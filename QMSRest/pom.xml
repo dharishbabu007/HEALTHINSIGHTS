@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.qms.rest</groupId>
+	<artifactId>QMSRestApplication</artifactId>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
+
+	<name>QMSRestApplication</name>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.4.RELEASE</version>
+	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<start-class>com.qms.rest.SpringBootRestApiApp</start-class>  
+		<!-- Additionally, Please make sure that your JAVA_HOME is pointing to 
+			1.8 when building on commandline -->
+	</properties>
+
+	<dependencies>
+		<!-- Add typical dependencies for a web application -->
+		<!-- Adds Tomcat and Spring MVC, along others -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+			    <exclusion>
+			      <groupId>org.springframework.boot</groupId>
+			      <artifactId>spring-boot-starter-logging</artifactId>
+			    </exclusion>
+			</exclusions>			
+		</dependency>
+		<dependency>
+    		<groupId>com.fasterxml.jackson.dataformat</groupId>
+    		<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>	
+		
+		<!-- Hive jars -->
+		<dependency>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-common</artifactId>
+		    <version>2.7.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.hive</groupId>
+		    <artifactId>hive-jdbc</artifactId>
+		    <version>1.1.0</version>
+		    <classifier>standalone</classifier>
+			<exclusions>
+			    <exclusion>
+			      <groupId>org.eclipse.jetty.aggregate</groupId>
+			      <artifactId>jetty-all</artifactId>
+			    </exclusion>
+		  	</exclusions>		    
+		</dependency>
+		
+		<!-- oracle jar 
+		<dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0</version>
+        </dependency> -->
+        
+		<!-- https://mvnrepository.com/artifact/com.github.noraui/ojdbc7 -->
+		<dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0</version>
+        </dependency>
+        
+		
+		<!-- JSTL tag lib -->
+	    <dependency>
+	      <groupId>javax.servlet.jsp.jstl</groupId>
+	      <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+	      <version>1.2.1</version>
+	    </dependency>
+
+	    <dependency>
+	      <groupId>taglibs</groupId>
+	      <artifactId>standard</artifactId>
+	      <version>1.1.2</version>
+	    </dependency>  
+	    
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin><!-- Include if you want to make an executable jar[FAT JAR which 
+					includes all dependencies along with sprinboot loader] that you can run on 
+					commandline using java -jar NAME -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

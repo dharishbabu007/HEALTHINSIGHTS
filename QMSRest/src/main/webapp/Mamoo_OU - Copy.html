@@ -1,0 +1,348 @@
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Data + Science</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Creating Tabitha">
+		<meta name="author" content="Jeffrey Shaffer">
+
+		<script src="annyang.min.js"></script> <!-- Voice Recognition -->
+		<script src="responsivevoice.js"></script> <!-- Voice Response -->
+		
+		<script src="https://public.tableausoftware.com/javascripts/api/tableau-2.min.js " type="text/javascript"></script> 
+		
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+	
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="stylenew.css">
+		
+</head>	
+
+<body onload=initializeViz();>
+
+
+
+
+    <header class="header col-md-12" >
+        <a href="index.html">
+        <img class="logo" src="Curis_Landing.jpg"/>
+    </a>
+
+        <div class="reflink">
+            <a href="#">Contact Us</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">About</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">Logout</a>&nbsp; &nbsp; &nbsp;
+            <a href="patient_profile.html" id="pp">Patient_Profile</a>
+        </div>
+
+    </header>
+
+
+
+
+
+
+<center><div id='tableauViz' style = "margin-top: 27px;"></div></center>
+
+
+
+<div class="footer">
+        <div class="col-md-12">
+            <center>
+                <div class="image-content w3-display-container">   
+                    <div class="imgiconclass">
+                        <div class="imgiconclass1" style="margin-left: 3.5vw;"><img class="mySlides imgfloat" src="icon1.png" style="">
+                            <div class="dropdown">
+                            <h2 class="dropbtn">Provider</h2>
+                            <div class="dropdown-content">
+                                 
+                                  
+                                    <a onClick="load_html(); return false;" id="dashboard">Mammography Quality Metrics</a>
+                                    <a onClick="Stroke_html(); return false;" id="dashboard">Stroke Quality Metrics</a>
+                                    <a onClick="utilize_html(); return false;" id="dashboard">Utilisation Metrics</a>
+                                    <a onClick="TAT_html(); return false;" id="dashboard">TAT Metrics</a>
+                                    <a href="">Summary Radiology Quality Metrics</a>
+                                    <a onClick="OBS_html(); return false;" id="dashboard">Obstetrics</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon2.png" style="">
+                            <div class="dropdown">
+                           <a class="dropbtn" href="qms_landing.html" style="display: inline-block; font-size: 16px">Compliance & Reporting</a>
+                                <!-- <div class="dropdown-content">
+                                    <a onClick="MIPS_html(); return false;" id="dashboard">MIPS Performance</a>
+                                </div> -->
+                           </div>
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon3.png" style="">
+                        <h2 class="dropbtn">Financial Performance</h2>
+                        </div>
+                    </div>
+
+                        
+                    <div class="imgiconclass">
+                        <div class="imgiconclass1" style="margin-left: 3.5vw;"><img class="mySlides imgfloat" src="icon1.png" style="">
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon2.png" style="">
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon3.png" style="">
+                        </div> 
+                    </div>
+                    
+               </div>     
+                    <div class="button">
+
+                        <button class=" w3-button w3-black w3-display-left" onclick="plusDivs(-1)" style="height: 10vh; opacity: 0.8; margin-left: 12vw;">
+                        <i class="fa fa-caret-left" aria-hidden="true" ></i>
+                        </button>
+                        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)" style="height: 10vh;opacity: 0.8; margin-right: 13vw;"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+                    </div>
+
+            </center>
+        </div>
+    </div>
+
+
+
+
+
+
+<script>
+//alert("annyang-->" + annyang);
+if (annyang) {
+  // These are the voice commands in quotes followed by the function
+ // alert("@123");
+  var commands = {
+  	//commands for Facility_Name
+	'Select Sisters Medical': function() { selectSM(); responsiveVoice.speak('selecting Sisters Medical', "UK English Female"); },
+	'Select Memorial Hospital': function() { selectMH(); responsiveVoice.speak('selecting Memorial Hospital', "UK English Female"); }, 
+ 	'Select Lakeside': function() { selectLakeside(); responsiveVoice.speak('selecting Lakeside', "UK English Female"); },
+  	'Select Carehoods': function() { selectCarehoods(); responsiveVoice.speak('selecting Carehoods', "UK English Female"); },
+  	'Select Delta center': function() { selectDMC(); responsiveVoice.speak('selecting Delat Medical Center', "UK English Female"); },
+     'Select Navato': function() { selectNavato(); responsiveVoice.speak('selecting Navato', "UK English Female"); },
+     //commands for Operating Unit
+     'Select North': function() { selectNorth(); responsiveVoice.speak('selecting North', "UK English Female"); },
+     'Select South': function() { selectSouth(); responsiveVoice.speak('selecting South', "UK English Female"); },
+     //commands for Loc_Name
+     'Select Northridge': function() { selectNorthridge(); responsiveVoice.speak('selecting Northridge', "UK English Female"); },
+	'Drill Down to Facility': function() { selectFacility(); responsiveVoice.speak('Showing Facility Dashboard', "UK English Female"); },
+	'Drill Up to Facility': function() { selectFacility(); responsiveVoice.speak('Showing Facility Dashboard', "UK English Female"); },
+	'Drill Down to Location': function() { selectLocation(); responsiveVoice.speak('Showing Location Dashboard', "UK English Female"); },
+	'Drill Up to Location': function() { selectLocation(); responsiveVoice.speak('Showing Location Dashboard', "UK English Female"); },
+	'Drill Down to Radiologist': function() { selectRadiologist(); responsiveVoice.speak('Showing Radiologist Dashboard', "UK English Female"); },
+	'Drill Up to Operating Unit': function() { selectOU(); responsiveVoice.speak('Showing Operating Unit Dashboard', "UK English Female"); },
+ 
+    'Select Oakland': function() { selectOakland(); responsiveVoice.speak('selecting Oakland', "UK English Female"); },
+     'Select Orange': function() { selectOrange(); responsiveVoice.speak('selecting Orange', "UK English Female"); },
+	'Select Santa Monica': function() { selectSMO(); responsiveVoice.speak('selecting Santa Monica', "UK English Female"); },
+	'Select San Rafael': function() { selectSR(); responsiveVoice.speak('selecting San Rafael', "UK English Female"); },
+	'Select Palo Alto': function() { selectPA(); responsiveVoice.speak('selecting Palo Alto', "UK English Female"); },
+	'Select San Francisco': function() { selectSF(); responsiveVoice.speak('selecting San Franciso', "UK English Female"); },
+	'Select Stockton': function() { selectStk(); responsiveVoice.speak('selecting Stockton', "UK English Female"); },
+	'Select Scottie Buzzing': function() { selectSBz(); responsiveVoice.speak('selecting Scottie Buzzing', "UK English Female"); },
+     //Command To reset all the filters
+	'start over': function() { startover(); responsiveVoice.speak('starting over'); }
+
+ };
+  
+  // Add commands to annyang
+  annyang.addCommands(commands);
+  
+  // Start listening.
+  annyang.start({continuous:false});
+  annyang.debug();
+//	annyang.start({ autoRestart: true });
+}
+</script>
+ 
+<script>
+var viz, workbook, activeSheet, Worksheet, worksheet;
+function initializeViz(){
+
+var x1 = document.getElementsByTagName("script");
+//var ii;
+//alert("MOMO --> " + x1.length);
+//for (ii = 0; ii < x1.length; ii++) {
+//    alert(x1[ii].innerHTML);
+//}
+
+var placeholderDiv = document.getElementById("tableauViz");
+var url="https://public.tableau.com/views/Curis_Mammo_Loctextchanged/Mammo-OU";
+//var url = "https://public.tableau.com/views/54SMFJCB6?:toolbar=no&:display_count=yes";
+//var url = "https://public.tableau.com/views/CurisDashboard/Compliance_First";
+//var url = "https://public.tableau.com/views/CurisDashboard/Mammo_Recall-OU";
+//var url = "https://public.tableau.com/views/Superstoretest_5/Testing";
+var options = {
+   width: "100%",   
+   height: "100%",
+   hideTabs: true,
+   hideToolbar: true,
+  onFirstInteractive: function () {
+  workbook = viz.getWorkbook();
+  activeSheet = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-OU");
+  activeSheet2 = workbook.getActiveSheet().getWorksheets().get("Next");
+  activeSheet4 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall");
+  activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+}
+};
+  viz = new tableauSoftware.Viz(placeholderDiv, url, options);
+}
+
+//Tabitha says hello
+//responsiveVoice.speak('Hi. My name is Ask Curis. How may I help you?');
+
+//Make Facility Name selection
+function selectBates()
+	{
+	activeSheet.applyFilterAsync("Facility Name","BATES",tableau.FilterUpdateType.REPLACE);
+}
+function selectSM()
+	{
+	activeSheet4 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall");
+	activeSheet4.applyFilterAsync("Facility Name","SISTERS MEDICAL",tableau.FilterUpdateType.REPLACE);
+}
+function selectMH()
+	{
+	activeSheet4 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall");
+	activeSheet4.applyFilterAsync("Facility Name","MEMORIAL HOSPITAL",tableau.FilterUpdateType.REPLACE);
+}
+function selectNavato()
+	{
+	activeSheet.applyFilterAsync("Facility Name","NAVATO",tableau.FilterUpdateType.REPLACE);
+}
+
+function selectLakeside()
+	{
+	activeSheet.applyFilterAsync("Facility Name","LAKESIDE",tableau.FilterUpdateType.REPLACE);
+}
+function selectCarehoods()
+	{
+	activeSheet.applyFilterAsync("Facility Name","CAREHOODS",tableau.FilterUpdateType.REPLACE);
+}
+function selectDMC()
+	{
+	activeSheet.applyFilterAsync("Facility Name","DELTA MEDICAL CENTER",tableau.FilterUpdateType.REPLACE);
+}
+
+//Make Operating Unit Selection
+function selectNorth()
+	{
+	activeSheet.applyFilterAsync("Operating Unit","NORTH",tableau.FilterUpdateType.REPLACE);
+}
+function selectSouth()
+	{
+	activeSheet.applyFilterAsync("Operating Unit","SOUTH",tableau.FilterUpdateType.REPLACE);
+}
+//make Loc_Name Selection
+function selectNorthridge()
+	{
+	activeSheet.applyFilterAsync("Loc_Name","Northridge",tableau.FilterUpdateType.REPLACE);
+}
+function selectOakland()
+	{
+	activeSheet.applyFilterAsync("Loc_Name","Oakland",tableau.FilterUpdateType.REPLACE);
+}
+function selectOrange()
+	{
+	activeSheet.applyFilterAsync("Loc_Name","Orange",tableau.FilterUpdateType.REPLACE);
+}
+function selectSMO()
+	{
+activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+	activeSheet5.applyFilterAsync("Loc Name","Santa Monica",tableau.FilterUpdateType.REPLACE);
+}
+function selectPA()
+	{
+activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+	activeSheet5.applyFilterAsync("Loc Name","Palo Alto",tableau.FilterUpdateType.REPLACE);
+}
+function selectSF()
+	{
+activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+	activeSheet5.applyFilterAsync("Loc Name","San Francisco",tableau.FilterUpdateType.REPLACE);
+}
+function selectSR()
+	{
+activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+	activeSheet5.applyFilterAsync("Loc Name","San Rafael",tableau.FilterUpdateType.REPLACE);
+}
+function selectStk()
+	{
+activeSheet5 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Loc");
+	activeSheet5.applyFilterAsync("Loc Name","Stockton",tableau.FilterUpdateType.REPLACE);
+}
+function selectSBz()
+	{
+activeSheet6 = workbook.getActiveSheet().getWorksheets().get("Mammo_Recall-Radio");
+	activeSheet6.applyFilterAsync("External Name","Scottie Buzzing",tableau.FilterUpdateType.REPLACE);
+}
+
+function selectFacility()
+	{
+	viz.getWorkbook().activateSheetAsync("Mammo-Facility");
+//	activeSheet2.selectMarksAsync('Next', 'Next', 'REPLACE'); 
+	}	
+function selectLocation()
+	{
+	viz.getWorkbook().activateSheetAsync("Mammo-Location");
+	}	
+function selectRadiologist()
+	{
+	viz.getWorkbook().activateSheetAsync("Mammo-Radiologist");
+	}	
+function selectOU()
+	{
+	viz.getWorkbook().activateSheetAsync("Mammo-OU");
+	}	
+
+
+	
+//Start Viz Over
+function startover()
+	{
+       
+	viz.revertAllAsync();
+	}
+
+</script>
+
+<script>
+
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("imgiconclass");
+        
+    
+        if (n > x.length) {
+            slideIndex = 1
+        }
+        if (n < 1) {
+            slideIndex = x.length
+        }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+</script>
+
+</body>
+</html>		
+		
+		

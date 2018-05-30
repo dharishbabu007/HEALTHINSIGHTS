@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--  stylesheet for help icon -->
+    <link rel="stylesheet" href="qms_styles.css">
+</head>
+<style type="text/css">
+.library{
+    background-color: #fff;
+    margin:20px;
+    width: 97.5%;
+}
+.library tbody{
+    /* height: 100px;
+    overflow-y: scroll;*/
+    display:block;
+    max-height: 440px;
+overflow-y:scroll;
+}
+.library thead, tbody tr {
+display:table;
+width:100%;
+table-layout:fixed;
+}
+    .library thead {
+        background-color: #37a279;
+        color: #fff;
+   
+    }
+
+    .library tr {
+       color:#00A565;;
+        cursor: pointer;
+    }
+.library thead>tr>th{
+  color: #fff;
+  font-size: 17px;
+}
+.library td{
+  max-width: 20%;
+}
+    .highlight {
+        background-color: #8ae8c4;
+    }
+    .btn-config{
+      font-weight: bold;
+      width: 150px;
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                  <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>                        
+                  </button>
+
+                <a href="index.html"> <img class="logo" src="LOGOitcinfotech.jpg"/></a>
+
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <!-- <li style="margin-left: 50px;"><a onClick="Home(); return false;">Home</a></li> -->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
+                    <li style="margin-right: 20px; margin-top: 5px;"><b>Admin,Admin<br></b></li>
+                <li style="margin-right: 25px;margin-top: 5px;">
+                        <div>
+                            <img src="doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Logout</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="col-md-12 no-padding-margin">
+        <div class="col-md-2 no-padding-margin nav-border-box">
+            <p class="quicklink"><a href="#"><b>Quick Links</b></a></p>
+            <p><a href="qms_landing.html">QMS Home</a></p>
+            <p><a href="Measure_Library.html">Measure Library</a></p>
+            <p><a href="Final_Creator.html">Measure Creator</a></p>
+            <!-- <p><a href="Measure_Editor.html">Measure Editor</a></p> -->
+            <p class="active-tab"><a href="Measure_Worklist.html">Measure Worklist</a></p>
+            
+            <!-- <p><a href="#">Measure Configurator</a></p> -->
+        </div>
+        <div class="col-md-10 no-padding-margin main-content">
+            <div class="sub-header">
+                <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Worklist</b></p>
+                <div class="button-div">
+                    <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
+                        <div class="input-group">
+                            <input type="text" class="form-control search-form" placeholder="Search Measure">
+                            <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q" style="margin-top: 9px;padding: 0px;"><img src="SearchIcon.png" height= "33.5px">
+                        </button></span>
+                        </div>
+                    </form>
+                    <input type="button" name="" value="Measure Configurator" class="btn-config btn-edit btn btn-primary btn-mini">
+                </div>
+            </div>
+            <div class="sub-content" id="sub-content">
+                <table class="table library">
+
+                    <thead>
+                      <tr>
+                        <th>Measure ID</th>
+                        <th>Measure Name</th>
+                    <th>Program Name</th>
+                    <th>Status</th>
+                    <th>Review Comments</th>
+                    <th>Reviewed By</th>
+
+                      </tr>
+                    </thead>
+                    
+                    <tbody style="overflow-y: scroll;">
+                        <tr>
+                            <td>12345</td>
+                            <td>common disease Antiplatelet Therapy</td>
+                            <td>MIPS</td>
+                            <td>pass</td>
+                            <td>No Comments</td>
+                            <td>Dr.BRam</td>
+
+                        </tr>
+                        <tr>
+                            <td>12345</td>
+                            <td>common disease Antiplatelet Therapy</td>
+                            <td>MIPS</td>
+                            <td>pass</td>
+                            <td>No Comments</td>
+                            <td>Dr.BRam</td>
+                        </tr>
+                       
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="footer">
+
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+  $(document).ready(function () {
+    $('tr').click(function () {
+      var selected = $(this).hasClass("highlight");
+      /*var selected = $(this).hasClass("highlight");*/
+    $('tr').removeClass("highlight");
+    if(!selected)
+            $(this).addClass("highlight");
+       
+        /*if(this.style.background == "none" || this.style.background =="") {
+
+             
+            $(this).css('background', '#8ae8c4');
+        }
+        else {
+          $(this).css('background', "");
+          }*/
+
+    });
+
+});
+</script>

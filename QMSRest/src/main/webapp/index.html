@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSS Website Layout</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<script id = "voice1script" src="annyang.min.js"></script> <!-- Voice Recognition -->
+	<script id = "voice2script" src="responsivevoice.js"></script> <!-- Voice Response -->		
+
+ <!--    <script src="jquery-3.2.1.min.js"></script> -->
+    <!-- <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+	
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="stylesheet" href="stylenew.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--  stylesheet for help icon -->
+
+    <script src="download/angular.min.js"></script>
+	<script src="download/angular.js"></script>
+	<script src="download/angular-route.js"></script>	
+	
+    <script src="scripts/annyang.min.js"></script> <!-- Voice Recognition -->
+    <script src="scripts/responsivevoice.js"></script> <!-- Voice Response -->	
+	<script src="qms_home.js"></script>
+	<script src="qms_common.js"></script>
+	
+   <!--  <script src="jquery-3.2.1.min.js"></script> -->
+
+</head>
+
+<body  ng-app="QMSHomeManagement" ng-controller="IndexDotHTMLController">
+   
+   <div id="wrapper">
+
+    <header class="header col-md-12" style="width:100%">
+        <a href="index.html">
+        <img class="logo" src="LOGOitcinfotech.jpg"/>
+    </a>
+
+        <!-- <div class="reflink">
+            <a href="#">Contact Us</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">About</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">Logout</a>&nbsp; &nbsp; &nbsp;
+         <a href="patient_profile.html" id="pp">Patient_Profile</a>
+        </div> -->
+        <ul class="nav navbar-nav navbar-right" style="padding-right: 14px;display: -webkit-box;float: right;">
+<li> <img src="images/speech.png" style="width: auto; height: 6vh;cursor: pointer;margin-top: 10px;float: left;margin-right: 15px;" class=" SpeechIcon"></li>
+                <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
+               <li style="margin-right: 20px; margin-top: 5px;"><b><span ng-bind="userName"></span><br></b></li>
+                <li style="margin-right: 25px;margin-top: 5px;">
+                    <div>
+                        <img src="doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" onclick="logOut()">Logout</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+            </ul>
+
+    </header>
+
+
+    <div id="main">
+
+       
+
+    </div>
+    <footer>
+      <div class="col-md-12 ">
+        <div class="slider_container">
+       
+
+        <!-- <div class="well"> -->
+            <div id="myCarousel" class="carousel slide">
+                
+                <!-- Carousel items -->
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev" style=""><i class="fa fa-caret-left"></i></a>
+                <div class="carousel-inner">
+                 
+                    <div class="item active">
+          
+                        <div class="row">
+                            
+                            <div class="col-sm-4" data-toggle="popover" data-placement="top">
+                                
+                                <div class="imageSlider">
+                                <a href="#x" style="float:left"><img src="icon2.png" alt="Image" class="img-responsive"></a>
+                                 <p class="SliderNames">Provider Corner</p>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4">
+
+                                <div class="imageSlider"><a href="#x" style="float:left"><img src="icon3.png" alt="Image" class="img-responsive"></a>
+                               <a href="hleft.jsp#!/" style="color:#fff;"> <p class="SliderNames">Quality Management System</p></a>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="imageSlider"><a href="#x" style="float:left"><img src="icon1.png" alt="Image" class="img-responsive"></a>
+                                <p class="SliderNames">Financial Performance</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+              
+                        <!--/row-->
+                    </div>
+                    <!--/item-->
+                    <div class="item">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="imageSlider">
+                                <a href="#x" style="float:left"><img src="women's health_logo.png" alt="Image" class="img-responsive" width="74px" height="74px"></a>
+                                <p class="SliderNames">Womens Health</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="imageSlider"><a href="#x" style="float:left"><img src="member_engagement_Logo2.png" alt="Image" class="img-responsive" width="74px" height="74px"></a>
+                                <p class="SliderNames">Membership Engagement</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="imageSlider">
+                                <a href="#x" style="float:left"><img src="icon1.png" alt="Image" class="img-responsive"></a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <!--/row-->
+                    </div>
+
+                </div>
+                <!--/carousel-inner--> 
+
+                <a class="right carousel-control" href="#myCarousel" data-slide="next"  style=""><i class="fa fa-caret-right"></i></a>
+            </div>
+            <!--/myCarousel-->
+            </div>
+        </div>
+        <!--/well-->
+<!--     </div> -->
+<div id="popover-content" style="display: none">
+  <ul class="list-group custom-popover">
+   
+   <a href="OR_Utilization.html"> <li class="list-group-item">OR Utilisation</li></a>
+    <a href="Obstetrics.html"><li class="list-group-item">Obstetrics</li></a>
+	
+	<a href="Stroke.html"><li class="list-group-item">Stroke</li></a>
+	<a href="Mamoo_OU.html"><li class="list-group-item">Mammography Quality</li></a>
+
+  </ul>
+</div>  
+</footer>
+</div>
+
+</body>
+
+</html>
+
+
+
+<script>
+function load_html() {
+
+//alert("before --> " + document.getElementsByTagName("script").length);
+
+//alert("1" + document.getElementById("voice1script"));
+//alert("2" + document.getElementById("voice2script"));
+
+var elem = document.getElementById('voice1script');
+elem.parentNode.removeChild(elem);
+//alert(11);
+
+var elem1 = document.getElementById('voice2script');
+elem1.parentNode.removeChild(elem1);
+//alert(22);
+
+//alert("After remove --> " + document.getElementsByTagName("script").length);
+
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Mamoo_OU.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+     $('#pp').show();
+
+}
+function utilize_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Utilisation_First.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+     
+
+}
+function Stroke_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Stroke.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+
+}
+function TAT_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="TAT.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+function MIPS_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="MIPS.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+function OBS_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="obs.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#myCarousel').carousel({
+    interval: false
+    })
+    
+    $('#myCarousel').on('slid.bs.carousel', function() {
+        //alert("slid");
+    });    
+});
+
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({html: true,container: 'body',
+    content: function() {
+      return $('#popover-content').html();}
+  }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    });
+});
+</script>
+<script>
+if (annyang) {
+  // These are the voice commands in quotes followed by the function
+  var commands = {
+    //commands for Facility_Name
+    
+    'Open Health Insights HomePage': function() {  responsiveVoice.speak('Showing Health Insights HomePage', "UK English Female"); selectCurisHome();},
+  'Open QMS HomePage': function() {  responsiveVoice.speak('Showing QMS HomePage', "UK English Female"); selectQmsHome();},
+  'Open Diabetes Eye Exam': function() {  responsiveVoice.speak('Showing Diabetes Eye Exam Dashboard', "UK English Female"); selectDiabetesExam();},
+  'Open Control Tower': function() {  responsiveVoice.speak('Showing MIPS Control Tower', "UK English Female"); selectMIPS();},
+  'Open Obstetrics': function() {  responsiveVoice.speak('Showing Obstetrics Dashboard', "UK English Female"); selectObs();},
+     //Command To reset all the filters
+    'start over': function() { startover(); responsiveVoice.speak('starting over'); }
+
+ };
+  
+  // Add commands to annyang
+  annyang.addCommands(commands);
+  
+  // Start listening.
+  annyang.start({continuous:false});
+  annyang.debug();
+//  annyang.start({ autoRestart: true });
+}
+</script>
+ 
+<script>
+
+function selectCurisHome()
+  {
+    window.location.href="index.html";
+}
+function selectQmsHome()
+  {
+    window.location.href="qms_landing.jsp";
+}
+function selectDiabetesExam()
+  {
+    window.location.href="DiabetesEyeExam.html";
+}
+function selectObs()
+  {
+    window.location.href="Obstetrics.html";
+}
+function selectMIPS()
+  {
+    window.location.href="MIPS.html";
+}
+/*function selectNext()
+    {
+    activeSheet2.getWorksheets()[2].selectMarksAsync('Next', 'Next', 'REPLACE'); 
+    }   
+
+*/
+    
+//Start Viz Over
+function startover()
+    {
+       
+    viz.revertAllAsync();
+    }
+
+</script>
+<script>
+    if (annyang) {
+      $('.SpeechIcon').click(function() {
+      var clicks = $(this).data('clicks');
+       if (clicks) {
+            annyang.start();
+            
+            console.log("started");
+            } 
+            else {
+               
+            annyang.abort();
+            
+            console.log("stopped");
+
+            }
+            $(this).data("clicks", !clicks);
+           });
+    }
+</script>

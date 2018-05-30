@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<style>
+.table{
+
+            border-collapse: separate;
+            border-spacing: 15px;
+            font-family: sans-serif;
+                border: 7px solid #8E8989;
+        }
+       .table>tbody>tr>td{
+          border-top: 0px;
+
+        }
+        .form-control
+        {
+          border-color: #508E0E;
+
+        }
+        #reset{
+border-style: none;
+}
+.search-form {
+    border-radius: 30px 0px 0px 30px;
+   width: 300px;
+    float: right;
+    margin: 5px;
+    
+    /*border-radius:Top-left, Top-right, Bottom-right, Bottom-left;*/
+}
+/*to cange only one form and not all give unique class name like  class="search-form" */
+ .search-btn {
+    border-radius: 0px 30px 30px 0px;
+    cursor:pointer;
+    background-color: #508E0E;
+   
+}
+.input-group-btn:last-child>.btn{
+  margin: 5px;
+}
+       
+</style>
+<body>
+  
+<div class="container"> 
+<form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
+    <div class="input-group">
+        <input type="text" class="form-control search-form" placeholder="Search">
+        <!--DO NOT NEED TRAILING SLASH "/" As HTML5 FORMS SLASHES ARE NO LONGER REQUIRED--> <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"><!--FONT AWESOME font @ "http://fortawesome.github.io/Font-Awesome/" --></i>
+                                    </button></span>
+    </div>
+    </form>      
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>
+        <div class="form-group">
+        <input class="form-control" id="Measure_ID" type="text" placeholder="Measure ID">
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+     Clinical Condition:<input class="form-control" id="Clinical_Condition" type="text" list="browsers" placeholder="Clinical Condition">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+        </td>
+        </tr>
+      <tr>
+        <td>
+        <div class="form-group">
+        <input class="form-control" id="Measure_Name" type="text" list="browsers" placeholder="Measure Name">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+        <input class="form-control" id="Age_Criteria" type="text" list="browsers" placeholder="Age Criteria">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-group">
+        <input class="form-control" id="Measure_Type" type="text" list="browsers" placeholder="Measure Type">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+</div>
+      </td>
+      <td>
+        <div class="form-group">
+        <input class="form-control" id="Data_Source" type="text" list="browsers" placeholder="Data Source">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        <div class="form-group">
+        <input class="form-control" id="Measure_Steward" type="text" list="browsers" placeholder="Measure Steward">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+        <input class="form-control" id="Numerator" type="text" list="browsers" placeholder="Numerator">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        <div class="form-group">
+        <input class="form-control" id="Exclusions" type="text" list="browsers" placeholder="Exclusions">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+       <input class="form-control" id="Denominator" type="text" list="browsers" placeholder="Denominator">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        <div class="form-group">
+        <input class="form-control" id="Program_Name" type="text" list="browsers" placeholder="Program Name">
+<datalist id="browsers">
+  <option value="Internet Explorer">
+  <option value="Firefox">
+  <option value="Firestar">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+        </div>
+      </td>
+      <td>
+         <div class="form-group">
+      
+     
+      <textarea class="form-control" rows="5" id="comment" type="text" placeholder="Measure Description"></textarea>
+      </div>
+    </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-group">
+          <button type="button" class="btn clear"> <u><input id="reset" type='reset' value='Clear All' name='reset'></u></button>
+        </div>
+        </td>
+        <td>
+          <button type="button" class="btn clear">Save Measure</button>
+          <button type="button" class="btn btn-success clear">Submit For Approval</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
+<script>
+  $(function() {
+  $('.clear').click(function() {
+    $('.form-group input[type="text"], textarea[type="text"]').val('');
+  });
+});
+</script>
