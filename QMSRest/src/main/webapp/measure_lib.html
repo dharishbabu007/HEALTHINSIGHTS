@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<style>
+.body{
+  background-color: #dddddd;
+}
+.table{
+  position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+}
+.table th{
+  background-color: #37a279;
+  color:#fff;
+}
+tr{
+  color: #59c21b;
+   cursor: pointer;
+}
+tbody tr:nth-child(odd){
+  background-color: #E8E6E6;
+  
+}
+</style>
+<body>
+  
+<div class="container">       
+  <table class ="table">
+     <th>Measure ID</th>
+      <th>Measure Name</th>
+      <th>Program Name</th>
+      <th>Status</th>
+      <th>Review Comments</th>
+      <th>Reviewed By</th>
+      
+    <tbody>
+       <tr>
+        <td>12345</td>
+        <td>common disease Antiplatelet Therapy</td>
+        <td>MIPS</td>
+        <td>pass</td>
+        <td>No Comments</td>
+        <td>Dr.BRam</td>
+        
+       </tr>
+       <tr>
+         <td>12345</td>
+        <td>common disease Antiplatelet Therapy</td>
+        <td>MIPS</td>
+        <td>pass</td>
+        <td>No Comments</td>
+        <td>Dr.BRam</td>
+       </tr>
+       <tr>
+         <td>12345</td>
+        <td>common disease Antiplatelet Therapy</td>
+        <td>MIPS</td>
+        <td>pass</td>
+        <td>No Comments</td>
+        <td>Dr.BRam</td>
+       </tr>
+       <tr>4</tr>
+       <tr>5</tr>
+       <tr>6</tr>
+    </tbody>
+
+  </table>
+</div>
+
+</body>
+</html>
+<script>
+  $(document).ready(function () {
+    $('tr').click(function () {
+        if(this.style.background == "none" || this.style.background =="") {
+            $(this).css('background', '#8ae8c4');
+        }
+        else {
+            $(this).css('background', "");
+        }
+    });
+});
+</script>

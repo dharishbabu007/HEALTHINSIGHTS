@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--  stylesheet for help icon -->
+    <link rel="stylesheet" href="styles/qms_styles.css">
+</head>
+<style type="text/css">
+.body{
+  background-color: #dddddd;
+}
+.Creator{
+  top: 0; bottom: 0; left: 0; right: 0;
+  border-collapse: separate;
+            border-spacing: 15px;
+            font-family: sans-serif;
+            background-color: #fff;
+            margin: 20px;
+            width: 97.5%;
+            height: 350px;
+}
+.Creator>tbody>tr>td{
+  border-top: none;
+}
+.select-box {
+     position:relative;
+     background-color:white;
+     border:solid grey 0px;
+     width:250px;
+     height:30px;
+     background-color: #E0F5ED;
+ }
+ .select-box select {
+     position:absolute;
+     top:0px;
+     left:0px;
+     font-size:15px;
+     border:none;
+     width:245px;
+     margin:0;
+         height: 25px;
+         background-color: #E0F5ED;
+ }
+ .select-box input {
+     position:absolute;
+     top:0px;
+     left:0px;
+     width:200px;
+     padding:6px;
+     font-size:15px;
+     border:none;
+     background-color: #E0F5ED;
+ }
+ .select-box select:focus, .select-box input:focus {
+     outline:none; 
+ }
+ .input_control{
+  width: 350px;
+  margin-bottom: 29px;
+    height: 35px;
+    border: 0px solid #777474;
+    border-radius: 0px;
+    background-color: #E0F5ED;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+ }
+textarea {
+
+   resize: none;
+   
+}
+::-webkit-input-placeholder {
+   font-weight: bold;
+   color: #449073;
+}
+.drop-down{
+    background-color: #E0F5ED;
+    width: 350px;
+}
+.drop-margin{
+    margin-bottom: 25px;
+}
+.submit-cls{
+    text-align: center;
+    padding: 10px 0px;
+    background: #C8C8C8;
+}
+.btn-cls{
+    height: 30px;
+    font-weight: bold;
+    
+}
+.btn-cls:hover{
+    
+    border:1px solid black;
+}
+</style>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                  <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>                        
+                  </button>
+
+                <a href="index.html"> <img class="logo" src="images/LOGOitcinfotech.jpg"/></a>
+
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <!-- <li style="margin-left: 50px;"><a onClick="Home(); return false;">Home</a></li> -->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
+                   <li style="margin-right: 20px; margin-top: 5px;"><b>Admin<br></b></li>
+                <li style="margin-right: 25px;margin-top: 5px;">
+                        <div>
+                            <img src="images/doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Logout</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="col-md-12 no-padding-margin">
+        <div class="col-md-2 no-padding-margin nav-border-box">
+            <p class="quicklink"><a href="#"><b>Quick Links</b></a></p>
+            <p><a href="qms_landing.html">QMS Home</a></p>
+            <p><a href="Measure_Library.html">Measure Library</a></p>
+            <p class="active-tab"><a href="Final_Creator.html">Measure Creator</a></p>
+           <!--  <p><a href="Measure_Editor.html">Measure Editor</a></p> -->
+            <p><a href="Measure_Worklist.html">Measure Worklist</a></p>
+            <!-- <p><a href="#">Measure Configurator</a></p> -->
+        </div>
+        <div class="col-md-10 no-padding-margin main-content">
+            <div class="sub-header">
+                <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Creator</b></p>
+                <div class="button-div">
+                    <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
+                        <div class="input-group">
+                            <input type="text" class="form-control search-form" placeholder="Search Measure">
+                            <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q" style="margin-top: 9px;padding: 0px;"><img src="images/SearchIcon.png" height= "33.5px">
+                        </button></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="sub-content" id="sub-content">
+            <!-- <div class="col-md-1"></div> -->
+            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;border: 1px solid black;">
+               
+    <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name</label>
+       <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Program_Name">
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+        <label for="Measure_Title">Measure Title</label>
+        <input type="" name="" class="form-group form-control drop-down drop-margin" id="Measure_Title" >
+        <label for="Description">Description</label>
+        <input type="" name="" class="form-group form-control drop-down drop-margin" id="Description" >
+        <label for="Target_Age">Target Age</label>
+        <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Target_Age" >
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+         <label for="Measure_Domain">Measure Domain</label>
+        <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Measure_Domain" >
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+        <label for="Measure_Category">Measure Category</label>
+        <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Measure_Category" >
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+        <label for="Type">Type</label>
+        <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Type"  >
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+         <label for="Clinical_Conditions">Clinical Conditions</label>
+        <input list="browsers" name="browser" class="form-group form-control drop-down drop-margin" id="Clinical_Conditions">
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+
+        
+  
+    </div>
+    <div class="col-md-6" style="padding-top:3vh;padding-left: 85px">
+      
+         <label for="Denominator">Denominator</label>
+        <textarea class="form-control input_control form-group " rows="3" id="Denominator" type="text" ></textarea>
+         <label for="Denominator_Exclusions">Denominator Exclusions</label>
+        <textarea class="form-control input_control form-group " rows="3" id="Denominator_Exclusions" type="text"></textarea>
+           <label for="Numerator">Numerator</label>
+        <textarea class="form-control input_control form-group " rows="3" type="text" id="Numerator"></textarea>
+        <label for="Numerator_Exclusions">Numerator Exclusions</label>
+        <textarea class="form-control input_control form-group " rows="3"  type="text" id="Numerator_Exclusions"></textarea>
+        <label for="Target">Target</label>
+        <input type="" name="" class="form-group form-control drop-down drop-margin" id="Target" >
+       
+    </div>
+    
+            </div>
+            <div class="col-md-12 submit-cls">
+        <button class="btn btn-cls" style="background-color: #EFEFEF">Save</button>
+        <button class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>
+    </div>
+
+        <!--     <div class="col-md-1"></div> -->
+            </div>
+            <div class="footer">
+
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+  $(document).ready(function () {
+    $('tr').click(function () {
+      var selected = $(this).hasClass("highlight");
+      /*var selected = $(this).hasClass("highlight");*/
+    $('tr').removeClass("highlight");
+    if(!selected)
+            $(this).addClass("highlight");
+       
+        /*if(this.style.background == "none" || this.style.background =="") {
+
+             
+            $(this).css('background', '#8ae8c4');
+        }
+        else {
+          $(this).css('background', "");
+          }*/
+
+    });
+
+});
+</script>

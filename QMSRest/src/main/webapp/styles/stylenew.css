@@ -1,0 +1,151 @@
+<style type="text/css">
+@media screen and (min-width:280px) and (max-width:800px) { body{font-size:0.7em;} }
+
+html,body{
+    margin: 0px;
+    padding: 0;
+}
+#pp{
+    display: none;
+}
+#wrapper {
+    background: url("ladiesgreen4.jpg") no-repeat;
+        background-size: cover;
+    margin-left:auto;
+    margin-right:auto;
+    height: 91.8vh;
+    width: 100vw;
+  /*  margin-top: 8vh;*/
+ 
+}
+
+    #main {
+        width: 100%;
+        height: 80vh;
+     margin-top: 8vh;
+     position: relative;
+   
+        
+    }
+
+    .header {
+        z-index: 1;
+    position: fixed;
+    top:0;
+    left: 0;
+        height: 8vh;
+        padding-left: 0px;
+        background-color: #92D051;
+    }
+    .reflink {
+    max-height: 8vh;
+     height: 8vh;
+    float: right;
+    max-width: auto;
+    margin-top: 4.5vh;
+    position: relative;
+
+    }
+.footer{
+overflow: hidden;
+}
+
+
+.logo{
+   
+    width: 16vw;
+    max-height: 8vh;
+    padding-top: 1px;
+    position: absolute;
+}
+
+ .carousel-control {
+  width:5%;
+  opacity: 0.8;
+}
+.carousel-control.left, .carousel-control.right {
+    background: none;
+    color: @red;
+    border: none;
+}
+.img-responsive {
+        margin-right: auto;
+    margin-left: 2px;
+    margin-top: 6px; 
+    margin-bottom: 10px;
+    height: 8vh;
+}
+.imageSlider{
+    
+      height: 10vh;
+    width: 100%;border:1px solid black;
+    border-style: groove;
+    border-radius: 4px;
+      background-color: rgba(0, 0, 0, 0.73);
+    color: white;
+   
+}
+.carousel-control.left {margin-left: -60px;margin-bottom: 20px;
+    color: black;
+    font-size: 80px;
+margin-top: -20px;}
+.carousel-control.right {margin-right: -60px; color: black;font-size: 80px;margin-top: -20px;}
+.SliderNames{
+        margin-top: 3vh;
+    margin-left: 8vw;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.col-sm-4{
+ /*margin-top: 50vh;*/
+}  .carousel-inner {
+    position: relative;
+    width: 100%;
+         overflow:hidden;}
+
+.slider_container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+        width: 80vw;
+}
+/*@media (min-width: 1200px){
+.slider_container {
+    width: 1120px;
+}
+}
+@media (min-width: 992px){
+.slider_container {
+    width: 970px;
+}
+}
+@media (min-width: 768px){
+.slider_container {
+    width: 750px;
+}
+}*/
+
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: rgba(255,255,255,0.6);
+     
+    
+    color: black;
+    font-weight: 700;
+}
+.popover{
+    background-color: rgba(255,255,255,0.6);
+    border: 3px solid #ddd;
+   
+}
+</style>

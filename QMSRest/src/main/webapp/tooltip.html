@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<style>
+.tooltip {
+    position: relative;
+    display: inline-block;
+   
+}
+
+.tooltip .tooltiptext {
+        visibility: hidden;
+    width: 200px;
+    height: 60px;
+    background-color: #FDFBFB;
+    color: #131212;
+    
+    border-radius: 10px;
+    /* border-color: black; */
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -25px;
+    left: 200%;
+}
+
+.tooltip .tooltiptext::after {
+        content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
+<body style="text-align:center;">
+
+<h2>Right Tooltip w/ Left Arrow</h2>
+
+<div class="tooltip">ACO
+  <span class="tooltiptext">Tooltip text</span>
+</div>
+
+</body>
+</html>

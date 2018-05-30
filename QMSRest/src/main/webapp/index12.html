@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CSS Website Layout</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<script id = "voice1script" src="annyang.min.js"></script> <!-- Voice Recognition -->
+	<script id = "voice2script" src="responsivevoice.js"></script> <!-- Voice Response -->		
+
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+	
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="stylenew.css">
+
+
+   <!--  <script src="jquery-3.2.1.min.js"></script> -->
+
+</head>
+
+<body>
+   
+   <div id="wrapper">
+
+    <header class="header col-md-12" >
+        <a href="index.html">
+        <img class="logo" src="Curis_Landing.jpg"/>
+    </a>
+
+        <div class="reflink">
+            <a href="#">Contact Us</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">About</a>&nbsp; &nbsp; &nbsp;
+            <a href="#">Logout</a>&nbsp; &nbsp; &nbsp;
+            <a href="patient_profile.html" id="pp">Patient_Profile</a>
+        </div>
+
+    </header>
+
+    <div id="main">
+
+        <!-- <div class="col-md-12 infodiv">
+            hceryguovuodfuovyjfhvofybhvfh
+        </div> -->
+
+    </div>
+    <div class="footer">
+        <div class="col-md-12">
+            <center>
+                <div class="image-content w3-display-container">   
+                    <div class="imgiconclass">
+                        <div class="imgiconclass1" style="margin-left: 3.5vw;"><img class="mySlides imgfloat" src="icon1.png" style="">
+                            <div class="dropdown">
+                            <h2 class="dropbtn">Provider</h2>
+                            <div class="dropdown-content">
+                                 
+                                    <!-- href="Mamoo_OU.html" -->
+                                    <a id="dashboard" onClick="load_html1(); return false;">Mammography Quality Metrics</a>
+                                    <a onClick="Stroke_html(); return false;" id="dashboard">Stroke Quality Metrics</a>
+                                    <a onClick="utilize_html(); return false;" id="dashboard">Utilisation Metrics</a>
+                                    <a onClick="TAT_html(); return false;" id="dashboard">TAT Metrics</a>
+                                    <a href="">Summary Radiology Quality Metrics</a>
+                                    <a onClick="OBS_html(); return false;" id="dashboard">Obstetrics</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon2.png" style="">
+                            <div class="dropdown">
+                           <a class="dropbtn" href="qms_landing.html" style="display: inline-block; font-size: 12px">Compliance & Reporting</a>
+                                <!-- <div class="dropdown-content">
+                                    <a onClick="MIPS_html(); return false;" id="dashboard">MIPS Performance</a>
+                                </div> -->
+                           </div>
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon3.png" style="">
+                        <h2 class="dropbtn">Financial Performance</h2>
+                        </div>
+                    </div>
+
+                        
+                    <div class="imgiconclass">
+                        <div class="imgiconclass1" style="margin-left: 3.5vw;"><img class="mySlides imgfloat" src="icon1.png" style="">
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon2.png" style="">
+                        </div>
+                        <div class="imgiconclass1"><img class="mySlides imgfloat" src="icon3.png" style="">
+                        </div> 
+                    </div>
+                    
+               </div>     
+                    <div class="button">
+
+                        <button class=" w3-button w3-black w3-display-left" onclick="plusDivs(-1)" style="height: 10vh; opacity: 0.8; margin-left: 12vw;">
+                        <i class="fa fa-caret-left" aria-hidden="true" ></i>
+                        </button>
+                        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)" style="height: 10vh;opacity: 0.8; margin-right: 13vw;"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+                    </div>
+
+            </center>
+        </div>
+    </div>
+</div>
+
+
+<script>
+if (annyang) {
+  // These are the voice commands in quotes followed by the function
+  var commands = {
+  	//commands for Facility_Name
+  	'Open Mammography': function() { load_html1(); responsiveVoice.speak('opening Mammography', "UK English Female"); },
+  	'Select Carehoods': function() { selectCarehoods(); responsiveVoice.speak('selecting Carehoods', "UK English Female"); },
+  	'Select Delta center': function() { selectDMC(); responsiveVoice.speak('selecting Delat Medical Center', "UK English Female"); },
+     'Select Navato': function() { selectNavato(); responsiveVoice.speak('selecting Navato', "UK English Female"); },
+     //commands for Operating Unit
+     'Select North': function() { selectNorth(); responsiveVoice.speak('selecting North', "UK English Female"); },
+     'Select South': function() { selectSouth(); responsiveVoice.speak('selecting South', "UK English Female"); },
+     //commands for Loc_Name
+     'Select Northridge': function() { selectNorthridge(); responsiveVoice.speak('selecting Northridge', "UK English Female"); },
+     'Select Oakland': function() { selectOakland(); responsiveVoice.speak('selecting Oakland', "UK English Female"); },
+     'Select Orange': function() { selectOrange(); responsiveVoice.speak('selecting Orange', "UK English Female"); },
+     //Command To reset all the filters
+	'start over': function() { startover(); responsiveVoice.speak('starting over'); }
+
+ };
+  
+  // Add commands to annyang
+  annyang.addCommands(commands);
+  
+  // Start listening.
+  annyang.start({continuous:false});
+  annyang.debug();
+//	annyang.start({ autoRestart: true });
+}
+</script>
+
+
+
+
+</body>
+
+</html>
+
+
+<script>
+
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("imgiconclass");
+        
+    
+        if (n > x.length) {
+            slideIndex = 1
+        }
+        if (n < 1) {
+            slideIndex = x.length
+        }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+</script>
+<script>
+
+function load_html1() {
+	window.location.href = "Mamoo_OU.html";
+}
+
+function load_html() {
+
+alert("before --> " + document.getElementsByTagName("script").length);
+
+//alert("1" + document.getElementById("voice1script"));
+//alert("2" + document.getElementById("voice2script"));
+
+var elem = document.getElementById('voice1script');
+elem.parentNode.removeChild(elem);
+//alert(11);
+
+var elem1 = document.getElementById('voice2script');
+elem1.parentNode.removeChild(elem1);
+//alert(22);
+
+alert("After remove --> " + document.getElementsByTagName("script").length);
+
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Mamoo_OU.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+     $('#pp').show();
+
+}
+function utilize_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Utilisation_First.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+     
+
+}
+function Stroke_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="Stroke.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+
+}
+function TAT_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="TAT.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+function MIPS_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="MIPS.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+function OBS_html() {
+    
+     document.getElementById("main").innerHTML='<object type="text/html" style="width:100%; height:100%;" data="obs.html" ></object>';
+     $('#wrapper').css("background","#ffffff");
+    
+}
+
+
+</script>

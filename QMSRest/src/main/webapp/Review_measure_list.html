@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<style>
+/*.table{
+
+            border-collapse: separate;
+        
+            font-family: sans-serif;
+                border: 7px solid #8E8989;
+        }
+       .table>tbody>tr>td{
+          border-top: 0px;
+
+        }*/
+        table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    border-spacing: 30px;
+    width: 100%;
+    
+}
+td{padding: 15px;}
+th{padding: 5px;
+background-color: #dddddd;
+    color: black;
+  }
+tr {
+    border: 3px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+        .form-control
+        {
+          border-color: #508E0E;
+
+        }
+        #reset{
+border-style: none;
+}
+.search-form {
+    border-radius: 30px 0px 0px 30px;
+   width: 300px;
+    float: right;
+    margin: 5px;
+    
+    /*border-radius:Top-left, Top-right, Bottom-right, Bottom-left;*/
+}
+/*to cange only one form and not all give unique class name like  class="search-form" */
+ .search-btn {
+    border-radius: 0px 30px 30px 0px;
+    cursor:pointer;
+    background-color: #508E0E;
+   
+}
+.input-group-btn:last-child>.btn{
+  margin: 5px;
+}
+   
+</style>
+<body>
+  
+<div class="container"> 
+<form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
+    <div class="input-group">
+        <input type="text" class="form-control search-form" placeholder="Search">
+        <!--DO NOT NEED TRAILING SLASH "/" As HTML5 FORMS SLASHES ARE NO LONGER REQUIRED--> <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q"><i class="fa fa-search"><!--FONT AWESOME font @ "http://fortawesome.github.io/Font-Awesome/" --></i>
+                                    </button></span>
+    </div>
+    </form>      
+  <table class="table">
+    <tr>
+    <th><b>List of measure</b></th>
+    <th><b>Status</b></th>
+    <th><b>Review Comments</b></th>
+  </tr>
+    <tbody>
+      <tr>
+        <td>Diabetes: Hemoglobin A1c(HbA1c)Poor Control(>9%)</td>
+        <td>Visited</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Coronary Artery Disease(CAD):Antiplatelet Therapy</td>
+        <td>Pending</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Heart Failure(HF):Beta-Blocker Therapy for Left Ventricular Systolic Dysfunction(LVSD)</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Heart Failure(HF):Beta-Blocker Therapy for Left Ventricular Systolic Dysfunction(LVSD)</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Preventive Care and Screening:Influenza Immunization</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Pneumococcal Vaccination Status for Older Adults</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Breast Cancer Screening</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
+<script>
+  $(function() {
+  $('.clear').click(function() {
+    $('.form-group input[type="text"], textarea[type="text"]').val('');
+  });
+});
+</script>
