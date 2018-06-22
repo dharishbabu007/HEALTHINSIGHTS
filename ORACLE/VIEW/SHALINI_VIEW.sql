@@ -1,4 +1,4 @@
-CREATE OR REPLACE FORCE VIEW "MIPS"."SHALINI_VIEW" ("Claims", "Achievement %", "Measure Cat", "Score", "Period", "Numerator", "Facility ID", "Facility Name", "Measure Name", "Measure Code", "Plan Code", "Plan Name", "Start", "End", "Product Name") AS 
+CREATE OR REPLACE FORCE VIEW "ADMIN"."SHALINI_VIEW" ("Claims", "Achievement %", "Measure Cat", "Score", "Period", "Numerator", "Facility ID", "Facility Name", "Measure Name", "Measure Code", "Plan Code", "Plan Name", "Start", "End", "Product Name") AS 
   (SELECT DISTINCT
   FCM.CLAIMS_ID AS "Claims",
   FHQ.RATIO AS "Achievement %", 
