@@ -294,17 +294,7 @@ table.popuptable tr {
     background-color: #F1EEEE;
 }
 
-@media (min-width: 768px)
 
-{
-
-.navbar {
-    position: relative;
-    min-height: 53px;
-   
-    border: 1px solid transparent;
-}
-}
 #main_field{
     height: 90vh;
 }
@@ -319,4 +309,8 @@ a:focus, a:hover {
     text-decoration: none;
 }
 
-
+@media (max-width: 990px){
+    .logo{
+        width:22.6vw;
+    }
+}
