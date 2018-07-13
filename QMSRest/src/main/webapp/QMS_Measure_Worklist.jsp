@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-   
+   <title>Measure Worklist</title>
 <script src="Sorting.js"></script>
 <script src="scripts/Search.js"></script>			
 
@@ -19,7 +19,7 @@
     /* height: 100px;
     overflow-y: scroll;*/
     display:block;
-    max-height: 440px;
+    max-height: 56vh;
 overflow-y:scroll;
 }
 .library thead, tbody tr {
@@ -78,7 +78,7 @@ table-layout:fixed;
                     <input type="button" name="" value="Approve" class="btn-config btn-edit btn btn-primary btn-mini">					
                     <input type="button" name="" value="View" class="btn-config btn-edit btn btn-primary btn-mini">					
 					-->
-					<button ng-click="measureConfigClick()" class="btn-edit btn btn-primary btn-mini">Measure Configurator</button>
+					<button ng-click="measureConfigClick()" ng-disabled="isDisabled" class="btn-edit btn btn-primary btn-mini">Measure Configurator</button>
 					<button ng-click="statusClick('Re-work')" class="btn-edit btn btn-primary btn-mini">Reject</button>
 					<button ng-click="statusClick('Approved')" class="btn-edit btn btn-primary btn-mini">Approve</button>
 					<button ng-click="viewClick('view')" class="btn-edit btn btn-primary btn-mini">View</button>	

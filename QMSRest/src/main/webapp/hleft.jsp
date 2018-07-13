@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Bootstrap Example</title>
+    <title>Healthcare Insights</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--
@@ -31,6 +31,7 @@
 	
 	<script src="./Query_Builder_files/angular-sanitize.min.js"></script> 
 	<script src="qms_home.js"></script>
+	<script src="qms_common.js"></script> 
 	
 	<!--
 	<script src="./Query_Builder_files/angular-query-builder.js"></script> 
@@ -39,8 +40,20 @@
 	
 <link rel="stylesheet" href="styles/qms_styles.css">
 
-    
+ 
 </head>
+<style type="text/css">
+
+
+@media (min-width: 992px){
+    .left-pane{
+    width: 12.666667%;
+}
+.main-pane{
+    width: 87.333333%;
+}
+}
+ </style>   
 
 <body ng-app="QMSHomeManagement" ng-controller="HLeftController">
 <!--
@@ -82,7 +95,7 @@
         </div>
     </div>
     </nav>-->
-	 <header class="header col-md-12" style="width: 100%;">
+	 <header class="header col-md-12">
         <a href="index.html">
         <img class="logo" src="images/LOGOitcinfotech.jpg"/>
     </a>
@@ -112,22 +125,22 @@
                     </div>
                 </li>
 
-                <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+                <!--<li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>-->
             </ul>
 
     </header>
     <div class="col-md-12 no-padding-margin" id="main_field">
-            <div class="col-md-2 no-padding-margin nav-border-box">
-                <p class="quicklink"><a href="#"><b>Quick Links</b></a></p>
+            <div class="col-md-2 no-padding-margin nav-border-box left-pane">
+                <p class="quicklink"><b>Quick Links</b></p>
 
                 <p ng-class="{active:activeTab == '#!'}" ng-click="isActive('#!')"><a href="#/!">QMS Home</a></p>
                 <p ng-class="{active:activeTab == '#!Measure_Library'}" ng-click="isActive('#!Measure_Library')"><a href="#!Measure_Library">Measure Library</a></p>
-                <p ng-class="{active:activeTab == '#!Final_Creator'}" ng-click="isActive('#!Final_Creator')"><a href="#!Final_Creator">Measure Creator</a></p>
+                <p ng-class="{active:activeTab == '#!Final_Creator'}" ng-click="isActive('#!Final_Creator')"><a href="#!Final_Creator"  ng-click="goToMeasureCreator()">Measure Creator</a></p>
                 <!-- <p><a href="Measure_Editor.html">Measure Editor</a></p> -->
                 <p ng-class="{active:activeTab == '#!Measure_Worklist'}" ng-click="isActive('#!Measure_Worklist')"><a href="#!Measure_Worklist">Measure Worklist</a></p>
                 <!-- <p><a href="#">Measure Configurator</a></p> -->
             </div>
-            <div class="col-md-10 no-padding-margin main-content">
+            <div class="col-md-10 no-padding-margin main-content main-pane">
                    <div class="col-md-12 no-padding-margin" ng-view >
 
                    </div>

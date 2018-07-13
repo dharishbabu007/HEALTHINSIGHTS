@@ -2,6 +2,8 @@ package com.qms.rest.controller;
 
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import com.qms.rest.model.User;
 import com.qms.rest.service.PatientService;
 import com.qms.rest.service.QMSService;
 import com.qms.rest.util.CustomErrorType;
+import com.qms.rest.util.QMSConstants;
 
 @RestController
 @RequestMapping("/qms")
@@ -37,6 +40,9 @@ public class QMSController {
 	@Autowired
 	PatientService patientService;	
 	
+	@Autowired 
+	private HttpSession httpSession;	
+	
 
 	@RequestMapping(value = "/measure_list/{type}/{value}", method = RequestMethod.GET)
 	public ResponseEntity<Set<MeasureCreator>> listMeasures(@PathVariable("type") String type, 
@@ -49,15 +55,15 @@ public class QMSController {
 	}
 	
 	@RequestMapping(value = "/measure_list/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> measureLibraryById(@PathVariable("id") int id) {
+	public ResponseEntity<MeasureCreator> measureLibraryById(@PathVariable("id") int id) {
 		logger.info("Fetching Measure with id {}", id);
-		Measure measure = qmsService.getMeasureLibraryById(id);
+		MeasureCreator measure = qmsService.getMeasureLibraryById(id);
 		if (measure == null) {
 			logger.error("Measure with id {} not found.", id);
 			return new ResponseEntity(new CustomErrorType("Measure with id " + id 
 					+ " not found"), HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Measure>(measure, HttpStatus.OK);
+		return new ResponseEntity<MeasureCreator>(measure, HttpStatus.OK);
 	}	
 	
 	
@@ -71,10 +77,10 @@ public class QMSController {
 		return new ResponseEntity<Set<String>>(dataList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/dropdown_namevalue_list/{tableName}/{columnValue}/{columnName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/dropdown_namevalue_list/{tableName}/{idColumn}/{nameColumn}", method = RequestMethod.GET)
 	public ResponseEntity<Set<NameValue>> dropDownNameValueList(@PathVariable("tableName") String tableName, 
-			@PathVariable("columnValue") String columnValue, @PathVariable("columnName") String columnName) {
-		Set<NameValue> dataList = qmsService.getMeasureDropDownNameValueList(tableName, columnValue, columnName);
+			@PathVariable("idColumn") String idColumn, @PathVariable("nameColumn") String nameColumn) {
+		Set<NameValue> dataList = qmsService.getMeasureDropDownNameValueList(tableName, idColumn, nameColumn);
 		if (dataList.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);			
 		}
@@ -92,7 +98,7 @@ public class QMSController {
 	}	
 	
 	@RequestMapping(value = "/work_list/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getMeasureCreator(@PathVariable("id") String id) {
+	public ResponseEntity<?> getMeasureCreator(@PathVariable("id") int id) {
 		logger.info("Fetching MeasureCreator with id {}", id);
 		MeasureCreator measureCreator = qmsService.findMeasureCreatorById(id);
 		if (measureCreator == null) {
@@ -115,7 +121,7 @@ public class QMSController {
 	}	
 
 	@RequestMapping(value = "/work_list/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<RestResult> updateMeasureCreator(@PathVariable("id") String id, @RequestBody MeasureCreator measureCreator) {
+	public ResponseEntity<RestResult> updateMeasureCreator(@PathVariable("id") int id, @RequestBody MeasureCreator measureCreator) {
 		logger.info("Updating MeasureCreator with id {}", id);
 		measureCreator.setId(id);
 		MeasureCreator currentMeasureCreator = qmsService.findMeasureCreatorById(id);
@@ -141,7 +147,7 @@ public class QMSController {
 	}	
 	
 	@RequestMapping(value = "/work_list/status/{id}/{status}", method = RequestMethod.PUT)
-	public ResponseEntity<RestResult> updateMeasureCreatorStatus(@PathVariable("id") String id, 
+	public ResponseEntity<RestResult> updateMeasureCreatorStatus(@PathVariable("id") int id, 
 			@PathVariable("status") String status) {
 		System.out.println("REST Update Measure WorkList Status for id : " + id + " with status : " + status);
 		MeasureCreator currentMeasureCreator = qmsService.findMeasureCreatorById(id);
@@ -180,6 +186,8 @@ public class QMSController {
 			logger.error("User details with loginId {} not found.", loginId);
 			return new ResponseEntity(new CustomErrorType("User details with loginId " + loginId 
 					+ " not found"), HttpStatus.NOT_FOUND);
+		} else {
+			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
 		}
 		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
 		return new ResponseEntity<User>(user, HttpStatus.OK);

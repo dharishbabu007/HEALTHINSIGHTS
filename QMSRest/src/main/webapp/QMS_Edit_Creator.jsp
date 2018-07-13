@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+   <title>Measure Editor</title>
 	<!-- commented on 18/05
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
@@ -148,7 +149,11 @@ cursor: default;
         <input ng-model="measureForm.targetAge" ng-disabled="isDisabled" class="form-group form-control drop-down drop-margin" id="Target_Age" required>
         
          <label for="Measure_Domain">Measure Domain</label>
-        <input ng-model="measureForm.measureDomain" ng-disabled="isDisabled" class="form-group form-control drop-down drop-margin" id="Measure_Domain" >
+        <input ng-model="measureForm.measureDomain" ng-disabled="isDisabled" class="form-group form-control drop-down drop-margin" id="Measure_Domain" 
+		list="measureDomain">
+        <datalist id="measureDomain" name="measureDomain">
+            <option ng-repeat="measureDomain in measureDomains track by $index" value="{{measureDomain.name}}">
+        </datalist>		
         
         <label for="Measure_Category">Measure Category</label>
         <input ng-model="measureForm.measureCategory" list="measureCategory" ng-disabled="isDisabled" 

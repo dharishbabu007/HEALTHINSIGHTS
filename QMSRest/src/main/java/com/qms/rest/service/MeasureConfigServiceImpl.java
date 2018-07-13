@@ -75,7 +75,6 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 		}	
 		
 		finally {
-			//QMSServiceImpl.closeJDBCResources(rs, stmt, connection);
 			qmsConnection.closeJDBCResources(rs, stmt, connection);
 		}		
 		
@@ -172,8 +171,6 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 			restResult = RestResult.getRestResult(RestResult.FAIL_STATUS, e.getMessage());
 		}
 		finally {
-			//QMSServiceImpl.closeJDBCResources(null, getStatement, null);
-			//QMSServiceImpl.closeJDBCResources(resultSet, statement, connection);
 			qmsConnection.closeJDBCResources(null, getStatement, null);
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}	

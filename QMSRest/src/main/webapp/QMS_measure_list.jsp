@@ -2,10 +2,9 @@
 <html lang="en">
 
 <head>
-   
+    <title>Measure Library</title>  
 <script src="Sorting.js"></script>
 <script src="scripts/Search.js"></script>			
-
 
 	
 </head>
@@ -21,7 +20,7 @@
     /* height: 100px;
     overflow: auto;*/
     display:block;
-    max-height: 440px;
+    max-height: 56vh;
 overflow-y:scroll;
 }
     .library thead,tbody,tr {
