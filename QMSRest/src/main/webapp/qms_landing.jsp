@@ -4,7 +4,7 @@
 <head>
  
 
-
+   <title>QMS Home</title>
      <script src="scripts/annyang.min.js"></script> <!-- Voice Recognition -->
     <script src="scripts/responsivevoice.js"></script> <!-- Voice Response -->
     
@@ -291,13 +291,13 @@
 										
 									<tr ng-repeat="domain in nqfDomains track by $index">
 									<td class="td-content">		
-									{{domain}}
+									{{domain.name}}
 									</td>
 									
 									<td class="td-images">
 									<img src="images/ListView_icon.png" style="float:right;" 
 									onMouseOver="this.style.cursor='pointer'" 
-									ng-click="qmsHomeIconClick('NQF', domain)">																		
+									ng-click="qmsHomeIconClick('NQF', domain.value)">
 									</td>
 									
 									</tr>

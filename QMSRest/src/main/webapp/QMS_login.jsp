@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+           <title>QMS Login</title>
     <script src="download/angular.min.js"></script>
 	<script src="download/angular.js"></script>
 	<script src="download/angular-route.js"></script>
@@ -26,18 +26,28 @@
          
     }
 
-
-   .container{
+.right {
+       position: absolute;
+    right: 0px;
+    width: 300px;
+    /* max-width: 300px; */
+    /* border: 3px solid #73AD21; */
+    padding: 10px;
+    margin-right: 20px;
+    bottom: 0px;
+    margin-bottom: 58px;
+}
+   /*.container{
       margin-top: 65vh;
     max-width: 45vw;
     margin-left: 74vw;
     position: absolute;
-    }
+    }*/
 
     input[type=text],
     input[type=password]
     {
-        width: 20vw;
+         width: 258px;
         padding: 12px 20px;
         margin: 8px 0;
         display: inline-block;
@@ -48,7 +58,8 @@
         float: left;
      }
      #su{
-        margin-left: 10vw;
+        float: right;
+        margin-right: 50px;
      }
      
     button {
@@ -58,7 +69,7 @@
         margin: 8px 0;
         border: none;
         cursor: pointer;
-        width: 20vw;
+        width: 100px;
          
     }
    button:hover {
@@ -73,7 +84,7 @@
 <body ng-app="QMSHomeManagement" ng-controller="LoginController">
    <div class="wrapper">
    
-       <div class="container">
+       <div class="container right">
            <form>
 			 <font color="red"><b><span ng-bind="errorMessage"></span></b></font>
              <input type="text" ng-model="userName" placeholder="User ID" name="uname" required>

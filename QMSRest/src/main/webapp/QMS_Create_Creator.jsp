@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    
+     <title>Measure Creator</title>  
 </head>
 <style type="text/css">
 .body{
@@ -139,7 +139,11 @@ textarea {
         <input ng-model="measureForm.targetAge" class="form-group form-control drop-down drop-margin" id="Target_Age" required>
         
          <label for="Measure_Domain">Measure Domain</label>
-        <input ng-model="measureForm.measureDomain" class="form-group form-control drop-down drop-margin" id="Measure_Domain" >
+        <input ng-model="measureForm.measureDomain" class="form-group form-control drop-down drop-margin" 
+		id="Measure_Domain" list="measureDomain">
+        <datalist id="measureDomain" name="measureDomain">
+            <option ng-repeat="measureDomain in measureDomains track by $index" value="{{measureDomain.name}}">
+        </datalist>
       
         <label for="Measure_Category">Measure Category</label>
         <input ng-model="measureForm.measureCategory" list="measureCategory" 

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <!-- saved from url=(0049)https://mfauveau.github.io/angular-query-builder/ -->
 <html lang="en" ng-app="app" class="cye-disabled cye-nm ng-scope">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+   <title>Measure Configurator</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- 18/05
 <style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>
 
@@ -12,10 +14,10 @@
 		
         <title>QMS Query Builder</title>
 		
-        <link href="./Query_Builder_files/bootstrap.min.css" rel="stylesheet">
+       <!--  <link href="./Query_Builder_files/bootstrap.min.css" rel="stylesheet">
         <link href="./Query_Builder_files/styles.css" rel="stylesheet">
-		
-
+		 -->
+<link rel="stylesheet" href="styles/qms_styles.css">
 <!-- 18/05		
  <style id="nightModeStyle">
 html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
@@ -30,32 +32,30 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
 	-->
 	
     <!--<div class="container ng-scope" ng-app="QMSHomeManagement" ng-controller="QueryBuilderCtrl">-->
-	<div class="col-md-12 no-padding-margin main-content" style="overflow:scroll;height:650px; width:1270px;">
+	<!--<div class="col-md-12 no-padding-margin main-content" style="overflow:scroll;height:650px; width:1270px;"> -->
 	
-            <div class="sub-header">
-                <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Configurator</b></p>
-                <div class="button-div">
-					<!--
-                    <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
-                        <div class="input-group">
-                            <input type="text" class="form-control search-form" placeholder="Search">
-                            <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q" style="margin-top: 5px;padding: 0px;"><img src="images/SearchIcon.png" height= "33.5px">
-                        </button></span>
-                        </div>
-                    </form> -->
-                </div>
+		<div class="col-md-12 no-padding-margin main-content ng-scope">
+	
+            <div class="col-md-12 sub-header">
+				<!--
+                <span style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Configurator</b></span> - 
+				<b><span ng-bind="selectedMeasureTitle" style="font-size: 20px"></span></b>
+				-->
+                <span style="font-size: xx-large;float: left; margin-top: 1.5vh;color: white;margin-left: 3vw;line-height: 1.0" id="heading"><b>Measure Configurator</b> - 
+				<b><span ng-bind="selectedMeasureTitle" style="font-size: 20px"></span></b></span>
             </div>		
 	
 	
     <!-- <h1>Angular.js Query Builder</h1> -->
 		<br>
-		
+		<div class="col-md-12 sub-content">
         <div class="alert alert-info">
             <strong>Example Output</strong><br>
             <span ng-bind-html="output" class="ng-binding">()</span>
         </div> 
 	
-	<div class="col-md-12" style="background-color:lightyellow;height:400px; width:1220px;"> 
+	<!--<div class="col-md-12" style="background-color:lightyellow;height:400px; width:1220px;">  -->
+	<div class="col-md-12" style="background-color:lightyellow;height:400px;width: 100%;"> 
 	
             <h3>Select Field To be Populated</h3>
              <form class="Field_Selection_Form"> 
@@ -111,8 +111,8 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
 		
      <script type="text/ng-template" id="/queryBuilderDirective.html"> 
 		
-		
-    <div class="alert alert-warning alert-group" style="background-color:lightyellow;overflow-y: scroll;height:280px; width:1200px;">
+	<!--<div class="alert alert-warning alert-group" style="background-color:lightyellow;overflow-y: scroll;height:280px; width:1200px;">-->
+    <div class="alert alert-warning alert-group" style="background-color:lightyellow;overflow-y: scroll;height:280px;width: 100%;">
 		<!--
         <div class="form-inline">
             <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control input-sm"></select> 
@@ -198,7 +198,7 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
         </div>
     </div>
     </script>
-
+</div>
     <!--
 	<script src="./Query_Builder_files/angular.min.js"></script>
     <script src="./Query_Builder_files/angular-sanitize.min.js"></script> 

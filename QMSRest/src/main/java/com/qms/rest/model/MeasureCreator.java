@@ -1,8 +1,8 @@
 package com.qms.rest.model;
 
-public class MeasureCreator {
+public class MeasureCreator implements Comparable<MeasureCreator> {
 
-	private String id;
+	private int id;
 	private String programName;
 	private String name;
 	private String description;
@@ -21,18 +21,25 @@ public class MeasureCreator {
 	private String status;
 	private String reviewComments;
 	private String reviewedBy;
-	private String measureEditId;
+	private int measureEditId;
+	private String sourceType;
 	
+	public String getSourceType() {
+		return sourceType;
+	}
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
 	public String getDenomExclusions() {
 		return denomExclusions;
 	}
 	public void setDenomExclusions(String denomExclusions) {
 		this.denomExclusions = denomExclusions;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getProgramName() {
@@ -137,11 +144,16 @@ public class MeasureCreator {
 	public void setReviewedBy(String reviewedBy) {
 		this.reviewedBy = reviewedBy;
 	}
-	public String getMeasureEditId() {
+	public int getMeasureEditId() {
 		return measureEditId;
 	}
-	public void setMeasureEditId(String measureEditId) {
+	public void setMeasureEditId(int measureEditId) {
 		this.measureEditId = measureEditId;
+	}
+	
+	@Override
+	public int compareTo(MeasureCreator arg0) {
+		return Integer.compare(this.getId(), arg0.getId());
 	}
 	
 	

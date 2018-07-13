@@ -1,8 +1,5 @@
             var app = angular.module("QMSHomeManagement", ["ngRoute","ngSanitize","queryBuilder"]);
-			var baseURL = 'http://localhost:8082/curis'; //local server
-			//var baseURL = 'http://192.168.184.70:8082/curis'; //DC server
-			//var baseURL = 'http://healthinsight:8082/curis';
-			//var baseURL = 'http://104.211.216.183:8082/curis'; //Azure server
+			
 			app.config(function($routeProvider,$locationProvider) {
 				$routeProvider
 				.when("/", {
@@ -53,8 +50,8 @@
                 function _listReimbursementPrograms() {
                     $http({
                         method : 'GET',
-                        //url : baseURL+'/qms/dropdown_list/dim_quality_measure_main/program_name'
-						url : baseURL+'/qms/qmshome_dropdown_list/QMS_MEASURE/PROGRAM_NAME'
+                        //url : 'http://192.168.184.70:8082/curis/qms/dropdown_list/dim_quality_measure_main/program_name'
+						url : 'http://192.168.184.70:8082/curis/qms/qmshome_dropdown_list/QMS_MEASURE/PROGRAM_NAME'
                     }).then(function successCallback(response) {
                         $scope.reimbursementPrograms = response.data;
                     }, function errorCallback(response) {
@@ -65,33 +62,20 @@
                 function _listClinicalConditions() {
                     $http({
                         method : 'GET',
-                        //url : baseURL+'/qms/dropdown_list/dim_quality_measure_main/clinical_conditions'
-						url : baseURL+'/qms/qmshome_dropdown_list/QMS_MEASURE/CLINICAL_CONDITIONS'
+                        //url : 'http://192.168.184.70:8082/curis/qms/dropdown_list/dim_quality_measure_main/clinical_conditions'
+						url : 'http://192.168.184.70:8082/curis/qms/qmshome_dropdown_list/QMS_MEASURE/CLINICAL_CONDITIONS'
                     }).then(function successCallback(response) {
                         $scope.clinicalConditions = response.data;
                     }, function errorCallback(response) {
                         console.log(response.statusText);
                     });
-                } 
+                }         
 
-
-
-				$scope.nqfDomains = {name : "", value : ""};
-				function _listNQFDomains() {
-					$http({
-						method : 'GET',
-						url : baseURL+'/qms/dropdown_namevalue_list/QMS_MEASURE_DOMAIN/MEASURE_DOMAIN_ID/MEASURE_DOMAIN_NAME'
-					}).then(function successCallback(response) {
-						$scope.nqfDomains = response.data;
-					}, function errorCallback(response) {
-						console.log(response.statusText);
-					});
-				}				
-                function _listNQFDomains_notUsed() {
+                function _listNQFDomains() {
                     $http({
                         method : 'GET',
-                        //url : baseURL+'/qms/dropdown_list/dim_quality_measure_main/nqs_domain'
-						url : baseURL+'/qms/qmshome_dropdown_list/QMS_MEASURE/DOMAIN'
+                        //url : 'http://192.168.184.70:8082/curis/qms/dropdown_list/dim_quality_measure_main/nqs_domain'
+						url : 'http://192.168.184.70:8082/curis/qms/qmshome_dropdown_list/QMS_MEASURE/DOMAIN'
                     }).then(function successCallback(response) {
                         $scope.nqfDomains = response.data;						
                     }, function errorCallback(response) {
@@ -138,7 +122,7 @@
                 function _listMeasures() {
                     $http({
                         method : 'GET',
-                        url : baseURL+'/qms/measure_list/'+filterType+'/'+filterValue
+                        url : 'http://192.168.184.70:8082/curis/qms/measure_list/'+filterType+'/'+filterValue
                     }).then(function successCallback(response) {
                         $scope.measureList = response.data;						
                     }, function errorCallback(response) {
@@ -234,7 +218,7 @@
                 function _listWorklist() {
                     $http({
                         method : 'GET',
-                        url : baseURL+'/qms/work_list/'
+                        url : 'http://192.168.184.70:8082/curis/qms/work_list/'
                     }).then(function successCallback(response) {
                         $scope.workList = response.data;
                     }, function errorCallback(response) {
@@ -244,7 +228,6 @@
 
 				//row select
 				$scope.selectedId = -1;
-				$scope.selectedMeasureTitle = "";
 				$scope.setSelected = function(workList) {
 				   console.log("show", arguments, this);
 				   if ($scope.lastSelected) {
@@ -253,19 +236,12 @@
 				   this.selected = 'highlight';
 				   $scope.lastSelected = this;
 				   $scope.selectedId=workList.id;
-				   $scope.selectedMeasureTitle = workList.name;
-				   
-				   if(workList.status == "Approved")  {
-					   $scope.isDisabled = false;
-				   } else {
-					   $scope.isDisabled = true;
-				   }
 				}
 				
 				$scope.restResult = {status : "", meaasge : ""};
 				//reject, approve Click
 				$scope.statusClick = function (status) {					
-					$http.put(baseURL+'/qms/work_list/status/'+$scope.selectedId+'/'+status)		
+					$http.put('http://192.168.184.70:8082/curis/qms/work_list/status/'+$scope.selectedId+'/'+status)		
 					.then(function successCallback(response) {
 						$scope.restResult = response.data;
 						console.log(response.statusText);
@@ -286,20 +262,18 @@
 					window.location.href="hleft.jsp#!/Measure_Editor";
 				}
 				
-				$scope.isDisabled = true;
 				$scope.measureConfigClick = function () {
 					//$rootScope.measureId = $scope.selectedId;
 					//window.location.href="hleft.jsp#!/Measure_Configurator";
 					
 					$http({
 						method : 'GET',
-						url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+						url : 'http://192.168.184.70:8082/curis/measure_configurator/config_data/qms_input/qms_input123'
 					}).then(function successCallback(response) {
 						$scope.tableData = response.data;
 						$window.sessionStorage.setItem("tableData", JSON.stringify($scope.tableData));
 						
 						$rootScope.measureId = $scope.selectedId;
-						$rootScope.selectedMeasureTitle = $scope.selectedMeasureTitle;
 						window.location.href="hleft.jsp#!/Measure_Configurator";						
 					}, function errorCallback(response) {
 						console.log(response.statusText);
@@ -321,15 +295,15 @@
 		//var selectedMeasureId = $location.search().measureId;
 		//var action = $location.search().action;
 		var selectedMeasureId = $rootScope.measureId;  //$location.search().measureId;
-		var action = $rootScope.action;  //$location.search().action;		
-		
+		var action = $rootScope.action;  //$location.search().action;
+
 		$scope.measureProgramNames = {name : "", value : ""};
 		$scope.programNameCategory = {name : "", value : ""};
 		_listMeasureProgramNames();		
 		function _listMeasureProgramNames() {
 			$http({
 				method : 'GET',				
-				url : baseURL+'/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_ID/PROGRAM_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_ID/PROGRAM_NAME'
 			}).then(function successCallback(response) {
 				$scope.measureProgramNames = response.data;
 			}, function errorCallback(response) {
@@ -338,7 +312,7 @@
 			
 			$http({
 				method : 'GET',				
-				url : baseURL+'/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_NAME/CATEGORY_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_NAME/CATEGORY_NAME'
 			}).then(function successCallback(response) {
 				$scope.programNameCategory = response.data;
 			}, function errorCallback(response) {
@@ -363,26 +337,13 @@
 		function _listMeasureTypes() {
 			$http({
 				method : 'GET',
-				url : baseURL+'/qms/dropdown_namevalue_list/QMS_MEASURE_TYPE/MEASURE_TYPE_ID/MEASURE_TYPE_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/QMS_MEASURE_TYPE/MEASURE_TYPE_ID/MEASURE_TYPE_NAME'
 			}).then(function successCallback(response) {
 				$scope.measureTypes = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
 			});
 		}		
-		
-		$scope.measureDomains = {name : "", value : ""};
-		_listMeasureDomains();
-		function _listMeasureDomains() {
-			$http({
-				method : 'GET',
-				url : baseURL+'/qms/dropdown_namevalue_list/QMS_MEASURE_DOMAIN/MEASURE_DOMAIN_ID/MEASURE_DOMAIN_NAME'
-			}).then(function successCallback(response) {
-				$scope.measureDomains = response.data;
-			}, function errorCallback(response) {
-				console.log(response.statusText);
-			});
-		}				
 		
 		$scope.measureForm = {					 
 			id : -1,
@@ -406,20 +367,13 @@
 			measureEditId : ""
 		};	
 		
-		$scope.$on('emptyMeasureCreatorObj', function (event, args) {
-			$scope.measureForm={};
-        })		
-				
-		if(action == "copy") {
-			_getMeasureLib();
-			$rootScope.measureId = "";
-			$rootScope.action = "";
-		}
+		if(action == "copy")
+			_getMeasureLib();	
 		
 		function _getMeasureLib() {
 			$http({
 				method : 'GET',
-				url : baseURL+'/qms/measure_list/'+selectedMeasureId
+				url : 'http://192.168.184.70:8082/curis/qms/measure_list/'+selectedMeasureId
 			}).then(function successCallback(response) {
 				$scope.measureForm = response.data;
 				console.log(" measure --> " + $scope.measureForm);
@@ -448,7 +402,7 @@
 			if(action=="submit")
 				$scope.measureForm.status = "Review";
 			
-			$http.post(baseURL+'/qms/work_list/', $scope.measureForm)		
+			$http.post('http://192.168.184.70:8082/curis/qms/work_list/', $scope.measureForm)		
 			.then(function successCallback(response) {
 				$scope.restResult = response.data;
 				console.log(response.statusText);
@@ -524,7 +478,7 @@
 			if(source == "measureLibrary") {
 				$http({
 					method : 'GET',
-					url : baseURL+'/qms/measure_list/'+selectedMeasureId
+					url : 'http://192.168.184.70:8082/curis/qms/measure_list/'+selectedMeasureId
 				}).then(function successCallback(response) {
 					$scope.measureForm = response.data;
 					console.log(" measure --> " + $scope.measureForm);
@@ -535,7 +489,7 @@
 			else if(source == "measureWorkList") {
 				$http({
 					method : 'GET',
-					url : baseURL+'/qms/work_list/'+selectedMeasureId
+					url : 'http://192.168.184.70:8082/curis/qms/work_list/'+selectedMeasureId
 				}).then(function successCallback(response) {
 					$scope.measureForm = response.data;
 					console.log(" measure --> " + $scope.measureForm);
@@ -571,7 +525,7 @@
 			if(action=="submit")
 				$scope.measureForm.status = "Review";
 		
-			$http.put(baseURL+'/qms/work_list/'+selectedMeasureId, 
+			$http.put('http://192.168.184.70:8082/curis/qms/work_list/'+selectedMeasureId, 
 			$scope.measureForm)		
 			.then(function successCallback(response) {
 				$scope.restResult = response.data;				
@@ -611,7 +565,7 @@
 		function _listMeasureProgramNames() {
 			$http({
 				method : 'GET',				
-				url : baseURL+'/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_ID/PROGRAM_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_ID/PROGRAM_NAME'
 			}).then(function successCallback(response) {
 				$scope.measureProgramNames = response.data;
 			}, function errorCallback(response) {
@@ -620,7 +574,7 @@
 			
 			$http({
 				method : 'GET',				
-				url : baseURL+'/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_NAME/CATEGORY_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/qms_quality_program/PROGRAM_NAME/CATEGORY_NAME'
 			}).then(function successCallback(response) {
 				$scope.programNameCategory = response.data;
 			}, function errorCallback(response) {
@@ -646,26 +600,13 @@
 		function _listMeasureTypes() {
 			$http({
 				method : 'GET',
-				url : baseURL+'/qms/dropdown_namevalue_list/QMS_MEASURE_TYPE/MEASURE_TYPE_ID/MEASURE_TYPE_NAME'
+				url : 'http://192.168.184.70:8082/curis/qms/dropdown_namevalue_list/QMS_MEASURE_TYPE/MEASURE_TYPE_ID/MEASURE_TYPE_NAME'
 			}).then(function successCallback(response) {
 				$scope.measureTypes = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
 			});
-		}
-
-		$scope.measureDomains = {name : "", value : ""};
-		_listMeasureDomains();
-		function _listMeasureDomains() {
-			$http({
-				method : 'GET',
-				url : baseURL+'/qms/dropdown_namevalue_list/QMS_MEASURE_DOMAIN/MEASURE_DOMAIN_ID/MEASURE_DOMAIN_NAME'
-			}).then(function successCallback(response) {
-				$scope.measureDomains = response.data;
-			}, function errorCallback(response) {
-				console.log(response.statusText);
-			});
-		}
+		}		
     });	
 	
 	
@@ -679,10 +620,6 @@
 			window.location.href="QMS_login.jsp";
 		}
 		
-		$scope.goToMeasureCreator = function () {
-			$scope.$broadcast('emptyMeasureCreatorObj', { message: "Hello" });
-			//window.location.href="hleft.jsp#!/Final_Creator";
-		}		
 		
 		$scope.activeTab = '#!';		
 		$scope.isActive = function (viewLocation) { 
@@ -707,8 +644,8 @@
 			
 			$http({
 				method : 'GET',
-				//url : baseURL+'/qms/spv/'+patienceId
-				url : baseURL+'/qms/spv/2014875'
+				//url : 'http://192.168.184.70:8082/curis/qms/spv/'+patienceId
+				url : 'http://192.168.184.70:8082/curis/qms/spv/2014875'
 			}).then(function successCallback(response) {
 				$scope.patientProfileForm = response.data;
 				console.log(" patient Profile Data --> " + $scope.patientProfileForm);
@@ -738,7 +675,7 @@
 
 			$http({
 				method : 'GET',
-				url : baseURL+'/qms/user/'+$scope.userName+'/'+$scope.password
+				url : 'http://192.168.184.70:8082/curis/qms/user/'+$scope.userName+'/'+$scope.password
 			}).then(function successCallback(response) {
 				$scope.userDetails = response.data;
 				$window.sessionStorage.setItem("loginName",$scope.userName);
@@ -848,7 +785,7 @@ app.controller("PatientProfileController", function($scope, $http, $location) {
 	function _getPatientProfile() {
 		$http({
 			method : 'GET',
-			url : baseURL+'/qms/spv/'+memberId
+			url : 'http://192.168.184.70:8082/curis/qms/spv/'+memberId
 		}).then(function successCallback(response) {
 			$scope.patientProfileForm = response.data;
 			console.log(" patient Profile Data --> " + $scope.patientProfileForm);
@@ -890,7 +827,7 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 		function _getTechnicalExpressions() {
 			$http({
 				method : 'GET',
-				url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+				url : 'http://192.168.184.70:8082/curis/measure_configurator/config_data/qms_input/qms_input123'
 			}).then(function successCallback(response) {
 				$scope.tableData = response.data;				
 			}, function errorCallback(response) {
@@ -900,14 +837,13 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 	
 		//retrive and populate the measure configs
 		var selectedMeasureId = $rootScope.measureId;			
-		$scope.selectedMeasureTitle = $rootScope.selectedMeasureTitle;
 		var measureConfigs = [];		
 		$scope.categoryClick = function (configType) {
 			$scope.group.rules = [];
 			$scope.group.remarks = "";
 			$http({
 				method : 'GET',
-				url : baseURL+'/measure_configurator/'+selectedMeasureId+'/'+configType
+				url : 'http://192.168.184.70:8082/curis/measure_configurator/'+selectedMeasureId+'/'+configType
 			}).then(function successCallback(response) {
 				measureConfigs = response.data;			
 				_getTechnicalExpressions();	
@@ -950,7 +886,7 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 	function _getTechnicalExpressions() {
 			$http({
 				method : 'GET',
-				url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+				url : 'http://192.168.184.70:8082/curis/measure_configurator/config_data/qms_input/qms_input123'
 			}).then(function successCallback(response) {
 				$scope.tableData = response.data;
 				alert("$scope.tableData --> " + $scope.tableData.length);
@@ -990,7 +926,7 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 		
 		//sending data to server
 		$scope.restResult = {status : "", meaasge : ""};
-		$http.post(baseURL+'/measure_configurator/'+selectedMeasureId+'/'+$scope.configType, 
+		$http.post('http://192.168.184.70:8082/curis/measure_configurator/'+selectedMeasureId+'/'+$scope.configType, 
 		$scope.group.rules)		
 		.then(function successCallback(response) {
 			$scope.restResult = response.data;				
@@ -1065,7 +1001,7 @@ app.directive('queryBuilder', ['$compile', '$http', function ($compile, $http) {
 	function _getTechnicalExpressions() {
 		$http({
 			method : 'GET',
-			url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+			url : 'http://192.168.184.70:8082/curis/measure_configurator/config_data/qms_input/qms_input123'
 		}).then(function successCallback(response) {
 			scope.tableData = response.data;
 			

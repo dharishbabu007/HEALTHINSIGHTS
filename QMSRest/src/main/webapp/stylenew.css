@@ -54,8 +54,8 @@ overflow: hidden;
 
 .logo{
    
-    width: 16.5vw;
-    max-height: 8vh;
+    width: 12.69vw;
+    height: 8vh;
     position: absolute;
 }
 
@@ -92,7 +92,7 @@ margin-top: -20px;}
 .carousel-control.right {margin-right: -60px; color: black;font-size: 80px;margin-top: -20px;}
 .SliderNames{
         margin-top: 3vh;
-    margin-left: 9vw;
+    margin-left: 6vw;
     font-size: 15px;
     font-weight: bold;
 }
@@ -126,6 +126,11 @@ margin-top: -20px;}
     width: 750px;
 }
 }*/
+@media (max-width: 868px){
+    .SliderNameQuality{
+        margin-top: 1vh;
+    }
+}
 
 ::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */

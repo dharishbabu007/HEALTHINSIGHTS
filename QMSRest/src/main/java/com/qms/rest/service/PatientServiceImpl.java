@@ -214,7 +214,6 @@ public class PatientServiceImpl implements PatientService {
 		Connection connection = null;
 		User user = null;
 		try {						
-			//connection = QMSServiceImpl.getConnection();
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
 			resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
@@ -230,7 +229,6 @@ public class PatientServiceImpl implements PatientService {
 			e.printStackTrace();
 		}
 		finally {
-			//QMSServiceImpl.closeJDBCResources(resultSet, statement, connection);
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}
 		

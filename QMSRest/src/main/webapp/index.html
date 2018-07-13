@@ -2,25 +2,23 @@
 <html lang="en">
 
 <head>
-    <title>CSS Website Layout</title>
+    <title>Home Page</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<script id = "voice1script" src="annyang.min.js"></script> <!-- Voice Recognition -->
-	<script id = "voice2script" src="responsivevoice.js"></script> <!-- Voice Response -->		
-
  <!--    <script src="jquery-3.2.1.min.js"></script> -->
     <!-- <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 	
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="index_js_css/bootstrap.min.css">
+	<script src="index_js_css/jquery.min.js"></script>
+	<script src="index_js_css/maxcdn_bootstrap.min.js"></script>
+    <!--<link rel="stylesheet" href="index_js_css/font-awesome.min.css">-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
     <link rel="stylesheet" href="stylenew.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="index_js_css/Material_Icons.css" rel="stylesheet">
     <!--  stylesheet for help icon -->
 
     <script src="download/angular.min.js"></script>
@@ -43,7 +41,7 @@
     <header class="header col-md-12" style="width:100%">
         <a href="index.html">
         <img class="logo" src="LOGOitcinfotech.jpg"/>
-    </a>
+		</a>
 
         <!-- <div class="reflink">
             <a href="#">Contact Us</a>&nbsp; &nbsp; &nbsp;
@@ -54,7 +52,10 @@
         <ul class="nav navbar-nav navbar-right" style="padding-right: 14px;display: -webkit-box;float: right;">
 <li> <img src="images/speech.png" style="width: auto; height: 6vh;cursor: pointer;margin-top: 10px;float: left;margin-right: 15px;" class=" SpeechIcon"></li>
                 <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
-               <li style="margin-right: 20px; margin-top: 5px;"><b><span ng-bind="userName"></span><br></b></li>
+               <li style="margin-right: 20px; margin-top: 5px;"><b>
+			   <!--<span ng-bind="userName"></span>-->
+			   <span id="userName" name="userName"></span>
+			   <br></b></li>
                 <li style="margin-right: 25px;margin-top: 5px;">
                     <div>
                         <img src="doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
@@ -66,7 +67,7 @@
                     </div>
                 </li>
 
-                <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+                <!--<li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>-->
             </ul>
 
     </header>
@@ -104,7 +105,7 @@
                             <div class="col-sm-4">
 
                                 <div class="imageSlider"><a href="#x" style="float:left"><img src="icon3.png" alt="Image" class="img-responsive"></a>
-                               <a href="hleft.jsp#!/" style="color:#fff;"> <p class="SliderNames">Quality Management System</p></a>
+                               <a href="hleft.jsp#!/" style="color:#fff;"> <p class="SliderNames SliderNameQuality">Quality Management System</p></a>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -325,22 +326,22 @@ function startover()
 
 </script>
 <script>
-    if (annyang) {
+
       $('.SpeechIcon').click(function() {
       var clicks = $(this).data('clicks');
        if (clicks) {
             annyang.start();
-            
+            $(this).attr('src',"speech.png");
             console.log("started");
             } 
             else {
                
             annyang.abort();
-            
+             $(this).attr('src',"speech_mute.png");
             console.log("stopped");
 
             }
             $(this).data("clicks", !clicks);
            });
-    }
+
 </script>

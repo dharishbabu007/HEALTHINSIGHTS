@@ -11,7 +11,7 @@ public interface QMSService {
 
 	Set<MeasureCreator> getMeasureLibrary(String programName, String value);
 	
-	Measure getMeasureLibraryById(int id);
+	MeasureCreator getMeasureLibraryById(int id);
 	
 	Set<String> getMeasureDropDownList(String tableName, String columnName);
 	
@@ -23,9 +23,9 @@ public interface QMSService {
 	
 	RestResult updateMeasureCreator(MeasureCreator measureCreator);
 	
-	MeasureCreator findMeasureCreatorById(String id);
+	MeasureCreator findMeasureCreatorById(int id);
 	
 	Set<MeasureCreator> getAllWorkList();
 	
-	RestResult updateMeasureWorkListStatus(String id, String status);
+	RestResult updateMeasureWorkListStatus(int id, String status);
 }

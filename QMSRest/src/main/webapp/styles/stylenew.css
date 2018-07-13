@@ -9,7 +9,7 @@ html,body{
     display: none;
 }
 #wrapper {
-    background: url("ladiesgreen4.jpg") no-repeat;
+    background: url("Dr Tablet.jpg") no-repeat;
         background-size: cover;
     margin-left:auto;
     margin-right:auto;
@@ -34,8 +34,9 @@ html,body{
     top:0;
     left: 0;
         height: 8vh;
-        padding-left: 0px;
-        background-color: #92D051;
+        background-color: #009688;
+		padding-left:0px;
+		
     }
     .reflink {
     max-height: 8vh;
@@ -53,9 +54,8 @@ overflow: hidden;
 
 .logo{
    
-    width: 16vw;
-    max-height: 8vh;
-    padding-top: 1px;
+    width: 16.5vw;
+    height: 8vh;
     position: absolute;
 }
 
@@ -70,7 +70,7 @@ overflow: hidden;
 }
 .img-responsive {
         margin-right: auto;
-    margin-left: 2px;
+    margin-left: initial;
     margin-top: 6px; 
     margin-bottom: 10px;
     height: 8vh;
@@ -92,7 +92,7 @@ margin-top: -20px;}
 .carousel-control.right {margin-right: -60px; color: black;font-size: 80px;margin-top: -20px;}
 .SliderNames{
         margin-top: 3vh;
-    margin-left: 8vw;
+    margin-left: 7vw;
     font-size: 15px;
     font-weight: bold;
 }
