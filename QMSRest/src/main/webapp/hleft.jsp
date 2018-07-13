@@ -108,12 +108,12 @@
         </div> -->
         <ul class="nav navbar-nav navbar-right" style="padding-right: 14px;display: -webkit-box;
     float: right;">
-  <li> <img src="images/speech.png" style="width: auto; height: 6vh;cursor: pointer;margin-top: 10px;float: left;margin-right: 15px;" class=" SpeechIcon"></li>
+  <li> <img src="images/speech.png" style="width: auto; height: 5vh;cursor: pointer;margin-top: 0.5vh;float: left;margin-right: 15px;" class=" SpeechIcon"></li>
                 <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
                <li style="margin-right: 20px; margin-top: 5px;"><b><span ng-bind="userName"></span><br></b></li>
-                <li style="margin-right: 25px;margin-top: 5px;">
+                <li style="margin-right: 25px;margin-top: 0.4vh;">
                     <div>
-                        <img src="images/doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="images/doc.png" style=" height: 4vh;width: auto;" class="dropdown-toggle" data-toggle="dropdown">
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#" style="color: black;
     background-color: #FFFFFF;
@@ -135,7 +135,7 @@
 
                 <p ng-class="{active:activeTab == '#!'}" ng-click="isActive('#!')"><a href="#/!">QMS Home</a></p>
                 <p ng-class="{active:activeTab == '#!Measure_Library'}" ng-click="isActive('#!Measure_Library')"><a href="#!Measure_Library">Measure Library</a></p>
-                <p ng-class="{active:activeTab == '#!Final_Creator'}" ng-click="isActive('#!Final_Creator')"><a href="#!Final_Creator"  ng-click="goToMeasureCreator()">Measure Creator</a></p>
+                <p ng-class="{active:activeTab == '#!Final_Creator'}" ng-click="isActive('#!Final_Creator')"><a href="#!Final_Creator">Measure Creator</a></p>
                 <!-- <p><a href="Measure_Editor.html">Measure Editor</a></p> -->
                 <p ng-class="{active:activeTab == '#!Measure_Worklist'}" ng-click="isActive('#!Measure_Worklist')"><a href="#!Measure_Worklist">Measure Worklist</a></p>
                 <!-- <p><a href="#">Measure Configurator</a></p> -->
