@@ -4,25 +4,19 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import com.qms.rest.model.*;
+import com.qms.rest.service.ProgramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.qms.rest.model.DimPatient;
-import com.qms.rest.model.Measure;
-import com.qms.rest.model.MeasureCreator;
-import com.qms.rest.model.NameValue;
-import com.qms.rest.model.RestResult;
-import com.qms.rest.model.User;
 import com.qms.rest.service.PatientService;
 import com.qms.rest.service.QMSService;
 import com.qms.rest.util.CustomErrorType;
@@ -41,7 +35,10 @@ public class QMSController {
 	PatientService patientService;	
 	
 	@Autowired 
-	private HttpSession httpSession;	
+	private HttpSession httpSession;
+
+	@Autowired
+	private ProgramService programService;
 	
 
 	@RequestMapping(value = "/measure_list/{type}/{value}", method = RequestMethod.GET)
@@ -191,6 +188,16 @@ public class QMSController {
 		}
 		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
 		return new ResponseEntity<User>(user, HttpStatus.OK);
-	}	
-	
+	}
+
+	@RequestMapping(value = "/createProgram", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> createProgram(@RequestBody Program program) {
+		logger.info("About to create program :  " + program);
+		programService.createProgram(program);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
+
+
 }
