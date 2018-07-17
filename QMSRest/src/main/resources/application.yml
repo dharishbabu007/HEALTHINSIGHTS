@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  contextPath: /SpringBootRestApi
+
+spring:
+  application:
+    name: QMSRest
+  datasource:
+    url:  jdbc:oracle:thin:@192.168.184.74:1521:healthin
+    platform: oracle
+    username: admin
+    password: admin123
+    driverClassName: oracle.jdbc.OracleDriver
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle10gDialect
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
