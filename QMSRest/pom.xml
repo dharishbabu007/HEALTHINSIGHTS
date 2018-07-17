@@ -20,6 +20,7 @@
 		<start-class>com.qms.rest.SpringBootRestApiApp</start-class>  
 		<!-- Additionally, Please make sure that your JAVA_HOME is pointing to 
 			1.8 when building on commandline -->
+		<lombok.version>1.16.20</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -91,7 +92,34 @@
 	      <groupId>taglibs</groupId>
 	      <artifactId>standard</artifactId>
 	      <version>1.1.2</version>
-	    </dependency>  
+	    </dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-jdbc</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+		</dependency>
 	    
 	</dependencies>
 	
