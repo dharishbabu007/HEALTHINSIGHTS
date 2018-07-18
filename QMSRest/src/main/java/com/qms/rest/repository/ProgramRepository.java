@@ -15,4 +15,5 @@ public interface ProgramRepository extends CrudRepository<QualityProgram, Intege
     List<QualityProgram> getQualityProgramByMaxQualityProgramId();
 
     QualityProgram findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
+
 }
