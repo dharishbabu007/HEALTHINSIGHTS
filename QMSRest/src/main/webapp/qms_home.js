@@ -201,8 +201,8 @@
 			
 			
 			
-				//var app = angular.module("QMSHomeManagement", []);
-				//Worklist
+			//var app = angular.module("QMSHomeManagement", []);
+			//Worklist
             app.controller("WorklistController", function($scope, $rootScope, $http, $location, $window) {					
 				
                 $scope.workList = [];
@@ -276,6 +276,19 @@
 						console.log(response.statusText);
 					});
 				}							
+				
+				$scope.statusClickImg = function (status, workFlowId) {					
+					$http.put(baseURL+'/qms/work_list/status/'+workFlowId+'/'+status)		
+					.then(function successCallback(response) {
+						$scope.restResult = response.data;
+						console.log(response.statusText);
+						_listWorklist();
+						//alert("Status update success. ");
+						alert($scope.restResult.status + " : " + $scope.restResult.message);
+					}, function errorCallback(response) {
+						console.log(response.statusText);
+					});
+				}											
 
 				//view button
 				$scope.viewClick = function (action) {
@@ -284,6 +297,14 @@
 					$rootScope.source = "measureWorkList";					
 					//window.location.href="QMS_Edit_Creator.jsp#?measureId="+$scope.selectedId+"&action="+action+"&source=measureWorkList";	
 					window.location.href="hleft.jsp#!/Measure_Editor";
+				}
+				
+				$scope.dblClickWorkList = function (action) {
+					$rootScope.measureId = $scope.selectedId;
+					$rootScope.action = action;
+					$rootScope.source = "measureWorkList";					
+					//window.location.href="QMS_Edit_Creator.jsp#?measureId="+$scope.selectedId+"&action="+action+"&source=measureWorkList";	
+					window.location.href="hleft.jsp#!/Measure_Editor";					
 				}
 				
 				$scope.isDisabled = true;
@@ -305,6 +326,24 @@
 						console.log(response.statusText);
 					});
 				}
+				$scope.measureConfigImgClick = function (selectedId, selectedMeasureTitle) {
+					//$rootScope.measureId = $scope.selectedId;
+					//window.location.href="hleft.jsp#!/Measure_Configurator";
+					
+					$http({
+						method : 'GET',
+						url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+					}).then(function successCallback(response) {
+						$scope.tableData = response.data;
+						$window.sessionStorage.setItem("tableData", JSON.stringify($scope.tableData));
+						
+						$rootScope.measureId = selectedId;
+						$rootScope.selectedMeasureTitle = selectedMeasureTitle;
+						window.location.href="hleft.jsp#!/Measure_Configurator";						
+					}, function errorCallback(response) {
+						console.log(response.statusText);
+					});
+				}				
 				
             });	
 			

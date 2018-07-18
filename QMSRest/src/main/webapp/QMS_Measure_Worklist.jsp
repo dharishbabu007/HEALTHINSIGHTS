@@ -51,6 +51,22 @@ table-layout:fixed;
       font-weight: bold;
       width: 150px;
     }
+	
+.rejectColor {
+    color: red;
+}
+
+.approveColor {
+    color: green;
+}
+
+.reviewColor {
+    color: yellow;
+}
+
+.inProgressColor {
+    color: blue;
+}
 </style>
 
 <body ng-app="QMSHomeManagement" ng-controller="WorklistController">
@@ -77,11 +93,12 @@ table-layout:fixed;
                     <input type="button" name="" value="Reject" class="btn-config btn-edit btn btn-primary btn-mini">					                    
                     <input type="button" name="" value="Approve" class="btn-config btn-edit btn btn-primary btn-mini">					
                     <input type="button" name="" value="View" class="btn-config btn-edit btn btn-primary btn-mini">					
-					-->
+					
 					<button ng-click="measureConfigClick()" ng-disabled="isDisabled" class="btn-edit btn btn-primary btn-mini">Measure Configurator</button>
 					<button ng-click="statusClick('Re-work')" class="btn-edit btn btn-primary btn-mini">Reject</button>
-					<button ng-click="statusClick('Approved')" class="btn-edit btn btn-primary btn-mini">Approve</button>
+					<button ng-click="statusClick('Approved')" class="btn-edit btn btn-primary btn-mini">Approve</button>					
 					<button ng-click="viewClick('view')" class="btn-edit btn btn-primary btn-mini">View</button>	
+					-->
                    </div>					
                 </div>
             </div>
@@ -96,18 +113,38 @@ table-layout:fixed;
 						<th class="sortable">Status</th>
 						<th>Review Comments</th>
 						<th>Reviewed By</th>
+						<th>Images</th>
                       </tr>
                     </thead>
                     
                     <tbody style="overflow-y: scroll;">
 					
-                        <tr ng-repeat="work in workList" ng-click="setSelected(work)" class="{{selected}}">
+                        <tr ng-repeat="work in workList" ng-dblclick="dblClickWorkList()" 
+						ng-click="setSelected(work)" class="{{selected}}">
                             <td>{{work.id}}</td>
                             <td>{{work.name}}</td>
                             <td>{{work.programName}}</td>
-                            <td>{{work.status}}</td>
+                            <td ng-class="{rejectColor: work.status == 'Re-work', approveColor: work.status == 'Approved', reviewColor: work.status == 'Review', inProgressColor: work.status == 'In-Progress'}">
+							{{work.status}}</td>
                             <td>{{work.reviewComments}}</td>
                             <td>{{work.reviewedBy}}</td>
+							<td>							
+							<img src="images/ListView_icon.png" 
+								 style="float:right;" 
+								 onMouseOver="this.style.cursor='pointer'" 
+								 ng-click="measureConfigImgClick(work.id, work.name)" 
+								 ng-if="work.status == 'Approved'"> 
+							
+							<img src="images/Tickmark_green.jpg" 
+								 style="float:right;" width="25" height="25" 
+								 onMouseOver="this.style.cursor='pointer'" 
+								 ng-click="statusClickImg('Approved', work.id)"> 
+							
+							<img src="images/Cross_Red.jpg" 
+								 style="float:right;" width="25" height="25" 
+								 onMouseOver="this.style.cursor='pointer'" 
+								 ng-click="statusClickImg('Re-work', work.id)">
+							</td>		
                         </tr>					
 						
 						<!--
