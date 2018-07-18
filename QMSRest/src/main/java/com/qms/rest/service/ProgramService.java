@@ -4,10 +4,14 @@ import com.qms.rest.exception.ProgramCreatorException;
 import com.qms.rest.model.Program;
 import com.qms.rest.model.ProgramCategory;
 import com.qms.rest.model.QualityProgram;
+import com.qms.rest.model.User;
 import com.qms.rest.repository.ProgramRepository;
+import com.qms.rest.util.QMSConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -20,6 +24,9 @@ public class ProgramService {
 
     @Autowired
     private ProgramRepository programRepository;
+
+    @Autowired
+    private HttpSession httpSession;
 
     private final String CURRENT_FLAG="Y";
 
@@ -42,6 +49,8 @@ public class ProgramService {
 
     private QualityProgram buildQualityProgram( String programName, Date startDate, Date endDate, ProgramCategory programCategory){
         String categoryName = programCategory.getCategoryName();
+
+        User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 
         if(isRecordAlreadyExist(programName, categoryName)){
             System.out.println("Error: Program already exist for specified value");
@@ -70,13 +79,13 @@ public class ProgramService {
                 .recCreateDate(new Date())
                 .recUpdateDate(new Date())
                 .currentFlag(CURRENT_FLAG)
-                .modifiedBy("raghu")
+                .modifiedBy(userData.getName())
                 .build();
     }
 
     private boolean isRecordAlreadyExist(String programName, String categoryName){
        QualityProgram qualityProgram = programRepository.findQualityProgramByProgramNameAndCategoryName(programName, categoryName);
         System.out.println("Quality Program : "+qualityProgram);
-        return qualityProgram != null? true : false;
+        return qualityProgram != null ? true : false;
     }
 }
