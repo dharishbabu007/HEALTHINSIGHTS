@@ -21,7 +21,7 @@ public class DimMember {
 
     @Column(name = "MEMBER_ID")
     @Id
-    private int memberId;
+    private String memberId;
 
     @Column(name = "MEMBER_SK")
     private String memberSk;
