@@ -199,5 +199,31 @@ public class QMSController {
 		return new ResponseEntity<String>(headers, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/caregaps", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> findAllClearGaps() {
+		logger.info("About to get all clear gaps ");
+
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/caregaps/{careGapId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> findClearGaps(@PathVariable("careGapId") String careGapId) {
+		logger.info("About to get clear gap for id :  " + careGapId);
+
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/caregaps/{careGapId}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ResponseEntity<?> updateClearGap(@PathVariable("careGapId") String careGapId) {
+		logger.info("About to update clear gap for id:  "+careGapId);
+
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
 
 }
