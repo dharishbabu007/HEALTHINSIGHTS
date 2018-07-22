@@ -10,7 +10,7 @@
     
     <script src="https://public.tableausoftware.com/javascripts/api/tableau-2.min.js " type="text/javascript"></script> 
 
-	<script src="scripts/Search.js"></script>	
+
 	
 	<!--
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
@@ -49,9 +49,9 @@
                 <div class="col-md-12 sub-header">
                     <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>QMS Home</b></p>
                     <div class="button-div">
-                    <form class="search-form" class="form-inline" role="form" method="post" action="/" target="_blank" >
+                    <form class="search-form" class="form-inline" role="form" >
                         <div class="input-group">
-                            <input type="text" class="form-control search-form" placeholder="Search" id="search">
+                            <input type="text" class="form-control search-form" placeholder="Search" id="search" ng-model="searchQMS">
                             <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q" style="margin-top: 5px;padding: 0px;"><img src="images/SearchIcon.png" height= "33.5px">
                         </button></span>
                         </div>

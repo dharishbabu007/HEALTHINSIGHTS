@@ -10,7 +10,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
    	<script src="qms_home.js"></script>
 	-->
-	
+	 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style type="text/css">
 .body{
@@ -87,7 +87,7 @@ textarea {
 .submit-cls{
     text-align: center;
     padding: 10px 0px;
-    background: #C8C8C8;
+ 
         margin-bottom: 0px
 
 
@@ -118,7 +118,18 @@ cursor: default;
         <div class="col-md-12 no-padding-margin main-content">
             <div class="sub-header">
                 <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Editor</b></p>
+                 <i class="material-icons" data-toggle="tooltip" data-placement="right" title="Measure Editor info" style="font-size: 25px;font-weight: 600;margin-top: 6vh;float: left;margin-left: 1vw;cursor: pointer;">info_outline</i>
                 <div class="button-div">
+                      <div class="col-md-12 submit-cls">
+        
+        <button ng-click="editClick()" class="btn btn-cls" style="background-color: #EFEFEF">Edit</button>          
+        <button ng-click="submitEdit('save')" class="btn btn-cls" style="background-color: #EFEFEF">Save</button>
+                <!-- 
+        <input type="submit" class="btn btn-cls" style="background-color: #EFEFEF" value="Save" >
+                -->
+        <button ng-click="submitEdit('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>       
+            
+    </div>
 					<!--
                     <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
                         <div class="input-group">
@@ -131,7 +142,7 @@ cursor: default;
             </div>
             <div class="sub-content" id="sub-content">
             <!-- <div class="col-md-1"></div> -->
-            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;border: 1px solid black;">
+            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: inherit; overflow: auto;border-left: #060606 1px solid;">
  <form action="#" class="form-horizontal ws-validate">
     <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name*</label>
        <input ng-model="measureForm.programName" list="measureProgramName" ng-disabled="isDisabled"  
@@ -191,16 +202,7 @@ cursor: default;
     </div>
     
             </div>
-            <div class="col-md-12 submit-cls">
-		
-		<button ng-click="editClick()" class="btn btn-cls" style="background-color: #EFEFEF">Edit</button>	        
-		<button ng-click="submitEdit('save')" class="btn btn-cls" style="background-color: #EFEFEF">Save</button>
-				<!-- 
-		<input type="submit" class="btn btn-cls" style="background-color: #EFEFEF" value="Save" >
-				-->
-        <button ng-click="submitEdit('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>		
-			
-    </div>
+          
 
         <!--     <div class="col-md-1"></div> -->
             </div>

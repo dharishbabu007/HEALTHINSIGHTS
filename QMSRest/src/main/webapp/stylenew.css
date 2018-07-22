@@ -9,13 +9,15 @@ html,body{
     display: none;
 }
 #wrapper {
-    background: url("Dr Tablet.jpg") no-repeat;
-        background-size: cover;
-    margin-left:auto;
-    margin-right:auto;
-    height: 91.8vh;
-    width: 100vw;
-  /*  margin-top: 8vh;*/
+    background: url("..\\images\\Dr Tablet.jpg") no-repeat;
+    background-size: cover;
+    /* background-position: center; */
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    height: 100vh;
+    /* height: 91.8vh; */
+    /* width: 100vw; */
+    /* margin-top: 8vh; */
  
 }
 
@@ -35,8 +37,8 @@ html,body{
     left: 0;
         height: 8vh;
         background-color: #009688;
-		padding-left:0px;
-		
+        padding-left:0px;
+        
     }
     .reflink {
     max-height: 8vh;
@@ -47,14 +49,15 @@ html,body{
     position: relative;
 
     }
-.footer{
-overflow: hidden;
-}
+.footerClass{
+    position: absolute;
+    bottom: 46px;
+    width: 100%;}
 
 
 .logo{
    
-    width: 12.69vw;
+    width: 12.6vw;
     height: 8vh;
     position: absolute;
 }
@@ -77,12 +80,15 @@ overflow: hidden;
 }
 .imageSlider{
     
-      height: 10vh;
-    width: 100%;border:1px solid black;
+         height: auto;
+    width: 100%;
+    border: 1px solid black;
     border-style: groove;
     border-radius: 4px;
-      background-color: rgba(0, 0, 0, 0.73);
-    color: white;
+    background-color: rgba(0, 0, 0, 0.73);
+    /* color: white; */
+    overflow: auto;
+    margin: 2px;
    
 }
 .carousel-control.left {margin-left: -60px;margin-bottom: 20px;
@@ -92,9 +98,10 @@ margin-top: -20px;}
 .carousel-control.right {margin-right: -60px; color: black;font-size: 80px;margin-top: -20px;}
 .SliderNames{
         margin-top: 3vh;
-    margin-left: 6vw;
+        margin-left: 8vw;
     font-size: 15px;
     font-weight: bold;
+        color: white;
 }
 
 .col-sm-4{
@@ -126,11 +133,6 @@ margin-top: -20px;}
     width: 750px;
 }
 }*/
-@media (max-width: 868px){
-    .SliderNameQuality{
-        margin-top: 1vh;
-    }
-}
 
 ::-webkit-scrollbar {
     width: 0px;  /* remove scrollbar space */
@@ -152,5 +154,25 @@ margin-top: -20px;}
     background-color: rgba(255,255,255,0.6);
     border: 3px solid #ddd;
    
+}
+
+
+@media (max-width: 868px){
+    .SliderNameQuality{
+        margin-top: 1vh;
+    }
+}
+@media (max-width: 990px){
+    .logo{
+        width:22.6vw;
+    }
+}
+
+
+@media(max-width: 600px){
+    .carousel-control.right {
+    margin-right: -29px;}
+    .carousel-control.left {
+    margin-left: -46px;}
 }
 </style>
