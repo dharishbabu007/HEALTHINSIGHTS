@@ -1,5 +1,5 @@
             var app = angular.module("QMSHomeManagement", ["ngRoute","ngSanitize","queryBuilder"]);
-			var baseURL = 'http://localhost:8082/curis'; //local server
+			var baseURL = 'http://localhost:9999/curis'; //local server
 			//var baseURL = 'http://192.168.184.70:8082/curis'; //DC server
 			//var baseURL = 'http://healthinsight:8082/curis';
 			//var baseURL = 'http://104.211.216.183:8082/curis'; //Azure server
@@ -30,6 +30,10 @@
 				.when("/Measure_Configurator", {
 					templateUrl : "QMS_Measure_Configurator.jsp",
 					controller : "QueryBuilderCtrl"
+				})
+				.when("/Program_Creator", {
+					templateUrl : "Program_Creator.jsp",
+					controller : "ProgramCreatorCtrl"
 				})
 				.when("/Patient_Profile", {
 					templateUrl : "QMS_Patient_Profile.jsp",
@@ -152,7 +156,11 @@
 					$scope.selectedMeasureName = measure.name;	
 				}
 				
-				$scope.dashboardClick = function () {
+				$scope.dashboardClick = function (measure) {
+					console.log("came here")
+					$scope.selectedProgramName = measure.programName;
+					$scope.selectedMeasureName = measure.name;
+					
 					if($scope.selectedProgramName == "Merit-Based Incentive Payment System (MIPS) Program" && $scope.selectedMeasureName == "Comprehensive Diabetes Care: Eye Exam") 
 						window.location.href = "MIPS_Dia.html";
 					if($scope.selectedProgramName == "Merit-Based Incentive Payment System (MIPS) Program" && $scope.selectedMeasureName == "Breast Cancer Screening") 
@@ -185,8 +193,21 @@
 					//window.location.href="QMS_Create_Creator.jsp#?measureId="+$scope.selectedId+"&action="+action+"&source=measureLibrary";	
 					window.location.href="hleft.jsp#!/Final_Creator";
 				}
+                   
 
+
+                $scope.setSelected = function(measure) {
+				   console.log("show", arguments, this);
+				   if ($scope.lastSelected) {
+					 $scope.lastSelected.selected = '';					 
+				   }
+				   this.selected = 'highlight';
+				   $scope.lastSelected = this;
+				   $scope.selectedId=measure.id;
+				
+				}
 				//row select
+/*
 				$scope.setSelected = function() {
 				   console.log("show", arguments, this);
 				   if ($scope.lastSelected) {
@@ -194,7 +215,14 @@
 				   }
 				   this.selected = 'highlight';
 				   $scope.lastSelected = this;
-				}
+				}*/
+				$scope.dblClickLibrary = function (action) {
+                    $rootScope.measureId = $scope.selectedId;
+                    $rootScope.action = action;
+                    $rootScope.source = "measureLibrary";                   
+                    //window.location.href="QMS_Edit_Creator.jsp#?measureId="+$scope.selectedId+"&action="+action+"&source=measureWorkList";    
+                    window.location.href="hleft.jsp#!/Measure_Editor";
+                }
 					
             });	
 			
@@ -306,6 +334,8 @@
 					//window.location.href="QMS_Edit_Creator.jsp#?measureId="+$scope.selectedId+"&action="+action+"&source=measureWorkList";	
 					window.location.href="hleft.jsp#!/Measure_Editor";					
 				}
+
+				
 				
 				$scope.isDisabled = true;
 				$scope.measureConfigClick = function () {
@@ -326,10 +356,13 @@
 						console.log(response.statusText);
 					});
 				}
-				$scope.measureConfigImgClick = function (selectedId, selectedMeasureTitle) {
+				$scope.measureConfigImgClick = function (selectedId, selectedMeasureTitle,selectedMeasureStatus) {
 					//$rootScope.measureId = $scope.selectedId;
 					//window.location.href="hleft.jsp#!/Measure_Configurator";
-					
+					$scope.MeasureStatus = selectedMeasureStatus;
+					if($scope.MeasureStatus == "Review"){
+						$scope.enable = true;
+					}
 					$http({
 						method : 'GET',
 						url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'

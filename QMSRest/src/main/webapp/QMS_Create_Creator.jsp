@@ -3,6 +3,7 @@
 
 <head>
      <title>Measure Creator</title>  
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style type="text/css">
 .body{
@@ -79,7 +80,7 @@ textarea {
 .submit-cls{
     text-align: center;
     padding: 10px 0px;
-    background: #C8C8C8;
+   /* background: #C8C8C8;*/
         margin-bottom: 0px
 
 
@@ -99,6 +100,7 @@ textarea {
     
     border:1px solid black;
 }
+
 </style>
 
 <body ng-app="QMSHomeManagement" ng-controller="MeasureCreateController">
@@ -107,7 +109,13 @@ textarea {
         <div class="col-md-12 no-padding-margin main-content">
             <div class="sub-header">
                 <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Creator</b></p>
+                <i class="material-icons" data-toggle="tooltip" data-placement="right" title="Measure Creator info" style="font-size: 25px;font-weight: 600;margin-top: 6vh;float: left;margin-left: 1vw;cursor: pointer;">info_outline</i>
+
                 <div class="button-div">
+                    <div class="col-md-12 submit-cls">
+                        <button ng-click="submitAdd('save')" class="btn btn-cls" style="background-color: #EFEFEF">Save</button> 
+                        <button ng-click="submitAdd('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>  
+                    </div>
 					<!--
                     <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
                         <div class="input-group">
@@ -120,7 +128,7 @@ textarea {
             </div>
             <div class="sub-content" id="sub-content">
             <!-- <div class="col-md-1"></div> -->
-            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;border: 1px solid black;">
+            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;height: inherit;    border-left: #060606 1px solid;">
       <form action="#" class="form-horizontal ws-validate">
 	  
     <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name*</label>
@@ -130,7 +138,6 @@ textarea {
 	    <datalist id="measureProgramName" name="measureProgramName">
             <option ng-repeat="measureProgramName in measureProgramNames track by $index" value="{{measureProgramName.name}}">
         </datalist>		
-       
         <label for="Measure_Title">Measure Title*</label>
         <input ng-model="measureForm.name" class="form-group form-control drop-down drop-margin" id="Measure_Title" required>
         <label for="Description">Description*</label>
@@ -149,20 +156,20 @@ textarea {
         <input ng-model="measureForm.measureCategory" list="measureCategory" 
 		class="form-group form-control drop-down drop-margin" id="Measure_Category" type="text">
         <datalist id="measureCategory" name="measureCategory">
-            <option ng-repeat="measureCategory in measureCategories track by $index" value="{{measureCategory}}">
+            <option ng-repeat="measureCategory in measureCategories track by $index" value="{{measureCategory.name}}">
         </datalist>		
        
         <label for="Type">Type</label>
-        <input ng-model="measureForm.type" list="measureType" class="form-group form-control drop-down drop-margin" id="Type"  >
-        <datalist id="measureType" name="measureType">
-            <option ng-repeat="measureType in measureTypes track by $index" value="{{measureType.name}}">
-        </datalist>				
-      
+        <input  list="measureType"  id="Type" class="form-group form-control drop-down" >
+        <datalist ng-model="measureForm.type" id="measureType" name="measureType">
+            <option ng-repeat="measureType in measureTypes track by $index" value="{{measureType.name}}"></option>
+        </datalist>			
+   
+
+
          <label for="Clinical_Conditions">Clinical Conditions</label>
         <input ng-model="measureForm.clinocalCondition" class="form-group form-control drop-down drop-margin" id="Clinical_Conditions">
-        
-        
-  
+    
     </div>                               
     <div class="col-md-6" style="padding-top:3vh;padding-left: 85px">
       
@@ -180,11 +187,7 @@ textarea {
     </div>
     
             </div>
-            <div class="col-md-12 submit-cls">
-        <button ng-click="submitAdd('save')" class="btn btn-cls" style="background-color: #EFEFEF">Save</button> 
-        <button ng-click="submitAdd('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>
-</form>		
-    </div>
+            </form>
 
         <!--     <div class="col-md-1"></div> -->
             </div>

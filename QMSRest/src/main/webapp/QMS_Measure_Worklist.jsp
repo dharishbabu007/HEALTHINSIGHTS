@@ -4,10 +4,8 @@
 <head>
    <title>Measure Worklist</title>
 <script src="Sorting.js"></script>
-<script src="scripts/Search.js"></script>			
-
-
 	
+
 </head>
 <style type="text/css">
 .library{
@@ -61,7 +59,7 @@ table-layout:fixed;
 }
 
 .reviewColor {
-    color: yellow;
+    color: #FF9800;
 }
 
 .inProgressColor {
@@ -75,14 +73,17 @@ table-layout:fixed;
         <div class="col-md-12 no-padding-margin main-content">
             <div class="sub-header">
                 <p style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Worklist</b></p>
+                 <i class="material-icons" data-toggle="tooltip" data-placement="right" title="Measure worklist info" style="font-size: 25px;font-weight: 600;margin-top: 6vh;float: left;margin-left: 1vw;cursor: pointer;">info_outline</i>
                 <div class="button-div">
-                    <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank" style="float:right">
+                    <form class="search-form" class="form-inline" role="form" style="float:right">
                         <div class="input-group">
-                            <input type="text" class="form-control search-form" placeholder="Search">
+                            <input type="text" class="form-control search-form" placeholder="Search Worklist" ng-model="searchWork">
                             <span class="input-group-btn"><button type="submit" class="btn btn-primary search-btn" data-target="#search-form" name="q" style="margin-top: 5px;padding: 0px;"><img src="SearchIcon.png" height= "33.5px">
                         </button></span>
                         </div>
                     </form>
+
+
 					<div> 
 					<!--
 					<a href="QMS_Measure_Configurator.html">
@@ -107,41 +108,45 @@ table-layout:fixed;
 
                     <thead>
                       <tr>
-                        <th class="sortable">Measure ID</th>
-                        <th>Measure Name</th>
-						<th>Program Name</th>
+                        <th style="width: 10%" class="sortable">Measure ID</th>
+                        <th style="width: 20%">Measure Name</th>
+						<th style="width: 20%">Program Name</th>
 						<th class="sortable">Status</th>
 						<th>Review Comments</th>
 						<th>Reviewed By</th>
-						<th>Images</th>
+						<th></th>
                       </tr>
                     </thead>
                     
                     <tbody style="overflow-y: scroll;">
 					
-                        <tr ng-repeat="work in workList" ng-dblclick="dblClickWorkList()" 
+                        <tr ng-repeat="work in workList | filter:searchWork " ng-dblclick="dblClickWorkList()" 
 						ng-click="setSelected(work)" class="{{selected}}">
-                            <td>{{work.id}}</td>
-                            <td>{{work.name}}</td>
-                            <td>{{work.programName}}</td>
+                            <td style="width: 10%">{{work.id}}</td>
+                            <td style="width: 20%">{{work.name}}</td>
+                            <td style="width: 20%">{{work.programName}}</td>
                             <td ng-class="{rejectColor: work.status == 'Re-work', approveColor: work.status == 'Approved', reviewColor: work.status == 'Review', inProgressColor: work.status == 'In-Progress'}">
 							{{work.status}}</td>
                             <td>{{work.reviewComments}}</td>
                             <td>{{work.reviewedBy}}</td>
-							<td>							
+							<td class="TableImgsWork">							
 							<img src="images/ListView_icon.png" 
-								 style="float:right;" 
+								 style="float:right;"
+                                 class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Editor" 
 								 onMouseOver="this.style.cursor='pointer'" 
-								 ng-click="measureConfigImgClick(work.id, work.name)" 
-								 ng-if="work.status == 'Approved'"> 
+                                 ng-class="{'enable': enable,'disabled': !enable }"
+								 ng-click="measureConfigImgClick(work.id, work.name,work.status)" 
+								 ng-disabled="work.status == 'Approved'"> 
 							
 							<img src="images/Tickmark_green.jpg" 
-								 style="float:right;" width="25" height="25" 
+								 style="float:right;" width="25" height="25"
+                                 class="material-icons" data-toggle="tooltip" data-placement="right" title="Approve" 
 								 onMouseOver="this.style.cursor='pointer'" 
 								 ng-click="statusClickImg('Approved', work.id)"> 
 							
 							<img src="images/Cross_Red.jpg" 
 								 style="float:right;" width="25" height="25" 
+                                 class="material-icons" data-toggle="tooltip" data-placement="right" title="Reject"
 								 onMouseOver="this.style.cursor='pointer'" 
 								 ng-click="statusClickImg('Re-work', work.id)">
 							</td>		
@@ -178,6 +183,9 @@ table-layout:fixed;
 
 
 <script>
+    $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+}); 
   $(document).ready(function () {
     $('tbody tr').click(function () {
       var selected = $(this).hasClass("highlight");

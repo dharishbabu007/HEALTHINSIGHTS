@@ -32,7 +32,7 @@
 	<script src="./Query_Builder_files/angular-sanitize.min.js"></script> 
 	<script src="qms_home.js"></script>
 	<script src="qms_common.js"></script> 
-	
+   
 	<!--
 	<script src="./Query_Builder_files/angular-query-builder.js"></script> 
 	-->
@@ -40,7 +40,6 @@
 	
 <link rel="stylesheet" href="styles/qms_styles.css">
 
- 
 </head>
 <style type="text/css">
 
@@ -138,7 +137,9 @@
                 <p ng-class="{active:activeTab == '#!Final_Creator'}" ng-click="isActive('#!Final_Creator')"><a href="#!Final_Creator">Measure Creator</a></p>
                 <!-- <p><a href="Measure_Editor.html">Measure Editor</a></p> -->
                 <p ng-class="{active:activeTab == '#!Measure_Worklist'}" ng-click="isActive('#!Measure_Worklist')"><a href="#!Measure_Worklist">Measure Worklist</a></p>
+
                 <!-- <p><a href="#">Measure Configurator</a></p> -->
+                 <p ng-class="{active:activeTab == '#!Program_Creator'}" ng-click="isActive('#!Program_Creator')"><a href="#!Program_Creator">Program Creator</a></p>
             </div>
             <div class="col-md-10 no-padding-margin main-content main-pane">
                    <div class="col-md-12 no-padding-margin" ng-view >
@@ -156,6 +157,8 @@
     </body>
     </html>
 	<script type="text/javascript">
+
+        
     if (annyang) {
       $('.SpeechIcon').click(function() {
       var clicks = $(this).data('clicks');
