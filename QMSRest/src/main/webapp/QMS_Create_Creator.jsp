@@ -3,6 +3,7 @@
 
 <head>
      <title>Measure Creator</title>  
+
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style type="text/css">
@@ -115,6 +116,7 @@ textarea {
                     <div class="col-md-12 submit-cls">
                         <button ng-click="submitAdd('save')" class="btn btn-cls" style="background-color: #EFEFEF">Save</button> 
                         <button ng-click="submitAdd('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>  
+                   
                     </div>
 					<!--
                     <form class="search-form" class="form-inline" role="form" method="post" action="//www.google.com/search" target="_blank">
@@ -129,7 +131,7 @@ textarea {
             <div class="sub-content" id="sub-content">
             <!-- <div class="col-md-1"></div> -->
             <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;height: inherit;    border-left: #060606 1px solid;">
-      <form action="#" class="form-horizontal ws-validate">
+      <form class="form-horizontal ws-validate">
 	  
     <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name*</label>
        <input ng-model="measureForm.programName" list="measureProgramName" 
@@ -158,17 +160,21 @@ textarea {
         <datalist id="measureCategory" name="measureCategory">
             <option ng-repeat="measureCategory in measureCategories track by $index" value="{{measureCategory.name}}">
         </datalist>		
-       
+       <!-- 
         <label for="Type">Type</label>
         <input  list="measureType"  id="Type" class="form-group form-control drop-down" >
         <datalist ng-model="measureForm.type" id="measureType" name="measureType">
             <option ng-repeat="measureType in measureTypes track by $index" value="{{measureType.name}}"></option>
-        </datalist>			
-   
+        </datalist>	 -->		
+          <label for="Type1">Type</label>
+        <select class="form-group form-control drop-down" ng-model="measureForm.type" id="measureType1" name="measureType1" ng-options="m.name for m in measureTypes">   
+        </select>
 
 
          <label for="Clinical_Conditions">Clinical Conditions</label>
         <input ng-model="measureForm.clinocalCondition" class="form-group form-control drop-down drop-margin" id="Clinical_Conditions">
+
+       
     
     </div>                               
     <div class="col-md-6" style="padding-top:3vh;padding-left: 85px">
@@ -221,4 +227,5 @@ textarea {
     });
 
 });
+
 </script>

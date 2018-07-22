@@ -127,7 +127,7 @@
                                          </tr>
                                      </table> -->
                                     <table class="inside-content" id="tablesearch">
-									<tr ng-repeat="program in reimbursementPrograms track by $index" ng-if="
+									<tr ng-repeat="program in reimbursementPrograms | filter:searchQMS track by $index" ng-if="
                                       program == 'Merit-Based Incentive Payment System (MIPS) Program'">
 									 
 									<td class="td-content"> 
@@ -147,7 +147,7 @@
 									</td>
 									</tr>
 									
-									<tr ng-repeat="program in reimbursementPrograms track by $index" ng-if="
+									<tr ng-repeat="program in reimbursementPrograms | filter:searchQMS track by $index" ng-if="
                                       program == 'CMS Star'">
 									 
 									<td class="td-content">
@@ -165,7 +165,7 @@
 									</td>
 									
 									</tr>	
-                                   <tr ng-repeat="program in reimbursementPrograms track by $index" ng-if="
+                                   <tr ng-repeat="program in reimbursementPrograms | filter:searchQMS track by $index" ng-if="
                                       program == 'The Healthcare Effectiveness Data and Information Set (HEDIS)'">
 									 
 									<td class="td-content">
@@ -185,7 +185,7 @@
 									</tr>										
 									
 									
-									<tr ng-repeat="program in reimbursementPrograms track by $index" ng-if="
+									<tr ng-repeat="program in reimbursementPrograms | filter:searchQMS track by $index" ng-if="
                                       program != 'Merit-Based Incentive Payment System (MIPS) Program' && program !='CMS Star'&& program !='The Healthcare Effectiveness Data and Information Set (HEDIS)'">
 									 
 									<td class="td-content">		
@@ -229,7 +229,7 @@
                                             </td>
                                         </tr> -->
 										
-									<tr ng-repeat="condition in clinicalConditions track by $index">
+									<tr ng-repeat="condition in clinicalConditions | filter:searchQMS track by $index">
 									
 									<td class="td-content">		
 									{{condition}}
@@ -289,7 +289,7 @@
                                             </td>
                                         </tr> -->
 										
-									<tr ng-repeat="domain in nqfDomains track by $index">
+									<tr ng-repeat="domain in nqfDomains | filter:searchQMS track by $index">
 									<td class="td-content">		
 									{{domain.name}}
 									</td>
