@@ -110,6 +110,8 @@ textarea {
 .form-control[disabled], fieldset[disabled] .form-control {
 cursor: default;
 }
+
+
 </style>
 
 <body ng-app="QMSHomeManagement" ng-controller="MeasureEditController">
@@ -173,11 +175,14 @@ cursor: default;
             <option ng-repeat="measureCategory in measureCategories track by $index" value="{{measureCategory}}">
         </datalist>				
         
-        <label for="Type">Type</label>
+       <!--  <label for="Type">Type</label>
         <input ng-model="measureForm.type" ng-disabled="isDisabled" list="measureType" class="form-group form-control drop-down drop-margin" id="Type"  >
         <datalist id="measureType" name="measureType">
             <option ng-repeat="measureType in measureTypes track by $index" value="{{measureType.name}}">
-        </datalist>						
+        </datalist>	 -->
+         <label for="Type1">Type</label>
+        <select class="form-group form-control" ng-model="measureForm.type" id="measureType1" name="measureType1" ng-options="m.name for m in measureTypes">   
+        </select>					
        
          <label for="Clinical_Conditions">Clinical Conditions</label>
         <input ng-model="measureForm.clinocalCondition" ng-disabled="isDisabled" class="form-group form-control drop-down drop-margin" id="Clinical_Conditions">

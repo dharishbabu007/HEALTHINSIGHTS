@@ -4,7 +4,6 @@
 <head>
    <title>Measure Worklist</title>
 <script src="Sorting.js"></script>
-	
 
 </head>
 <style type="text/css">
@@ -85,6 +84,7 @@ table-layout:fixed;
 
 
 					<div> 
+                  
 					<!--
 					<a href="QMS_Measure_Configurator.html">
 					<input type="button" name="" value="Measure Configurator" class="btn-config btn-edit btn btn-primary btn-mini">
@@ -131,24 +131,28 @@ table-layout:fixed;
                             <td>{{work.reviewedBy}}</td>
 							<td class="TableImgsWork">							
 							<img src="images/ListView_icon.png" 
+                                  ng-if="work.status =='Approved'"
 								 style="float:right;"
                                  class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Editor" 
 								 onMouseOver="this.style.cursor='pointer'" 
-                                 ng-class="{'enable': enable,'disabled': !enable }"
 								 ng-click="measureConfigImgClick(work.id, work.name,work.status)" 
-								 ng-disabled="work.status == 'Approved'"> 
+                                 > 
 							
 							<img src="images/Tickmark_green.jpg" 
 								 style="float:right;" width="25" height="25"
+                                 ng-if="work.status =='Review'"
                                  class="material-icons" data-toggle="tooltip" data-placement="right" title="Approve" 
 								 onMouseOver="this.style.cursor='pointer'" 
-								 ng-click="statusClickImg('Approved', work.id)"> 
+								 ng-click="statusClickImg('Approved', work.id)"
+                                > 
 							
 							<img src="images/Cross_Red.jpg" 
 								 style="float:right;" width="25" height="25" 
+                                 ng-if="work.status =='Review'"
                                  class="material-icons" data-toggle="tooltip" data-placement="right" title="Reject"
 								 onMouseOver="this.style.cursor='pointer'" 
-								 ng-click="statusClickImg('Re-work', work.id)">
+								 ng-click="statusClickImg('Re-work', work.id)"
+                              >
 							</td>		
                         </tr>					
 						
@@ -184,7 +188,9 @@ table-layout:fixed;
 
 <script>
     $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();   
+    $('[data-toggle="tooltip"]').tooltip(); 
+
+
 }); 
   $(document).ready(function () {
     $('tbody tr').click(function () {
@@ -206,4 +212,7 @@ table-layout:fixed;
     });
 
 });
+
+  
+
 </script>
