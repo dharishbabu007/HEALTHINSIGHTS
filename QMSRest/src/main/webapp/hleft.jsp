@@ -140,6 +140,7 @@
 
                 <!-- <p><a href="#">Measure Configurator</a></p> -->
                  <p ng-class="{active:activeTab == '#!Program_Creator'}" ng-click="isActive('#!Program_Creator')"><a href="#!Program_Creator">Program Creator</a></p>
+				 <p ng-class="{active:activeTab == '#!MemberDetails_List'}" ng-click="isActive('#!MemberDetails_List')"><a href="#!MemberDetails_List">Member Deatils</a></p>
             </div>
             <div class="col-md-10 no-padding-margin main-content main-pane">
                    <div class="col-md-12 no-padding-margin" ng-view >

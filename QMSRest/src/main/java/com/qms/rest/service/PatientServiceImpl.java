@@ -2,11 +2,16 @@ package com.qms.rest.service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qms.rest.model.DimPatient;
+import com.qms.rest.model.MemberDetail;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 
@@ -18,6 +23,7 @@ public class PatientServiceImpl implements PatientService {
 	
 	@Override
 	public DimPatient getMemberById(String memberId) {
+		System.out.println(" Getting member detail from hive for " + memberId);
 		DimPatient dimPatient = new DimPatient();
 		Statement statement = null;
 		ResultSet resultSet = null;		
@@ -41,8 +47,7 @@ public class PatientServiceImpl implements PatientService {
 			
 			resultSet = statement.executeQuery(memberSQL);			
 			
-			while (resultSet.next()) {
-				
+			while (resultSet.next()) {				
 				dimPatient.setEmailAddress(resultSet.getString("email_address"));				
 				dimPatient.setEthniCity(resultSet.getString("ethnicity"));
 				dimPatient.setGender(resultSet.getString("gender")!=null?resultSet.getString("gender").trim():null);
@@ -99,6 +104,64 @@ public class PatientServiceImpl implements PatientService {
 					dimPatient.setRisk("low");
 			}
 			
+
+			//Comorbidities
+			resultSet.close();
+			memberSQL = "select * from fact_mem_comorbidity where member_sk = '"+memberId+"'";			
+			resultSet = statement.executeQuery(memberSQL);
+			Set<String> comorbidities = new TreeSet<>();
+			ResultSetMetaData rsmd = resultSet.getMetaData();
+			int colCount = rsmd.getColumnCount();			
+			String colName = null;
+			String colValue = null;
+			while (resultSet.next()) {
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					colName = rsmd.getColumnName(i); 
+					colValue = resultSet.getString(i);
+					if(colValue == null || !colValue.equalsIgnoreCase("Y")) continue;
+					if(!colName.equalsIgnoreCase("latest_flag") && !colName.equalsIgnoreCase("active_flag")  
+							&& !colName.equalsIgnoreCase("curr_flag"))
+						comorbidities.add(colValue);
+                }
+				break;
+			}
+			dimPatient.setComorbidities(comorbidities);
+			dimPatient.setComorbiditiesCount(comorbidities.size()+"");
+			
+			//Care Gaps			
+			resultSet.close();
+			memberSQL = "select dqm.measure_title, qgl.status from dim_quality_measure dqm "
+					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
+					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"'";
+			Set<String> careGaps = new TreeSet<>();
+			resultSet = statement.executeQuery(memberSQL);
+			
+			while (resultSet.next()) {
+				careGaps.add(resultSet.getString("measure_title"));
+			}
+			dimPatient.setCareGaps(careGaps);
+			dimPatient.setCareGapsCount(careGaps.size()+"");
+			
+			if(true) {
+				return dimPatient;
+			}			
+			
+			//PCP Name, NPI, NPI, Speciality, address 
+			resultSet.close();
+			memberSQL = "select dp.* from fact_attribution fa, dim_provider dp "
+					+ "where fa.provider_id = dp.provider_id and fa.member_id='"+memberId+"'";			
+			resultSet = statement.executeQuery(memberSQL);
+			while (resultSet.next()) {
+				dimPatient.setProviderFirstName(resultSet.getString("first_name"));
+				dimPatient.setProviderLastName(resultSet.getString("last_name"));
+				dimPatient.setProviderBillingTaxId(resultSet.getString("billing_tax_id"));
+				dimPatient.setProviderSpeciality(resultSet.getString("speciality_1"));
+				dimPatient.setProviderAddress1(resultSet.getString("address1"));
+				dimPatient.setProviderAddress2(resultSet.getString("address2"));
+			}		
+			
+			
+			//TODO: change bill type to claim type 			
 			resultSet.close();
 			memberSQL = "SELECT DM.MEMBER_ID, "+
 			"COUNT (CASE WHEN BILL_TYPE_DESC BETWEEN 111 AND 128 THEN 'IP' END) AS IP_VISIT, "+
@@ -114,11 +177,8 @@ public class PatientServiceImpl implements PatientService {
 				dimPatient.setIpVisitsCount(resultSet.getString("IP_VISIT"));
 				dimPatient.setOpVisitsCount(resultSet.getString("OP_VISIT"));
 				dimPatient.setErVisitsCount(resultSet.getString("ER_VISIT"));
-			}
+			}						
 			
-			if(true) {
-				return dimPatient;
-			}			
 			
 			resultSet.close();
 			memberSQL = "SELECT DP.PAT_ID, FA.APPOINTMENT_DATE, "+ 
@@ -164,7 +224,7 @@ public class PatientServiceImpl implements PatientService {
 		finally {			
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}			
-
+		System.out.println(" Returned member detail from hive for " + memberId);
 		return dimPatient;
 	}
 	
@@ -233,6 +293,42 @@ public class PatientServiceImpl implements PatientService {
 		}
 		
 		return user;
+	}
+
+	@Override
+	public Set<MemberDetail> getMemberDetails() {
+		Set<MemberDetail> dataSet = new HashSet<>();
+		System.out.println(" Getting member details from Hive... ");
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+//			resultSet = statement.executeQuery("select hmv.* from hedis_member_view hmv "+
+//						"inner join HEDIS_SUMMARY_VIEW hsv on hmv.QUALITY_MEASURE_SK = hsv.quality_measure_sk");
+			resultSet = statement.executeQuery("select * from hedis_member_view");
+			
+			MemberDetail data = null;
+			while (resultSet.next()) {
+				data = new MemberDetail(); 
+				data.setId(resultSet.getString("member_id"));
+				data.setAge(resultSet.getString("age"));
+				data.setAmount(resultSet.getString("amount_paid").equalsIgnoreCase("0")?"0":"$"+resultSet.getString("amount_paid"));
+				data.setGender(resultSet.getString("gender").equalsIgnoreCase("F")?"Female":"Male");
+				data.setHccScore(resultSet.getString("hcc_score"));
+				data.setName(resultSet.getString("name"));
+				data.setReason(resultSet.getString("reason"));				
+				dataSet.add(data);				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(" Member details from Hive returned " + dataSet.size());
+		return dataSet;	
 	}
 
 }

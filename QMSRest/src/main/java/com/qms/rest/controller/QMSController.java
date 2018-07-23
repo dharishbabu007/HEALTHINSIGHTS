@@ -173,6 +173,19 @@ public class QMSController {
 		}
 		return new ResponseEntity<DimPatient>(dimPatient, HttpStatus.OK);
 	}	
+	
+	@RequestMapping(value = "/spv/hedis_member_list", method = RequestMethod.GET)
+	public ResponseEntity<?> getMemberDetails() {
+		logger.info("Fetching MemberDetails");
+		Set<MemberDetail> memberDetails = null;
+		memberDetails = patientService.getMemberDetails();
+		
+		if (memberDetails == null) {
+			logger.error(" Unable to fetch MemberDetails details");
+			return new ResponseEntity(new CustomErrorType("Unable to fetch MemberDetails details"), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Set<MemberDetail>>(memberDetails, HttpStatus.OK);
+	}		
 
 	@RequestMapping(value = "/user/{loginId}/{password}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserDetails(@PathVariable("loginId") String loginId, @PathVariable("password") String password) {
