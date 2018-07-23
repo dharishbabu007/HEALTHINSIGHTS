@@ -129,15 +129,25 @@ table-layout:fixed;
 							{{work.status}}</td>
                             <td>{{work.reviewComments}}</td>
                             <td>{{work.reviewedBy}}</td>
-							<td class="TableImgsWork">							
-							<img src="images/ListView_icon.png" 
-                                  ng-if="work.status =='Approved'"
-								 style="float:right;"
-                                 class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Editor" 
-								 onMouseOver="this.style.cursor='pointer'" 
-								 ng-click="measureConfigImgClick(work.id, work.name,work.status)" 
-                                 > 
-							
+							<td >		
+                <span 	class="TableImgsWork" ng-if="work.status =='Approved'"		 >
+  							   <img src="images/ListView_icon.png" style="float:right;" class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Configurator" ng-click="measureConfigImgClick(work.id, work.name,work.status)" onMouseOver="this.style.cursor='pointer'" >
+
+                   <img src="images/Tickmark_green.jpg" style="float:right; opacity: 0.4;cursor: default;" width="25" height="25" class="material-icons" data-toggle="tooltip" data-placement="right" title="Approve" >
+
+                   <img src="images/Cross_Red.jpg" style="float:right; opacity: 0.4;cursor: default;" width="25" height="25" class="material-icons" data-toggle="tooltip" data-placement="right" title="Reject" > 
+
+                </span>
+                <span class="TableImgsWork" ng-if="work.status =='Review'"  >
+                   <img src="images/ListView_icon.png" style="float:right; opacity: 0.4;cursor: default;" class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Configurator">
+
+                   <img src="images/Tickmark_green.jpg" style="float:right;" width="25" height="25" class="material-icons" data-toggle="tooltip" data-placement="right" title="Approve" ng-click="statusClickImg('Approved', work.id)" onMouseOver="this.style.cursor='pointer'"> 
+
+                   <img src="images/Cross_Red.jpg" style="float:right;" width="25" height="25" class="material-icons" data-toggle="tooltip" data-placement="right" title="Reject"  ng-click="statusClickImg('Re-work', work.id)" onMouseOver="this.style.cursor='pointer'" > 
+                </span>
+                
+					      <!--  <img src="images/ListView_icon.png" style="float:right;" class="material-icons" data-toggle="tooltip" data-placement="right" title="open in Configurator"   ng-if="work.status =='Review'" ng-click="measureConfigImgClick(work.id, work.name,work.status)" onMouseOver="this.style.cursor='pointer'" >
+
 							<img src="images/Tickmark_green.jpg" 
 								 style="float:right;" width="25" height="25"
                                  ng-if="work.status =='Review'"
@@ -152,7 +162,7 @@ table-layout:fixed;
                                  class="material-icons" data-toggle="tooltip" data-placement="right" title="Reject"
 								 onMouseOver="this.style.cursor='pointer'" 
 								 ng-click="statusClickImg('Re-work', work.id)"
-                              >
+                              > -->
 							</td>		
                         </tr>					
 						

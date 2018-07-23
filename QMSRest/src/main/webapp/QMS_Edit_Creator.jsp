@@ -10,6 +10,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
    	<script src="qms_home.js"></script>
 	-->
+    <script src="scripts/base64.js"></script>
 	 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <style type="text/css">
@@ -129,7 +130,9 @@ cursor: default;
                 <!-- 
         <input type="submit" class="btn btn-cls" style="background-color: #EFEFEF" value="Save" >
                 -->
-        <button ng-click="submitEdit('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button>       
+        <button ng-click="submitEdit('submit')" class="btn btn-cls" style="background-color: #EFEFEF">Submit</button> 
+
+        <button class="btn-cls btn" style="background-color: #EFEFEF;"><a href="javascript://Save as TXT" id="submitLink" style="color: black;background-color: #EFEFEF;">Download</a></p> </button>      
             
     </div>
 					<!--
@@ -144,8 +147,8 @@ cursor: default;
             </div>
             <div class="sub-content" id="sub-content">
             <!-- <div class="col-md-1"></div> -->
-            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: inherit; overflow: auto;border-left: #060606 1px solid;">
- <form action="#" class="form-horizontal ws-validate">
+            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: inherit; overflow: auto;border-left:rgba(6, 6, 6, 0.12) 1px solid;">
+ <form action="#" class="form-horizontal ws-validate" method="post" id="formToSave">
     <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name*</label>
        <input ng-model="measureForm.programName" list="measureProgramName" ng-disabled="isDisabled"  
 	   class="form-group form-control drop-down drop-margin" id="Program_Name" 	ng-change="onChangeProgramName()"   
@@ -180,8 +183,8 @@ cursor: default;
         <datalist id="measureType" name="measureType">
             <option ng-repeat="measureType in measureTypes track by $index" value="{{measureType.name}}">
         </datalist>	 -->
-         <label for="Type1">Type</label>
-        <select class="form-group form-control" ng-model="measureForm.type" id="measureType1" name="measureType1" ng-options="m.name for m in measureTypes">   
+         <label for="Type">Type</label>
+        <select class="form-group form-control drop-down drop-margin" ng-model="measureForm.type" ng-disabled="isDisabled" id="measureType" name="measureType" ng-options="m.name for m in measureTypes">   
         </select>					
        
          <label for="Clinical_Conditions">Clinical Conditions</label>
@@ -240,5 +243,48 @@ cursor: default;
 
     });
 
+});
+
+
+
+function buildData(){
+    console.log($("#Program_Name").val());
+    console.log($("#Measure_Title").val());
+    var txtData = "Program Name        : "+$("#Program_Name").val()+
+              "\r\nMeasure Title       : "+$("#Measure_Title").val()+
+              "\r\nDescription         : "+$("#Description").val()+
+              "\r\nTarget Age          : "+$("#Target_Age").val()+
+              "\r\nMeasure Domain      : "+$("#Measure_Domain").val()+
+              "\r\nMeasure Category    : "+$("#Measure_Category").val()+
+              "\r\nMeasure Type        : "+$("#Measure_Type").val()+
+              "\r\nClinical Conditions : "+$("#Clinical_Conditions").val()+
+              "\r\nDenominator         : "+$("#Denominator").val()+
+              "\r\nDenominator_Exclusion   : "+$("#Denominator_Exclusions").val()+
+              "\r\nNumerator           : "+$("#Numerator").val()+
+              "\r\nNumerator_Exclusion   : "+$("#Numerator_Exclusions").val()+
+              "\r\nTarget              : "+$("#Target").val()
+
+            ;
+
+    return txtData;
+}
+// This will be executed when the document is ready
+$(function(){
+    // This will act when the submit BUTTON is clicked
+    $("#formToSave").submit(function(event){
+        event.preventDefault();
+        var txtData = buildData();
+        console.log("came here1");
+        window.location.href="data:application/octet-stream;base64,"+Base64.encode(txtData);
+    });
+
+    // This will act when the submit LINK is clicked
+    $("#submitLink").click(function(event){
+        var txtData = buildData();
+         console.log("came here2");
+        $(this).attr('download','EditorData.txt')
+            .attr('href',"data:application/octet-stream;base64,"+Base64.encode(txtData));
+             console.log("came here3");
+    });
 });
 </script>

@@ -36,7 +36,7 @@
 	<!--
 	<script src="./Query_Builder_files/angular-query-builder.js"></script> 
 	-->
-	
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	
 <link rel="stylesheet" href="styles/qms_styles.css">
 
@@ -140,7 +140,6 @@
 
                 <!-- <p><a href="#">Measure Configurator</a></p> -->
                  <p ng-class="{active:activeTab == '#!Program_Creator'}" ng-click="isActive('#!Program_Creator')"><a href="#!Program_Creator">Program Creator</a></p>
-				 <p ng-class="{active:activeTab == '#!MemberDetails_List'}" ng-click="isActive('#!MemberDetails_List')"><a href="#!MemberDetails_List">Member Deatils</a></p>
             </div>
             <div class="col-md-10 no-padding-margin main-content main-pane">
                    <div class="col-md-12 no-padding-margin" ng-view >
@@ -159,7 +158,6 @@
     </html>
 	<script type="text/javascript">
 
-        
     if (annyang) {
       $('.SpeechIcon').click(function() {
       var clicks = $(this).data('clicks');
