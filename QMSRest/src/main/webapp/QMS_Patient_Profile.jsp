@@ -216,8 +216,8 @@ float: right;
                     <div class="row content">
                         <div class="col-sm-3">
               <p>Name: <b><span ng-bind="patientProfileForm.name"></span></b><br>
-			  MRN: <span ng-bind="patientProfileForm.mrn"></span><br>
-			  BenID: <span ng-bind="memberId"></span><br>
+			  <!--MRN: <span ng-bind="patientProfileForm.mrn"></span><br>-->
+			  BenID: <span ng-bind="patientProfileForm.patId"></span><br>
 			  Primary Payer: <span ng-bind="patientProfileForm.primaryPayer"></p>
             </div>
             <div class="col-sm-3">
@@ -251,24 +251,28 @@ float: right;
                            <div class="div1">
                             
                              <span class="headings">Comorbidities</span>
-                             <span class="numberCircle">4</span>
+                             <span class="numberCircle"><span ng-bind="patientProfileForm.comorbiditiesCount"></span>
                     
                            </div>
                             <p>
+							<!--
 							<span ng-bind="patientProfileForm.comorbidity1"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity2"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity3"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity4"></span><br>
-							<span ng-bind="patientProfileForm.comorbidity5"></span>
+							<span ng-bind="patientProfileForm.comorbidity5"></span> 
+							-->							
+							<span ng-repeat="member in patientProfileForm.comorbidities">{{member}}</span><br>
+							
 							</p>
                             <br><hr><br>
                             <div class="div1">
                              <span class="headings">Next Appointment Details</span>
-                             <span class="numberCircle">4</span>
+                             <!--<span class="numberCircle">4</span>-->
                            </div>
-                            <p>Next Appointment Date: <span ng-bind="patientProfileForm.nextAppointmentDate"></span><br>
-							Physician Name: <span ng-bind="patientProfileForm.physicianName"></span><br>
-							Department: <span ng-bind="patientProfileForm.department"></span></p>
+                            <p>Next Appointment Date: 15-Aug-2018 <!--<span ng-bind="patientProfileForm.nextAppointmentDate"></span>--><br>
+							Physician Name: Test,Physician<!--<span ng-bind="patientProfileForm.physicianName"></span>--><br>
+							Department: Test Department<!--<span ng-bind="patientProfileForm.department"></span></p>-->
                            <br><hr><br>
                             
                             
@@ -285,14 +289,18 @@ float: right;
                          <div class="div1">
                             
                              <span class="headings">Care Gaps</span>
-                             <span class="numberCircle">3</span>
+                             <span class="numberCircle"><span ng-bind="patientProfileForm.careGapsCount"></span>
                     
                            </div>
                             <p>
+							<!--
 							<span ng-bind="patientProfileForm.careGaps1"></span><br>
 							<span ng-bind="patientProfileForm.careGaps2"></span><br>
 							<span ng-bind="patientProfileForm.careGaps3"></span><br>
-							<span ng-bind="patientProfileForm.careGaps4"></span></p>
+							<span ng-bind="patientProfileForm.careGaps4"></span>
+							-->
+							<span ng-repeat="member in patientProfileForm.careGaps">{{member}}</span><br>
+							</p>
                             <br><hr><br>
                             <table title="Visit Counts">
                               <tr><th colspan="3" style="text-align: center;">Visit Counts</th></tr>
@@ -302,9 +310,13 @@ float: right;
                                     <th>ER Visits</th>
                                 </tr>
                                 <tr>
+									<!--
                                     <td><span ng-bind="patientProfileForm.ipVisitsCount"></span></td>
                                     <td><span ng-bind="patientProfileForm.opVisitsCount"></span></td>
-                                    <td><span ng-bind="patientProfileForm.erVisitsCount"></span></td>
+                                    <td><span ng-bind="patientProfileForm.erVisitsCount"></span></td> -->
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>0</td>									
                                 </tr>
 
 
