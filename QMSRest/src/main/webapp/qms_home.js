@@ -38,10 +38,7 @@
 				.when("/Patient_Profile", {
 					templateUrl : "QMS_Patient_Profile.jsp",
 					controller : "PatientProfileController"
-				}).when("/MemberDetails_List", {
-					templateUrl : "QMS_Member_Details.jsp",
-					controller : "MemberDetailsController"
-				});				
+				});
 
 			});
 			
@@ -230,39 +227,6 @@
             });	
 			
 			
-			//MemberDetails
-            app.controller("MemberDetailsController", function($scope, $rootScope, $http, $location, $window) {	
-			
-				//member list
-				$scope.memberDetailsList = [];
-				_listMemberDetailslist();	
-                function _listMemberDetailslist() {
-                    $http({
-                        method : 'GET',
-                        url : baseURL+'/qms/spv/hedis_member_list/'
-                    }).then(function successCallback(response) {
-                        $scope.memberDetailsList = response.data;
-                    }, function errorCallback(response) {
-                        console.log(response.statusText);
-                    });
-                }	
-				
-				
-				//Get spv details
-                $scope.viewMemberDetail = function (member) {
-                    $http({
-                        method : 'GET',
-						url : baseURL+'/qms/spv/hedis/'+member.id
-                    }).then(function successCallback(response) {
-						$window.sessionStorage.setItem("patientProfileData",JSON.stringify(response.data));
-						window.location.href="QMS_Patient_Profile.jsp";
-                    }, function errorCallback(response) {
-						console.log(response.statusText);
-                    });
-                }					
-				
-            });			
-			
 			
 			
 			//var app = angular.module("QMSHomeManagement", []);
@@ -335,7 +299,7 @@
 						console.log(response.statusText);
 						_listWorklist();
 						//alert("Status update success. ");
-						alert($scope.restResult.status + " : " + $scope.restResult.message);
+						swal($scope.restResult.status + " : " + $scope.restResult.message);
 					}, function errorCallback(response) {
 						console.log(response.statusText);
 					});
@@ -348,7 +312,7 @@
 						console.log(response.statusText);
 						_listWorklist();
 						//alert("Status update success. ");
-						alert($scope.restResult.status + " : " + $scope.restResult.message);
+						swal($scope.restResult.status + " : " + $scope.restResult.message);
 					}, function errorCallback(response) {
 						console.log(response.statusText);
 					});
@@ -412,8 +376,7 @@
 					}, function errorCallback(response) {
 						console.log(response.statusText);
 					});
-				}				
-				
+				}
             });	
 			
 			
@@ -539,15 +502,16 @@
 		$scope.restResult = {status : "", meaasge : ""};
 		$scope.submitAdd = function (action) {	
 			if($scope.measureForm.programName == "" || !angular.isDefined($scope.measureForm.programName))  {
-				alert(" Please select the value for Program Name.");
+
+			swal(" Please enter the value for Measure Program.");
 				return;
 			}
 			if($scope.measureForm.name == "" || !angular.isDefined($scope.measureForm.name))  {
-				alert(" Please enter the value for Measure Title.");
+				swal(" Please enter the value for Measure Title.");
 				return;
 			}
 			if($scope.measureForm.measureCategory == "" || !angular.isDefined($scope.measureForm.measureCategory))  {
-				alert(" Please select the value for Measure Category.");
+				swal(" Please select the value for Measure Category.");
 				return;
 			}
 			$scope.measureForm.measureEditId = "";
@@ -562,7 +526,7 @@
 				console.log(response.statusText);
 				if(action=="submit" && $scope.restResult.status=='SUCCESS')
 					_clearFormData();
-				alert($scope.restResult.status + " : " + $scope.restResult.message);
+				swal($scope.restResult.status + " : " + $scope.restResult.message);
 			}, function errorCallback(response) {
 				console.log(response.statusText);
 			});
@@ -662,15 +626,15 @@
 		$scope.restResult = {status : "", meaasge : ""};
 		$scope.submitEdit = function (action) {			
 			if($scope.measureForm.programName == "" || !angular.isDefined($scope.measureForm.programName))  {
-				alert(" Please select the value for Program Name.");
+				swal(" Please select the value for Program Name.");
 				return;
 			}
 			if($scope.measureForm.name == "" || !angular.isDefined($scope.measureForm.name))  {
-				alert(" Please enter the value for Measure Title.");
+				swal(" Please enter the value for Measure Title.");
 				return;
 			}
 			if($scope.measureForm.measureCategory == "" || !angular.isDefined($scope.measureForm.measureCategory))  {
-				alert(" Please select the value for Measure Category.");
+				swal(" Please select the value for Measure Category.");
 				return;
 			}			
 			$scope.measureForm.sourceType = source;
@@ -686,7 +650,7 @@
 				console.log(response.data);
 				if(action=="submit" && $scope.restResult.status=='SUCCESS')
 				_clearFormData();
-				alert($scope.restResult.status + " : " + $scope.restResult.message);
+				swal($scope.restResult.status + " : " + $scope.restResult.message);
 			}, function errorCallback(response) {
 				console.log(response.statusText);
 			});
@@ -871,9 +835,9 @@
 	
 	
 app.controller("PatientProfileController", function($scope, $http, $location) {	
-	alert("Test");
+	swal("Test");
 	var selectedMemberId = $location.search().mrnId;
-	alert("selectedMemberId "+selectedMemberId);
+	swal("selectedMemberId "+selectedMemberId);
 	$scope.memberId = selectedMemberId;		
 	$scope.patientProfileForm = { 
 		 patId : "",
@@ -1080,11 +1044,11 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 	//for save and submit begin
 	$scope.submit = function (action) {
 		if(!angular.isDefined($scope.configType)) {
-			alert(" Please select the type..");
+			swal(" Please select the type..");
 			return;
 		}		
 		if($scope.group.remarks == "" || $scope.group.remarks == null || $scope.group.remarks == '') {
-			alert(" Please enter remarks ");
+			swal(" Please enter remarks ");
 			return;
 		}
 		
@@ -1103,7 +1067,7 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
 		.then(function successCallback(response) {
 			$scope.restResult = response.data;				
 			console.log(response.data);			
-			alert($scope.restResult.status + " : " + $scope.restResult.message);
+			swal($scope.restResult.status + " : " + $scope.restResult.message);
 		}, function errorCallback(response) {
 			console.log(response.statusText);
 		});	 	

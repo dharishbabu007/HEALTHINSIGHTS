@@ -1,3 +1,6 @@
+.swal-button {
+    background-color: #EC5E5E;
+}
 .no-padding-margin{
     padding: 0px;
     margin: 0px;
@@ -95,16 +98,16 @@
   /*  display:none;*/
 }
 ::-webkit-scrollbar {
-    width: 12px;
+  /*  width: 17px;*/
 }
  
 ::-webkit-scrollbar-track {
-    border-radius: 10px;
+   /* border-radius: 10px;*/
 }
  
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  /*  border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
 }
 .quicklink{
     background-color: #009688;
@@ -276,6 +279,8 @@ table.popuptable tr {
 .button-div{
     float: right;
     height: 80px;
+     margin-right: 50px;
+    margin-top: 50px;
 
 }
 .btn-edit{
@@ -307,6 +312,36 @@ table.popuptable tr {
 a:focus, a:hover {
     color: #23527c;
     text-decoration: none;
+}
+
+
+.TableImgs  img{
+margin-right: 20px;
+}
+.TableImgs  img.disabled {
+   pointer-events: none;
+   cursor: default;
+  
+  opacity:0.5
+}
+.TableImgs  img.enable {
+  
+    opacity:1
+  
+}
+.TableImgsWork img{
+    margin-right: 20px;
+}
+
+@media(max-width: 850px){
+.TableImgs img{
+margin-right: 0px;
+}
+}
+@media(max-width: 1420px){
+.TableImgsWork img{
+    margin-right: 0px;
+}
 }
 
 @media (max-width: 990px){
