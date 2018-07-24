@@ -1,5 +1,5 @@
             var app = angular.module("QMSHomeManagement", ["ngRoute","ngSanitize","queryBuilder"]);
-			var baseURL = 'http://localhost:9999/curis'; //local server
+			var baseURL = 'http://localhost:8080/curis'; //local server
 			//var baseURL = 'http://192.168.184.70:8082/curis'; //DC server
 			//var baseURL = 'http://healthinsight:8082/curis';
 			//var baseURL = 'http://104.211.216.183:8082/curis'; //Azure server

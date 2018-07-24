@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -30,10 +31,12 @@ public class ProgramService {
 
     private final String CURRENT_FLAG="Y";
 
-    private static int nextQualityProgramId = 0;
-    private static int nextProgramId = 0;
+    private static int nextQualityProgramId = 1050;
+    private static int nextProgramId = 1050;
 
     private static QualityProgram qualityProgram = null;
+
+    private static volatile boolean FETCHED_FROM_DB = false;
 
     @Transactional(propagation = REQUIRED)
     public void createProgram(Program program){
@@ -50,23 +53,24 @@ public class ProgramService {
     private QualityProgram buildQualityProgram( String programName, Date startDate, Date endDate, ProgramCategory programCategory){
         String categoryName = programCategory.getCategoryName();
 
-        User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+        Optional<User> userData = Optional.ofNullable((User)httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ));
 
-        if(isRecordAlreadyExist(programName, categoryName)){
+      if(isRecordAlreadyExist(programName, categoryName)){
             System.out.println("Error: Program already exist for specified value");
             throw new ProgramCreatorException("Program already exist for ProgramName: "+programName+" and category: "+categoryName);
         }
 
-        if(qualityProgram ==  null){
+        if(qualityProgram ==  null && !FETCHED_FROM_DB){
             qualityProgram = programRepository.getQualityProgramByMaxQualityProgramId().get(0);
             nextProgramId = qualityProgram.getProgramId();;
             nextQualityProgramId = qualityProgram.getQualityProgramId();
+            FETCHED_FROM_DB = true;
         }
         nextQualityProgramId = nextQualityProgramId + 1;
         nextProgramId = nextProgramId + 1;
 
         System.out.println("Latest qualityProgramId: " + nextQualityProgramId + " and ProgramId: " + nextProgramId);
-
+        Date currentDate  = new Date();
         return QualityProgram.builder()
                  .qualityProgramId(nextQualityProgramId)
                 .programId(nextProgramId)
@@ -76,10 +80,16 @@ public class ProgramService {
                 .categoryName(categoryName)
                 .maxPoints(programCategory.getMaxPoints())
                 .maxScore(programCategory.getMaxScore())
-                .recCreateDate(new Date())
-                .recUpdateDate(new Date())
+                .recCreateDate(currentDate)
+                .recUpdateDate(currentDate)
                 .currentFlag(CURRENT_FLAG)
-                .modifiedBy(userData.getName())
+               //TODO need to take from session
+                // .user(userData.isPresent()? userData.get().getName(): "Raghu")
+                .user("Raghu")
+                .latestFlag(CURRENT_FLAG)
+                .activeFlag(CURRENT_FLAG)
+                .ingestionDate(currentDate)
+                .source("UI")
                 .build();
     }
 

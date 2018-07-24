@@ -48,9 +48,21 @@ public class QualityProgram {
     @Column(name = "REC_UPDATE_DATE")
     private Date recUpdateDate;
 
-    @Column(name = "CURRENT_FLAG")
+    @Column(name = "CURR_FLAG")
     private String currentFlag;
 
-    @Column(name = "MODIFIED_BY")
-    private String modifiedBy;
+     @Column(name = "USER_NAME")
+    private String user;
+
+    @Column(name = "LATEST_FLAG")
+    private String latestFlag;
+
+    @Column(name = "ACTIVE_FLAG")
+    private String activeFlag;
+
+    @Column(name = "INGESTION_DATE")
+    private Date ingestionDate;
+
+    @Column(name = "SOURCE")
+    private String source;
 }

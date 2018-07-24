@@ -14,6 +14,8 @@ public interface ProgramRepository extends CrudRepository<QualityProgram, Intege
     @Query(value = "select * from QMS_QUALITY_PROGRAM where QUALITY_PROGRAM_ID in (select max(QUALITY_PROGRAM_ID) from QMS_QUALITY_PROGRAM)", nativeQuery = true)
     List<QualityProgram> getQualityProgramByMaxQualityProgramId();
 
+   /* @Query(value = "SELECT qp.* FROM QMS_QUALITY_PROGRAM qp WHERE qp.PROGRAM_NAME=? AND qp.CATEGORY_NAME=?", nativeQuery = true)
+    List<QualityProgram> findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
+*/
     QualityProgram findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
-
 }
