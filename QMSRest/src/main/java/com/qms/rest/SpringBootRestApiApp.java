@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages={"com.qms.rest"})// same as @Configuration @EnableAutoConfiguration @ComponentScan combined
 @EnableJpaRepositories
-@EntityScan("com.qms.rest")
+@EntityScan("com.qms.rest.model")
 public class SpringBootRestApiApp extends SpringBootServletInitializer {
 //public class SpringBootRestApiApp {
 

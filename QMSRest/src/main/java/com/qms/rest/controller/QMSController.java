@@ -24,6 +24,7 @@ import com.qms.rest.util.QMSConstants;
 
 @RestController
 @RequestMapping("/qms")
+@CrossOrigin
 public class QMSController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(QMSController.class);
