@@ -1,16 +1,17 @@
 package com.qms.rest.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
 import com.qms.rest.model.*;
+import com.qms.rest.service.MemberService;
 import com.qms.rest.service.ProgramService;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,12 @@ public class QMSController {
 
 	@Autowired
 	private ProgramService programService;
+
+	@Autowired
+	private MemberService memberService;
+
+	//@Autowired
+	//private ObjectMapper objectMapper;
 	
 
 	@RequestMapping(value = "/measure_list/{type}/{value}", method = RequestMethod.GET)
@@ -238,6 +245,15 @@ public class QMSController {
 
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/members/{dimMemberId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> findDimMember(@PathVariable("dimMemberId") String dimMemberId) {
+		logger.info("About to get dim member for id :  " + dimMemberId);
+		List<DimMember> dimMemberList = memberService.findDimMembers(dimMemberId);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<Object>(dimMemberList, headers, HttpStatus.OK);
 	}
 
 }
