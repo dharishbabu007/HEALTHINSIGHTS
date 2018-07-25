@@ -16,7 +16,7 @@
     <link href="download/bootstrap.min.css" rel="stylesheet">
 	<link href="download/Material_Icons.css" rel="stylesheet">
 	
-     <link rel="stylesheet" href="qms_styles.css">
+     <link rel="stylesheet" href="styles/qms_styles.css">
 	 
     <script src="download/angular.min.js"></script>
 	<script src="download/angular.js"></script>
@@ -45,13 +45,12 @@
 p{
   margin-top: 2vh;
 }
-p:hover{
-    background-color: #fff;
-}
+
 
         .sidenav {
             background-color: #f1f1f1;
             height: 91.8vh;
+            
         }
      .aside {
             height: 20vh;
@@ -79,26 +78,34 @@ p:hover{
             border-color: black;
             border-width: 1px;
         }
+        .leftTable
+        {
+        width: 100%;
+        }
+         .leftTable tr{
+              border-bottom: 2px solid #DDDDDD;
 
-        table {
+         }
+        .VistTable {
             font-family: arial, sans-serif;
             border-collapse: collapse;
             width: 100%;
         }
 
-        td,
+        .VistTable td,
         th {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
 
-        tr:nth-child(even) {
+        .VistTable tr:nth-child(even) {
             background-color: #dddddd;
         }
 
 .numberCircle {
 float: right;
+    height: 27px;
     border-radius: 50%;
     width: 25px;
     background: #09F17D;
@@ -112,6 +119,8 @@ float: right;
 }
 .div1{
   width: 60%;
+      margin-top: 10px;
+    margin-bottom: 10px;
 }
 #rcorners{
     border-radius: 25px;
@@ -120,54 +129,46 @@ float: right;
         width: 150px;
     height: 80px;   
 }
+.logo{
+      width: 15.6vw;
+}
         @media screen and (max-width: 767px) {
             .sidenav {
                 height: auto;
                 padding: 15px;
+                width: 100%;
             }
             .row.content {
                 height: auto;
             }
         }
+
+        
     </style>
 </head>
 
 <body ng-app="QMSHomeManagement" ng-controller="PatientProfileController">
- <!--  <header class="header col-md-12" >
+   <header class="header col-md-12" style="width:100%">
         <a href="index.html">
-          <img class="logo" src="Curis_Logo.jpg"/>
-  </a>
+        <img class="logo" src="images/LOGOitcinfotech.jpg"/>
+    </a>
 
-        <div class="reflink">
+        <!-- <div class="reflink">
             <a href="#">Contact Us</a>&nbsp; &nbsp; &nbsp;
             <a href="#">About</a>&nbsp; &nbsp; &nbsp;
-            <a href="#">Logout</a>
-        </div>
-
-    </header> -->
-    <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                  <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                   <span class="icon-bar"></span>                        
-                  </button>
-                 
-            <a href="index.html"> <img class="logo" src="LOGOitcinfotech.jpg"/></a>
-       
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav">
-                <!-- <li style="margin-left: 50px;"><a onClick="Home(); return false;">Home</a></li> -->
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-
+            <a href="#">Logout</a>&nbsp; &nbsp; &nbsp;
+         <a href="patient_profile.html" id="pp">Patient_Profile</a>
+        </div> -->
+        <ul class="nav navbar-nav navbar-right" style="padding-right: 14px;display: -webkit-box;float: right;">
+<li> <img src="images/speech.png" style="width: auto; height: 5vh;cursor: pointer;margin-top: 0.5vh;float: left;margin-right: 15px;" class=" SpeechIcon"></li>
                 <!-- <li><a href="patient_profile.html" id="pp">Patient Profile</a></li> -->
-                <li style="margin-right: 20px; margin-top: 5px;"><b>Admin<br></b></li>
-                <li style="margin-right: 25px;margin-top: 5px;">
+               <li style="margin-right: 20px; margin-top: 5px;"><b>
+         <!--<span ng-bind="userName"></span>-->
+         <span id="userName" name="userName"></span>
+         <br></b></li>
+                <li style="margin-right: 25px;margin-top: 0.4vh;">
                     <div>
-                        <img src="doc.png" width="40px" height="40px" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="doc.png" style=" height: 4vh;width: auto;" class="dropdown-toggle" data-toggle="dropdown">
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#" onclick="logOut()">Logout</a>
                             </li>
@@ -176,15 +177,15 @@ float: right;
                     </div>
                 </li>
 
-                <li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>
+                <!--<li><i class="material-icons" style="font-size:25px; font-weight: 600;margin-top: 3px;">info_outline</i></li>-->
             </ul>
-        </div>
-    </div>
-    </nav>
+
+    </header>
+
 
     <div class="container-fluid" id="container">
         <div class="row content">
-            <div class="col-sm-3 sidenav" style="padding-left: 27px;">
+            <div class="col-sm-2 sidenav" style="padding-left: 27px;">
 
                 <img src="patient_pic.jpg" width="150px" height="150px">
                 <!--<p>Address:<br>11,HIL Road,Atlanta<br>Georgia<br>Phone:111-111-2134<br>Email:roh.lind@yahoo.com</p> -->
@@ -211,7 +212,7 @@ float: right;
 
             </div>
 
-            <div class="col-sm-9">
+            <div class="col-sm-10">
                <div class="container-fluid">
                     <div class="row content">
                         <div class="col-sm-3">
@@ -244,95 +245,108 @@ float: right;
             </div>
                 
              <br><hr><br>
-          <div class="container-fluid">
-                    <div class="row content">
-                        <div class="col-sm-6">
-                           
-                           <div class="div1">
+    <div class="container-fluid">
+      <div class="row content">
+        <div class="col-sm-12">
+          <table class="leftTable">
+            <tr>
+              <td>
+          <div class="div1 Comorbi">
                             
-                             <span class="headings">Comorbidities</span>
-                             <span class="numberCircle"><span ng-bind="patientProfileForm.comorbiditiesCount"></span>
-                    
-                           </div>
-                            <p>
+            <span class="headings">Comorbidities</span>
+            <span class="numberCircle"><span ng-bind="patientProfileForm.comorbiditiesCount">
+            </span></span>
+            <p>
+            <span ng-repeat="member in patientProfileForm.comorbidities">{{member}}</span><br>
+            </p>
+           
+          </div>
+             </td>
+             <td>
+                <div class="div1">
+            <span class="headings">Care Gaps</span>
+            <span class="numberCircle"><span ng-bind="patientProfileForm.careGapsCount"></span>
+          </div>
+          <div class="div1 careGaps">
+            <p>
+              <!--
+              <span ng-bind="patientProfileForm.careGaps1"></span><br>
+              <span ng-bind="patientProfileForm.careGaps2"></span><br>
+              <span ng-bind="patientProfileForm.careGaps3"></span><br>
+              <span ng-bind="patientProfileForm.careGaps4"></span>
+              -->
+            <span ng-repeat="member in patientProfileForm.careGaps">{{member}}</span><br>
+            </p>
+
+          </div>
+             </td>
+             </tr> 
+
 							<!--
 							<span ng-bind="patientProfileForm.comorbidity1"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity2"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity3"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity4"></span><br>
 							<span ng-bind="patientProfileForm.comorbidity5"></span> 
-							-->							
-							<span ng-repeat="member in patientProfileForm.comorbidities">{{member}}</span><br>
-							
-							</p>
-                            <br><hr><br>
-                            <div class="div1">
-                             <span class="headings">Next Appointment Details</span>
-                             <!--<span class="numberCircle">4</span>-->
-                           </div>
-                            <p>Next Appointment Date: 15-Aug-2018 <!--<span ng-bind="patientProfileForm.nextAppointmentDate"></span>--><br>
-							Physician Name: Test,Physician<!--<span ng-bind="patientProfileForm.physicianName"></span>--><br>
-							Department: Test Department<!--<span ng-bind="patientProfileForm.department"></span></p>-->
-                           <br><hr><br>
-                            
-                            
-                            <span class="headings">Procedures</span>
-                            
-                             <p>
-							 <span ng-bind="patientProfileForm.procedureName1"> - <span ng-bind="patientProfileForm.procedureDateTime1"></span><br>
-							 <span ng-bind="patientProfileForm.procedureName2"> - <span ng-bind="patientProfileForm.procedureDateTime2"></span>
-							 </p>
-                      
-                           </div>
-                        <div class="col-sm-6">
-                           
-                         <div class="div1">
-                            
-                             <span class="headings">Care Gaps</span>
-                             <span class="numberCircle"><span ng-bind="patientProfileForm.careGapsCount"></span>
-                    
-                           </div>
-                            <p>
-							<!--
-							<span ng-bind="patientProfileForm.careGaps1"></span><br>
-							<span ng-bind="patientProfileForm.careGaps2"></span><br>
-							<span ng-bind="patientProfileForm.careGaps3"></span><br>
-							<span ng-bind="patientProfileForm.careGaps4"></span>
-							-->
-							<span ng-repeat="member in patientProfileForm.careGaps">{{member}}</span><br>
-							</p>
-                            <br><hr><br>
-                            <table title="Visit Counts">
-                              <tr><th colspan="3" style="text-align: center;">Visit Counts</th></tr>
-                                <tr>
-                                    <th>IP Visits</th>
-                                    <th>OP Visits</th>
-                                    <th>ER Visits</th>
-                                </tr>
-                                <tr>
-									<!--
-                                    <td><span ng-bind="patientProfileForm.ipVisitsCount"></span></td>
-                                    <td><span ng-bind="patientProfileForm.opVisitsCount"></span></td>
-                                    <td><span ng-bind="patientProfileForm.erVisitsCount"></span></td> -->
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>0</td>									
-                                </tr>
-
-
-                            </table>
-                            
-                             <br><br><hr><br>
-                             <h2>Medical Prescription</h2>
-                             <div style="width: 100%;height: 90px;background-color: #dddddd">
-							 <span ng-bind="patientProfileForm.prescription">
-							 </div>
-                        </div>
-                    <div>
-                </div>
-            </div>
+							-->		
+             		<tr>
+                 <td>
+                   <div class="div1 NextApp">
+            <span class="headings">Next Appointment Details</span>
+             <!--<span class="numberCircle">4</span>-->
+            <p>Next Appointment Date: 15-Aug-2018 <!--<span ng-bind="patientProfileForm.nextAppointmentDate"></span>--><br>
+            Physician Name: Test,Physician<!--<span ng-bind="patientProfileForm.physicianName"></span>--><br>
+            Department: Test Department<!--<span ng-bind="patientProfileForm.department"></span></p>-->
+            
+          </div>
+                 </td> 
+                 <td>
+                    <div class="div1 VisitCount">
+            <table title="Visit Counts" class="VistTable">
+              <tr><th colspan="3" style="text-align: center;">Visit Counts</th></tr>
+              <tr>
+              <th>IP Visits</th>
+              <th>OP Visits</th>
+              <th>ER Visits</th>
+              </tr>
+              <tr>
+              <!--
+              <td><span ng-bind="patientProfileForm.ipVisitsCount"></span></td>
+              <td><span ng-bind="patientProfileForm.opVisitsCount"></span></td>
+              <td><span ng-bind="patientProfileForm.erVisitsCount"></span></td> -->
+              <td>1</td>
+              <td>2</td>
+              <td>0</td>                  
+              </tr>
+            </table>
+          </div> 
+                 </td>
+                </tr>
+					<tr style="border:none;">
+       <td>
+          <div class="div1 Procedures">
+            <span class="headings">Procedures</span>
+            <p>
+            <span ng-bind="patientProfileForm.procedureName1"> - <span ng-bind="patientProfileForm.procedureDateTime1"></span><br>
+            <span ng-bind="patientProfileForm.procedureName2"> - <span ng-bind="patientProfileForm.procedureDateTime2"></span>
+            </p>
+          </div>
+      
         </div>
+       </td>   
+       <td>
+          <h2>Medical Prescription</h2>
+            <div style="width: 100%;height: 90px;background-color: #dddddd">
+              <span ng-bind="patientProfileForm.prescription">
+            </div>
+       </td>  
+          </tr>
+        
+      <div>
     </div>
+  </div>
+</div>
+</div>
 </body>
 
 </html>
