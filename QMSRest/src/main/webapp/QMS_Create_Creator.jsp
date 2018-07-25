@@ -130,7 +130,7 @@ textarea {
             </div>
             <div class="sub-content" id="sub-content">
             <!-- <div class="col-md-1"></div> -->
-            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;height: inherit;    border-left: #060606 1px solid;">
+            <div class=" col-md-12 no-padding-margin" style="background-color: #fff;height: 60vh; overflow: auto;height: inherit;    border-left: rgba(6, 6, 6, 0.12) 1px solid;">
       <form class="form-horizontal ws-validate">
 	  
     <div class="col-md-6" style="padding-top: 3vh;padding-left: 85px;"> <label for="Program_Name">Program Name*</label>
