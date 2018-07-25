@@ -74,24 +74,24 @@ table-layout:fixed;
                 <table class="table library" id="tablesearch">
                     <thead>
                     <tr>
-						<th>Member Id</th>
-						<th>Name</th>
+						<th style="width: 10%">Member Id</th>
+						<th style="width: 20%">Name</th>
 						<th>Age</th>
 						<th>Gender</th>
-						<th>Hcc Score</th>
+						<th style="width: 10%">MRI Score</th>
 						<th>Amount</th>
-						<th>Reason</th>
+						<th style="width: 20%">Reason</th>
                     </tr>
                     </thead>
                     <tbody>
 					   <tr ng-repeat="member in memberDetailsList" ng-click="viewMemberDetail(member)">
-						<td>{{member.id}}</font></td>
-						<td>{{member.name}}</font></td>
+						<td style="width: 10%">{{member.id}}</font></td>
+						<td style="width: 20%">{{member.name}}</font></td>
 						<td>{{member.age}}</td>
 						<td>{{member.gender}}</td>
-						<td>{{member.hccScore}}</td>
+						<td style="width: 10%">{{member.hccScore}}</td>
 						<td>{{member.amount}}</td>        
-						<td>{{member.reason}}</td>        
+						<td style="width: 20%">{{member.reason}}</td>        
 					   </tr>					
                     </tbody>
 
