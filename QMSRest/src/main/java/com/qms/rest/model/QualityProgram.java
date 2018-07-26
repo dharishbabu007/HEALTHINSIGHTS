@@ -63,6 +63,6 @@ public class QualityProgram {
     @Column(name = "INGESTION_DATE")
     private Date ingestionDate;
 
-    @Column(name = "SOURCE")
+    @Column(name = "SOURCE_NAME ")
     private String source;
 }

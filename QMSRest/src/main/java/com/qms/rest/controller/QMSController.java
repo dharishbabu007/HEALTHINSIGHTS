@@ -214,10 +214,11 @@ public class QMSController {
 	@RequestMapping(value = "/createProgram", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> createProgram(@RequestBody Program program) {
+		String response = "Program created successfully for ProgramName : "+program.getProgramName();
 		logger.info("About to create program :  " + program);
 		programService.createProgram(program);
 		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<String>(headers, HttpStatus.OK);
+		return new ResponseEntity<String>(response, headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/caregaps", method = RequestMethod.GET)

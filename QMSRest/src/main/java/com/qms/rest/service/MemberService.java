@@ -38,11 +38,11 @@ public class MemberService {
             connection = qmsConnection.getHiveConnection();
             System.out.println("Service after connection: " + connection);
             statement = connection.prepareStatement(sqlQuery);
+            memberId = "%"+memberId.toLowerCase()+"%";
             if(isNumeric){
                 statement.setString(1, memberId);
             }
             else{
-                memberId = "%"+memberId.toLowerCase()+"%";
                 statement.setString(1, memberId);
                 statement.setString(2, memberId);
                 statement.setString(3, memberId);
