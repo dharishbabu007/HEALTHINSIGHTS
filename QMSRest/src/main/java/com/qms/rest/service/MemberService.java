@@ -38,13 +38,14 @@ public class MemberService {
             connection = qmsConnection.getHiveConnection();
             System.out.println("Service after connection: " + connection);
             statement = connection.prepareStatement(sqlQuery);
+            memberId = "%"+memberId.toLowerCase()+"%";
             if(isNumeric){
                 statement.setString(1, memberId);
             }
             else{
-                memberId = "%"+memberId+"%";
                 statement.setString(1, memberId);
                 statement.setString(2, memberId);
+                statement.setString(3, memberId);
             }
             resultSet = statement.executeQuery();
             memberList = convertToDimMember(resultSet);
@@ -69,9 +70,10 @@ public class MemberService {
 
         while (resultSet.next()) {
             DimMember dimMember = DimMember.builder()
-                    .firstName(resultSet.getString("FIRST_NAME"))
-                    .lastName(resultSet.getString("LAST_NAME"))
                     .memberId(resultSet.getString("MEMBER_ID"))
+                    .firstName(resultSet.getString("FIRST_NAME"))
+                    .middelName(resultSet.getString("MIDDLE_NAME"))
+                    .lastName(resultSet.getString("LAST_NAME"))
                     .build();
             memberList.add(dimMember);
         }
