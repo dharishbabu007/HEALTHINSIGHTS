@@ -84,8 +84,8 @@ public class PatientServiceImpl implements PatientService {
 			}			
 						
 			resultSet.close();
-			memberSQL = "SELECT DM.MEMBER_ID, HCC_SCORE AS MRA_Score "+
-			"FROM FACT_HCC_RISK_SCORE FHS "+
+			memberSQL = "SELECT DM.MEMBER_ID, cci_score AS MRA_Score "+
+			"FROM fact_cci_risk_score FHS "+
 			"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_SK = FHS.MEMBER_SK "+
 			"WHERE DM.MEMBER_ID = '"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
@@ -107,21 +107,19 @@ public class PatientServiceImpl implements PatientService {
 
 			//Comorbidities
 			resultSet.close();
-			memberSQL = "select * from fact_mem_comorbidity where member_sk = '"+memberId+"'";			
+			memberSQL = "select fmc.* from fact_mem_comorbidity fmc, dim_member dm where "
+					+ "fmc.member_sk = dm.member_sk and dm.member_id = '"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
 			Set<String> comorbidities = new TreeSet<>();
 			ResultSetMetaData rsmd = resultSet.getMetaData();
-			int colCount = rsmd.getColumnCount();			
 			String colName = null;
 			String colValue = null;
 			while (resultSet.next()) {
 				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 					colName = rsmd.getColumnName(i); 
 					colValue = resultSet.getString(i);
-					if(colValue == null || !colValue.equalsIgnoreCase("Y")) continue;
-					if(!colName.equalsIgnoreCase("latest_flag") && !colName.equalsIgnoreCase("active_flag")  
-							&& !colName.equalsIgnoreCase("curr_flag"))
-						comorbidities.add(colValue);
+					if(colValue != null && colValue.equalsIgnoreCase("1") && !colName.equalsIgnoreCase("fmc.comorbidity_count"))
+						comorbidities.add(colName.replaceFirst("fmc.", ""));
                 }
 				break;
 			}
@@ -142,14 +140,10 @@ public class PatientServiceImpl implements PatientService {
 			dimPatient.setCareGaps(careGaps);
 			dimPatient.setCareGapsCount(careGaps.size()+"");
 			
-			if(true) {
-				return dimPatient;
-			}			
-			
 			//PCP Name, NPI, NPI, Speciality, address 
 			resultSet.close();
-			memberSQL = "select dp.* from fact_attribution fa, dim_provider dp "
-					+ "where fa.provider_id = dp.provider_id and fa.member_id='"+memberId+"'";			
+			memberSQL = "select dp.* from fact_mem_attribution fa, dim_provider dp, dim_member dm "
+					+ "where dm.member_sk = fa.member_sk and fa.provider_sk = dp.provider_sk and dm.member_id='"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
 				dimPatient.setProviderFirstName(resultSet.getString("first_name"));
@@ -160,6 +154,9 @@ public class PatientServiceImpl implements PatientService {
 				dimPatient.setProviderAddress2(resultSet.getString("address2"));
 			}		
 			
+			if(true) {
+				return dimPatient;
+			}
 			
 			//TODO: change bill type to claim type 			
 			resultSet.close();
@@ -316,7 +313,7 @@ public class PatientServiceImpl implements PatientService {
 				data.setAge(resultSet.getString("age"));
 				data.setAmount(resultSet.getString("amount_paid").equalsIgnoreCase("0")?"0":"$"+resultSet.getString("amount_paid"));
 				data.setGender(resultSet.getString("gender").equalsIgnoreCase("F")?"Female":"Male");
-				data.setHccScore(resultSet.getString("hcc_score"));
+				data.setHccScore(resultSet.getString("cci_score"));
 				data.setName(resultSet.getString("name"));
 				data.setReason(resultSet.getString("reason"));				
 				dataSet.add(data);				

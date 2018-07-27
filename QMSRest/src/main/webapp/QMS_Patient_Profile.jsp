@@ -254,10 +254,10 @@ float: right;
           <div class="div1 Comorbi">
                             
             <span class="headings">Comorbidities</span>
-            <span class="numberCircle"><span ng-bind="patientProfileForm.comorbiditiesCount">
-            </span></span>
+            <span class="numberCircle"><span ng-bind="patientProfileForm.comorbiditiesCount"></span>
+			</span>
             <p>
-            <span ng-repeat="member in patientProfileForm.comorbidities">{{member}}</span><br>
+            <span ng-repeat="member in patientProfileForm.comorbidities">{{member}}<br></span><br>
             </p>
            
           </div>
