@@ -19,8 +19,8 @@ public class QMSConnection {
 	@Autowired
 	private QMSProperty qmsProperty;
 	
-	@Autowired
-    DataSource dataSource;	
+//	@Autowired
+//    DataSource dataSource;	
 	
 	public static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver"; //org.apache.hadoop.hive.jdbc.HiveDriver
 	public static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.OracleDriver";
@@ -50,13 +50,13 @@ public class QMSConnection {
 	}	
 	
 	public Connection getHiveConnection() throws Exception {
-//		//HIVE
-//		Class.forName(HIVE_JDBC_DRIVER);
-//		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCUrl(), qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
-//		return connection;
+		//HIVE
+		Class.forName(HIVE_JDBC_DRIVER);
+		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCUrl(), qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
+		return connection;
 		
-		System.out.println(" HIVE DATASOURCE = " + dataSource);
-	    return dataSource.getConnection();		
+//		System.out.println(" HIVE DATASOURCE = " + dataSource);
+//	    return dataSource.getConnection();		
 	}
 	
 	public void closeJDBCResources (ResultSet resultSet, Statement statement, Connection connection) {

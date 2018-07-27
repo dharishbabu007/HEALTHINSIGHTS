@@ -1,5 +1,5 @@
             var app = angular.module("QMSHomeManagement", ["ngRoute","ngSanitize","queryBuilder"]);
-			var baseURL = 'http://localhost:8080/curis'; //local server
+			var baseURL = 'http://localhost:8082/curis'; //local server
 			//var baseURL = 'http://192.168.184.70:8082/curis'; //DC server
 			//var baseURL = 'http://healthinsight:8082/curis';
 			//var baseURL = 'http://104.211.216.183:8082/curis'; //Azure server
@@ -38,7 +38,11 @@
 				.when("/Patient_Profile", {
 					templateUrl : "QMS_Patient_Profile.jsp",
 					controller : "PatientProfileController"
-				});
+				})
+				.when("/MemberDetails_List", {
+					templateUrl : "QMS_Member_Details.jsp",
+					controller : "MemberDetailsController"
+				});				
 
 			});
 			
@@ -381,6 +385,38 @@
 			
 			
 			
+			//MemberDetails
+            app.controller("MemberDetailsController", function($scope, $rootScope, $http, $location, $window) {	
+			
+				//member list
+				$scope.memberDetailsList = [];
+				_listMemberDetailslist();	
+                function _listMemberDetailslist() {
+                    $http({
+                        method : 'GET',
+                        url : baseURL+'/qms/spv/hedis_member_list/'
+                    }).then(function successCallback(response) {
+                        $scope.memberDetailsList = response.data;
+                    }, function errorCallback(response) {
+                        console.log(response.statusText);
+                    });
+                }	
+				
+				
+				//Get spv details
+                $scope.viewMemberDetail = function (member) {
+                    $http({
+                        method : 'GET',
+						url : baseURL+'/qms/spv/hedis/'+member.id
+                    }).then(function successCallback(response) {
+						$window.sessionStorage.setItem("patientProfileData",JSON.stringify(response.data));
+						window.location.href="QMS_Patient_Profile.jsp";
+                    }, function errorCallback(response) {
+						console.log(response.statusText);
+                    });
+                }					
+				
+            });	
 			
 			
 			

@@ -43,10 +43,11 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from dim_member where member_id='"+memberId+"'");
+			resultSet = statement.executeQuery("select dm.*, dd.CALENDAR_DATE from dim_member dm, dim_date dd "
+					+ "where dm.date_of_birth_sk=dd.date_sk and member_id='"+memberId+"'");
 			if (resultSet.next()) {
 				closeGaps.setGender(resultSet.getString("gender"));
-				closeGaps.setDateOfBirth(resultSet.getString("date_of_birth_sk"));
+				closeGaps.setDateOfBirth(resultSet.getString("CALENDAR_DATE"));
 				closeGaps.setMemberId(resultSet.getString("member_id"));
 				closeGaps.setName(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
 			}
