@@ -275,7 +275,7 @@ float: right;
               <span ng-bind="patientProfileForm.careGaps3"></span><br>
               <span ng-bind="patientProfileForm.careGaps4"></span>
               -->
-            <span ng-repeat="member in patientProfileForm.careGaps">{{member}}</span><br>
+            <span ng-repeat="member in patientProfileForm.careGaps">{{member}}<br></span><br>
             </p>
 
           </div>
