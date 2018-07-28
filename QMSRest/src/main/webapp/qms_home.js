@@ -392,6 +392,7 @@
 				$scope.memberDetailsList = [];
 				_listMemberDetailslist();	
                 function _listMemberDetailslist() {
+					/*
                     $http({
                         method : 'GET',
                         url : baseURL+'/qms/spv/hedis_member_list/'
@@ -399,7 +400,9 @@
                         $scope.memberDetailsList = response.data;
                     }, function errorCallback(response) {
                         console.log(response.statusText);
-                    });
+                    }); **/
+					
+					$scope.memberDetailsList = JSON.parse($window.sessionStorage.getItem("memberDetailsData"));
                 }	
 				
 				

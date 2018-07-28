@@ -45,7 +45,7 @@
      </style>
 </head>	
 
-<body onload="initializeViz()" ng-app="QMSHomeManagement" ng-controller="IndexDotHTMLController">
+<body onload="cacheMemberDetails();initializeViz()" ng-app="QMSHomeManagement" ng-controller="IndexDotHTMLController">
 	  <header class="header col-md-12" style="width: 100%;">
         <a href="index.html">
         <img class="logo" src="images/LOGOitcinfotech.jpg"/>
@@ -212,6 +212,28 @@ var url = "http://192.168.184.70/views/CurisDashboard_HEDIS/HEDIS_Plan?:embed=y&
 			xhttp.send(); 
 		}
 
+		
+		//cache member_list
+		function cacheMemberDetails () {
+		
+			if(window.sessionStorage.getItem("memberDetailsData") != null) {
+				console.log("$$$$$$$$$$$DATA ALREADY LOADED$$$$$$$$$$$");
+				return;
+			}
+	
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var response = xhttp.responseText;
+					console.log("*********RETURNED THE LIST FROM HIVE**********");
+					window.sessionStorage.setItem("memberDetailsData",response);
+					//window.location.href="QMS_Patient_Profile.jsp";
+				}
+			};
+			xhttp.open("GET", "http://healthinsight:8082/curis/qms/spv/hedis_member_list", true);
+			xhttp.send();
+			
+		}
 
 
 		/** to get the MRN value for begin 
