@@ -16,4 +16,5 @@ public class MemberCareGaps {
 	private String plan;
 	private String timePeriod;
 	private String pcp;
+	private String Status;
 }
