@@ -134,21 +134,6 @@ var viz, workbook, activeSheet, Worksheet, worksheet;
 
 var worksheets_to_listen_on = {'Patient Details' : true};
 
-var tokenResponse = "";
-function getTableauToken() {
-	var xhttp = new XMLHttpRequest();	
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			tokenResponse = xhttp.responseText;
-			initializeViz();
-		}
-	};
-	xhttp.open("POST", "http://192.168.184.70/trusted",true);	
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.setRequestHeader("Accept", "application/json");
-	xhttp.send("username=raghukonda");
-}
-
 function initializeViz(){
 var placeholderDiv = document.getElementById("tableauViz");
 
@@ -160,9 +145,15 @@ var url = "http://192.168.184.70/views/CurisDashboard_HEDIS/HEDIS_Plan?:embed=y&
 	width: "100%",   
 	height: "100%",
 	hideTabs: true,
-	hideToolbar: true,
+	hideToolbar: false,
 	onFirstInteractive: function () {
 			workbook = viz.getWorkbook();
+			
+			//Paramter set for export button
+			//workbook.changeParameterValueAsync(param_name,values[0]).then(
+			//function (){ console.log('Parameter set');}
+			//);
+			
 			activeSheet = workbook.getActiveSheet().getWorksheets().get("Filter Sheet");			
 			//listenToMarksSelection();
 			
