@@ -139,19 +139,19 @@ var placeholderDiv = document.getElementById("tableauViz");
 
 
 //var url = "https://public.tableau.com/views/CurisDashboard_HEDIS_Measure_160518/HEDIS_Plan"
-var url = "http://192.168.184.70/views/CurisDashboard_HEDIS/HEDIS_Plan?:embed=y&:display_count=no&:showAppBanner=false&:showShareOptions=true&:showVizHome=no"
+var url = "http://192.168.184.70/views/CurisDashboard_HEDIS_2/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no"
 
 	var options = {
 	width: "100%",   
 	height: "100%",
-	hideTabs: true,
+	hideTabs: false,
 	hideToolbar: false,
 	onFirstInteractive: function () {
 			workbook = viz.getWorkbook();
 			
 			//Paramter set for export button
-			//workbook.changeParameterValueAsync(param_name,values[0]).then(
-			//function (){ console.log('Parameter set');}
+			//workbook.changeParameterValueAsync("ParameterInput","http://healthinsight:8082/curis/hleft.jsp#!/MemberDetails_List").then(
+			//function (){ console.log('$$$$$$$$$$$$$$$$$$ Parameter set');}
 			//);
 			
 			activeSheet = workbook.getActiveSheet().getWorksheets().get("Filter Sheet");			
@@ -181,6 +181,9 @@ var url = "http://192.168.184.70/views/CurisDashboard_HEDIS/HEDIS_Plan?:embed=y&
 						mrnValue = pair.formattedValue;
 						break;
 					}
+					if(pair.fieldName == "Export"){
+						window.location.href="hleft.jsp#!/MemberDetails_List";
+					}					
                 }
             }
 			//var scope = angular.element(document.getElementById("tableauViz")).scope();

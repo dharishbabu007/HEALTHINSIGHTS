@@ -10,6 +10,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -57,7 +58,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 					+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
 					+ "member_id='"+memberId+"' order by gap_date desc");
 			CloseGap closeGap = null;
-			Set<CloseGap> closeGapSet = new HashSet<>();
+			Set<CloseGap> closeGapSet = new LinkedHashSet<>();
 			while (resultSet.next()) {
 				closeGap = new CloseGap();
 				closeGap.setMeasureTitle(resultSet.getString("measure_title"));
