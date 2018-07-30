@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +25,79 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	private QMSConnection qmsConnection;
 	
-	@Override
-	public DimPatient getMemberById(String memberId) {
-		System.out.println(" Getting member detail from hive for " + memberId);
-		DimPatient dimPatient = new DimPatient();
+	
+	int cacheSize = 50;
+	HashMap<String, DimPatient> cacheMap = new HashMap<>();
+	
+	@PostConstruct
+	public void cacheMemberData() {
+		System.out.println(" SPV Caching member data for ........." + cacheSize);
+		
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			//connection = QMSServiceImpl.getHiveConnection();
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select member_id from hedis_member_view limit "+cacheSize);
+			Set<String> memberIds = new HashSet<String>();
+			int i = 0;
+			while (resultSet.next()) {
+				memberIds.add(resultSet.getString("member_id"));
+				if(i == cacheSize) break;
+				i++;
+			}
+			
+			DimPatient dimPatient = null;
+			for (String memberId : memberIds) {
+				if(connection == null || connection.isClosed()) {
+					connection = qmsConnection.getHiveConnection();
+					statement = connection.createStatement();
+				}
+					
+				//System.out.println(" Caching member detail ... " + memberId);
+				if(cacheMap.get(memberId) == null) {
+					dimPatient = getMemberByIdFromDB(memberId, connection, statement);
+					cacheMap.put(memberId, dimPatient);
+				}
+				//System.out.println("  Cached member detail ... " + memberId);
+			}
+			System.out.println("  SPV Cached member detail completed *****");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			System.out.println(" SPV actual cache size --> " + cacheMap.size());
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+	}
+	@PreDestroy
+	public void cleanUp() throws Exception {}
+	
+	@Override
+	public DimPatient getMemberById(String memberId) {
+		DimPatient dimPatient = cacheMap.get(memberId);
+		if(dimPatient != null)
+			System.out.println(memberId + " Getting member id from cache - " + dimPatient.getEmailAddress());
+		return dimPatient;
+	}
+	
+	
+	
+	
+	
+	
+	public DimPatient getMemberByIdFromDB(String memberId, Connection connection, Statement statement) {
+//		System.out.println(" Getting member detail from hive for " + memberId);
+		DimPatient dimPatient = new DimPatient();
+//		Statement statement = null;
+		ResultSet resultSet = null;		
+//		Connection connection = null;
+		try {						
+			//connection = QMSServiceImpl.getHiveConnection();
+//			connection = qmsConnection.getHiveConnection();
+//			statement = connection.createStatement();			
 			
 //			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
 //			"FIRST_NAME ||' '|| MIDDLE_NAME ||' '|| LAST_NAME AS \"Member_Name\","+
@@ -218,10 +284,10 @@ public class PatientServiceImpl implements PatientService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		finally {			
-			qmsConnection.closeJDBCResources(resultSet, statement, connection);
-		}			
-		System.out.println(" Returned member detail from hive for " + memberId);
+//		finally {			
+//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+//		}			
+//		System.out.println(" Returned member detail from hive for " + memberId);
 		return dimPatient;
 	}
 	
@@ -304,7 +370,7 @@ public class PatientServiceImpl implements PatientService {
 			statement = connection.createStatement();			
 //			resultSet = statement.executeQuery("select hmv.* from hedis_member_view hmv "+
 //						"inner join HEDIS_SUMMARY_VIEW hsv on hmv.QUALITY_MEASURE_SK = hsv.quality_measure_sk");
-			resultSet = statement.executeQuery("select * from hedis_member_view");
+			resultSet = statement.executeQuery("select * from hedis_member_view limit " + cacheSize);
 			
 			MemberDetail data = null;
 			while (resultSet.next()) {
