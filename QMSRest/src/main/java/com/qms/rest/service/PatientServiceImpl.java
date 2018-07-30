@@ -28,9 +28,11 @@ public class PatientServiceImpl implements PatientService {
 	
 	int cacheSize = 50;
 	HashMap<String, DimPatient> cacheMap = new HashMap<>();
+	Set<MemberDetail> memberDetailsSet = new HashSet<>();
 	
 	@PostConstruct
 	public void cacheMemberData() {
+		getMemberDetails();
 		System.out.println(" SPV Caching member data for ........." + cacheSize);
 		
 		Statement statement = null;
@@ -49,17 +51,20 @@ public class PatientServiceImpl implements PatientService {
 			}
 			
 			DimPatient dimPatient = null;
+			i = 0;
+			System.out.println(" finished caches .. ");
 			for (String memberId : memberIds) {
 				if(connection == null || connection.isClosed()) {
 					connection = qmsConnection.getHiveConnection();
 					statement = connection.createStatement();
 				}
-					
+				i++;	
 				//System.out.println(" Caching member detail ... " + memberId);
 				if(cacheMap.get(memberId) == null) {
 					dimPatient = getMemberByIdFromDB(memberId, connection, statement);
 					cacheMap.put(memberId, dimPatient);
-				}
+				}				
+				System.out.print(i+ " ");
 				//System.out.println("  Cached member detail ... " + memberId);
 			}
 			System.out.println("  SPV Cached member detail completed *****");
@@ -77,12 +82,28 @@ public class PatientServiceImpl implements PatientService {
 	
 	@Override
 	public DimPatient getMemberById(String memberId) {
+		Statement statement = null;
+		Connection connection = null;		
 		DimPatient dimPatient = cacheMap.get(memberId);
-		if(dimPatient != null)
+		
+		if(dimPatient != null) {
 			System.out.println(memberId + " Getting member id from cache - " + dimPatient.getEmailAddress());
+		} else {
+			System.out.println(memberId + " Getting member id from HIVE ");
+			try {
+				connection = qmsConnection.getHiveConnection();
+				statement = connection.createStatement();
+				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
+				cacheMap.put(memberId, dimPatient);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {			
+				qmsConnection.closeJDBCResources(null, statement, connection);
+			}			
+		}		
 		return dimPatient;
 	}
-	
 	
 	
 	
@@ -360,8 +381,11 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Set<MemberDetail> getMemberDetails() {
-		Set<MemberDetail> dataSet = new HashSet<>();
-		System.out.println(" Getting member details from Hive... ");
+		if(memberDetailsSet.size() > 0) {
+			return memberDetailsSet;
+		}
+		
+		System.out.println(" Getting member details from HIVE... ");
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
@@ -382,7 +406,7 @@ public class PatientServiceImpl implements PatientService {
 				data.setHccScore(resultSet.getString("cci_score"));
 				data.setName(resultSet.getString("name"));
 				data.setReason(resultSet.getString("reason"));				
-				dataSet.add(data);				
+				memberDetailsSet.add(data);				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -390,8 +414,8 @@ public class PatientServiceImpl implements PatientService {
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}		
-		System.out.println(" Member details from Hive returned " + dataSet.size());
-		return dataSet;	
+		System.out.println(" Member details from Hive returned " + memberDetailsSet.size());
+		return memberDetailsSet;	
 	}
 
 }
