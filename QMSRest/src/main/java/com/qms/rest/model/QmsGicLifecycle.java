@@ -21,4 +21,8 @@ public class QmsGicLifecycle {
 	private String providerComments;
 	private String status;
 	private String qualityMeasureId;
+	private String duration;
+	private String start_date;
+	private String end_date;
+	private String MeasureTitle;
 }

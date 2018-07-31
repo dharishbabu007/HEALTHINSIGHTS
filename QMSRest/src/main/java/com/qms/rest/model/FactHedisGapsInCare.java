@@ -15,4 +15,5 @@ public class FactHedisGapsInCare {
 	
 	private String MeasureTitle;
 	private String qualityMeasureId;
+	
 }

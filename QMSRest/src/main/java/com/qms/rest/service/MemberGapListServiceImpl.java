@@ -41,11 +41,39 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			connection = qmsConnection.getHiveConnection();
 			System.out.println("Service after connection " + connection);
 			statement = connection.createStatement();
-			String membergplistQry = "SELECT DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME) as name, DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE AS DATE_OF_BIRTH, QGL.MEMBER_ID, QGL.QUALITY_MEASURE_ID, QGL.INTERVENTIONS, QGL.PRIORITY, QGL.PAYOR_COMMENTS, QGL.PROVIDER_COMMENTS, QGL.STATUS, QM.QUALITY_MEASURE_ID,QM.MEASURE_TITLE  \r\n" + 
+			/*String membergplistQry = "SELECT DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME) as name, DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE AS DATE_OF_BIRTH, QGL.MEMBER_ID, QGL.QUALITY_MEASURE_ID, QGL.INTERVENTIONS, QGL.PRIORITY, QGL.PAYOR_COMMENTS, QGL.PROVIDER_COMMENTS, QGL.STATUS, QM.QUALITY_MEASURE_ID,QM.MEASURE_TITLE  \r\n" + 
 					"FROM DIM_MEMBER DM \r\n" + 
 					"INNER JOIN QMS_GIC_LIFECYCLE QGL ON QGL.MEMBER_ID = DM.MEMBER_ID  \r\n" + 
 					"INNER JOIN DIM_QUALITY_MEASURE QM ON  QGL.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID \r\n" + 
-					"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK where DM.MEMBER_ID="+mid;
+					"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK where DM.MEMBER_ID="+mid;*/
+			
+			String membergplistQry = "SELECT DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME)  AS NAME, DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE AS DATE_OF_BIRTH, GIC1.QUALITY_MEASURE_ID, MAX(GIC1.INTERVENTIONS) AS INTERVENTIONS, MAX(GIC1.STATUS) AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE, DATEDIFF(CURRENT_DATE(),MAX(FROM_UNIXTIME(UNIX_TIMESTAMP(GIC2.GAP_DATE,'dd-MMM-yy'),'yyyy-MM-dd'))) AS DURATION\n" + 
+					"FROM DIM_MEMBER DM\n" + 
+					"INNER JOIN QMS_GIC_LIFECYCLE GIC1 ON GIC1.MEMBER_ID = DM.MEMBER_ID\n" + 
+					"LEFT OUTER JOIN QMS_GIC_LIFECYCLE GIC2 ON GIC1.QUALITY_MEASURE_ID = GIC2.QUALITY_MEASURE_ID AND GIC1.MEMBER_ID = GIC2.MEMBER_ID\n" + 
+					"INNER JOIN DIM_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID\n" + 
+					"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK where dm.member_id="+mid+"\n" + 
+					"GROUP BY DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME), DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE, GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE";
+			/*String membergplistQry = "SELECT DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME)  AS NAME, DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE AS DATE_OF_BIRTH, GIC1.QUALITY_MEASURE_ID, MAX(GIC1.INTERVENTIONS) AS INTERVENTIONS, MAX(GIC1.STATUS) AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE, (UPPER(from_unixtime(unix_timestamp(),'dd-MMM-yy'))), MAX(GIC2.GAP_DATE) AS DURATION\n" + 
+					"FROM DIM_MEMBER DM\n" + 
+					"INNER JOIN QMS_GIC_LIFECYCLE GIC1 ON GIC1.MEMBER_ID = DM.MEMBER_ID\n" + 
+					"LEFT OUTER JOIN QMS_GIC_LIFECYCLE GIC2 ON GIC1.QUALITY_MEASURE_ID = GIC2.QUALITY_MEASURE_ID AND GIC1.MEMBER_ID = GIC2.MEMBER_ID\n" + 
+					"INNER JOIN DIM_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID\n" + 
+					"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK\n" + 
+					"WHERE DM.MEMBER_ID="+mid+"\n" + 
+					"GROUP BY DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME), DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE, GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE";*/
+			
+			
+			/*String membergplistQry = "SELECT DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME)  AS NAME, DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE AS DATE_OF_BIRTH, GIC1.QUALITY_MEASURE_ID, MAX(GIC1.INTERVENTIONS), MAX(GIC1.STATUS) AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE, \n" + 
+					"DATEDIFF(CURRENT_DATE(),MAX(FROM_UNIXTIME(UNIX_TIMESTAMP(GIC2.GAP_DATE,'dd-MMM-yy'),'yyyy-MM-dd'))) AS DURATION\n" + 
+					"FROM DIM_MEMBER DM\n" + 
+					"INNER JOIN QMS_GIC_LIFECYCLE GIC1 ON GIC1.MEMBER_ID = DM.MEMBER_ID\n" + 
+					"LEFT OUTER JOIN QMS_GIC_LIFECYCLE GIC2 ON GIC1.QUALITY_MEASURE_ID = GIC2.QUALITY_MEASURE_ID AND GIC1.MEMBER_ID = GIC2.MEMBER_ID\n" + 
+					"INNER JOIN DIM_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID\n" + 
+					"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK\n" + 
+					"WHERE DM.MEMBER_ID="+mid+"\n" + 
+					"GROUP BY DM.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.LAST_NAME), DM.GENDER, DD.DATE_SK, DD.CALENDAR_DATE, GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE";*/
+			
 
 			resultSet = statement.executeQuery(membergplistQry);
 			if (resultSet.next()) {
@@ -57,8 +85,12 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 
 				QmsGicLifecycle qmsGicLifecycle = new QmsGicLifecycle();
 				qmsGicLifecycle.setInterventions(resultSet.getString("INTERVENTIONS"));
-				qmsGicLifecycle.setPriority(resultSet.getString("PRIORITY"));
-				qmsGicLifecycle.setPayorComments(resultSet.getString("PAYOR_COMMENTS"));
+				//qmsGicLifecycle.setPriority(resultSet.getString("PRIORITY"));
+				qmsGicLifecycle.setDuration(resultSet.getString("DURATION"));
+				qmsGicLifecycle.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+				qmsGicLifecycle.setStart_date(resultSet.getString("START_DATE"));
+				qmsGicLifecycle.setEnd_date(resultSet.getString("END_DATE"));
+				//qmsGicLifecycle.setPayorComments(resultSet.getString("PAYOR_COMMENTS"));
 				qmsGicLifecycle.setStatus(resultSet.getString("STATUS"));
 				qmsGicLifecycle.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 				qmsGicLifyCycleMap.put(resultSet.getString("QUALITY_MEASURE_ID"), qmsGicLifecycle);
@@ -66,6 +98,9 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 				FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
 				factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
 				factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+			//	factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
+				//factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
+			//	factHedisGapsInCare.setDuration(resultSet.getString("DURATION"));
 				qmsGicLifecycle.setFactHedisGapsInCare(new ArrayList<FactHedisGapsInCare>());
 				qmsGicLifecycle.getFactHedisGapsInCare().add(factHedisGapsInCare);
 
@@ -78,19 +113,28 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 					FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
 					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
 					factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+		//			factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
+		//			factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
+			//		factHedisGapsInCare.setDuration(resultSet.getString("DURATION"));
 					qmsGicLifyCycleMap.get(qmsMesureId).getFactHedisGapsInCare().add(factHedisGapsInCare);
 				}else {
 					QmsGicLifecycle qmsGicLifecycle = new QmsGicLifecycle();
 					qmsGicLifecycle.setInterventions(resultSet.getString("INTERVENTIONS"));
-					qmsGicLifecycle.setPriority(resultSet.getString("PRIORITY"));
-					qmsGicLifecycle.setPayorComments(resultSet.getString("PAYOR_COMMENTS"));
+				//	qmsGicLifecycle.setPriority(resultSet.getString("PRIORITY"));
+				//	qmsGicLifecycle.setPayorComments(resultSet.getString("PAYOR_COMMENTS"));
 					qmsGicLifecycle.setStatus(resultSet.getString("STATUS"));
+					qmsGicLifecycle.setDuration(resultSet.getString("DURATION"));
+					qmsGicLifecycle.setStart_date(resultSet.getString("START_DATE"));
+					qmsGicLifecycle.setEnd_date(resultSet.getString("END_DATE"));
 					qmsGicLifecycle.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 					qmsGicLifyCycleMap.put(resultSet.getString("QUALITY_MEASURE_ID"), qmsGicLifecycle);
 					
 					FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
 					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
 					factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+				//	factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
+			//		factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
+			//		factHedisGapsInCare.setDuration(resultSet.getString("DURATION"));
 					qmsGicLifecycle.setFactHedisGapsInCare(new ArrayList<FactHedisGapsInCare>());
 					qmsGicLifecycle.getFactHedisGapsInCare().add(factHedisGapsInCare);
 				}
