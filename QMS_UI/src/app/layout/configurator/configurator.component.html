@@ -1,0 +1,90 @@
+<div>
+<app-page-header [heading]="'Configurator'" [icon]="'fa-table'"></app-page-header>
+    <div class="card ">
+        <div class="row p-3 ">
+            <div class="col-sm-12 col-lg-12 ">
+                <p-panel header="Denominator" [toggleable]="true" >
+                    <ng-container *ngTemplateOutlet="conditionFormPanel"></ng-container>
+                    <p-footer >
+                        <button pButton type="button" label="Save" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Submit" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Clear" class="ui-button-secondary"></button>
+                    </p-footer>
+                </p-panel>
+                <p-panel header="Denominator Exclusion" [collapsed]="true" [toggleable]="true" >
+                    <ng-container *ngTemplateOutlet="conditionFormPanel"></ng-container>
+                    <p-footer >
+                        <button pButton type="button" label="Save" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Submit" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Clear" class="ui-button-secondary"></button>
+                    </p-footer>
+                </p-panel>
+                <p-panel header="Numerator" [collapsed]="true" [toggleable]="true" >
+                    <ng-container *ngTemplateOutlet="conditionFormPanel"></ng-container>
+                    <p-footer >
+                        <button pButton type="button" label="Save" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Submit" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Clear" class="ui-button-secondary"></button>
+                    </p-footer>
+                </p-panel>
+                <p-panel header="Numerator Exclusion" [collapsed]="true" [toggleable]="true" >
+                    <ng-container *ngTemplateOutlet="conditionFormPanel"></ng-container>
+                    <p-footer >
+                        <button pButton type="button" label="Save" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Submit" class="ui-button-primary" style="margin-right: .25em"></button>
+                        <button pButton type="button" label="Clear" class="ui-button-secondary"></button>
+                    </p-footer>
+                </p-panel>
+            </div>
+            
+        </div>
+    </div>
+    <ng-template #conditionFormPanel>
+        <form [formGroup]="configForm" novalidate method="post" class="form-horizontal">
+            <div class="form-group row">
+                <div formArrayName="conditionList" class="col-md-12">
+                    <div *ngFor="let condRow of formConditionList.controls; let i=index;" class="panel panel-default">
+                        <div [formGroupName]="i">
+                            <div class="row">
+                                <span class="col-lg-1">
+                                <input type="text" class="form-control" formControlName="andOrCondition">
+                                </span>
+                                <span class="col-lg-3">
+                                <input type="text" class="form-control" formControlName="tableName">
+                                </span>
+                                <span class="col-lg-3">
+                                <input type="text" class="form-control" formControlName="columnName">
+                                </span>
+                                <span class="col-lg-4">
+                                    <input type="text" class="form-control" formControlName="expression">
+                                </span>
+                                <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length == i+1">
+                                <button  class="btn bg-primary" (click)="addCondition()">+</button> 
+                                </span>
+                                <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length != i+1">
+                                <button  class="btn bg-secondary" (click)="removeCondition(i)">-</button> 
+                                </span>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2">
+                    Remarks
+                </div>
+                <div class="col-md-8">
+                    <textarea rows="5" class="form-control" formControlName="remark"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                    <div class="col-md-2">
+                        Expressions
+                    </div>
+                    <div class="col-md-8">
+                        <textarea rows="5" class="form-control" formControlName="expression"></textarea>
+                    </div>
+                </div>
+        </form>
+    </ng-template>
+</div>
