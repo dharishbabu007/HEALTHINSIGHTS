@@ -1,0 +1,8 @@
+   body{
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #e4e5e6;
+background-color: #E4E5E6 !important;
+}
+.measure_click{
+     cursor: pointer;
+}

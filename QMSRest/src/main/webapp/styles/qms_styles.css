@@ -30,7 +30,8 @@
     }
 
 .sub-header{
-    background-color: #4E9E9D;
+    /*background-color: #4E9E9D;*/
+	background-color: #C0C0C0;
     height: 14vh;
     text-align: center;
 }

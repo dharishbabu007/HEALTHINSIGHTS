@@ -2,7 +2,6 @@ package com.qms.rest.service;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -11,20 +10,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.ColumnData;
 import com.qms.rest.model.MeasureConfig;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.TableData;
+import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
 
 @Service("measureConfigService")
@@ -36,6 +36,12 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 	
 	@Autowired
 	private QMSProperty qmsProperty;	
+	
+	@Autowired
+	QMSService qmsService;
+	
+	@Autowired 
+	private HttpSession httpSession;	
 
 	@Override
 	public Set<TableData> getMeasureConfigData() {
@@ -125,6 +131,14 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 			//connection = QMSServiceImpl.getConnection();
 			connection = qmsConnection.getOracleConnection();
 			String measureId = measureConfigList.get(0).getMeasureId();
+			
+			String configStatus = measureConfigList.get(0).getMeasureId();
+			System.out.println(" measureId and configuration Status --> " + measureId + " :: " + configStatus);
+			User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+			if(configStatus != null && configStatus.equalsIgnoreCase("submit")) {
+				qmsService.updateMeasureWorkListStatus(Integer.parseInt(measureId), "Under Development");
+			}
+
 			int version = 0;
 			getStatement = connection.createStatement();
 			resultSet = getStatement.executeQuery("select max(version) from QMS_MEASURE_CONFIGURATOR where MEASURE_ID='"+measureId+"' and CATEGORY='"+category+"'");
@@ -136,7 +150,7 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 			System.out.println(" Adding measure config for category " + category + " with version " + version + " for measure id " + measureId);
 			
 			String sqlStatementInsert = 
-					"insert into QMS_MEASURE_CONFIGURATOR values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";			
+					"insert into QMS_MEASURE_CONFIGURATOR values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";			
 			statement = connection.prepareStatement(sqlStatementInsert);
 			
 			int i=0;
@@ -154,11 +168,24 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 				statement.setString(++i, measureConfig.getTechnicalExpression());
 				statement.setString(++i, measureConfig.getRemarks());
 				statement.setInt(++i, version);			
-				statement.setString(++i, measureConfig.getStatus());
+				statement.setString(++i, measureConfig.getStatus()); //status
+				
+				Date date = new Date();				
+				Timestamp timestamp = new Timestamp(date.getTime());				
+				
 				statement.setString(++i, "Y");
-				Date date = new Date();
-				statement.setTimestamp(++i, new Timestamp(date.getTime()));			
-				statement.setString(++i, "2");
+				statement.setTimestamp(++i, timestamp);
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, "Y");
+				statement.setString(++i, "A");
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, "UI");				
+				
+				if(userData != null && userData.getName() != null)
+					statement.setString(++i, userData.getName());
+				else 
+					statement.setString(++i, "Raghu");				
+
 				statement.addBatch();	
 
 				i=0;
@@ -207,7 +234,7 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 						measureConfig.setRemarks(resultSet.getString("REMARKS"));
 						measureConfig.setVersion(resultSet.getInt("VERSION"));
 						measureConfig.setStatus(resultSet.getString("STATUS"));
-						measureConfig.setModifiedBy(resultSet.getString("MODIFIED_BY"));								
+						measureConfig.setModifiedBy(resultSet.getString("USER_NAME"));								
 						measureConfigList.add(measureConfig);
 					}
 				}

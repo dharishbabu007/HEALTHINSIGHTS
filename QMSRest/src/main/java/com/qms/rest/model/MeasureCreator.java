@@ -23,6 +23,9 @@ public class MeasureCreator implements Comparable<MeasureCreator> {
 	private String reviewedBy;
 	private int measureEditId;
 	private String sourceType;
+	private String isActive;
+	private String startDate;
+	private String endDate;
 	
 	public String getSourceType() {
 		return sourceType;
@@ -150,7 +153,24 @@ public class MeasureCreator implements Comparable<MeasureCreator> {
 	public void setMeasureEditId(int measureEditId) {
 		this.measureEditId = measureEditId;
 	}
-	
+	public String getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 	@Override
 	public int compareTo(MeasureCreator arg0) {
 		return Integer.compare(this.getId(), arg0.getId());

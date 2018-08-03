@@ -394,7 +394,7 @@ public class PatientServiceImpl implements PatientService {
 			statement = connection.createStatement();			
 //			resultSet = statement.executeQuery("select hmv.* from hedis_member_view hmv "+
 //						"inner join HEDIS_SUMMARY_VIEW hsv on hmv.QUALITY_MEASURE_SK = hsv.quality_measure_sk");
-			resultSet = statement.executeQuery("select * from hedis_member_view limit " + cacheSize);
+			resultSet = statement.executeQuery("select * from HEDIS_MEMBER_WEB_VIEW limit " + cacheSize);
 			
 			MemberDetail data = null;
 			while (resultSet.next()) {

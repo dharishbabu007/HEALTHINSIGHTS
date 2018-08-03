@@ -3,13 +3,11 @@ package com.qms.rest.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,7 +33,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 	private HttpSession httpSession;	
 
 	@Override
-	public CloseGaps getCloseGaps(String memberId) {
+	public CloseGaps getCloseGaps(String memberId, String measureId) {
 		
 		CloseGaps closeGaps = new CloseGaps();
 		Statement statement = null;
@@ -53,10 +51,17 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 				closeGaps.setName(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
 			}
 			
-			resultSet.close();			
-			resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
-					+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
-					+ "member_id='"+memberId+"' order by gap_date desc");
+			resultSet.close();	
+			if(measureId == null || measureId.equalsIgnoreCase("0") || measureId.equalsIgnoreCase("all")) {
+				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
+						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+						+ "member_id='"+memberId+"' order by gap_date desc");
+			} else {
+				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
+						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+						+ "qgl.quality_measure_id = '"+measureId+"' and  "
+						+ "member_id='"+memberId+"' order by gap_date desc");				
+			}
 			CloseGap closeGap = null;
 			Set<CloseGap> closeGapSet = new LinkedHashSet<>();
 			while (resultSet.next()) {
@@ -82,7 +87,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 	}
 
 	@Override
-	public RestResult insertCloseGaps(CloseGaps closeGaps, String memberId) {
+	public RestResult insertCloseGaps(CloseGaps closeGaps, String memberId, String measureId) {
 
 		String sqlStatementInsert = "insert into qms_gic_lifecycle (member_id,quality_measure_id,interventions,"
 				+ "priority,payor_comments,provider_comments,status,gap_date,"
@@ -101,7 +106,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			
 			statementObj = connection.createStatement();			
 			resultSet = statementObj.executeQuery("select HEDIS_GAPS_IN_CARE_SK,PRODUCT_PLAN_ID,user_name"
-					+ " from qms_gic_lifecycle where member_id='"+memberId+"'");
+					+ " from qms_gic_lifecycle where member_id='"+memberId+"' and quality_measure_id = '"+measureId+"'");
 			String productId = null;
 			String hedisGapsSK = null;
 			String userName = null;
@@ -124,7 +129,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			for (CloseGap closeGap : closeGapSet) {
 				int i=0;							
 				statement.setString(++i, memberId);
-				statement.setString(++i, closeGap.getQualityMeasureId());
+				statement.setString(++i, measureId);
 				statement.setString(++i, closeGap.getIntervention());
 				statement.setString(++i, closeGap.getPriority());
 				statement.setString(++i, closeGap.getPayerComments());
