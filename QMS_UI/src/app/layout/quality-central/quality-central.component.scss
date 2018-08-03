@@ -1,0 +1,34 @@
+.brand-card-body{
+    height: 40vh;
+    overflow-y: scroll;
+}
+.icon-bg{
+    background: url('/assets/images/icon-bg.png') no-repeat;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+    > img {
+        width: 25px;
+        height: 30px;
+        position: absolute;
+        left: 20px;
+        top: 10px;
+    }
+}
+.card {
+    .row{
+        min-height: 80vh;
+    } 
+}
+.text-value{
+        font-size: 1.6rem;
+}
+
+.list-values{
+    margin-left: 20px;
+}
+.qmstable td{
+    border-top: 1px solid #c8ced3;
+        padding-bottom: 15px;
+            padding-left: 10px;
+}

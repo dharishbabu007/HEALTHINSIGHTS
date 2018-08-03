@@ -1,0 +1,176 @@
+<div >
+    <app-page-header [heading]="'Program Creator'" [icon]="'fa-table'"></app-page-header>
+<div class="card ">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold" for="hf-programName">Program Name*</label>
+              <div class="col-md-9">
+                <input type="text" class="form-control" formControlName="programName">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold" for="hf-startDate">Start Date*</label>
+              <div class="col-md-3">
+                  <p-calendar formControlName="startDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
+              </div>
+              <label class="col-md-3 col-form-label font-weight-bold" for="hf-endDate">End Date*</label>
+              <div class="col-md-3">
+                  <p-calendar formControlName="endDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
+              </div>
+            </div>
+            <div class="form-group row">
+                <div formArrayName="programCategorys" class="col-md-12">
+                    <div *ngFor="let address of formData.controls; let i=index;" class="panel panel-default">
+                      <div [formGroupName]="i">
+                          <div class="row" *ngIf="i==0">
+                            <span class="col-lg-4">
+                              <label class="font-weight-bold">Category Name</label>
+                            </span>
+                            <span class="col-lg-3">
+                              <label class="font-weight-bold">Max Points</label>
+                            </span>
+                            <span class="col-lg-3">
+                              <label class="font-weight-bold">Max Score</label>
+                            </span>
+                          </div>
+                          <div class="row">
+                            <span class="col-lg-4">
+                              <input type="text" class="form-control" formControlName="categoryName">
+                              <small [hidden]="myForm.controls.programCategorys.controls[i].controls.categoryName.valid" class="text-danger">
+                                CategoryName is required
+                              </small>
+                            </span>
+                            <span class="col-lg-3">
+                              <input type="text" class="form-control" formControlName="maxPoints">
+                              <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxPoints.valid" class="text-danger">
+                                Max Points is required
+                              </small>
+                            </span>
+                            <span class="col-lg-3">
+                              <input type="text" class="form-control" formControlName="maxScore">
+                              <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxScore.valid" class="text-danger">
+                                Max Score is required
+                              </small>
+                            </span>
+                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length == i+1">
+                              <button  class="btn btn-secondary" (click)="addCategory()">+</button> 
+                            </span>
+                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length != i+1">
+                              <button  class="btn btn-secondary" (click)="removeCategory(i)">-</button> 
+                            </span>                        
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer text-right">
+            <button type="submit" class="btn btn-sm btn-primary" (click)="submitPc(myForm.value,myForm.valid)" >
+              <i class="fa fa-dot-circle-o"></i> Submit
+            </button>
+            <button type="reset" class="btn btn-sm btn-danger" (click)="cancelPc()">
+              <i class="fa fa-ban"></i> Reset
+            </button>
+          </div>
+        </div>
+      </div>
+<!-- 
+      <form [formGroup]="myForm" novalidate  class="form-horizontal">
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="hf-email">Email</label>
+            <div class="col-md-9">
+            <input type="email" id="hf-email" name="hf-email" class="form-control" placeholder="Enter Email..">
+            <span class="help-block">Please enter your email</span>
+            </div>
+        </div>
+          
+          <div class="row">
+            <span class="col-lg-4">Program Name* </span>
+            <span class="col-lg-3">Start Date* </span>
+            <span class="col-lg-3">End Date* </span>
+          </div>
+          <div class="row">
+            <span class="col-lg-4">
+              <input type="text" class="form-control" formControlName="programName">
+            </span>
+            <span class="col-lg-3">
+           <!--   <input type="text" class="form-control" formControlName="startDate"> -
+              <p-calendar formControlName="startDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
+            </span>
+            <span class="col-lg-3">
+            <!-- <input type="text" class="form-control" formControlName="endDate"> -
+              <p-calendar formControlName="endDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
+            </span>
+          </div>
+          <div class="row">
+            <span class="col-lg-4">
+              <small *ngIf="!myForm.controls.programName.valid" class="text-danger">
+                Program Name is required.
+              </small>
+            </span>
+            <span class="col-lg-3">
+              <small *ngIf="!myForm.controls.startDate.valid" class="text-danger">
+                Start Date is required.
+              </small>
+            </span>
+            <span class="col-lg-3">
+              <small *ngIf="!myForm.controls.endDate.valid" class="text-danger">
+                End Date is required.
+              </small>
+            </span>
+          </div>
+
+
+          <div formArrayName="programCategorys">
+            <div *ngFor="let address of myForm.controls.programCategorys; let i=index;" class="panel panel-default">
+              <div [formGroupName]="i">
+                  <div class="row" *ngIf="i==0">
+                    <span class="col-lg-4">
+                      <label>Category Name*</label>
+                    </span>
+                    <span class="col-lg-3">
+                      <label>Max Points*</label>
+                    </span>
+                    <span class="col-lg-3">
+                      <label>Max Score*</label>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <span class="col-lg-4">
+                      <input type="text" class="form-control" formControlName="categoryName">
+                      <small [hidden]="myForm.controls.programCategorys.controls[i].controls.categoryName.valid" class="text-danger">
+                        CategoryName is required
+                      </small>
+                    </span>
+                    <span class="col-lg-3">
+                      <input type="text" class="form-control" formControlName="maxPoints">
+                      <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxPoints.valid" class="text-danger">
+                        Max Points is required
+                      </small>
+                    </span>
+                    <span class="col-lg-3">
+                      <input type="text" class="form-control" formControlName="maxScore">
+                      <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxScore.valid" class="text-danger">
+                        Max Score is required
+                      </small>
+                    </span>
+                    <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length == i+1">
+                    <button  class="btn btn-secondary" (click)="addCategory()">+</button> 
+                    </span>
+
+                    <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length != i+1">
+                       <button  class="btn btn-secondary" (click)="removeCategory(i)">-</button> 
+                    </span>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       -->

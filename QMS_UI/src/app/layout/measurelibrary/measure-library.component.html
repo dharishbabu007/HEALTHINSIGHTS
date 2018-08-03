@@ -1,0 +1,50 @@
+<div >
+    <app-page-header [heading]="'Measure Library'" [icon]="'fa-table'"></app-page-header>
+    <div class="card">
+    <div class="row">
+        <div class="col col-lg-12 ">
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
+            <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                        <th rowspan="2" width="3%"></th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                                <div *ngSwitchCase="'age'">
+                                        Age > {{ageFilter}}
+                                        <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
+                                        <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
+                                    </div>
+                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                            <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                        </th>
+                        
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr >
+                        <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field">
+                                <span *ngSwitchCase="'isActive'" >
+                                    <i class="fa fa-toggle-on text-primary" *ngIf="rowData['isActive'] == 'Y'">Active</i>
+                                    <i class="fa fa-toggle-off text-secondary" *ngIf="rowData['isActive'] != 'Y'">Decommisioned</i>
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{rowData[col.field]}}
+                                </span>
+                            
+                        </td>
+                        <td >
+                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 0)" style="cursor: pointer;"></i>&nbsp;<i class="fa fa-pie-chart"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+</div>
