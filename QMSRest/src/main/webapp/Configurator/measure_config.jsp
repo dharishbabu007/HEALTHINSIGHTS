@@ -1,63 +1,45 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)https://mfauveau.github.io/angular-query-builder/ -->
+
 <html lang="en" ng-app="app" class="cye-disabled cye-nm ng-scope">
 <head>
    <title>Measure Configurator</title>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- 18/05
-<style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>
-
-        
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		-->
-		
-        <title>QMS Query Builder</title>
-		
-       <!--  <link href="./Query_Builder_files/bootstrap.min.css" rel="stylesheet">
-        <link href="./Query_Builder_files/styles.css" rel="stylesheet">
-		 -->
+ <link href="download/bootstrap.min.css" rel="stylesheet">	
+<script src="download/jquery.min.js"></script>	
+<script src="download/bootstrap.min.js"></script>    
+<script src="download/angular.min.js"></script>
+<script src="download/angular.js"></script>
+<script src="download/angular-route.js"></script>		
+<script src="Query_Builder_files/angular-sanitize.min.js"></script> 
+<script src="Query_Builder_files/angular-query-builder.js"></script> 	
 <link rel="stylesheet" href="styles/qms_styles.css">
-<!-- 18/05		
- <style id="nightModeStyle">
-html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
- html.cye-enabled.cye-nm:not(*:-webkit-full-screen) #cye-workaround-body {-webkit-filter:contrast(91%) brightness(84%) invert(1);}</style><style id="cyebody">html.cye-enabled.cye-lm body{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyediv">html.cye-enabled.cye-lm div{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyetable">html.cye-enabled.cye-lm th{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}html.cye-enabled.cye-lm td{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyetextInput">html.cye-enabled.cye-lm input[type=text]{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}html.cye-enabled.cye-lm textarea{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyeselect">html.cye-enabled.cye-lm select{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyeul">html.cye-enabled.cye-lm ul{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}</style><style id="cyeChangeByClick">html.cye-enabled.cye-lm .cye-lm-tag,html.cye-enabled.cye-lm.cye-lm-tag{background-color:#cce8cf !important;border-color:rgb(51, 58, 51) !important;background-image:none !important;color:#000000  !important}
- </style>
- --> 
  </head>
  
   <body  ng-app="QMSHomeManagement" ng-controller="QueryBuilderCtrl">
-  <!--
-    <a href="https://github.com/mfauveau/angular-query-builder"><img style="position: absolute; top: 0; right: 0; border: 0;" src="./Query_Builder_files/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
-	-->
+ 
 	
-    <!--<div class="container ng-scope" ng-app="QMSHomeManagement" ng-controller="QueryBuilderCtrl">-->
-	<!--<div class="col-md-12 no-padding-margin main-content" style="overflow:scroll;height:650px; width:1270px;"> -->
+		<div class="col-md-12 no-padding-margin ng-scope" style="background-color: #e4e5e6;">
 	
-		<div class="col-md-12 no-padding-margin main-content ng-scope">
-	
-            <div class="col-md-12 sub-header">
-				<!--
-                <span style="font-size: xx-large;float: left; margin-top: 5.5vh;color: white;margin-left: 3vw" id="heading"><b>Measure Configurator</b></span> - 
-				<b><span ng-bind="selectedMeasureTitle" style="font-size: 20px"></span></b>
-				-->
-                <span style="font-size: xx-large;float: left; margin-top: 1.5vh;color: white;margin-left: 3vw;line-height: 1.0" id="heading"><b>Measure Configurator</b> - 
+            <div class="col-md-12" style="background-color: #e4e5e6;">
+			
+                <span style="color: #23282C;font-size: x-large;" id="heading"><b>Measure Configurator</b> 
 				<b><span ng-bind="selectedMeasureTitle" style="font-size: 20px"></span></b></span>
             </div>		
 	
 	
-    <!-- <h1>Angular.js Query Builder</h1> -->
+ 
 		<br>
-		<div class="col-md-12 sub-content">
-        <div class="alert alert-info">
+		<div class="col-md-12">
+        <div class="alert alert-info" style="background-color:white; border-color: white;">
             <strong>Business Expression</strong><br>
             <span ng-bind-html="output" class="ng-binding">()</span>
         </div> 
 	
-	<!--<div class="col-md-12" style="background-color:lightyellow;height:400px; width:1220px;">  -->
-	<div class="col-md-12" style="background-color:lightyellow;height:400px;width: 100%;"> 
+
+	<div class="col-md-12" style="background-color:white;height:500px;width: 100%;border-radius: 5px;"> 
 	
-            <h3>Select Field To be Populated</h3>
+      
+			<label for="Select_Field">Select Field To be Populated</label>
              <form class="Field_Selection_Form"> 
 			 <table>
 			 </table>
@@ -84,24 +66,20 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
 			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			
 			
-        <button class="btn btn-cls" ng-click="submit('save')" style="background-color: #A0F3D3;">Save</button>
-        <button class="btn btn-cls" ng-click="submit('submit')" style="background-color: #A0F3D3;">Submit</button>
-		<button class="btn btn-cls" style="background-color: #A0F3D3;">Clear All</button> 
+        <button class="btn btn-cls btn-primary" ng-click="submit('save')">Save</button>
+        <button class="btn btn-cls btn-primary" ng-click="submit('submit')">Submit</button>
+		<button class="btn btn-cls btn-primary" >Clear All</button> 
 				
                        </form> 
-					   <!-- <br> -->
+	
 					   
     <query-builder group="filter.group" class="ng-isolate-scope">
     <div class="alert alert-warning alert-group ng-scope" >
         <div class="form-inline">
-			<!--
-            <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control input-sm ng-pristine ng-valid"><option value="0" selected="selected">AND</option><option value="1">OR</option>
-			</select> 
-			
-            <button style="margin-left: 5px" ng-click="addCondition()" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Condition</button> -->
+	
         </div>
         <div class="group-conditions">
-            <!-- ngRepeat: rule in group.rules | orderBy:'index' -->
+        
         </div>
     </div>
     </query-builder>					   
@@ -117,7 +95,7 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
      <script type="text/ng-template" id="/queryBuilderDirective.html"> 
 		
 	<!--<div class="alert alert-warning alert-group" style="background-color:lightyellow;overflow-y: scroll;height:280px; width:1200px;">-->
-    <div class="alert alert-warning alert-group" style="background-color:lightyellow;overflow-y: scroll;height:280px;width: 100%;">
+    <div class="alert alert-warning alert-group" style="background-color:white;overflow-y: scroll;height:280px;width: 100%; border-color: #9E9E9E;">
 		<!--
         <div class="form-inline">
             <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control input-sm"></select> 
@@ -207,9 +185,9 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
 			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			   
-				<button class="btn btn-cls" ng-click="submit('save')" style="background-color: #A0F3D3;">Save</button>
-				<button class="btn btn-cls" ng-click="submit('submit')" style="background-color: #A0F3D3;">Submit</button>
-				<button class="btn btn-cls" style="background-color: #A0F3D3;">Clear All</button>			
+				<button class="btn btn-cls bnt-style" ng-click="submit('save')">Save</button>
+				<button class="btn btn-cls" ng-click="submit('submit')">Submit</button>
+				<button class="btn btn-cls">Clear All</button>			
 			</td> -->
 			<tr>
 			</table>
@@ -218,18 +196,9 @@ html.cye-enabled.cye-nm:not(*:-webkit-full-screen) body,
     </div>
     </script>
 </div>
-    <!--
-	<script src="./Query_Builder_files/angular.min.js"></script>
-    <script src="./Query_Builder_files/angular-sanitize.min.js"></script> 
-    <script src="./Query_Builder_files/angular-query-builder.js"></script> 
-	-->
-	
+  
   
 
 </body>
-<!-- 1705
-<div id="cyeBlackMaskLayer" style="position: fixed; width: 1980px; height: 1080px; z-index: -2147483648; background-color: rgb(19, 19, 19);"></div>
-<div id="cye-workaround-body" style="position: absolute; left: 0px; top: 0px; z-index: -2147483646; height: 741px; width: 1600px; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(255, 255, 255);"></div>
-<div id="cye-workaround-body-image" style="position: absolute; left: 0px; top: 0px; z-index: -2147483645; height: 741px; width: 1600px; background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0);"></div>
--->
+
 </html>

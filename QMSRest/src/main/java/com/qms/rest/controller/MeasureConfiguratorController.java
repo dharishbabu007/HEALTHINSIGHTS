@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.qms.rest.model.MeasureConfig;
-import com.qms.rest.model.MeasureCreator;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.TableData;
 import com.qms.rest.service.MeasureConfigService;
@@ -33,8 +32,8 @@ public class MeasureConfiguratorController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(MeasureConfiguratorController.class);
 	
-	@RequestMapping(value = "/config_data/{schemaName}/{password}", method = RequestMethod.GET)
-	public ResponseEntity<Set<TableData>> getMeasureConfigData(@PathVariable("schemaName")  String schemaName, @PathVariable("password")  String password) {
+	@RequestMapping(value = "/config_data", method = RequestMethod.GET)
+	public ResponseEntity<Set<TableData>> getMeasureConfigData() {
 		Set<TableData> data = measureConfigService.getMeasureConfigData();
 		if (data.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);			

@@ -23,19 +23,21 @@ public class CloseGapController {
 	@Autowired
 	CloseGapsService closeGapsService;	
 	
-	@RequestMapping(value = "/{memberId}", method = RequestMethod.GET)
-	public ResponseEntity<CloseGaps> getCloseGaps(@PathVariable("memberId") String memberId) {
-		CloseGaps closeGaps = closeGapsService.getCloseGaps(memberId);
+	@RequestMapping(value = "/{memberId}/{measureId}", method = RequestMethod.GET)
+	public ResponseEntity<CloseGaps> getCloseGaps(@PathVariable("memberId") String memberId, 
+			@PathVariable("measureId") String measureId) {
+		CloseGaps closeGaps = closeGapsService.getCloseGaps(memberId, measureId);
 		if (closeGaps == null) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<CloseGaps>(closeGaps, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/{memberId}", method = RequestMethod.POST)
-	public ResponseEntity<RestResult> insertCloseGaps(@PathVariable("memberId") String memberId,
+	@RequestMapping(value = "/{memberId}/{measureId}", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> insertCloseGaps(@PathVariable("memberId") String memberId, 
+			@PathVariable("measureId") String measureId,
 			@RequestBody CloseGaps closeGaps, UriComponentsBuilder ucBuilder) {
-		RestResult restResult = closeGapsService.insertCloseGaps(closeGaps, memberId);
+		RestResult restResult = closeGapsService.insertCloseGaps(closeGaps, memberId, measureId);
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.CREATED);
 	}	
 }

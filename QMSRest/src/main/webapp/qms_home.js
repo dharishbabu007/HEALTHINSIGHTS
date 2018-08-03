@@ -348,6 +348,7 @@
 					
 					$http({
 						method : 'GET',
+						//url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
 						url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
 					}).then(function successCallback(response) {
 						$scope.tableData = response.data;
@@ -369,7 +370,7 @@
 					}
 					$http({
 						method : 'GET',
-						url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+						url : baseURL+'/measure_configurator/config_data'
 					}).then(function successCallback(response) {
 						$scope.tableData = response.data;
 						$window.sessionStorage.setItem("tableData", JSON.stringify($scope.tableData));
@@ -988,7 +989,10 @@ app.controller('QueryBuilderCtrl', ['$scope', '$rootScope', '$http', '$window', 
             str += group.rules[i].group ?
                 computed(group.rules[i].group) :
                 //group.rules[i].field + " " + htmlEntities(group.rules[i].condition) + " " +group.rules[i].data;				
-				group.rules[i].operator + " " + htmlEntities(group.rules[i].businessExpression);
+				//group.rules[i].operator + " " + htmlEntities(group.rules[i].businessExpression);
+				//group.rules[i].operator + " " + htmlEntities(group.rules[i].businessExpression);
+				i == 0?group.rules[i].tableName+"."+group.rules[i].columnName + "=" + htmlEntities(group.rules[i].businessExpression):
+				group.rules[i].operator + " " + group.rules[i].tableName+"."+group.rules[i].columnName + "=" + htmlEntities(group.rules[i].businessExpression);
         }
 		
         return str + ")";
@@ -1176,7 +1180,8 @@ app.directive('queryBuilder', ['$compile', '$http', function ($compile, $http) {
 	function _getTechnicalExpressions() {
 		$http({
 			method : 'GET',
-			url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+			//url : baseURL+'/measure_configurator/config_data/qms_input/qms_input123'
+			url : baseURL+'/measure_configurator/config_data'
 		}).then(function successCallback(response) {
 			scope.tableData = response.data;
 			

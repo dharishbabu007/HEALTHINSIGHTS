@@ -17,4 +17,5 @@ public class MemberCareGaps {
 	private String timePeriod;
 	private String pcp;
 	private String Status;
+	private String qualityMeasureId;
 }
