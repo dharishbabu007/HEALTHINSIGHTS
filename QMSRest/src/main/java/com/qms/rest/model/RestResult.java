@@ -15,6 +15,21 @@ public class RestResult {
 		return restResult;
 	}
 	
+	public static RestResult getSucessRestResult(String message) {
+		return RestResult.getRestResult(SUCCESS_STATUS, message);
+	}
+	
+	public static RestResult getFailRestResult(String message) {
+		return RestResult.getRestResult(FAIL_STATUS, message);
+	}
+	
+	public static boolean isSuccessRestResult(RestResult restResult) {
+		if(restResult.getStatus().equals(SUCCESS_STATUS)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public String getStatus() {
 		return status;
 	}
