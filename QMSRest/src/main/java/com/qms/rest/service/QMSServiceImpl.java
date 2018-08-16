@@ -26,6 +26,7 @@ import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
+import com.qms.rest.util.QMSDateUtil;
 
 
 @Service("qmsService")
@@ -85,8 +86,8 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setSteward(stewardMap.get(resultSet.getString("STEWARD_ID")));
 				measureCreator.setType(typeMap.get(resultSet.getString("TYPE_ID")));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
-				measureCreator.setStartDate(resultSet.getString("START_DATE"));
-				measureCreator.setEndDate(resultSet.getString("END_DATE"));		
+				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
+				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				measureCreator.setStatus(statusMap.get(resultSet.getString("status_id")));
 				measureList.add(measureCreator);
 			}			
@@ -138,8 +139,8 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setMeasureEditId(resultSet.getInt("MEASURE_EDIT_ID"));
 				measureCreator.setStatus(resultSet.getString("STATUS_ID"));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
-				measureCreator.setStartDate(resultSet.getString("START_DATE"));
-				measureCreator.setEndDate(resultSet.getString("END_DATE"));
+				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
+				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
 				break;
 			}
 		} catch (Exception e) {
@@ -327,12 +328,12 @@ public class QMSServiceImpl implements QMSService {
 			Timestamp timestamp = new Timestamp(date.getTime());
 			statement.setTimestamp(++i, timestamp);			
 			System.out.println(measureCreator.getStatus() + " KKKKKKKKKKKKstatus " + statusMap.get(measureCreator.getStatus()==null?"Open":measureCreator.getStatus()));
-			statement.setString(++i, statusMap.get(measureCreator.getStatus()==null?"Open":measureCreator.getStatus()));
+			statement.setString(++i, statusMap.get(measureCreator.getStatus()==null?QMSConstants.MEASURE_DEFAULT_STATUS:measureCreator.getStatus()));
 			statement.setString(++i, isActive);
-			statement.setString(++i, "2");
-			statement.setString(++i, "2");
+			statement.setString(++i, QMSConstants.MEASURE_REVIEWER_ID);
+			statement.setString(++i, QMSConstants.MEASURE_REVIEWER_ID);
 			if(userData == null || userData.getId() == null)
-				statement.setString(++i, "Raghu");
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
 			else
 				statement.setString(++i, userData.getId());
 			//IS_ACTIVE
@@ -347,7 +348,7 @@ public class QMSServiceImpl implements QMSService {
 			statement.setTimestamp(++i, timestamp);
 			statement.setString(++i, "Y");
 			statement.setTimestamp(++i, timestamp);	
-			statement.setString(++i, "UI");
+			statement.setString(++i, QMSConstants.MEASURE_SOURCE_NAME);
 			
 			statement.executeUpdate();
 			connection.commit();
@@ -387,7 +388,7 @@ public class QMSServiceImpl implements QMSService {
 		lastCreatedCreator = findMeasureCreatorById(measureCreator.getId());
 		
 		String lastStatusId = lastCreatedCreator.getStatus();
-		String currentStatusId = statusMap.get(measureCreator.getStatus()==null?"Open":measureCreator.getStatus());
+		String currentStatusId = statusMap.get(measureCreator.getStatus()==null?QMSConstants.MEASURE_DEFAULT_STATUS:measureCreator.getStatus());
 		System.out.println(" lastStatusId --> " + lastStatusId + " currentStatusId --> " + currentStatusId);
 		if(!lastStatusId.equalsIgnoreCase(currentStatusId)) {
 			int currentVersion = lastCreatedCreator.getMeasureEditId()+1;
@@ -401,7 +402,8 @@ public class QMSServiceImpl implements QMSService {
 		String sqlStatementUpdate = 
 				"update qms_measure set clinical_conditions=?, data_sources_id=?, denominator=?, target=?, "
 				+ "domain_id=?, deno_exclusions=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
-				+ "QUALITY_PROGRAM_ID=?, STEWARD_ID=?, target_population_age=?, type_id=?, rec_update_date=?,  STATUS_ID=?,  USER_NAME=?, IS_ACTIVE=? "
+				+ "QUALITY_PROGRAM_ID=?, STEWARD_ID=?, target_population_age=?, type_id=?, rec_update_date=?,  "
+				+ "STATUS_ID=?,  USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=? "
 				+ "where measure_id=? and MEASURE_EDIT_ID=?";
 		
 		String qualityProgramId = this.getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
@@ -435,16 +437,19 @@ public class QMSServiceImpl implements QMSService {
 			statement.setString(++i, typeMap.get(measureCreator.getType()));			
 			Date date = new Date();
 			statement.setTimestamp(++i, new Timestamp(date.getTime()));
-			statement.setString(++i, statusMap.get(measureCreator.getStatus()==null?"Open":measureCreator.getStatus()));
+			statement.setString(++i, statusMap.get(measureCreator.getStatus()==null?QMSConstants.MEASURE_DEFAULT_STATUS:measureCreator.getStatus()));
 			if(userData != null && userData.getId() != null)
 				statement.setString(++i, userData.getId());
 			else
-				statement.setString(++i, "Raghu");
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
 			//IS_ACTIVE
 			if(measureCreator.getIsActive()!=null && measureCreator.getIsActive().equalsIgnoreCase("N"))
 				statement.setString(++i, "N");
 			else
-				statement.setString(++i, "Y");			
+				statement.setString(++i, "Y");	
+			
+			statement.setString(++i, measureCreator.getStartDate());
+			statement.setString(++i, measureCreator.getEndDate());			
 			
 			statement.setInt(++i, measureCreator.getId());
 			statement.setInt(++i, lastCreatedCreator.getMeasureEditId());
@@ -507,8 +512,8 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setMeasureEditId(resultSet.getInt("MEASURE_EDIT_ID"));
 				measureCreator.setStatus(resultSet.getString("STATUS_ID"));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
-				measureCreator.setStartDate(resultSet.getString("START_DATE"));
-				measureCreator.setEndDate(resultSet.getString("END_DATE"));				
+				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
+				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				break;
 			}
 		} catch (Exception e) {
@@ -553,8 +558,8 @@ public class QMSServiceImpl implements QMSService {
 					measureCreator.setReviewComments(resultSet.getString("review_comments"));
 					measureCreator.setReviewedBy(userMap.get(resultSet.getString("REVIEWER_ID")));
 					measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
-					measureCreator.setStartDate(resultSet.getString("START_DATE"));
-					measureCreator.setEndDate(resultSet.getString("END_DATE"));					
+					measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
+					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));					
 					dataSet.add(measureCreator);
 				}
 			}
