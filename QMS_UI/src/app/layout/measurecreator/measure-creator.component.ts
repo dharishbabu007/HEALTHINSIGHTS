@@ -15,13 +15,14 @@ import { Router } from '@angular/router';
 export class MeasurecreatorComponent implements OnInit {
 
   public myForm: FormGroup;
-
+  disableForm = false;
   public submitted: boolean;
   measureId: string;
   title: string;
   type: string;
   programList: any;
   measureDomainList: any;
+  measureCategoriesList: any;
   measureCategories: any;
   measureTypes: any;
   constructor(private _fb: FormBuilder,
@@ -34,13 +35,35 @@ export class MeasurecreatorComponent implements OnInit {
             this.type = params['type'];
             this.title = (this.type === '1' ) ? 'Measure Editor' : 'Measure Creator';
         });
+        this.myForm = this._fb.group({
+          programName: ['', [Validators.required]],
+          denominator: [],
+          name: ['', [Validators.required]],
+          numerator: [],
+          description: [],
+    
+          targetAge: [],
+
+          numeratorExclusions: [],
+          denomExclusions: [],
+          measureDomain: [],
+          target: [],
+          measureCategory: [],
+          type: [],
+          clinocalCondition: [],
+          startDate: [],
+          endDate: [],
+          id: [],
+          Decommisioned: []
+        });
+
     }
 
  ngOnInit() {
-  this.gapsService.getPrograms().subscribe((data: any) => {
+  this.gapsService.getDropDownPrograms().subscribe((data: any) => {
     this.programList = [];
     data.forEach(element => {
-      this.programList.push({label: element, value: element});
+      this.programList.push({label: element.name, value: element.name});
     });
   });
   this.gapsService.getMeasureDomain().subscribe((data: any) => {
@@ -50,15 +73,12 @@ export class MeasurecreatorComponent implements OnInit {
     });
   });
   this.gapsService.getMeasureCategories().subscribe((data: any) => {
-    this.measureCategories = [];
-    data.forEach(element => {
-      this.measureCategories.push({label: element.name, value: element.name});
-    });
+    this.measureCategoriesList = data;
   });
   this.gapsService.getMeasureTypes().subscribe((data: any) => {
     this.measureTypes = [];
     data.forEach(element => {
-      this.measureTypes.push({label: element.name, value: element.value});
+      this.measureTypes.push({label: element.name, value: element.name});
     });
   });
    if (this.measureId) {
@@ -66,28 +86,14 @@ export class MeasurecreatorComponent implements OnInit {
       this.setMeasureInfo(data);
     });
    }
-      this.myForm = this._fb.group({
-        programName: ['', [Validators.required]],
-        denominator: [],
-        name: ['', [Validators.required]],
-        numerator: [],
-        description: [],
-        targetAge: [],
-        numeratorExclusions: [],
-        denomExclusions: [],
-        measureDomain: [],
-        target: [],
-        measureCategory: [],
-        type: [],
-        clinocalCondition: [],
-        startDate: [],
-        endDate: [],
-        id: [],
-        Decommisioned: []
-      });
+      
   }
 
  setMeasureInfo(measureInfo) {
+   if (measureInfo.isActive === 'N') {
+    this.myForm.disable();
+    this.disableForm = true;
+   }
    this.myForm.controls['programName'].setValue(measureInfo.programName);
    this.myForm.controls['name'].setValue(measureInfo.name);
    this.myForm.controls['description'].setValue(measureInfo.description);
@@ -128,16 +134,17 @@ export class MeasurecreatorComponent implements OnInit {
       // call API to save
       // ...
       model.status = 'New';
+      model.target = parseInt(model.target, 10);
       model.startDate = this.formatDate(model.startDate);
       model.endDate = this.formatDate(model.endDate);
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure created Successfully');
+        this.router.navigateByUrl('/measureworklist?fetch');
       } else {
-        this.msgService.success(res.message);
+        this.msgService.error(res.message);
       }
     } );
-    this.router.navigateByUrl('/measureworklist');
   }
 
   savePc(model: Measurecreator, isValid: boolean) {
@@ -146,14 +153,16 @@ export class MeasurecreatorComponent implements OnInit {
    // call API to save
    // ...
    model.status = 'Open';
+   model.target = parseInt(model.target, 10);
    model.startDate = this.formatDate(model.startDate);
    model.endDate = this.formatDate(model.endDate);
    // console.log(model);
   this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure saved Successfully');
+        this.router.navigateByUrl('/measureworklist?fetch');
       } else {
-        this.msgService.success(res.message);
+        this.msgService.error(res.message);
       }
     } );
   }
@@ -170,15 +179,16 @@ export class MeasurecreatorComponent implements OnInit {
     this.myForm.controls['endDate'].markAsTouched();
     model.isActive = 'N';
     model.status = 'In-active';
+    model.target = parseInt(model.target, 10);
     model.startDate = this.formatDate(model.startDate);
     model.endDate = this.formatDate(model.endDate);
     if (this.myForm.valid) {
       this.gapsService.createMeasure(model).subscribe( (res: any) => {
         if (res.status === 'SUCCESS') {
           this.msgService.success('Measure saved Successfully');
-          this.router.navigateByUrl('/measurelibrary');
+          this.router.navigateByUrl('/measurelibrary?fetch');
         } else {
-          this.msgService.success(res.message);
+          this.msgService.error(res.message);
         }
       } );
     }
@@ -190,6 +200,13 @@ export class MeasurecreatorComponent implements OnInit {
     } else {
       return null;
     }
+  }
+  filterCategory(event) {
+    this.measureCategories = [];
+    const elementList = this.measureCategoriesList.filter(ele => ele.value === event.value);
+    elementList.forEach(element => {
+      this.measureCategories.push({label: element.name, value: element.name});
+    });
   }
 }
 
@@ -206,4 +223,5 @@ export interface Measurecreator {
     endDate: string;
     status: string;
     id: string;
+    target: any;
    }

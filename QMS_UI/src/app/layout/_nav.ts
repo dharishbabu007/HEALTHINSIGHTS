@@ -24,11 +24,11 @@ export const navItems = [
             url: 'http://192.168.184.70/views/CurisDashboard_HEDIS_1/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
             icon: 'fa fa-line-chart'
           },
-          {
-            name: 'OHA',
-            url: '#',
-            icon: 'fa fa-line-chart'
-          },
+          // {
+          //   name: 'OHA',
+          //   url: '#',
+          //   icon: 'fa fa-line-chart'
+          // },
           // {
           //   name: 'CMS STAR',
           //   url: 'https://public.tableau.com/views/CMS_webscree_12dec/NEW_CMSSTAR?:embed=y&:showVizHome=n&:tabs=n&:toolbar=n&:apiID=host0#navType=0&navSrc=Parse',
@@ -39,6 +39,11 @@ export const navItems = [
       {
         name: 'Quality Measures',
         url: '/measurelibrary',
+        icon: 'fa fa-line-chart'
+      },
+      {
+        name: 'Member Compliance',
+        url: 'http://192.168.184.70/views/Member_Measure_Compliance_Dashboard/MemberMeasure?:iid=1&:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-line-chart'
       },
       {
@@ -103,7 +108,7 @@ export const navItems = [
     children: [
       {
         name: 'PHM SUMMARY',
-        url: 'http://192.168.184.70/views/PHMsummary/PHMPerformanceSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       {
@@ -113,37 +118,37 @@ export const navItems = [
       },
       {
         name: 'Measure Analysis',
-        url: 'http://192.168.184.70/views/PHMMeasuressDashboard/PHMMeasures?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
-      {
-        name: 'Membership Analysis',
-        url: '#',
-        icon: 'fa fa-user-o'
-      },
+      // {
+      //   name: 'Membership Analysis',
+      //   url: '#',
+      //   icon: 'fa fa-user-o'
+      // },
       {
         name: 'Geo Analysis',
-        url: 'http://192.168.184.70/views/Location_Dashboard_0/PHMLocationDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       {
         name: 'Cohort',
-        url: 'http://192.168.184.70/views/FinalDashboardPHM/Cohort?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/views/FinalDashboardPHM/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
-      {
-        name: 'Utilitzation Analysis',
-        url: '#',
-        icon: 'fa fa-user-o'
-      },
-      {
-        name: 'Financial Analysis',
-        url: '#',
-        icon: 'fa fa-user-o'
-      },
+      // {
+      //   name: 'Utilitzation Analysis',
+      //   url: '#',
+      //   icon: 'fa fa-user-o'
+      // },
+      // {
+      //   name: 'Financial Analysis',
+      //   url: '#',
+      //   icon: 'fa fa-user-o'
+      // },
       {
         name: 'Provider Analysis',
-        url: '#',
+        url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
     ]

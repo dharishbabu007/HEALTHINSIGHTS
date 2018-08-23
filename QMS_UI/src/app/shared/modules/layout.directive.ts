@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, ElementRef, OnInit } from '@angular/core';
-import { sidebarCssClasses, asideMenuCssClasses, ToggleClasses } from '../index';
+import { sidebarCssClasses, asideMenuCssClasses, ToggleClasses } from '..';
 /**
 * Allows the sidebar to be toggled via click.
 */

@@ -3,6 +3,8 @@ import { routerTransition } from '../../router.animations';
 import { ActivatedRoute } from '@angular/router';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
+
+import { MeasurecreatorComponent } from '../measurecreator/measure-creator.component'
 import { Router } from '@angular/router';
 @Component({
     selector: 'app-tables',
@@ -12,8 +14,10 @@ import { Router } from '@angular/router';
     providers: [GapsService]
 })
 export class MeasurelibraryComponent implements OnInit {
+      private disableForm = false;
     programType = 'test';
     programValue = 'test';
+    statusTypes = [{label: 'Active', value: 'Approved'}, {label: 'Decommission', value: 'In-active'}];
     constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router) {
         this.route.params.subscribe(params => {
             if (params['type']) {
@@ -37,10 +41,11 @@ export class MeasurelibraryComponent implements OnInit {
             { field: 'type', header: 'Measure Type' },
             { field: 'steward', header: 'Measure Steward' },
             { field: 'clinocalCondition', header: 'Clinical Condition' },
-            { field: 'isActive', header: 'Status'}
+            { field: 'status', header: 'Status'}
         ];
     }
     copytoCreator(id, newType) {
          this.router.navigate(['/measurecreator', id, newType]);
+          disableForm = true;
     }
 }

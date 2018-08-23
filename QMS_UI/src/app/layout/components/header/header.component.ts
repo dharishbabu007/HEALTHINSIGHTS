@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { Replace } from '../../../shared/index';
+import { Replace } from '../../../shared';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',

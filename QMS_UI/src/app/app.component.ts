@@ -16,7 +16,7 @@ export class SafePipe implements PipeTransform {
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    constructor(private msgService: MessageService) {
+    constructor(public msgService: MessageService) {
     }
 
     ngOnInit() {

@@ -47,15 +47,21 @@
                         <div [formGroupName]="i">
                             <div class="row">
                                 <span class="col-lg-1">
-                                <input type="text" class="form-control" formControlName="andOrCondition">
+                                <!-- <input type="text" class="form-control" formControlName="andOrCondition"> -->
+                                 <p-dropdown  styleClass="form-control" [options]="ConditionList" formControlName="andOrCondition" ></p-dropdown>
                                 </span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="col-lg-3">
-                                <input type="text" class="form-control" formControlName="tableName">
+                                <!-- <input type="text" class="form-control" formControlName="tableName"> -->
+                                <p-dropdown  styleClass="form-control" [options]="TableNameList" formControlName="tableName" (onChange)="filterColumn($event)" placeholder="select TableName"></p-dropdown>
                                 </span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="col-lg-3">
-                                <input type="text" class="form-control" formControlName="columnName">
+                               <!--  <input type="text" class="form-control" formControlName="columnName"> -->
+                                <p-dropdown  styleClass="form-control" [options]="ColumnNameList" formControlName="columnName" placeholder="select ColumnName"></p-dropdown>
                                 </span>
-                                <span class="col-lg-4">
+                    
+                                <span class="col-lg-3">
                                     <input type="text" class="form-control" formControlName="expression">
                                 </span>
                                 <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length == i+1">

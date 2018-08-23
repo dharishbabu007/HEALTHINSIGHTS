@@ -27,7 +27,8 @@
                 </div>
             </div>
             <div class="col col-lg-12">
-                <table class="table table-bordered table-hover" >
+                <form [formGroup]="closeGapForm" class="form-horizontal" novalidate >
+                <table class="table table-bordered table-hover responsive" >
                     <thead>
                         <tr>
                             <th *ngFor="let col of cols" class="text-center align-middle" >
@@ -36,30 +37,40 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <tr *ngFor="let gapsElement of gaps">
-                            <td *ngFor="let col of cols" [ngSwitch]="col.field">
-                                <span *ngSwitchCase="'measureTitle'"> 
+                        <tr *ngFor="let gapsElement of gaps; let i=index;" >
+                            <td *ngFor="let col of cols" >
+                                <span *ngIf="col.field == 'measureTitle'"> 
                                     {{gapsElement[col.field]}}
                                 </span>
-                                <span *ngSwitchCase="'dateTime'"> 
+                                <span *ngIf="col.field == 'dateTime'"> 
                                     {{gapsElement[col.field] | date}}
                                 </span>
-                                <p-dropdown *ngSwitchCase="'status'" [(ngModel)]="gapsElement[col.field]" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown>
-                                <p-dropdown *ngSwitchCase="'priority'" [(ngModel)]="gapsElement[col.field]" [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
-                                <span *ngSwitchDefault>
-                                    <textarea [(ngModel)]="gapsElement[col.field]" [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
+                                
+                                <p-dropdown formControlName="status" *ngIf="col.field == 'status' && i ==0" [(ngModel)]="gapsElement[col.field]" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                                <p-dropdown formControlName="priority" *ngIf="col.field == 'priority' && i ==0" [(ngModel)]="gapsElement[col.field]" [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                                <span *ngIf="col.field == 'payerComments' && i ==0" >
+                                    <textarea formControlName="payerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
                                 </span> 
-                            
+                                <span *ngIf="col.field == 'providerComments' && i ==0" >
+                                    <textarea formControlName="providerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
+                                </span> 
+                                <span *ngIf="col.field == 'intervention' && i ==0" >
+                                    <textarea formControlName="intervention"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
+                                </span>  
+                                <span *ngIf="i > 0 && (col.field != 'dateTime' && col.field != 'measureTitle')"> 
+                                        {{gapsElement[col.field]}}
+                                    </span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                </form>
                 <p-fileUpload name="myfile[]" url="#" multiple="multiple" accept="image/*" maxFileSize="1000000"></p-fileUpload>
             </div>
         </div>
         <div class="row  text-right">
             <div class="col col-lg-12 ">
-                <button pButton type="button" [routerLink]="['/measurelibrary']" label="Submit" class="ui-button-primary m-2"></button>
+                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2"></button>
                 <button pButton type="button" label="Cancel" class="ui-button-secondary m-2"></button>
             </div>
         </div>

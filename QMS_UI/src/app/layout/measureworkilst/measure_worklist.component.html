@@ -1,5 +1,5 @@
 <div >
-    <app-page-header [heading]="'Measure Worklist'" [icon]="'fa-table'"></app-page-header>
+    <app-page-header [heading]="'My Measures'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
     <div class="row">
         <div class="col col-lg-12">
@@ -35,7 +35,7 @@
                             <div *ngSwitchCase="'Approved'" >
                                 <i class="fa fa-2x fa-check-square text-secondary" ></i>&nbsp;
                                 <i class="fa fa-2x fa-window-close text-secondary" ></i>&nbsp;
-                                <i class="fa fa-2x fa-cog text-primary" style="cursor:pointer"></i>
+                                <a [routerLink]="['/configurator']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" ></i></a>
                             </div>
                             <div *ngSwitchCase="'New'">
                                 <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])"></i>&nbsp;

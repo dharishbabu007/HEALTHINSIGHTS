@@ -3,18 +3,27 @@ import { routerTransition } from '../../router.animations';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { MessageService } from '../../shared/services/message.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'app-tables',
     templateUrl: './measure_worklist.component.html',
     styleUrls: ['./measure-worklist.component.scss'],
-    animations: [routerTransition()],
+    animations: [routerTransition()], 
     providers: [GapsService]
 })
 export class MeasureworklistComponent implements OnInit {
+    refresh = false;
     constructor(private gapsService: GapsService,
         private msgService: MessageService,
-         public router: Router) {}
+        public router: Router,
+        private route: ActivatedRoute
+        ) {
+            this.route.queryParams.subscribe(params => {
+                if (params['fetch']) {
+                    this.refresh = true;
+                }
+            });
+         }
     membergaps: MemberCareGaps[];
     cols: any[];
     ngOnInit() {
@@ -31,12 +40,13 @@ export class MeasureworklistComponent implements OnInit {
         ];
     }
     copytoCreator(id, newType) {
-        this.router.navigate(['/measurecreator', id, newType]);
-   }
+         this.router.navigate(['/measurecreator', id, newType]);
+    }
    statusClickImg(status, id) {
        this.gapsService.setMeasureStatus(id, status).subscribe( (res: any) => {
         if (res.status === 'SUCCESS') {
             this.msgService.success('Measure approved Successfully');
+            this.router.navigate(['/measureworklist']);
           } else {
             this.msgService.success(res.message);
           }

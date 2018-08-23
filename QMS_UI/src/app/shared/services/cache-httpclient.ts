@@ -23,11 +23,11 @@ export class CachedHttpClient {
     private http: HttpClient,
   ) { }
 
-  get<T>(url: string, cacheTime?: number, forceRefresh?: boolean )
+  get<T>(url: string, forceRefresh = false )
   : Observable<T> {
     let cachedItem: CacheItem<T> = this.getCachedItem<T>(url);
     forceRefresh = (forceRefresh) ? forceRefresh : false;
-    cacheTime = (cacheTime) ? cacheTime : 86400000;
+    const cacheTime =  86400000;
     if (cachedItem !== undefined && !forceRefresh) {
       const expireDate = cachedItem.timestampCached + cacheTime;
       if (Date.now() < expireDate) {

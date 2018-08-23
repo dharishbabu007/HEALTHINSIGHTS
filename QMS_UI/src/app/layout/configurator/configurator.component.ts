@@ -9,10 +9,15 @@ import { Condition, Configurator } from '../../shared/services/gaps.data';
     providers: [GapsService]
 })
 export class ConfiguratorComponent implements OnInit {
-    programs: any;
-    clinicalConditions: any;
-    measureDomains: any;
-    memberList: any;
+    ConditionList=  [
+        
+        { label: 'AND', value: 'AND' },
+        { label: 'OR', value: 'OR' },
+        {label: 'UNION', value: 'UNION'}
+    ];
+    TableNameList: any; 
+    ColumnNameList: any;
+    tableRepository: any;
     public configForm: FormGroup;
     constructor(private gapsService: GapsService, private _fb: FormBuilder) {
         this.configForm = this._fb.group({
@@ -22,6 +27,13 @@ export class ConfiguratorComponent implements OnInit {
                 this.conditionParamForm(),
             ])
           });
+        this.gapsService.getTableName().subscribe((data: any) => {
+            this.TableNameList = [];
+            this.tableRepository = data;
+            data.forEach(element => {
+                this.TableNameList.push({label: element.name, value: element.name});
+            });
+        });
     }
     conditionParamForm() {
         return this._fb.group({
@@ -42,14 +54,16 @@ export class ConfiguratorComponent implements OnInit {
     }
     get formConditionList() { return <FormArray>this.configForm.get('conditionList'); }
     ngOnInit() {
-        this.gapsService.getPrograms().subscribe((data: any) => {
-            this.programs = data;
-        });
-        this.gapsService.getClinicalConditions().subscribe((data: any) => {
-            this.clinicalConditions = data;
-        });
-        this.gapsService.getMeasureDomain().subscribe((data: any) => {
-            this.measureDomains = data;
+
+  
+  
+
+    }
+    filterColumn(event){
+        this.ColumnNameList = [];
+        const columnArray = this.tableRepository.filter(item => item.name === event.value);
+        columnArray[0].columnList.forEach(element => {
+          this.ColumnNameList.push({label: element.name, value: element.name});
         });
     }
 }

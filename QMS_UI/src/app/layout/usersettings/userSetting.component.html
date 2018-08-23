@@ -1,0 +1,114 @@
+<div >
+    <app-page-header [heading]="'Edit Profile'" [icon]="'fa-table'"></app-page-header>
+<div class="card ">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">First Name</label>
+              <div class="col-md-3">
+               <input class="form-control" type="text" placeholder="Fisrt Name" formControlName="firstName">
+              </div>
+            </div>
+             <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">Last Name</label>
+              <div class="col-md-3">
+               <input class="form-control" type="text" placeholder="Last Name" formControlName="lastName">
+              </div>
+            </div>
+             <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">Security Question</label>
+              <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Security Question" formControlName="securityQuestion">
+              </div>
+            </div>
+             <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">Security Answer</label>
+              <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Security Answer" formControlName="securityAnswer">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">Phone Number</label>
+              <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Phone Number" formControlName="phoneNumber">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold">Email ID</label>
+              <div class="col-md-3">
+                <input class="form-control" type="text" placeholder="Email" formControlName="EmailId">
+              </div>
+            </div>
+          
+          </form>
+            </div>
+            <div class="card-footer text-right">
+            <button type="submit" class="btn btn-sm btn-primary" (click)="submitPc(myForm.value,myForm.valid)" >
+              <i class="fa fa-dot-circle-o"></i> Submit
+            </button>
+           
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+<!-- <div class="app flex-row align-items-center" >
+    <div class="container">
+        <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-group">
+                <div class="card p-4">
+                    <div class="card-body">
+                    <h1>Change User Details</h1>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                         <label class="col-md-3 col-form-label font-weight-bold" for="hf-programName">First Name</label>
+                        </span>
+                        </div>
+                        <input class="form-control" type="text" placeholder="Fisrt Name" formControlName="firstName">
+                    </div>
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <label class="col-md-3 col-form-label font-weight-bold" for="hf-programName">Lat Name</label>
+                        </span>
+                        </div>
+                        <input class="form-control" type="text" placeholder="Last Name" formControlName="lastName">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                         <label class="col-md-3 col-form-label font-weight-bold" for="hf-programName">Security Question</label>
+                        </span>
+                        </div>
+                        <input class="form-control" type="text" placeholder="Security Question" formControlName="securityName">
+                    </div>
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <label class="col-md-3 col-form-label font-weight-bold" for="hf-programName">Phone Number</label>
+                        </span>
+                        </div>
+                        <input class="form-control" type="text" placeholder="Phone Number" formControlName="phoneNumber">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-right">
+                        <button class="btn btn-link px-0" type="submit" (click)="submitPc(myForm.value)">submit</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

@@ -15,7 +15,7 @@
                             <span class="font-weight-bold">MID</span> :
                             <a [routerLink]="['/spv', gaps.memberId]">{{gaps.memberId}}</a>
                         </div>
-                        <div class="col col-lg-2 col-xl-2">
+                        <div class="col col-lg-4 col-xl-4">
                             <span class="font-weight-bold">Name</span> : {{gaps.name}}
                         </div>
                     </div>
@@ -54,7 +54,10 @@
                                             <a *ngSwitchCase="'measureTitle'" [routerLink]="['/member-gap/', rowData.qualityMeasureId, memberID]">
                                                 {{rowData[col.field]}}
                                             </a>
-                                            <span *ngSwitchCase="'dateTime'">
+                                            <span *ngSwitchCase="'start_date'">
+                                                    {{rowData[col.field] | date}}
+                                            </span>
+                                            <span *ngSwitchCase="'end_date'">
                                                     {{rowData[col.field] | date}}
                                             </span>
                                             <span *ngSwitchDefault>

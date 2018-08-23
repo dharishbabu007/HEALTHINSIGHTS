@@ -1,5 +1,5 @@
 <div >
-    <app-page-header [heading]="'Measure Library'" [icon]="'fa-table'"></app-page-header>
+    <app-page-header [heading]="'Quality Measures'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
     <div class="row">
         <div class="col col-lg-12 ">
@@ -20,8 +20,10 @@
                                         <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                         <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
                                     </div>
+                            <input *ngSwitchCase="'id'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'equals')">
+
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                            <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                            <p-multiSelect *ngSwitchCase="'status'" [filter]="false" [options]="statusTypes" [style]="{'width':'100%','padding':'0px'}" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
                         </th>
                         
                     </tr>
@@ -29,9 +31,9 @@
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr >
                         <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field">
-                                <span *ngSwitchCase="'isActive'" >
-                                    <i class="fa fa-toggle-on text-primary" *ngIf="rowData['isActive'] == 'Y'">Active</i>
-                                    <i class="fa fa-toggle-off text-secondary" *ngIf="rowData['isActive'] != 'Y'">Decommisioned</i>
+                                <span *ngSwitchCase="'status'" >
+                                    <i class="text-primary" *ngIf="rowData['status'] != 'In-active'">Active</i>
+                                    <i class="text-danger" *ngIf="rowData['status'] == 'In-active'">Decommission</i>
                                 </span>
                                 <span *ngSwitchDefault>
                                     {{rowData[col.field]}}
@@ -39,7 +41,7 @@
                             
                         </td>
                         <td >
-                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 0)" style="cursor: pointer;"></i>&nbsp;<i class="fa fa-pie-chart"></i>
+                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 1)" style="cursor: pointer;"></i>&nbsp;<i class="fa fa-pie-chart"></i>
                         </td>
                     </tr>
                 </ng-template>

@@ -11,7 +11,7 @@
                         <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
-                        </th>
+                         </th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field">
@@ -20,8 +20,10 @@
                                         <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                         <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
                                     </div>
-                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-                            <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                                   
+                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                           <!-- col.filterMatchMode-->                            
+                           <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
                         </th>
                     </tr>
                 </ng-template>
@@ -35,8 +37,11 @@
                                 <a [routerLink]="['/spv/',rowData['member_id']]">{{rowData[col.field]}}</a>
                             </span>
                             <span *ngSwitchCase="'careGaps'">
-                                <a [routerLink]="['/member-gap/0/',rowData['member_id']]">{{rowData[col.field]}}</a>
+                                <a [routerLink]="['/member-gap', rowData['qualityMeasureId'], rowData['member_id']]">{{rowData[col.field]}}</a>
                             </span>
+                            <span *ngSwitchCase="'timePeriod'">
+                                    {{rowData[col.field] | date}}
+                                </span>
                             <span *ngSwitchDefault>{{rowData[col.field]}}</span>
                             
                         </td>

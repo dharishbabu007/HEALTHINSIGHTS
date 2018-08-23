@@ -14,6 +14,7 @@ import { MemberListComponent } from './member-list/member-list.component';
 import { MeasurecreatorComponent } from './measurecreator/measure-creator.component';
 import { SpvComponent } from './spv/spv.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
+import { UserSettingComponent } from './usersettings/userSetting.component';
 const routes: Routes = [
     {
         path: '',
@@ -37,6 +38,7 @@ const routes: Routes = [
             { path: 'measurecreator', component: MeasurecreatorComponent},
             { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent},
             { path: 'spv/:memberId', component: SpvComponent},
+            { path: 'usersettings', component: UserSettingComponent}
         ]
     }
 ];

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
-import { asideMenuCssClasses, Replace } from '../../../shared/index';
+import { asideMenuCssClasses, Replace } from '../../../shared';
 
 @Component({
   selector: 'app-aside',

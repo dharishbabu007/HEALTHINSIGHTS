@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
-import { ProgramCreator } from './programcreator.component';
+import { userSetting } from './UserSetting.component';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -16,22 +16,22 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class ProgramcreatorService {
+export class UserSettingService {
 
 
   private handleError: HandleError;
 
   constructor(private http: HttpClient,
     httpErrorHandler: HttpErrorHandler) {
-      this.handleError =  httpErrorHandler.createHandleError('ProgramcreatorService');
+      this.handleError =  httpErrorHandler.createHandleError('UserSettingService');
      }
-  programCreatorSubmit(model: ProgramCreator): Observable<ProgramCreator> {
-        console.log('ProgramCreator');
+  UserSettingSubmit(model: userSetting): Observable<userSetting> {
+        console.log('UserSetting');
 
-        return this.http.post<ProgramCreator>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions);
-        // . pipe(
-        //     // catchError(this.handleError('programCreatorSubmit', model))
-        //   );
+        return this.http.post<userSetting>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
+        . pipe(
+            catchError(this.handleError('UserSettingSubmit', model))
+          );
        // this.http.post('http://<hostname>:<port>/curis/qms/createProgram',model);
   }
 
