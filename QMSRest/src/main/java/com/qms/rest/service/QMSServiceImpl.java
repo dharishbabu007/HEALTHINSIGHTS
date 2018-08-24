@@ -246,13 +246,64 @@ public class QMSServiceImpl implements QMSService {
 		
 		return dataSet;				
 	}
+	
+	private String validateMeasureDates (MeasureCreator measureCreator) {
+		
+		if(measureCreator.getStartDate() == null && measureCreator.getEndDate() == null)
+			return null;
+		long measureStartDate = QMSDateUtil.getDateInLong(measureCreator.getStartDate(), null);
+		long measureEndDate = QMSDateUtil.getDateInLong(measureCreator.getEndDate(), null);
+		if(measureStartDate > measureEndDate) {
+			return "Invalid Measure Start and End Dates.";
+		}
+
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select START_DATE,END_DATE from "
+					+ "QMS_QUALITY_PROGRAM where PROGRAM_NAME = '"+measureCreator.getProgramName()+"'");
+			if (resultSet.next()) {
+
+				if(resultSet.getString("START_DATE") != null && measureCreator.getStartDate() != null) {
+					if(measureStartDate < QMSDateUtil.getDateInLong(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")), null)) {
+						return "Measure Start Date should match with Program Start Date. "
+								+ "It should be on/after "+QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE"))+".";
+						
+					}
+				}
+
+				if(resultSet.getString("END_DATE") != null && measureCreator.getEndDate() != null) {					
+					if(measureEndDate > QMSDateUtil.getDateInLong(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")), null)) {
+						return "Measure End Date should match with Program End Date. "
+								+ "It should be on/before "+QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")) +".";
+					}
+				}				
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+
+		return null;
+	}
 
 	@Override
 	public RestResult insertMeasureCreator(MeasureCreator measureCreator) {		
+		
+		String errorMessage = validateMeasureDates(measureCreator);
+		if(errorMessage != null) {
+			return RestResult.getFailRestResult(errorMessage);
+		}
+		
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
 		HashMap<String, String> typeMap = getIdNameMap("QMS_MEASURE_TYPE", "MEASURE_TYPE_ID", "MEASURE_TYPE_NAME");
 		HashMap<String, String> domainMap = getIdNameMap("QMS_MEASURE_DOMAIN", "MEASURE_DOMAIN_ID", "MEASURE_DOMAIN_NAME");		
-		String qualityProgramId = this.getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
+		String qualityProgramId = getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 
 		String sqlStatementInsert = 
@@ -272,7 +323,7 @@ public class QMSServiceImpl implements QMSService {
 			connection = qmsConnection.getOracleConnection();
 			connection.setAutoCommit(false);
 			sqlStatement = connection.createStatement();
-
+			
 			int measureId = 0;
 			//to get the last created measure id			
 			if(measureCreator.getMeasureEditId() == 0) {
@@ -398,6 +449,11 @@ public class QMSServiceImpl implements QMSService {
 		}
 		
 		System.out.println(" Updating the record for id --> " + measureCreator.getId() + " edit id --> " + lastCreatedCreator.getMeasureEditId());
+		
+		String errorMessage = validateMeasureDates(measureCreator);
+		if(errorMessage != null) {
+			return RestResult.getFailRestResult(errorMessage);
+		}		
 		
 		String sqlStatementUpdate = 
 				"update qms_measure set clinical_conditions=?, data_sources_id=?, denominator=?, target=?, "
@@ -634,7 +690,8 @@ public class QMSServiceImpl implements QMSService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"' and CATEGORY_NAME='"+categoryName+"'");
+			//resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"' and CATEGORY_NAME='"+categoryName+"'");
+			resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"'");
 			
 			if (resultSet.next()) {
 				qualityProgramId = resultSet.getString("QUALITY_PROGRAM_ID");				
