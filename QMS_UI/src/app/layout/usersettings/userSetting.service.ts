@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
-import { userSetting } from './UserSetting.component';
+import { UserSetting } from './userSetting.component';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -25,10 +25,10 @@ export class UserSettingService {
     httpErrorHandler: HttpErrorHandler) {
       this.handleError =  httpErrorHandler.createHandleError('UserSettingService');
      }
-  UserSettingSubmit(model: userSetting): Observable<userSetting> {
+  UserSettingSubmit(model: UserSetting): Observable<UserSetting> {
         console.log('UserSetting');
 
-        return this.http.post<userSetting>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
+        return this.http.post<UserSetting>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
         . pipe(
             catchError(this.handleError('UserSettingSubmit', model))
           );

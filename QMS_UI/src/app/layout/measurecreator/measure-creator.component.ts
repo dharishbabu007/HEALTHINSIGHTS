@@ -47,7 +47,7 @@ export class MeasurecreatorComponent implements OnInit {
           numeratorExclusions: [],
           denomExclusions: [],
           measureDomain: [],
-          target: [],
+          target: ['', [Validators.required]],
           measureCategory: [],
           type: [],
           clinocalCondition: [],
@@ -90,7 +90,7 @@ export class MeasurecreatorComponent implements OnInit {
   }
 
  setMeasureInfo(measureInfo) {
-   if (measureInfo.isActive === 'N') {
+   if (measureInfo.isActive === 'N' && this.type== '1') {
     this.myForm.disable();
     this.disableForm = true;
    }
@@ -223,5 +223,5 @@ export interface Measurecreator {
     endDate: string;
     status: string;
     id: string;
-    target: any;
+    target: number;
    }

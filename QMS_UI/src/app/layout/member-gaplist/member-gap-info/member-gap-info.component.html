@@ -7,11 +7,11 @@
                     <div class="card-body">
                         <div *ngIf="gaps" class="card-text row">
                             <div class="col col-lg-2 col-xl-2 ">
-                                <span class="font-weight-bold">MID</span> : <a [routerLink]="['/spv', closeGaps.memberId]">{{closeGaps.memberId}}</a>
+                                <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
                             <div class="col col-lg-2 col-xl-2">
-                                <span class="font-weight-bold">Name</span> : {{closeGaps.name}}
-                            </div>
+                                <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]">{{closeGaps.name}}</a>
+                             </div>
                         </div>
                         <div  *ngIf="gaps" class="row card-text">
                             <div class="col col-lg-2 col-xl-2">

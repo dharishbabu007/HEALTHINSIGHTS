@@ -13,6 +13,7 @@
                 <span class="col-lg-5">
                   <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="programList" formControlName="programName" (onChange)="filterCategory($event)"></p-dropdown>
                 </span>
+                &nbsp;
                 <span class="col-lg-5">
                   <input type="text" class="form-control" formControlName="name">
                 </span>
@@ -99,7 +100,7 @@
           </div>
           <div class="row">
             <span class="col-lg-5">
-               <input type="text" class="form-control" formControlName="target">
+               <input type="number" class="form-control" formControlName="target">
             </span>
              
           </div>

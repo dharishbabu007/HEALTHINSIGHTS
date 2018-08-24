@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 
-import { MeasurecreatorComponent } from '../measurecreator/measure-creator.component'
+
 import { Router } from '@angular/router';
 @Component({
     selector: 'app-tables',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
     providers: [GapsService]
 })
 export class MeasurelibraryComponent implements OnInit {
-      private disableForm = false;
+     
     programType = 'test';
     programValue = 'test';
     statusTypes = [{label: 'Active', value: 'Approved'}, {label: 'Decommission', value: 'In-active'}];
@@ -46,6 +46,6 @@ export class MeasurelibraryComponent implements OnInit {
     }
     copytoCreator(id, newType) {
          this.router.navigate(['/measurecreator', id, newType]);
-          disableForm = true;
+        
     }
 }
