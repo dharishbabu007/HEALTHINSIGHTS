@@ -16,7 +16,7 @@ export const navItems = [
         children: [
           {
             name: 'MIPS',
-            url: 'http://healthinsight:8082/curis/MIPS.html',
+            url: 'http://192.168.184.70/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
             icon: 'fa fa-line-chart'
           },
           {

@@ -31,7 +31,7 @@ export class UserSettingComponent implements OnInit {
       });
   }
 
-  submitPc(modelPc: userSetting) {
+  submitPc(modelPc: UserSetting) {
 
        this.submitted = true;
       // call API to save
@@ -41,7 +41,7 @@ export class UserSettingComponent implements OnInit {
     this.router.navigateByUrl('/dashboard');
   }
 
-  savePc(modelPC: userSetting) {
+  savePc(modelPC: UserSetting) {
 
     this.submitted = true;
    // call API to save

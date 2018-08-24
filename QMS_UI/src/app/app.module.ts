@@ -9,9 +9,11 @@ import { GrowlModule } from 'primeng/growl';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent, SafePipe } from './app.component';
 import { AuthGuard } from './shared';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpErrorHandler } from './shared/services/http-error-handler.service';
 import { MessageService } from './shared/services/message.service';
+
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {

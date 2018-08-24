@@ -15,8 +15,8 @@
                     <tr *ngFor="let program of programs; let i = index">
                         <td class="text-left list-values">{{program}}</td>
                         <td width="15%">
-                            <a href="http://healthinsight:8082/curis/MIPS.html"  *ngIf="i==0" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
-                            <a href='http://192.168.184.70/views/CurisDashboard_HEDIS_1/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no' *ngIf="i==1"> <i class="fa fa-pie-chart" ></i></a>
+                            <a [routerLink]="['/frame-url','http://192.168.184.70/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target" *ngIf="i==0" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
+                            <a [routerLink]="['/frame-url','http://192.168.184.70/views/CurisDashboard_HEDIS_1/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" *ngIf="i==1"> <i class="fa fa-pie-chart" ></i></a>
                             <span *ngIf="i>1"> &nbsp;&nbsp;&nbsp;</span>
                             &nbsp;<a [routerLink]="['/measurelibrary','reimbursement', program]"><i class="fa fa-th-list"></i></a></td>
                     </tr>
