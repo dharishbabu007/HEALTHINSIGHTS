@@ -10,4 +10,9 @@ public interface UserService {
 	
 	User getUserInfo(String userName, String password);
 	
+	RestResult addUser(User user);
+	
+	RestResult updateUser(User user);	
+	
+	User getUserInfo(String userName);
 }

@@ -63,4 +63,26 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}	
 
+	
+	@RequestMapping(value = "/create_user/", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+		
+		RestResult restResult = userService.addUser(user);
+		if(RestResult.isSuccessRestResult(restResult)) {
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(value = "/update_user/", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> updateUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+		
+		RestResult restResult = userService.updateUser(user);
+		if(RestResult.isSuccessRestResult(restResult)) {
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
+	}	
 }
