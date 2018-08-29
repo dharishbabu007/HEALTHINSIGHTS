@@ -12,7 +12,7 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/memberGapList/member/${memberID}`);
     }
     getMemberGaps() {
-        return this.http.get('http://healthinsight:8082/curis/memberGapList/findAllMembers', true);
+        return this.http.get('http://healthinsight:8082/curis/memberGapList/findAllMembers');
     }
     getGapsInfo(gapId, memberId) {
         return this.http.get(`http://healthinsight:8082/curis/closeGaps/${memberId}/${gapId}`);

@@ -23,7 +23,7 @@ export class CachedHttpClient {
     private http: HttpClient,
   ) { }
 
-  get<T>(url: string, forceRefresh = false )
+  get<T>(url: string, forceRefresh = true )
   : Observable<T> {
     let cachedItem: CacheItem<T> = this.getCachedItem<T>(url);
     forceRefresh = (forceRefresh) ? forceRefresh : false;

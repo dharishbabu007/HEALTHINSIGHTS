@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserSettingService } from './userSetting.service';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { UserSetting } from './userSetting.component';
 
 @Component({
   selector: 'app-userSetting',
@@ -31,7 +31,7 @@ export class UserSettingComponent implements OnInit {
       });
   }
 
-  submitPc(modelPc: UserSetting) {
+  submitPc(modelPc: UserSetting, isValid: boolean) {
 
        this.submitted = true;
       // call API to save
@@ -41,7 +41,7 @@ export class UserSettingComponent implements OnInit {
     this.router.navigateByUrl('/dashboard');
   }
 
-  savePc(modelPC: UserSetting) {
+  savePc(modelPC: UserSetting, isValid: boolean) {
 
     this.submitted = true;
    // call API to save
@@ -50,4 +50,7 @@ export class UserSettingComponent implements OnInit {
  this.UserSettingService.UserSettingSubmit(modelPC).subscribe( model => console.log('Succeessfully Created Program Creator'));
 }
 
+}
+export interface UserSetting{
+  
 }

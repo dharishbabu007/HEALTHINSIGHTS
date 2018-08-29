@@ -43,6 +43,8 @@ import {TooltipModule} from 'primeng/tooltip';
 import { ProgramcreatorComponent } from './programcreator/programcreator.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
+
+import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 @NgModule({
     imports: [
         CommonModule,
@@ -61,8 +63,9 @@ import { CalendarModule } from 'primeng/calendar';
         AutoCompleteModule,
         FormsModule,
         TooltipModule,
-        NgbDropdownModule.forRoot()
+        NgbDropdownModule.forRoot(),
     ],
+
     declarations: [LayoutComponent,
         BrandMinimizeDirective,
         NavDropdownToggleDirective,
@@ -98,6 +101,10 @@ import { CalendarModule } from 'primeng/calendar';
         MeasurecreatorComponent,
         ProgramcreatorComponent,
         UserSettingComponent],
+        
+ providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
+        
+   
 
 })
 export class LayoutModule {}

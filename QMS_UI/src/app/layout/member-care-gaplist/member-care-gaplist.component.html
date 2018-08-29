@@ -19,8 +19,12 @@
                                         Age > {{ageFilter}}
                                         <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                         <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
-                                    </div>
-                                   
+                               </div>
+                             <div *ngSwitchCase="'timePeriod'">
+                                       
+                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"  [readonlyInput]="false" dateFormat="dd.mm.yy" (onSelect)="dt.filter($event.value, col.field, 'equals')"></p-calendar>   
+                                        
+                               </div>
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                            <!-- col.filterMatchMode-->                            
                            <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
@@ -43,6 +47,7 @@
                                     {{rowData[col.field] | date}}
                                 </span>
                             <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                             
                             
                         </td>
                     </tr>

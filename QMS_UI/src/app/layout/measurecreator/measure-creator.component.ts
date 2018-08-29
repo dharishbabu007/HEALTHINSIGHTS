@@ -16,6 +16,7 @@ export class MeasurecreatorComponent implements OnInit {
 
   public myForm: FormGroup;
   disableForm = false;
+  disableOnCopy = false;
   public submitted: boolean;
   measureId: string;
   title: string;
@@ -93,6 +94,10 @@ export class MeasurecreatorComponent implements OnInit {
    if (measureInfo.isActive === 'N' && this.type== '1') {
     this.myForm.disable();
     this.disableForm = true;
+    this.disableOnCopy = true;
+   }
+   if (this.type== '2'){
+   this.disableOnCopy = true;
    }
    this.myForm.controls['programName'].setValue(measureInfo.programName);
    this.myForm.controls['name'].setValue(measureInfo.name);
@@ -134,7 +139,7 @@ export class MeasurecreatorComponent implements OnInit {
       // call API to save
       // ...
       model.status = 'New';
-      model.target = parseInt(model.target, 10);
+     // model.target = parseInt(model.target, 10);
       model.startDate = this.formatDate(model.startDate);
       model.endDate = this.formatDate(model.endDate);
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
@@ -153,7 +158,7 @@ export class MeasurecreatorComponent implements OnInit {
    // call API to save
    // ...
    model.status = 'Open';
-   model.target = parseInt(model.target, 10);
+  // model.target = parseInt(model.target, 10);
    model.startDate = this.formatDate(model.startDate);
    model.endDate = this.formatDate(model.endDate);
    // console.log(model);
@@ -179,7 +184,7 @@ export class MeasurecreatorComponent implements OnInit {
     this.myForm.controls['endDate'].markAsTouched();
     model.isActive = 'N';
     model.status = 'In-active';
-    model.target = parseInt(model.target, 10);
+    //model.target = parseInt(model.target, 10);
     model.startDate = this.formatDate(model.startDate);
     model.endDate = this.formatDate(model.endDate);
     if (this.myForm.valid) {

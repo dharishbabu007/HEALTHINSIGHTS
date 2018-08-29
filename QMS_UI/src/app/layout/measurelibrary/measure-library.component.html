@@ -30,7 +30,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr >
-                        <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field">
+                        <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field" pTooltip="Click to open in editor">
                                 <span *ngSwitchCase="'status'" >
                                     <i class="text-primary" *ngIf="rowData['status'] != 'In-active'">Active</i>
                                     <i class="text-danger" *ngIf="rowData['status'] == 'In-active'">Decommission</i>
@@ -41,7 +41,7 @@
                             
                         </td>
                         <td >
-                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" style="cursor: pointer;"></i>&nbsp;<i class="fa fa-pie-chart"></i>
+                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" style="cursor: pointer;" pTooltip="Open in Creator"></i>&nbsp;<i class="fa fa-pie-chart" pTooltip="Dashboard"></i>
                         </td>
                     </tr>
                 </ng-template>
