@@ -4,10 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qms.rest.model.CloseGap;
 import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
@@ -83,8 +89,11 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		try {						
 			connection = qmsConnection.getOracleConnection();
-			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+			statement = connection.createStatement();
+			if(password != null)
+				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+			else
+				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"'");
 			while (resultSet.next()) {
 				user = new User();
 				user.setEmail(resultSet.getString("USER_EMAIL"));
@@ -101,6 +110,92 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return user;
+	}
+
+	@Override
+	public RestResult addUser(User user) {		
+		PreparedStatement statement = null;
+		Connection connection = null;
+		RestResult restResult = null;
+		User getUser = getUserInfo(user.getLoginId());
+		if(getUser != null) {
+			return RestResult.getFailRestResult("User already exists.");
+		}
+		try {
+			connection = qmsConnection.getOracleConnection();	
+
+			String sqlStatementInsert = "insert into QMS_USER_MASTER(USER_LOGINID,FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
+					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD) values (?,?,?,?,?,?,?,?)";
+			statement = connection.prepareStatement(sqlStatementInsert);
+			int i=0;
+			statement.setString(++i, user.getLoginId());
+			statement.setString(++i, user.getFirstName());	
+			statement.setString(++i, user.getLastName());
+			statement.setString(++i, user.getSecurityQuestion());
+			statement.setString(++i, user.getSecurityAnswer());
+			statement.setString(++i, user.getPhoneNumber());
+			statement.setString(++i, user.getEmail());
+			statement.setString(++i, user.getPassword());
+			
+			statement.executeUpdate();
+			restResult = RestResult.getSucessRestResult("User added successfully.");
+		} catch (Exception e) {
+			restResult = RestResult.getFailRestResult(e.getMessage());
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}	
+		return restResult;		
+
+	}
+
+	@Override
+	public RestResult updateUser(User user) {
+		
+		PreparedStatement statement = null;
+		Connection connection = null;
+		RestResult restResult = null;
+		Statement statementObj = null;
+		ResultSet resultSet = null;
+		try {	
+			connection = qmsConnection.getOracleConnection();	
+			
+			statementObj = connection.createStatement();			
+			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+"'");
+			if (resultSet.next()) {
+				return RestResult.getSucessRestResult("Email id already exists. Please enter another one.");
+			}						
+			resultSet.close();			
+			
+			
+			String sqlStatementInsert = "update QMS_USER_MASTER set FIRST_NAME=?, LAST_NAME=?, SECURITY_QUESTION=?, "
+					+ "SECURITY_ANSWER=?, PHONE_NO=?, USER_EMAIL=? WHERE USER_LOGINID=?";		
+			statement = connection.prepareStatement(sqlStatementInsert);
+			int i=0;							
+			statement.setString(++i, user.getFirstName());	
+			statement.setString(++i, user.getLastName());
+			statement.setString(++i, user.getSecurityQuestion());
+			statement.setString(++i, user.getSecurityAnswer());
+			statement.setString(++i, user.getPhoneNumber());
+			statement.setString(++i, user.getEmail());
+			statement.setString(++i, user.getLoginId());			
+			statement.executeUpdate();
+			restResult = RestResult.getSucessRestResult("User updated successfully.");
+		} catch (Exception e) {
+			restResult = RestResult.getFailRestResult(e.getMessage());
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}	
+		return restResult;
+	}
+
+	@Override
+	public User getUserInfo(String userName) {	
+		return getUserInfo(userName, null);
 	}	
 	
 }
