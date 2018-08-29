@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'app-tables',
@@ -20,7 +21,11 @@ export class MemberCareGapListComponent implements OnInit {
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' }
     ];
+
+ 
+  dateFilters: any;
     ngOnInit() {
+
         this.gapsService.getMemberGaps().subscribe((data: any) => {
             this.loading = false;
             this.membergaps = [];
@@ -48,6 +53,8 @@ export class MemberCareGapListComponent implements OnInit {
                 }
             });
         });
+
+
         this.cols = [
             { field: 'member_id', header: 'Member Id' },
             { field: 'name', header: 'Name' },
@@ -62,5 +69,8 @@ export class MemberCareGapListComponent implements OnInit {
             { field: 'timePeriod', header: 'Last Action Date' },
 
         ];
+ 
+
+
     }
 }

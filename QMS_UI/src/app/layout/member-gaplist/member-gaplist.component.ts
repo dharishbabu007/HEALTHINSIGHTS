@@ -24,6 +24,7 @@ export class MemberGapListComponent implements OnInit {
     gaps: any[];
     cols: any[];
     memberList: any;
+   
     statusTypes =  [
         { label: 'Select', value: '' },
         { label: 'Open', value: 'Open' },
@@ -46,8 +47,10 @@ export class MemberGapListComponent implements OnInit {
                     element.measureTitle = element.factHedisGapsInCare[0].measureTitle;
                 });
                 this.gaps = data;
+               
                 // console.log('test', data.qmsGicLifecycle);
             });
+            this.gaps = null;
         }
         this.cols = [
             { field: 'measureTitle', header: 'Care Gaps' },

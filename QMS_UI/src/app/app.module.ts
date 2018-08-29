@@ -14,6 +14,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorHandler } from './shared/services/http-error-handler.service';
 import { MessageService } from './shared/services/message.service';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
+
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
@@ -44,7 +47,8 @@ export const createTranslateLoader = (http: HttpClient) => {
         FormsModule,
         ReactiveFormsModule
       ],
-    providers: [AuthGuard, HttpErrorHandler, MessageService],
+    providers: [AuthGuard, HttpErrorHandler, MessageService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

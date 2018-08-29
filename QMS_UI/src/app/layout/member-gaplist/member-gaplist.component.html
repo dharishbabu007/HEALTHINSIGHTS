@@ -4,7 +4,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div class=" card-text">
-                    <div class="form-group row">
+                    <div *ngIf="!gaps" class="form-group row">
                         <label class="col-sm-2 col-form-label" for="hf-member">Search Member:</label>
                         <div class="col-sm-8">
                             <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true" (onSelect)="loadMemberInfo($event)"  [suggestions]="memberList"  (completeMethod)="search($event)" placeholder="Enter Name or ID"></p-autoComplete>
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col col-lg-2 col-xl-2">
                                 <span class="font-weight-bold">DOB </span> :                         
-                                {{gaps.dateOfBirth | date}}
+                                {{gaps.dateOfBirthSk| date}}
                         </div>
                     </div>
                     <div class="row" *ngIf="gaps">

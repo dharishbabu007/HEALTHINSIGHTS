@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProgramcreatorService } from './programcreator.service';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -14,10 +15,18 @@ export class ProgramcreatorComponent implements OnInit {
   public myForm: FormGroup;
 
   public submitted: boolean;
+  type: string;
 
   constructor(private _fb: FormBuilder,
     private programCreatorService: ProgramcreatorService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) {
+
+    this.route.params.subscribe(params => {
+            this.measureId = params['measureId'];
+            this.type = params['type'];
+            this.title = (this.type === '1' ) ? 'Progaram Editor' : 'Program Creator';
+        }); }
 
   ngOnInit() {
       this.myForm = this._fb.group({
