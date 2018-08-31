@@ -7,7 +7,9 @@ public class Mail {
     private String from;
     private String to;
     private String subject;
+    private String text;
     private Map<String, Object> model;
+    
 
     public Mail() {}
 
@@ -34,8 +36,16 @@ public class Mail {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+    
+    public String getText() {
+		return text;
+	}
 
-    public Map<String, Object> getModel() {
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public Map<String, Object> getModel() {
         return model;
     }
 

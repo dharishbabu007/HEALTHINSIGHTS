@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.qms.rest.model.EMail;
 import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
@@ -45,6 +46,17 @@ public class UserController {
 		}
 
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(value = "/forgot_password", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> forgotPassword(@RequestBody EMail email, UriComponentsBuilder ucBuilder) {
+		
+		RestResult restResult = userService.forgotPassword(email.getEmailId());
+		if(RestResult.isSuccessRestResult(restResult)) {
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<RestResult>(restResult, HttpStatus.NOT_FOUND);
 	}	
 	
 	@RequestMapping(value = "/login/{loginId}/{password}", method = RequestMethod.GET)
@@ -61,10 +73,25 @@ public class UserController {
 		}
 		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/get_user/{loginId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserDetails(@PathVariable("loginId") String loginId) {
+		System.out.println("Fetching user details for loginId " + loginId);
+		User user = userService.getUserInfo(loginId);
+		if (user == null) {
+			return new ResponseEntity(new CustomErrorType("User details with loginId " + loginId 
+					+ " not found"), HttpStatus.NOT_FOUND);
+		} else {
+			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
+		}
+		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}	
 
 	
-	@RequestMapping(value = "/create_user/", method = RequestMethod.POST)
+	@RequestMapping(value = "/create_user", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
 		
 		RestResult restResult = userService.addUser(user);
@@ -75,7 +102,7 @@ public class UserController {
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}
 	
-	@RequestMapping(value = "/update_user/", method = RequestMethod.POST)
+	@RequestMapping(value = "/update_user", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> updateUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
 		
 		RestResult restResult = userService.updateUser(user);

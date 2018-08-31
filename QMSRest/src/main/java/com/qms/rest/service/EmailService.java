@@ -1,44 +1,31 @@
 package com.qms.rest.service;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import com.qms.rest.model.Mail;
 
-import javax.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
-
-@Service
+@Service("emailService")
 public class EmailService {
 
-    //@Autowired
+    @Autowired
     private JavaMailSender emailSender;
-
-    //@Autowired
-    private SpringTemplateEngine templateEngine;
 
     public void sendEmail(Mail mail) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    StandardCharsets.UTF_8.name());
-
-            Context context = new Context();
-            context.setVariables(mail.getModel());
-            String html = templateEngine.process("email/email-template", context);
-
-            helper.setTo(mail.getTo());
-            helper.setText(html, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message);            
+            helper.setTo(mail.getTo());          
             helper.setSubject(mail.getSubject());
             helper.setFrom(mail.getFrom());
-
+            helper.setText(mail.getText(), true);            
             emailSender.send(message);
         } catch (Exception e){
+        	e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
