@@ -5,25 +5,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qms.rest.model.CloseGap;
+import com.qms.rest.model.Mail;
 import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
+import com.qms.rest.util.PasswordGenerator;
 import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSConstants;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private QMSConnection qmsConnection;	
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired 
+	private HttpSession httpSession;	
 
 	@Override
 	public RestResult resetPassword(ResetPassword resetPassword) {
@@ -60,11 +67,12 @@ public class UserServiceImpl implements UserService {
 				return restResult;				
 			}			
 			
-			String sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=? where USER_LOGINID=?";
+			String sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=? where USER_LOGINID=?";
 			
 			prepStatement = connection.prepareStatement(sqlStatementUpdate);
 			prepStatement.setString(1, resetPassword.getNewPassword());
-			prepStatement.setString(2, resetPassword.getUserId());
+			prepStatement.setString(2, "N");
+			prepStatement.setString(3, resetPassword.getUserId());
 			prepStatement.executeUpdate();
 			
 			restResult = RestResult.getSucessRestResult(" Reset password success.");
@@ -101,6 +109,13 @@ public class UserServiceImpl implements UserService {
 				user.setLoginId(resultSet.getString("USER_LOGINID"));
 				user.setName(resultSet.getString("USER_NAME"));
 				user.setRoleId(resultSet.getString("USER_ROLE_ID"));
+				user.setFirstName(resultSet.getString("FIRST_NAME"));
+				user.setLastName(resultSet.getString("LAST_NAME"));
+				user.setPassword(resultSet.getString("PASSWORD"));
+				user.setPhoneNumber(resultSet.getString("PHONE_NO"));
+				user.setSecurityAnswer(resultSet.getString("SECURITY_ANSWER"));
+				user.setSecurityQuestion(resultSet.getString("SECURITY_QUESTION"));
+				user.setResetPassword(resultSet.getString("RESET_PASSWORD"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,15 +132,36 @@ public class UserServiceImpl implements UserService {
 		PreparedStatement statement = null;
 		Connection connection = null;
 		RestResult restResult = null;
+		Statement statementObj = null;
+		ResultSet resultSet = null;
+		
 		User getUser = getUserInfo(user.getLoginId());
 		if(getUser != null) {
-			return RestResult.getFailRestResult("User already exists.");
+			return RestResult.getFailRestResult("Login Id already exists. Please enter unique id.");
 		}
+		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		try {
 			connection = qmsConnection.getOracleConnection();	
+			
+			statementObj = connection.createStatement();			
+			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+"'");
+			if (resultSet.next()) {
+				return RestResult.getFailRestResult("Email id already exists. Please enter unique email.");
+			}						
+			resultSet.close();			
 
+			resultSet = statementObj.executeQuery("select max(USER_ID) from QMS_USER_MASTER");
+			int userId = 0;
+			while (resultSet.next()) {
+				userId = resultSet.getInt(1)+1;
+			}						
+			resultSet.close();			
+			System.out.println(" Adding the user with user id --> " + userId);
+			
 			String sqlStatementInsert = "insert into QMS_USER_MASTER(USER_LOGINID,FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
-					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD) values (?,?,?,?,?,?,?,?)";
+					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD,USER_ROLE_ID,USER_ID,"
+					+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,"
+					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;
 			statement.setString(++i, user.getLoginId());
@@ -136,6 +172,23 @@ public class UserServiceImpl implements UserService {
 			statement.setString(++i, user.getPhoneNumber());
 			statement.setString(++i, user.getEmail());
 			statement.setString(++i, user.getPassword());
+			statement.setString(++i, QMSConstants.DEFAULT_USER_ROLE_ID);
+			statement.setInt(++i, userId);
+			
+			Date date = new Date();				
+			Timestamp timestamp = new Timestamp(date.getTime());				
+			statement.setString(++i, "Y");
+			statement.setTimestamp(++i, timestamp);
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "Y");
+			statement.setString(++i, "A");
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, QMSConstants.MEASURE_SOURCE_NAME);				
+			
+			if(userData == null || userData.getId() == null)
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+			else
+				statement.setString(++i, userData.getLoginId());			
 			
 			statement.executeUpdate();
 			restResult = RestResult.getSucessRestResult("User added successfully.");
@@ -144,6 +197,7 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 		}
 		finally {
+			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
 			qmsConnection.closeJDBCResources(null, statement, connection);
 		}	
 		return restResult;		
@@ -162,9 +216,10 @@ public class UserServiceImpl implements UserService {
 			connection = qmsConnection.getOracleConnection();	
 			
 			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+"'");
+			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+
+					"' AND USER_LOGINID <> '"+user.getLoginId()+"'");
 			if (resultSet.next()) {
-				return RestResult.getSucessRestResult("Email id already exists. Please enter another one.");
+				return RestResult.getFailRestResult("Email id already exists. Please enter another one.");
 			}						
 			resultSet.close();			
 			
@@ -196,6 +251,61 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserInfo(String userName) {	
 		return getUserInfo(userName, null);
-	}	
+	}
+
+	@Override
+	public RestResult forgotPassword(String email) {
+		PreparedStatement statement = null;
+		Connection connection = null;
+		RestResult restResult = null;
+		Statement statementObj = null;
+		ResultSet resultSet = null;
+		try {	
+			connection = qmsConnection.getOracleConnection();	
+			
+			statementObj = connection.createStatement();			
+			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+email+"'");
+			String userLoginId = null;
+			if (resultSet.next()) {
+				userLoginId = resultSet.getString("USER_LOGINID"); 				
+			}						
+			resultSet.close();			
+			if(userLoginId == null) {
+				return RestResult.getFailRestResult("User not found with the entered email id. Please enter valid email id.");
+			}
+			String temporaryPassword = PasswordGenerator.generatePassword();
+			emailService.sendEmail(getForgotPasswordMail(email, temporaryPassword));
+			
+			String sqlStatementInsert = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=? WHERE USER_LOGINID=?";		
+			statement = connection.prepareStatement(sqlStatementInsert);
+			int i=0;							
+			statement.setString(++i, temporaryPassword);			
+			statement.setString(++i, "Y");
+			statement.setString(++i, userLoginId);
+			statement.executeUpdate();
+			restResult = RestResult.getSucessRestResult("Temporary password sent to your email. "
+					+ "Please reset your password after login. ");
+		} catch (Exception e) {
+			restResult = RestResult.getFailRestResult(e.getMessage());
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}	
+		return restResult;		
+	}
+	
+	private Mail getForgotPasswordMail (String email, String temporaryPassword) {
+		Mail mail = new Mail();
+		mail.setFrom("no-reply@healthin.com");
+		mail.setTo(email);
+		mail.setSubject(" Healthin - Temporary password");
+		String text = "Your temporary password to login into the health application : " + temporaryPassword;
+		text = text + "\n Please reset your password after logged into the application.";		
+		text = text + "\n This is auto generated mail. Please do not reply to this mail.";
+		mail.setText(text);
+		return mail;
+	}
 	
 }

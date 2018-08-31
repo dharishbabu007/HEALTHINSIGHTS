@@ -8,6 +8,8 @@ public interface UserService {
 
 	RestResult resetPassword (ResetPassword resetPassword);
 	
+	RestResult forgotPassword (String email);
+	
 	User getUserInfo(String userName, String password);
 	
 	RestResult addUser(User user);

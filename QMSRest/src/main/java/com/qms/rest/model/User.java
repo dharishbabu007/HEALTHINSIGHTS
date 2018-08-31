@@ -11,7 +11,8 @@ public class User {
 	private String securityQuestion;
 	private String securityAnswer;
 	private String phoneNumber;
-	private String password;		
+	private String password;	
+	private String resetPassword;
 	
 	public String getId() {
 		return id;
@@ -78,6 +79,12 @@ public class User {
 	}
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
+	}
+	public String getResetPassword() {
+		return resetPassword;
+	}
+	public void setResetPassword(String resetPassword) {
+		this.resetPassword = resetPassword;
 	}
 	
 }
