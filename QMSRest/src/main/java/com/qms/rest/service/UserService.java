@@ -1,8 +1,11 @@
 package com.qms.rest.service;
 
+import java.util.Set;
+
 import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
+import com.qms.rest.model.SecurityQuestion;
 
 public interface UserService {
 
@@ -17,4 +20,6 @@ public interface UserService {
 	RestResult updateUser(User user);	
 	
 	User getUserInfo(String userName);
+	
+	Set<SecurityQuestion> getSecurityQuestions();
 }
