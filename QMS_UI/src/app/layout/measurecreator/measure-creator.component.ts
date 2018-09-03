@@ -205,7 +205,7 @@ export class MeasurecreatorComponent implements OnInit {
     } else {
       return null;
     }
-  }
+  } 
   filterCategory(event) {
     this.measureCategories = [];
     const elementList = this.measureCategoriesList.filter(ele => ele.value === event.value);

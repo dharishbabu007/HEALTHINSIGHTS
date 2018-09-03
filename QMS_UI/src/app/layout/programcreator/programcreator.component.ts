@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProgramcreatorService } from './programcreator.service';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 
@@ -16,7 +17,8 @@ export class ProgramcreatorComponent implements OnInit {
 
   public submitted: boolean;
   type: string;
-
+  title: string;
+  measureId: string;
   constructor(private _fb: FormBuilder,
     private programCreatorService: ProgramcreatorService,
     private router: Router,
@@ -38,7 +40,14 @@ export class ProgramcreatorComponent implements OnInit {
           ])
       });
   }
-
+formatDate(dateString) {
+    if (dateString) {
+      const datePipe = new DatePipe('en-US');
+      return datePipe.transform(dateString, 'dd-MMM-yy');
+    } else {
+      return null;
+    }
+  }
   initProgramCategorys() {
       return this._fb.group({
         categoryName: [''],
@@ -58,19 +67,23 @@ export class ProgramcreatorComponent implements OnInit {
       control.removeAt(i);
   }
 
-  submitPc(modelPc: ProgramCreator, isValid: boolean) {
+  submitPc(modelPC: ProgramCreator, isValid: boolean) {
 
        this.submitted = true;
+       modelPC.startDate = this.formatDate(modelPC.startDate);
+      modelPC.endDate = this.formatDate(modelPC.endDate);
       // call API to save
       // ...
-      console.log( 'Model' + JSON.stringify(modelPc));
-    this.programCreatorService.programCreatorSubmit(modelPc).subscribe( model => console.log('Succeessfully Created Program Creator'));
+      console.log( 'Model' + JSON.stringify(modelPC));
+    this.programCreatorService.programCreatorSubmit(modelPC).subscribe( model => console.log('Succeessfully Created Program Creator'));
     this.router.navigateByUrl('/dashboard');
   }
 
   savePc(modelPC: ProgramCreator, isValid: boolean) {
 
     this.submitted = true;
+     modelPC.startDate = this.formatDate(modelPC.startDate);
+   modelPC.endDate = this.formatDate(modelPC.endDate);
    // call API to save
    // ...
    console.log('Model SavePC ' + JSON.stringify(modelPC));
@@ -93,8 +106,9 @@ cancelPc() {
 
 export interface ProgramCreator {
     programName: string;
-    startDate: Date;
-    endDate: Date;
+   
+    startDate: string;
+    endDate: string;
     programCategorys: ProgramCategorys[];
 }
 

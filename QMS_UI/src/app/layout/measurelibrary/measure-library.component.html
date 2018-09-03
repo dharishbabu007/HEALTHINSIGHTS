@@ -20,7 +20,7 @@
                                         <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                         <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
                                     </div>
-                            <input *ngSwitchCase="'id'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'equals')">
+                            <input *ngSwitchCase="'id'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
 
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             <p-multiSelect *ngSwitchCase="'status'" [filter]="false" [options]="statusTypes" [style]="{'width':'100%','padding':'0px'}" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>

@@ -15,6 +15,7 @@ export class FrameUrlComponent implements OnInit {
         this.route.params.subscribe(params => {
             console.log(params['url']);
             this.externalURL = this.safe.transform(params['url']);
+            console.log(this.externalURL);
         });
     }
 

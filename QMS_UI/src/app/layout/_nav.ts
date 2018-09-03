@@ -152,5 +152,22 @@ export const navItems = [
         icon: 'fa fa-user-o'
       },
     ]
+  },
+  {
+  name: 'Analytics Workbench',
+  url: '#',
+  icon: 'fa fa-line-chart',
+  children: [
+  {
+    name: 'R Studio',
+    url: 'http://192.168.184.74:8787/',
+    icon: 'fa fa-line-chart',
+  },
+  {
+    name: 'Jupyter',
+    url: 'https://192.168.184.74:8888/tree?',
+    icon: 'fa fa-line-chart',
+  }
+  ]
   }
 ];
