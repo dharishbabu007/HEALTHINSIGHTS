@@ -22,9 +22,17 @@ export class MemberCareGapListComponent implements OnInit {
         { label: 'Female', value: 'F' }
     ];
 
- 
+ @ViewChild('dt') private _table: Table;
   dateFilters: any;
     ngOnInit() {
+
+ this._table.filterConstraints['my'] = (value, filter): boolean => {
+            // Make sure the value and the filter are Dates
+
+           
+            return filter.getTime() == filter.getTime();
+        }
+
 
         this.gapsService.getMemberGaps().subscribe((data: any) => {
             this.loading = false;
