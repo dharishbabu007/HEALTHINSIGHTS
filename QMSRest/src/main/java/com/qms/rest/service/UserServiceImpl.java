@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +21,7 @@ import com.qms.rest.model.User;
 import com.qms.rest.util.PasswordGenerator;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
+import com.qms.rest.model.SecurityQuestion;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -306,6 +309,33 @@ public class UserServiceImpl implements UserService {
 		text = text + "\n This is auto generated mail. Please do not reply to this mail.";
 		mail.setText(text);
 		return mail;
+	}
+
+	@Override
+	public Set<SecurityQuestion> getSecurityQuestions() {
+		Set<SecurityQuestion> questions = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		SecurityQuestion securityQuestion = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from QMS_SECURITY_QUESTION order by SECURITY_QUESTION");
+			while (resultSet.next()) {
+				securityQuestion = new SecurityQuestion();
+				securityQuestion.setId(resultSet.getInt("SECURITY_QUESTION"));
+				securityQuestion.setQuestion(resultSet.getString("QUESTIONS"));
+				questions.add(securityQuestion);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		
+		return questions;		
 	}
 	
 }

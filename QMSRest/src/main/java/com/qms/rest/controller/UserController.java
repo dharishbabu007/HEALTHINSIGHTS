@@ -1,5 +1,7 @@
 package com.qms.rest.controller;
 
+import java.util.Set;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.qms.rest.model.EMail;
 import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.SecurityQuestion;
 import com.qms.rest.model.User;
 import com.qms.rest.service.UserService;
 import com.qms.rest.util.CustomErrorType;
@@ -111,5 +114,12 @@ public class UserController {
 		}
 
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(value = "/get_securityQuestions", method = RequestMethod.GET)
+	public ResponseEntity<Set<SecurityQuestion>> getSecurityQuestions() {
+		System.out.println("Fetching SecurityQuestions ");
+		Set<SecurityQuestion> questions = userService.getSecurityQuestions();
+		return new ResponseEntity<Set<SecurityQuestion>>(questions, HttpStatus.OK);
 	}	
 }
