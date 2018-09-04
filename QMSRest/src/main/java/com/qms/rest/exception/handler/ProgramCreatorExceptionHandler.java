@@ -13,6 +13,6 @@ public class ProgramCreatorExceptionHandler extends ResponseEntityExceptionHandl
 
     @ExceptionHandler(ProgramCreatorException.class)
     public final ResponseEntity<Object> handleProgramCreatorException(Exception ex, WebRequest request) {
-        return new ResponseEntity<Object>(ex, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
