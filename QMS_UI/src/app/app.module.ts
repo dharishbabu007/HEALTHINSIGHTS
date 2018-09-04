@@ -16,8 +16,6 @@ import { MessageService } from './shared/services/message.service';
 
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 
-
-
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');

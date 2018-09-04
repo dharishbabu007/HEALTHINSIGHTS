@@ -80,4 +80,8 @@ export class GapsService {
     getColumnName(){
       return this.http.get(`http://healthinsight:8082/curis/measure_configurator/config_data`);
       }
+
+      getSecurityQuestions(){
+      return this.http.get(`http://healthinsight:8082/curis/user/get_securityQuestions`);
+      }
 }
