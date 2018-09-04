@@ -52,6 +52,10 @@ public class ProgramService {
         String categoryName = programCategory.getCategoryName();
 
         Optional<User> userData = Optional.ofNullable((User)httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ));
+        
+      if(startDate == null || endDate == null) {
+    	  throw new ProgramCreatorException(" Start Date and End Date should not be null. ");
+      }
 
       if(isRecordAlreadyExist(programName, categoryName)){
             System.out.println("Error: Program already exist for specified value");
