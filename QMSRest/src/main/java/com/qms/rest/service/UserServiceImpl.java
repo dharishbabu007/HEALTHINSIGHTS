@@ -301,12 +301,12 @@ public class UserServiceImpl implements UserService {
 	
 	private Mail getForgotPasswordMail (String email, String temporaryPassword) {
 		Mail mail = new Mail();
-		mail.setFrom("no-reply@healthin.com");
+		mail.setFrom("raghunadha.konda@itcinfotech.com");
 		mail.setTo(email);
 		mail.setSubject(" Healthin - Temporary password");
-		String text = "Your temporary password to login into the health application : " + temporaryPassword;
-		text = text + "\n Please reset your password after logged into the application.";		
-		text = text + "\n This is auto generated mail. Please do not reply to this mail.";
+		String text = "<html><body>Your temporary password to login into the healthin application => <b>" + temporaryPassword + "</b><br>";
+		text = text + "<br> Please reset your password after logged into the application.";		
+		text = text + "<br> This is auto generated mail. Please do not reply to this mail.</body></html>";
 		mail.setText(text);
 		return mail;
 	}
