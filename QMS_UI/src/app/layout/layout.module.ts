@@ -28,6 +28,11 @@ import { SpvComponent } from './spv/spv.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
 import { QualityCentralComponent } from './quality-central/quality-central.component';
 import { UserSettingComponent } from './usersettings/userSetting.component';
+
+import { FileManagerComponent } from './file-manager/file-manager.component';
+import { Csv1Component } from './csv1/csv1.component';
+import { Csv2Component } from './csv2/csv2.component';
+
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
     MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective } from '../shared/modules/layout.directive';
@@ -45,6 +50,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
+import {ListboxModule} from 'primeng/listbox';
+import {ChartModule} from 'primeng/chart';
 @NgModule({
     imports: [
         CommonModule,
@@ -63,6 +72,9 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
         AutoCompleteModule,
         FormsModule,
         TooltipModule,
+        HttpClientModule,
+        ListboxModule,
+        ChartModule,
         NgbDropdownModule.forRoot(),
     ],
 
@@ -100,7 +112,10 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
         MemberGapInfoComponent,
         MeasurecreatorComponent,
         ProgramcreatorComponent,
-        UserSettingComponent],
+        UserSettingComponent,
+        FileManagerComponent,
+        Csv1Component,
+        Csv2Component],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

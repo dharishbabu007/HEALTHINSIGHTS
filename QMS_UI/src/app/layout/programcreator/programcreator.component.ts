@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@ang
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-
+import { MessageService } from '../../shared/services/message.service';
 
 @Component({
   selector: 'app-programcreator',
@@ -15,14 +15,14 @@ export class ProgramcreatorComponent implements OnInit {
 
   public myForm: FormGroup;
 
-  public submitted: boolean;
   type: string;
   title: string;
   measureId: string;
   constructor(private _fb: FormBuilder,
     private programCreatorService: ProgramcreatorService,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+  private msgService: MessageService) {
 
     this.route.params.subscribe(params => {
             this.measureId = params['measureId'];
@@ -67,32 +67,45 @@ formatDate(dateString) {
       control.removeAt(i);
   }
 
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+    const control = formGroup.get(field);
+    if (control instanceof FormControl) {
+      control.markAsTouched({ onlySelf: true });
+    } else if (control instanceof FormGroup) {
+      this.validateAllFormFields(control);
+    }
+  });
+}
+onSubmit() {
+  if (this.myForm.valid) {
+    this.submitPc(this.myForm.value, this.myForm.valid);
+  } else {
+    this.validateAllFormFields(this.myForm);
+  }
+}
   submitPc(modelPC: ProgramCreator, isValid: boolean) {
 
-       this.submitted = true;
+ 
        modelPC.startDate = this.formatDate(modelPC.startDate);
       modelPC.endDate = this.formatDate(modelPC.endDate);
-      // call API to save
-      // ...
+  
       console.log( 'Model' + JSON.stringify(modelPC));
-    this.programCreatorService.programCreatorSubmit(modelPC).subscribe( model => console.log('Succeessfully Created Program Creator'));
-    this.router.navigateByUrl('/dashboard');
+    this.programCreatorService.programCreatorSubmit(modelPC).subscribe((res: any) => {
+      if (res.status === 'SUCCESS') {
+        this.msgService.success('file Upload Successfully');
+        this.myForm.reset();
+      } else {
+        this.msgService.error("error");
+      }
+    } );
+  
+   
+    
   }
 
-  savePc(modelPC: ProgramCreator, isValid: boolean) {
-
-    this.submitted = true;
-     modelPC.startDate = this.formatDate(modelPC.startDate);
-   modelPC.endDate = this.formatDate(modelPC.endDate);
-   // call API to save
-   // ...
-   console.log('Model SavePC ' + JSON.stringify(modelPC));
- this.programCreatorService.programCreatorSubmit(modelPC).subscribe( model => console.log('Succeessfully Created Program Creator'));
-}
-
-
 cancelPc() {
-    this.router.navigateByUrl('/dashboard');
+  this.myForm.reset();
 }
 
 

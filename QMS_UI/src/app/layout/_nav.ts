@@ -157,17 +157,33 @@ export const navItems = [
   name: 'Analytics Workbench',
   url: '#',
   icon: 'fa fa-line-chart',
-  children: [
-  {
-    name: 'R Studio',
-    url: 'http://192.168.184.74:8787/',
+  children: 
+  [
+    {
+      name: 'Development Studio',
+      url: '#',
+      icon: 'fa fa-line-chart',
+      children: [
+      {
+      name: 'R Studio',
+      url: 'http://192.168.184.74:8787/',
+      icon: 'fa fa-line-chart',
+      },
+      {
+      name: 'Jupyter',
+      url: 'https://192.168.184.74:8888/tree?',
+      icon: 'fa fa-line-chart',
+      }
+      ]
+
+
+    },
+    {
+    name: 'Use Cases',
+    url: '/file-manager',
     icon: 'fa fa-line-chart',
-  },
-  {
-    name: 'Jupyter',
-    url: 'https://192.168.184.74:8888/tree?',
-    icon: 'fa fa-line-chart',
-  }
+    }
   ]
-  }
+}
+
 ];
