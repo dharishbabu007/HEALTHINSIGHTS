@@ -30,7 +30,7 @@ public class PatientServiceImpl implements PatientService {
 	HashMap<String, DimPatient> cacheMap = new HashMap<>();
 	Set<MemberDetail> memberDetailsSet = new HashSet<>();
 	
-	@PostConstruct
+	//@PostConstruct
 	public void cacheMemberData() {
 		getMemberDetails();
 		System.out.println(" SPV Caching member data for ........." + cacheSize);
