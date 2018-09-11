@@ -3,8 +3,6 @@ import { routerTransition } from '../../router.animations';
 import { ActivatedRoute } from '@angular/router';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
-
-
 import { Router } from '@angular/router';
 @Component({
     selector: 'app-tables',

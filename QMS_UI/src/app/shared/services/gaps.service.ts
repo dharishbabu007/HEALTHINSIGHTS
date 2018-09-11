@@ -50,6 +50,15 @@ export class GapsService {
     getLibrary(programType, programValue) {
         return this.http.get(`http://healthinsight:8082/curis/qms/measure_list/${programType}/${programValue}`);
     }
+
+    getCsv(){
+
+    return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_output`);
+    
+    }
+    getCsv2(){
+        return this.http.get('http://healthinsight:8082/curis/qms_file/csv_modelSummary');
+    }
     getMeasureDetails() {
         return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis_member_list`);
     }

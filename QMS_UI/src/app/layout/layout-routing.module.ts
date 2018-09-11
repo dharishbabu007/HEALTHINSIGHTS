@@ -15,6 +15,11 @@ import { MeasurecreatorComponent } from './measurecreator/measure-creator.compon
 import { SpvComponent } from './spv/spv.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
 import { UserSettingComponent } from './usersettings/userSetting.component';
+
+import { FileManagerComponent } from './file-manager/file-manager.component';
+import { Csv1Component } from './csv1/csv1.component';
+import { Csv2Component } from './csv2/csv2.component';
+
 const routes: Routes = [
     {
         path: '',
@@ -38,7 +43,11 @@ const routes: Routes = [
             { path: 'measurecreator', component: MeasurecreatorComponent},
             { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent},
             { path: 'spv/:memberId', component: SpvComponent},
-            { path: 'usersettings', component: UserSettingComponent}
+            { path: 'usersettings', component: UserSettingComponent},
+            { path: 'file-manager', component: FileManagerComponent},
+            { path: 'csv1', component: Csv1Component},
+            { path: 'csv2', component: Csv2Component},
+
         ]
     }
 ];
