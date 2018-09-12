@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource
@@ -18,4 +19,9 @@ public interface ProgramRepository extends CrudRepository<QualityProgram, Intege
     List<QualityProgram> findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
 */
     QualityProgram findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
+    
+    List<QualityProgram>  
+    findQualityProgramByProgramNameAndStartDateAndEndDate(@Param("programName") String programName,     		
+    		@Param("startDate") Date startDate, 
+    		@Param("endDate") Date endDate);    
 }

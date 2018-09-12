@@ -1,22 +1,22 @@
 package com.qms.rest.service;
 
-import com.qms.rest.exception.ProgramCreatorException;
-import com.qms.rest.model.Program;
-import com.qms.rest.model.ProgramCategory;
-import com.qms.rest.model.QualityProgram;
-import com.qms.rest.model.User;
-import com.qms.rest.repository.ProgramRepository;
-import com.qms.rest.util.QMSConstants;
+import static org.springframework.transaction.annotation.Propagation.REQUIRED;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import static org.springframework.transaction.annotation.Propagation.REQUIRED;
+import com.qms.rest.exception.ProgramCreatorException;
+import com.qms.rest.model.Program;
+import com.qms.rest.model.ProgramCategory;
+import com.qms.rest.model.QualityProgram;
+import com.qms.rest.repository.ProgramRepository;
 
 @Service
 public class ProgramService {
@@ -51,15 +51,13 @@ public class ProgramService {
     private QualityProgram buildQualityProgram( String programName, Date startDate, Date endDate, ProgramCategory programCategory){
         String categoryName = programCategory.getCategoryName();
 
-        Optional<User> userData = Optional.ofNullable((User)httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ));
-        
       if(startDate == null || endDate == null) {
     	  throw new ProgramCreatorException(" Start Date and End Date should not be null. ");
       }
-
-      if(isRecordAlreadyExist(programName, categoryName)){
-            System.out.println("Error: Program already exist for specified value");
-            throw new ProgramCreatorException("Program already exist for ProgramName: "+programName+" and category: "+categoryName);
+      
+      	if(isRecordAlreadyExist(programName, startDate, endDate)){            
+            //throw new ProgramCreatorException("Program already exist for ProgramName: "+programName+" and category: "+categoryName);
+            throw new ProgramCreatorException("Program already exist for ProgramName, Start Date and End Date");
         }
 
         if(qualityProgram ==  null && !FETCHED_FROM_DB){
@@ -95,9 +93,9 @@ public class ProgramService {
                 .build();
     }
 
-    private boolean isRecordAlreadyExist(String programName, String categoryName){
-       QualityProgram qualityProgram = programRepository.findQualityProgramByProgramNameAndCategoryName(programName, categoryName);
+    private boolean isRecordAlreadyExist(String programName, Date startDate, Date endDate){
+        List<QualityProgram> qualityPrograms = programRepository.findQualityProgramByProgramNameAndStartDateAndEndDate(programName, startDate, endDate);       
         System.out.println("Quality Program : "+qualityProgram);
-        return qualityProgram != null ? true : false;
+        return qualityPrograms != null && qualityPrograms.size() > 0 ? true : false;
     }
 }
