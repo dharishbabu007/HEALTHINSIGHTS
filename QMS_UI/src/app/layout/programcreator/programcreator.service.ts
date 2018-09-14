@@ -5,10 +5,11 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
 import { ProgramCreator } from './programcreator.component';
 
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Access-Control-Allow-Origin': '*',
-    'Content-Type':  'application/json'
+    'Content-Type': 'application/json'
   })
 };
 

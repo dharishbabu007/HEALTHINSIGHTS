@@ -25,7 +25,11 @@ export class SpvComponent implements OnInit {
     ngOnInit() {
         this.gapsService.getSpv(this.memberId).subscribe((data: MemberCareGaps[]) => {
             this.patientProfileForm = data;
+            console.log( this.patientProfileForm.comorbiditiesCount);
         });
+
+
+      
        // console.log(pattientProfileForm.emailAddress);
         // this.patientProfileForm = [];
     }

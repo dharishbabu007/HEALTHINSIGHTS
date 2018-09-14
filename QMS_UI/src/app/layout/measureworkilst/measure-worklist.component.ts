@@ -47,6 +47,7 @@ export class MeasureworklistComponent implements OnInit {
         if (res.status === 'SUCCESS') {
             this.msgService.success('Measure approved Successfully');
             this.router.navigate(['/measureworklist']);
+            console.log("came here")
           } else {
             this.msgService.success(res.message);
           }

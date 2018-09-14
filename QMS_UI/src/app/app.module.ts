@@ -15,7 +15,9 @@ import { HttpErrorHandler } from './shared/services/http-error-handler.service';
 import { MessageService } from './shared/services/message.service';
 
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
-
+import { JwtInterceptor} from './shared/helpers/jwt.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationService } from './shared/services/authenticationservice';
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -48,7 +50,9 @@ export const createTranslateLoader = (http: HttpClient) => {
     providers: [AuthGuard,
      HttpErrorHandler,
       MessageService,
-      {provide: LocationStrategy, useClass: HashLocationStrategy}],
+      AuthenticationService,
+      {provide: LocationStrategy, useClass: HashLocationStrategy},
+      { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
      
     bootstrap: [AppComponent]
 })

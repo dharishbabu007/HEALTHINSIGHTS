@@ -25,11 +25,8 @@ export class UserSettingComponent implements OnInit {
     private UserSettingService: UserSettingService,
     private router: Router,
      private gapsService: GapsService,
-    private msgService: MessageService,) { }
-
-  ngOnInit() {
-
-
+    private msgService: MessageService,) {
+      
       this.myForm = this._fb.group({
         firstName: [''],
         lastName: [''],
@@ -40,12 +37,20 @@ export class UserSettingComponent implements OnInit {
         
       });
 
-  this.gapsService.getSecurityQuestions().subscribe((data: any) => {
-    this.QuestionList = [];
-    data.forEach(element => {
-      this.QuestionList.push({label: element.name, value: element.name});
-    });
-  });
+     
+
+      
+      this.gapsService.getSecurityQuestions().subscribe((data: any) => {
+        this.QuestionList = [];
+        console.log(data)
+        data.forEach(element => {
+          this.QuestionList.push({label: element.question, value: element.question});
+        });
+      });
+     }
+
+  ngOnInit() {
+
 
 
   }

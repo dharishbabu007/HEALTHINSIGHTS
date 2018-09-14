@@ -131,10 +131,11 @@ export class MeasurecreatorComponent implements OnInit {
       this.validateAllFormFields(control);
     }
   });
+
 }
 
   submitPc(model: Measurecreator, isValid: boolean) {
-
+  
        this.submitted = true;
       // call API to save
       // ...
@@ -154,6 +155,7 @@ export class MeasurecreatorComponent implements OnInit {
 
   savePc(model: Measurecreator, isValid: boolean) {
 
+  
     this.submitted = true;
    // call API to save
    // ...
@@ -161,7 +163,7 @@ export class MeasurecreatorComponent implements OnInit {
   // model.target = parseInt(model.target, 10);
    model.startDate = this.formatDate(model.startDate);
    model.endDate = this.formatDate(model.endDate);
-   // console.log(model);
+   console.log(model);
   this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure saved Successfully');
@@ -176,6 +178,7 @@ export class MeasurecreatorComponent implements OnInit {
       this.submitPc(this.myForm.value, this.myForm.valid);
     } else {
       this.validateAllFormFields(this.myForm);
+      this.submitPc(this.myForm.value, this.myForm.valid);
     }
   }
   inActiveMeasure(model) {
