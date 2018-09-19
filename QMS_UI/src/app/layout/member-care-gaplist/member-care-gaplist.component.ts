@@ -3,6 +3,7 @@ import { routerTransition } from '../../router.animations';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { Table } from 'primeng/table';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-tables',
@@ -81,4 +82,18 @@ export class MemberCareGapListComponent implements OnInit {
 
 
     }
+    dateFilter(dateString){
+        console.log('date', this.formatDate(dateString))
+        this._table.value.filter((data)=>{
+            data.timePeriod == this.formatDate(dateString)
+        })
+    }
+    formatDate(dateString) {
+        if (dateString) {
+          const datePipe = new DatePipe('en-US');
+          return datePipe.transform(dateString, 'yyyy-MM-dd');
+        } else {
+          return null;
+        }
+      }
 }

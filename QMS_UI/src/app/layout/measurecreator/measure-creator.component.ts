@@ -48,7 +48,7 @@ export class MeasurecreatorComponent implements OnInit {
           numeratorExclusions: [],
           denomExclusions: [],
           measureDomain: [],
-          target: ['', [Validators.required]],
+          target: [''],
           measureCategory: [],
           type: [],
           clinocalCondition: [],
@@ -135,8 +135,11 @@ export class MeasurecreatorComponent implements OnInit {
 }
 
   submitPc(model: Measurecreator, isValid: boolean) {
+
+    if (this.myForm.valid) {
   
        this.submitted = true;
+       
       // call API to save
       // ...
       model.status = 'New';
@@ -152,13 +155,17 @@ export class MeasurecreatorComponent implements OnInit {
       }
     } );
   }
-
+  else{
+    this.validateAllFormFields(this.myForm);
+  }
+ 
+  }
   savePc(model: Measurecreator, isValid: boolean) {
 
-  
     this.submitted = true;
    // call API to save
    // ...
+   if (this.myForm.valid) {
    model.status = 'Open';
   // model.target = parseInt(model.target, 10);
    model.startDate = this.formatDate(model.startDate);
@@ -173,6 +180,13 @@ export class MeasurecreatorComponent implements OnInit {
       }
     } );
   }
+  else{
+    this.msgService.error("throw this")
+    this.validateAllFormFields(this.myForm);
+  }
+
+
+}
   onSubmit() {
     if (this.myForm.valid) {
       this.submitPc(this.myForm.value, this.myForm.valid);

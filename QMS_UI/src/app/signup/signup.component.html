@@ -1,28 +1,110 @@
-<div class="login-page" [@routerTransition]>
-    <div class="row justify-content-md-center">
-        <div class="col-md-4">
-            <img class="user-avatar" src="assets/images/itcinfotech-logo.jpg" width="150px" />
-            <h1>HealthInsight</h1>
-            <form role="form">
-                <div class="form-content">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="Full Name">
-                    </div>
+<div class="app flex-row align-items-center" >
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card-group">
+                    <div class="card p-4">
+                        <div class="card-body">
+                            
+                                <h1>Sign Up</h1>
+                                <form [formGroup]="myForm" class="form-horizontal" novalidate >
+                                                <div class="form-content">
+                                                    <div class="form-group">
+                                                        <div class="form-group row">
+                                                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="User Name" formControlName="name">
+                                                        </div>
+                                                        <div class="row">
+                                                                <span class="col-lg-5">
+                                                                    <small *ngIf="!myForm.controls.name.valid && myForm.controls.name.touched" class="text-danger">
+                                                                            name is required.
+                                                                  </small>
+                                                                </span>  
+                                                        </div>
+                                                    
+                                                        <div class="form-group row">
+                                                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="First Name" formControlName="firstName">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <input type="text" class="form-control input-underline input-lg" id="" placeholder="Last Name" formControlName="lastName">
+                                                        </div>
+                                                    
+                                                
+                                                        <div class="form-group row">
+                                                        <input  type="email" name="email" class="form-control input-underline input-lg" placeholder="Email" formControlName="email"  email required>
+                                                        </div>
+                                                        <div class="row">
+                                                                <span class="col-lg-5">
+                                                                    <small *ngIf="!myForm.controls.email.valid && myForm.controls.email.touched" class="text-danger">
+                                                                 Email is required.
+                                                                  </small>
+                                                                 
+                                                                </span>  
+                                                        </div>
+                                                       
+                                                        <div class="form-group row">
+                                                      
+                                                                  <span>
+                                                                    <p-dropdown placeholder="Security Question" formControlName="securityQuestion"[autoDisplayFirst]="false" [autoWidth]="false"  styleClass="form-control" [options]="QuestionList" (onChange)="filterColumn($event)"></p-dropdown>
+                                                                  </span>
+                                                        </div>
+                                                        <div class="form-group row">  
+                                                            <input class="form-control" type="text" placeholder="Security Answer" formControlName="securityAnswer">
+                                                        </div>
+                                                        <div class="form-group row">
+                                                          <input type="number" class="form-control input-underline input-lg" id="" placeholder="Phone Number" formControlName="phNumber">
+                                                        </div>
+                                                                    <div class="row">
+                                                                            <span class="col-lg-5">
+                                                                                <small *ngIf="!myForm.controls.phNumber.valid && myForm.controls.phNumber.touched" class="text-danger">
+                                                                              Phone Number is required.
+                                                                              </small>
+                                                                            </span>  
+                                                                    </div>
+                                                             
+                                                         <div class="form-group row">
+                                                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password" formControlName="password">
+                                                        </div>
+                                                        <div class="row">
+                                                                <span class="col-lg-5">
+                                                                    <small *ngIf="!myForm.controls.password.valid && myForm.controls.password.touched" class="text-danger">
+                                                                 Password is required.
+                                                                  </small>
+                                                                </span>  
+                                                        </div>
+                                                
+                                                        <div class="form-group row">
+                                                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Repeat Password" formControlName="repeatPassword">
+                                                        </div>
+                                                        <div class="row">
+                                                                <span class="col-lg-5">
+                                                                    <small *ngIf="!myForm.controls.repeatPassword.valid && myForm.controls.repeatPassword.touched" class="text-danger">
+                                                                  Repeat Password is required.
+                                                                  </small>
+                                                                </span>  
+                                                        </div>
 
-                    <div class="form-group">
-                        <input type="text" class="form-control input-underline input-lg" id="" placeholder="Email">
+                                                        <button class="btn btn-primary " (click)="OnRegister(myForm.value,myForm.valid)"> Register </button>&nbsp;
+                                                 </div>
+                                                    
+                                                </div>
+                                              
+                                               
+                                </form>
+                        </div>
                     </div>
+                            
 
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password">
+                    <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
+                        <div class="card-body text-center">
+                            <img src="assets/images/itcinfotech-logo.jpg" width="150px" class="user-avatar" />
+                            <div class="h3">Healthcare Insight</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Repeat Password">
-                    </div>
+                       
                 </div>
-                <a class="btn rounded-btn" [routerLink]="['/dashboard']"> Register </a>&nbsp;
-                <a class="btn rounded-btn" [routerLink]="['/login']"> Log in </a>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+                
+ 

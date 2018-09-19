@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../router.animations';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { LoginService } from '../login/login.service';
 import { MessageService } from '../shared/services/message.service';
 import { AuthenticationService } from '../shared/services/authenticationservice';
 import { first } from 'rxjs/operators';
@@ -20,7 +19,6 @@ export class ResetPasswordComponent implements OnInit {
     public submitted: boolean;
     constructor(private _fb: FormBuilder,
         public router: Router,
-        public LoginService: LoginService,
     public msgService :MessageService,
     public authenticService :AuthenticationService) {}
  
@@ -29,6 +27,8 @@ export class ResetPasswordComponent implements OnInit {
             password: ['', [Validators.required]],
             confirmPassword: ['',[Validators.required]]
            });
+
+           
 
     }
     validateAllFormFields(formGroup: FormGroup) {
@@ -57,7 +57,7 @@ export class ResetPasswordComponent implements OnInit {
       
         var user =  JSON.parse(localStorage.getItem('currentUser'));
      
-        console.log(user.loginId);
+        console.log(user);
         console.log(JSON.stringify(model.password));
 
         this.authenticService.Reset(user.loginId,user.password,model.password,model.confirmPassword).subscribe((res:any) =>{

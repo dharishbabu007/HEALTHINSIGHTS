@@ -28,7 +28,6 @@ const httpOptions = {
     Forgot(model: Forgot): Observable<Forgot>{
       console.log(model)
       return this.http.post<Forgot>('http://healthinsight:8082/curis/user/forgot_password',model);
-      console.log("forgot password");
   
     }
   

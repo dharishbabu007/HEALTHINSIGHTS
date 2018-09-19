@@ -44,12 +44,13 @@ export class MeasureworklistComponent implements OnInit {
     }
    statusClickImg(status, id) {
        this.gapsService.setMeasureStatus(id, status).subscribe( (res: any) => {
+           console.log(res)
         if (res.status === 'SUCCESS') {
             this.msgService.success('Measure approved Successfully');
-            this.router.navigate(['/measureworklist']);
+            window.location.reload();
             console.log("came here")
           } else {
-            this.msgService.success(res.message);
+            this.msgService.error(res.message);
           }
        });
    }

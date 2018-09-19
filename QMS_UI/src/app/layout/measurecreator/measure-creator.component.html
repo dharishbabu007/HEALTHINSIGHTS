@@ -128,7 +128,7 @@
           <div class="row p-2">
             <span class="col-lg-12 text-right">
             <button [disabled]="disableForm" (click)="savePc(myForm.value,myForm.valid)" class="btn btn-primary " > <i class="fa fa-floppy-o"></i>&nbsp; Save</button>&nbsp;&nbsp;
-            <button [disabled]="disableForm" (click)="onSubmit()" class="btn btn-primary" > <i class="fa fa-dot-circle-o"></i>&nbsp; Submit</button>&nbsp;&nbsp;
+            <button [disabled]="disableForm" (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" > <i class="fa fa-dot-circle-o"></i>&nbsp; Submit</button>&nbsp;&nbsp;
             <button [disabled]="disableOnCopy" (click)="inActiveMeasure(myForm.value)" class="btn btn-danger" ><i class="fa fa-ban"></i>&nbsp;Decommission</button>
             </span>
           </div>

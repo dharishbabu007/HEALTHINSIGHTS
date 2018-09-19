@@ -18,6 +18,8 @@ import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import { JwtInterceptor} from './shared/helpers/jwt.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthenticationService } from './shared/services/authenticationservice';
+
+import { GapsService } from './shared/services/gaps.service';
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -51,6 +53,7 @@ export const createTranslateLoader = (http: HttpClient) => {
      HttpErrorHandler,
       MessageService,
       AuthenticationService,
+      GapsService,
       {provide: LocationStrategy, useClass: HashLocationStrategy},
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
      

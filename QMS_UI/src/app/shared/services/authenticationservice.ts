@@ -13,9 +13,12 @@ import {
   import {Router} from "@angular/router";
   import {catchError} from "rxjs/internal/operators";
 
+  import { MessageService } from "./message.service";
+import { User } from '../modules/user';
+
 @Injectable()
 export class AuthenticationService {
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router, private messageSevice: MessageService) { }
     private handleAuthError(err: HttpErrorResponse): Observable<any> {
         //handle your auth error or rethrow
         if (err.status === 401) {
@@ -33,7 +36,7 @@ export class AuthenticationService {
             .pipe(
                 catchError((error, caught) => {
                     //intercept the respons error and displace it to the console
-                   alert(error.error.errorMessage);
+                    this.messageSevice.error(error.error.errorMessage);
                     this.handleAuthError(error);
                     return of(error);
                   }),
@@ -57,6 +60,23 @@ export class AuthenticationService {
             
 }
 );
+      }
+
+
+
+      Register(model){
+          return this.http.post<any>('http://healthinsight:8082/curis/user/create_user/',{
+            "name": model.name,
+            "email": model.email,
+            "loginId": model.name,
+            "firstName": model.firstName,
+            "lastName": model.lastName,
+            "securityQuestion": model.securityQuestion,
+            "securityAnswer": model.securityAnswer,
+            "phoneNumber": model.phNumber,
+            "password": model.password
+        }
+        );
       }
     logout() {
         // remove user from local storage to log user out

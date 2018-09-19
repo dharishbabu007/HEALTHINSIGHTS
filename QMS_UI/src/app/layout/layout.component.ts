@@ -11,6 +11,8 @@ export class LayoutComponent {
   public sidebarMinimized = true;
   private changes: MutationObserver;
   public element: HTMLElement = document.body;
+
+  username: any;
   constructor() {
 
     this.changes = new MutationObserver((mutations) => {
@@ -24,4 +26,13 @@ export class LayoutComponent {
   toggleMic() {
     this.micEnabled = !this.micEnabled;
   }
+
+
+  ngOnInit() {
+    var user =  JSON.parse(localStorage.getItem('currentUser'));
+         
+       this.username= user.loginId;
+        console.log(this.username);
+    }
+    
 }
