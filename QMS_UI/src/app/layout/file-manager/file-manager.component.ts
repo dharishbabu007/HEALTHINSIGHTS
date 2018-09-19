@@ -59,7 +59,7 @@ export class FileManagerComponent implements OnInit {
 
     }
 
-handleFileInput(event,file) {
+handleFileInput(event) {
 console.log(event);
 this.SelectedFile= <File>event.target.files[0];
 

@@ -92,11 +92,14 @@ onSubmit() {
   
       console.log( 'Model' + JSON.stringify(modelPC));
     this.programCreatorService.programCreatorSubmit(modelPC).subscribe((res: any) => {
-      if (res.status === 'SUCCESS') {
-        this.msgService.success('file Upload Successfully');
+
+      console.log(res.status)
+      if (res.status == 'SUCCESS') {
+        this.msgService.success('Program created Successfully');
         this.myForm.reset();
       } else {
-        this.msgService.error("error");
+        console.log(res.status)
+        this.msgService.error("Program exists");
       }
     } );
   
