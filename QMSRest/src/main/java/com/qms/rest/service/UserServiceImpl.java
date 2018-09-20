@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 				user.setEmail(resultSet.getString("USER_EMAIL"));
 				user.setId(resultSet.getString("USER_ID"));
 				user.setLoginId(resultSet.getString("USER_LOGINID"));
-				user.setName(resultSet.getString("USER_NAME"));
+				//user.setName(resultSet.getString("USER_NAME"));
 				user.setRoleId(resultSet.getString("USER_ROLE_ID"));
 				user.setFirstName(resultSet.getString("FIRST_NAME"));
 				user.setLastName(resultSet.getString("LAST_NAME"));
@@ -216,6 +216,11 @@ public class UserServiceImpl implements UserService {
 		Statement statementObj = null;
 		ResultSet resultSet = null;
 		try {	
+			
+			if(user.getLoginId() == null || user.getEmail() == null) {
+				return RestResult.getFailRestResult(" User Login Id and Email Id should be not be null. ");
+			}
+			
 			connection = qmsConnection.getOracleConnection();	
 			
 			statementObj = connection.createStatement();			

@@ -7,8 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,7 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			
 			//oracle query
 			
+			/*
 			String membergplistQry = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER, DD.DATE_SK," 
 			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')) AS DATE_OF_BIRTH," 
 			+"GIC1.QUALITY_MEASURE_ID, MAX(GIC1.INTERVENTIONS) AS INTERVENTIONS, MAX(GIC1.STATUS) AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE," 
@@ -69,6 +72,21 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			+"WHERE DM.MEMBER_ID='"+mid+"' " 
 			+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER, DD.DATE_SK,GIC1.PRIORITY," 
 			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')), GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE";
+			*/
+			
+			String membergplistQry = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER, DD.DATE_SK,"
+			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')) AS DATE_OF_BIRTH,"
+			+"GIC1.QUALITY_MEASURE_ID, (GIC1.INTERVENTIONS) AS INTERVENTIONS, GIC1.STATUS AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE,"
+			+"FLOOR(SYSDATE - MAX(GIC2.GAP_DATE)) AS DURATION, GIC1.PRIORITY AS PRIORITY " 
+			+"FROM DIM_MEMBER DM "
+			+"INNER JOIN QMS_GIC_LIFECYCLE GIC1 ON GIC1.MEMBER_ID = DM.MEMBER_ID " 
+			+"LEFT OUTER JOIN QMS_GIC_LIFECYCLE GIC2 ON GIC1.QUALITY_MEASURE_ID = GIC2.QUALITY_MEASURE_ID AND GIC1.MEMBER_ID = GIC2.MEMBER_ID " 
+			+"INNER JOIN DIM_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID " 
+			+"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK " 
+			+"WHERE DM.MEMBER_ID='"+mid+"' " 
+			+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER, DD.DATE_SK, GIC1.PRIORITY,GIC1.INTERVENTIONS, GIC1.STATUS,"
+			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')), GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE "
+			+"order by max(GIC2.GAP_DATE) desc";			
 			
 
 			resultSet = statement.executeQuery(membergplistQry);
@@ -106,13 +124,13 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 				System.out.println("inside ");
 				String qmsMesureId = resultSet.getString("QUALITY_MEASURE_ID");
 				if(qmsGicLifyCycleMap.containsKey(qmsMesureId)) {
-					FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
-					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
-					factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+//					FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
+//					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
+//					factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 		//			factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
 		//			factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
 			//		factHedisGapsInCare.setDuration(resultSet.getString("DURATION"));
-					qmsGicLifyCycleMap.get(qmsMesureId).getFactHedisGapsInCare().add(factHedisGapsInCare);
+				//	qmsGicLifyCycleMap.get(qmsMesureId).getFactHedisGapsInCare().add(factHedisGapsInCare);
 				}else {
 					QmsGicLifecycle qmsGicLifecycle = new QmsGicLifecycle();
 					qmsGicLifecycle.setInterventions(resultSet.getString("INTERVENTIONS"));
@@ -293,14 +311,25 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			+"WHERE GIC.GAP_DATE <= SYSDATE "
 			+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER,"
 			+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25),"
-			+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID";
+			+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID order by GIC.GAP_DATE DESC";
 			
 
 			resultSet = statement.executeQuery(memberCregapList);
 			System.out.println("Service resultset" + resultSet.getFetchSize());
+			Map<String, Set<Integer>> countCareGapMap = new HashMap<>(); 
 			while (resultSet.next()) {
 				String member_id =resultSet.getString("MEMBER_ID");
-				if(!members.containsKey(member_id)) {
+				String quaMesid =resultSet.getString("QUALITY_MEASURE_ID");
+				String mapKey = member_id+"##"+quaMesid; 
+				
+				Set<Integer> countHashSet = countCareGapMap.get(member_id);
+				if(countHashSet == null) {
+					countHashSet = new HashSet<>();	
+					countCareGapMap.put(member_id, countHashSet);
+				}
+				countHashSet.add(Integer.parseInt(quaMesid));
+					
+				if(!members.containsKey(mapKey)) {
 					MemberCareGapsList memberCareGaps =new MemberCareGapsList();
 					memberCareGaps.setMember_id(member_id);
 					memberCareGaps.setAge(resultSet.getString("AGE"));
@@ -320,19 +349,20 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 					
 					memberCareGaps.setMembers(new ArrayList<MemberCareGaps>());
 					memberCareGaps.getMembers().add(memberCareGaps2);
-					members.put(member_id, memberCareGaps);
+					members.put(mapKey, memberCareGaps);
 				}
 				else {
-					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
-					memberCareGaps2.setPcp(resultSet.getString("PCP"));
-					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
-					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
-					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
-				    memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
-				    memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
-					MemberCareGapsList memberCareGaps = members.get(member_id);
-					memberCareGaps.getMembers().add(memberCareGaps2);
-					int carGap = memberCareGaps.getCountOfCareGaps()+1;
+//					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
+//					memberCareGaps2.setPcp(resultSet.getString("PCP"));
+//					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
+//					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
+//					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
+//				    memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
+//				    memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+					MemberCareGapsList memberCareGaps = members.get(mapKey);
+//					memberCareGaps.getMembers().add(memberCareGaps2);
+//					int carGap = memberCareGaps.getCountOfCareGaps()+1;
+					int carGap = countHashSet.size();
 					memberCareGaps.setRiskGrade(getRiskBasedOnCareGap(carGap));
 					memberCareGaps.setCountOfCareGaps(carGap);
 				}
