@@ -37,19 +37,10 @@ public class ImportExportServiceImpl implements ImportExportService {
 	public static final Logger log = LoggerFactory.getLogger(ImportExportServiceImpl.class);
 	
 	@Autowired
-	private QMSAnalyticsProperty qmsAnalyticsProperty;  
+	private QMSAnalyticsProperty qmsAnalyticsProperty;
 	
 	String windowsCopyPath;
 
-//	String hostname = "192.168.184.74";
-//    String username = "Ashwinth";
-//    String password = "Login$321";	
-	
-//    String linuxUploadPath = "/home/Ashwinth/input/";
-//    String linuxOutputPath = "/home/Ashwinth/output/";
-//    String windowsCopyPath = "D:/import_export";	
-//    String linuxRScriptPath = "/home/Ashwinth/script/Script_ITC_healthcare_6_9_2018_v0.R";
-	
 	@PostConstruct
     public void init() {
 		windowsCopyPath = qmsAnalyticsProperty.getWindowsCopyPath();
@@ -61,6 +52,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
 					qmsAnalyticsProperty.getPassword(), file, 
 					qmsAnalyticsProperty.getLinuxUploadPath());
+			
 			return RestResult.getSucessRestResult(" File import success. ");
 		} catch (Exception e) {
 			e.printStackTrace();

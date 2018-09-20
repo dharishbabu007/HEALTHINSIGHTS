@@ -26,7 +26,7 @@ public class PatientServiceImpl implements PatientService {
 	private QMSConnection qmsConnection;
 	
 	
-	int cacheSize = 50;
+	int cacheSize = 10;
 	HashMap<String, DimPatient> cacheMap = new HashMap<>();
 	Set<MemberDetail> memberDetailsSet = new HashSet<>();
 	
@@ -41,7 +41,7 @@ public class PatientServiceImpl implements PatientService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select member_id from hedis_member_view limit "+cacheSize);
+			resultSet = statement.executeQuery("select member_id from HEDIS_MEMBER_WEB_VIEW limit "+cacheSize);
 			Set<String> memberIds = new HashSet<String>();
 			int i = 0;
 			while (resultSet.next()) {
@@ -129,7 +129,7 @@ public class PatientServiceImpl implements PatientService {
 			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
 			"CONCAT(FIRST_NAME,' ',MIDDLE_NAME,' ',LAST_NAME) AS Name,"+
 			"CONCAT(ADDRESS1,',',ADDRESS2,',',CITY,',',STATE,',',ZIP) AS Address,"+ 
-			"floor(datediff (CURRENT_DATE, (to_date(CONCAT(substr(ENC.DATE_OF_BIRTH_SK, 1, 4),'-',substr(ENC.DATE_OF_BIRTH_SK, 5,2),'-',substr(ENC.DATE_OF_BIRTH_SK, 7,2)))))/365.25) Age "+ 
+			"cast(floor(datediff (CURRENT_DATE, (to_date(CONCAT(substr(ENC.DATE_OF_BIRTH_SK, 1, 4),'-',substr(ENC.DATE_OF_BIRTH_SK, 5,2),'-',substr(ENC.DATE_OF_BIRTH_SK, 7,2)))))/365.25) as float) Age "+ 
 			"FROM DIM_MEMBER ENC WHERE MEMBER_ID='"+memberId+"'";			
 			
 			resultSet = statement.executeQuery(memberSQL);			
@@ -395,7 +395,7 @@ public class PatientServiceImpl implements PatientService {
 //			resultSet = statement.executeQuery("select hmv.* from hedis_member_view hmv "+
 //						"inner join HEDIS_SUMMARY_VIEW hsv on hmv.QUALITY_MEASURE_SK = hsv.quality_measure_sk");
 			resultSet = statement.executeQuery("select * from HEDIS_MEMBER_WEB_VIEW limit " + cacheSize);
-			
+
 			MemberDetail data = null;
 			while (resultSet.next()) {
 				data = new MemberDetail(); 
