@@ -20,6 +20,8 @@ public interface ProgramRepository extends CrudRepository<QualityProgram, Intege
 */
     QualityProgram findQualityProgramByProgramNameAndCategoryName(@Param("programName") String programName, @Param("categoryName") String categoryName);
     
+    List<QualityProgram> findQualityProgramByProgramId(@Param("programId") int programId);
+    
     List<QualityProgram>  
     findQualityProgramByProgramNameAndStartDateAndEndDate(@Param("programName") String programName,     		
     		@Param("startDate") Date startDate, 
