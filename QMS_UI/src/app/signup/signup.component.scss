@@ -1,2 +1,10 @@
-// shared css for the login and signup page
-@import "../login/login.component.scss";
+$topnav-background-color: #222;
+:host {
+    display: block;
+}
+.user-avatar {
+    margin-top: 40%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}

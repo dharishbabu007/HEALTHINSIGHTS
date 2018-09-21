@@ -94,7 +94,8 @@ export class SignupComponent implements OnInit {
             console.log(res)
             if (res.status === 'SUCCESS') {
     
-              this.msgService.success('Created');
+              this.msgService.success('Registration Successful');
+              
               this.router.navigateByUrl('/login');  
             } 
         
