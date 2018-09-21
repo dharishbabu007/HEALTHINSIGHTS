@@ -93,4 +93,9 @@ export class GapsService {
       getSecurityQuestions(){
       return this.http.get(`http://healthinsight:8082/curis/user/get_securityQuestions`);
       }
+
+
+      getDate(event){
+          return this.http.get(`http://healthinsight:8082/curis/qms/program/${event}`)
+      }
 }

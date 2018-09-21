@@ -29,10 +29,19 @@ export class UserSettingService {
      }
 
  
-  UserSettingSubmit(model: UserSetting): Observable<UserSetting> {
-        console.log('UserSetting');
+  UserSettingSubmit(model: UserSetting,loginID): Observable<UserSetting> {
+        console.log(loginID);
 
-        return this.http.post<UserSetting>('http://healthinsight:8082/curis/user/update_user/', model, httpOptions)
+        return this.http.post<UserSetting>('http://healthinsight:8082/curis/user/update_user/',{
+          "email": model.EmailId,
+          "loginId": loginID,
+          "firstName": model.firstName,
+          "lastName": model.lastName,
+          "securityQuestion": model.securityQuestion,
+          "securityAnswer": model.securityAnswer,
+          "phoneNumber": model.phoneNumber
+      }
+      , httpOptions)
         . pipe(
             catchError(this.handleError('UserSettingSubmit', model))
           );

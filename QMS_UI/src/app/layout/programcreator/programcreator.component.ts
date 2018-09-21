@@ -97,7 +97,8 @@ onSubmit() {
       if (res.status == 'SUCCESS') {
         this.msgService.success('Program created Successfully');
         this.myForm.reset();
-      } else {
+      }
+       else {
         console.log(res.status)
         this.msgService.error("Program exists");
       }

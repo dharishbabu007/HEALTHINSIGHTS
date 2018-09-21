@@ -21,6 +21,8 @@ export class MeasurecreatorComponent implements OnInit {
   measureId: string;
   title: string;
   type: string;
+  Repositry: any;
+  programId: any;
   programList: any;
   measureDomainList: any;
   measureCategoriesList: any;
@@ -63,9 +65,12 @@ export class MeasurecreatorComponent implements OnInit {
  ngOnInit() {
   this.gapsService.getDropDownPrograms().subscribe((data: any) => {
     this.programList = [];
+    this.Repositry =data;
     data.forEach(element => {
       this.programList.push({label: element.name, value: element.name});
     });
+   
+
   });
   this.gapsService.getMeasureDomain().subscribe((data: any) => {
     this.measureDomainList = [];
@@ -112,6 +117,7 @@ export class MeasurecreatorComponent implements OnInit {
    this.myForm.controls['numerator'].setValue(measureInfo.numerator);
    this.myForm.controls['numeratorExclusions'].setValue(measureInfo.numeratorExclusions);
    this.myForm.controls['target'].setValue(measureInfo.target);
+
    if (measureInfo.startDate) {
     this.myForm.controls['startDate'].setValue(new Date(measureInfo.startDate));
    }
@@ -224,12 +230,17 @@ export class MeasurecreatorComponent implements OnInit {
     }
   } 
   filterCategory(event) {
-    this.measureCategories = [];
-    const elementList = this.measureCategoriesList.filter(ele => ele.value === event.value);
-    elementList.forEach(element => {
-      this.measureCategories.push({label: element.name, value: element.name});
+    this.programId = this.Repositry.filter(item => item.name === event.value);
+
+    this.gapsService.getDate(this.programId[0].value).subscribe((res:any) => {
+  
+    this.myForm.controls['startDate'].setValue(new Date(res.startDate));
+    this.myForm.controls['endDate'].setValue(new Date(res.endDate));
+    
+  
     });
-  }
+   
+}
 }
 
 

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { GapsService } from '../../shared/services/gaps.service';
 import { MessageService } from '../../shared/services/message.service';
 import { UserSetting } from './userSetting.component';
+import { isTemplateExpression } from '../../../../node_modules/typescript';
 
 @Component({
   selector: 'app-userSetting',
@@ -49,7 +50,9 @@ export class UserSettingComponent implements OnInit {
     var user =  JSON.parse(localStorage.getItem('currentUser'));
 
     this.Queid = user.securityQuestion;
+     
 
+    
     this.gapsService.getSecurityQuestions().subscribe((data: any) => {
       this.QuestionList = [];
       this.Question = [];
@@ -57,10 +60,13 @@ export class UserSettingComponent implements OnInit {
       data.forEach(element => {
         this.QuestionList.push({label: element.question, value: element.question});
       });
-
-      this.Question = this.tableRepository.filter(item => item.id == this.Queid);
+      
+        this.Question = this.tableRepository.filter(item => item.id == this.Queid);
      this.actualQuestion =  this.Question[0].question;
      this.myForm.controls['securityQuestion'].setValue(this.actualQuestion);
+     console.log(this.Queid)
+ 
+     
     });
 
    
@@ -75,19 +81,33 @@ export class UserSettingComponent implements OnInit {
 
   }
 
+  getID(event){
+   
   
+}
   submitPc(modelPc: UserSetting, isValid: boolean) {
+    var user =  JSON.parse(localStorage.getItem('currentUser'));
+    this.Queid =  [];
+    this.Queid = this.tableRepository.filter(item => item.question === modelPc.securityQuestion );
+    modelPc.securityQuestion = this.Queid[0].id;
 
        this.submitted = true;
       // call API to save
       // ...
-      console.log( 'Model' + JSON.stringify(modelPc));
-    this.UserSettingService.UserSettingSubmit(modelPc).subscribe( model => console.log('Succeessfully Updated UserSettings'));
+      console.log( 'Model' + user.loginId);
+    this.UserSettingService.UserSettingSubmit(modelPc,user.loginId).subscribe( model => this.msgService.success('Successfully Updated UserSettings'));
 
   }
 
   
 }
 export interface UserSetting{
+  firstName: string;
+  lastName: string;
+  loginId: string;
+  securityAnswer:string;
+  phoneNumber:string;
+  EmailId: string;
+  
   securityQuestion: string;
 }
