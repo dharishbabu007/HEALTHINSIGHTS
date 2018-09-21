@@ -195,22 +195,6 @@ public class QMSController {
 		return new ResponseEntity<Set<MemberDetail>>(memberDetails, HttpStatus.OK);
 	}		
 
-	@RequestMapping(value = "/user/{loginId}/{password}", method = RequestMethod.GET)
-	public ResponseEntity<?> getUserDetails(@PathVariable("loginId") String loginId, @PathVariable("password") String password) {
-		logger.info("Fetching user details for loginId {}", loginId);
-		System.out.println("Fetching user details for loginId " + loginId);
-		User user = patientService.getUserInfo(loginId, password);
-		if (user == null) {
-			logger.error("User details with loginId {} not found.", loginId);
-			return new ResponseEntity(new CustomErrorType("User details with loginId " + loginId 
-					+ " not found"), HttpStatus.NOT_FOUND);
-		} else {
-			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
-		}
-		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
-		return new ResponseEntity<User>(user, HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/createProgram", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<RestResult> createProgram(@RequestBody Program program) {
@@ -219,37 +203,8 @@ public class QMSController {
 		programService.createProgram(program);
 		
 		RestResult restResult = RestResult.getSucessRestResult(response);		
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.TEXT_PLAIN);
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
 	}
-
-//	@RequestMapping(value = "/caregaps", method = RequestMethod.GET)
-//	@ResponseBody
-//	public ResponseEntity<?> findAllClearGaps() {
-//		logger.info("About to get all clear gaps ");
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		return new ResponseEntity<String>(headers, HttpStatus.OK);
-//	}
-//
-//	@RequestMapping(value = "/caregaps/{careGapId}", method = RequestMethod.GET)
-//	@ResponseBody
-//	public ResponseEntity<?> findClearGaps(@PathVariable("careGapId") String careGapId) {
-//		logger.info("About to get clear gap for id :  " + careGapId);
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		return new ResponseEntity<String>(headers, HttpStatus.OK);
-//	}
-//
-//	@RequestMapping(value = "/caregaps/{careGapId}", method = RequestMethod.PUT)
-//	@ResponseBody
-//	public ResponseEntity<?> updateClearGap(@PathVariable("careGapId") String careGapId) {
-//		logger.info("About to update clear gap for id:  "+careGapId);
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		return new ResponseEntity<String>(headers, HttpStatus.OK);
-//	}
 
 	@RequestMapping(value = "/members/{dimMemberId}", method = RequestMethod.GET)
 	@ResponseBody
@@ -259,5 +214,17 @@ public class QMSController {
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<Object>(dimMemberList, headers, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/program/{programId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getProgramById(@PathVariable("programId") int programId) {
+
+		QualityProgramUI qualityProgram = programService.getProgramById(programId);
+		if (qualityProgram == null) {
+			logger.error(" Unable to fetch program details");
+			return new ResponseEntity(new CustomErrorType("Program not found."), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<QualityProgramUI>(qualityProgram, HttpStatus.OK);
+	}	
 
 }

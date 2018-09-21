@@ -42,13 +42,13 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select dm.*, dd.CALENDAR_DATE from dim_member dm, dim_date dd "
+			resultSet = statement.executeQuery("select dm.gender, dm.member_id, (dm.FIRST_NAME||' '||dm.MIDDLE_NAME||' '||dm.LAST_NAME) AS NAME, dd.CALENDAR_DATE from dim_member dm, dim_date dd "
 					+ "where dm.date_of_birth_sk=dd.date_sk and member_id='"+memberId+"'");
 			if (resultSet.next()) {
 				closeGaps.setGender(resultSet.getString("gender"));
 				closeGaps.setDateOfBirth(resultSet.getString("CALENDAR_DATE"));
 				closeGaps.setMemberId(resultSet.getString("member_id"));
-				closeGaps.setName(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
+				closeGaps.setName(resultSet.getString("NAME"));
 			}
 			
 			resultSet.close();	
@@ -136,13 +136,12 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 				statement.setString(++i, closeGap.getProviderComments());
 				statement.setString(++i, closeGap.getStatus());	
 				
-
-				Format formatter = new SimpleDateFormat("dd-MMM-yy");
-				String gapDate = formatter.format(new java.util.Date());
-				statement.setString(++i, gapDate);
+//				Format formatter = new SimpleDateFormat("dd-MMM-yy");
+//				String gapDate = formatter.format(new java.util.Date());				
 
 				Date date = new Date();				
-				Timestamp timestamp = new Timestamp(date.getTime());				
+				Timestamp timestamp = new Timestamp(date.getTime());	
+				statement.setTimestamp(++i, timestamp);				
 				
 				statement.setString(++i, "Y");
 				statement.setTimestamp(++i, timestamp);

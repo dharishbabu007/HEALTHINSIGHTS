@@ -2,6 +2,8 @@ package com.qms.rest.service;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ import com.qms.rest.exception.ProgramCreatorException;
 import com.qms.rest.model.Program;
 import com.qms.rest.model.ProgramCategory;
 import com.qms.rest.model.QualityProgram;
+import com.qms.rest.model.QualityProgramUI;
 import com.qms.rest.repository.ProgramRepository;
 
 @Service
@@ -41,6 +44,23 @@ public class ProgramService {
         System.out.println("About to invoke repository for program: "+program);
         buildQualityPrograms(program).stream().forEach(q-> programRepository.save(q));
     }
+    
+    public QualityProgramUI getProgramById(int programId) {
+    	QualityProgramUI qualityProgramUI = null;
+    	List<QualityProgram> qualityPrograms = programRepository.findQualityProgramByProgramId(programId);
+    	if(qualityPrograms != null && qualityPrograms.size() > 0) {
+    		QualityProgram qualityProgram = qualityPrograms.get(0);
+    		qualityProgramUI = new QualityProgramUI();	
+    		qualityProgramUI.setProgramId(qualityProgram.getProgramId());
+    		qualityProgramUI.setProgramName(qualityProgram.getProgramName());    		
+			Format formatter = new SimpleDateFormat("dd-MMM-yy");
+			if(qualityProgram.getStartDate() != null)
+				qualityProgramUI.setStartDate(formatter.format(qualityProgram.getStartDate()));
+			if(qualityProgram.getEndDate() != null)
+				qualityProgramUI.setEndDate(formatter.format(qualityProgram.getEndDate()));			
+    	}
+    	return qualityProgramUI;
+    }    
 
     private List<QualityProgram> buildQualityPrograms(Program program) {
         return  program.getProgramCategorys().stream().map(category ->

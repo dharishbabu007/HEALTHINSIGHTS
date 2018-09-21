@@ -26,7 +26,7 @@ public class PatientServiceImpl implements PatientService {
 	private QMSConnection qmsConnection;
 	
 	
-	int cacheSize = 10;
+	int cacheSize = 5;
 	HashMap<String, DimPatient> cacheMap = new HashMap<>();
 	Set<MemberDetail> memberDetailsSet = new HashSet<>();
 	
