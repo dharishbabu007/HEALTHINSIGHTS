@@ -5,12 +5,14 @@ import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.util.Launcher;
 import com.qms.rest.util.QMSAnalyticsProperty;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,9 @@ public class ImportExportServiceImpl implements ImportExportService {
 	private QMSAnalyticsProperty qmsAnalyticsProperty;
 	
 	String windowsCopyPath;
+	
+	@Autowired
+	Launcher hdfsLauncher;
 
 	@PostConstruct
     public void init() {
@@ -63,9 +68,10 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult exportFile(String fileName) {
 		try {
-			getFile(qmsAnalyticsProperty.getLinuxOutputPath());
+			hdfsLauncher.callLauncher();
+			//getFile(qmsAnalyticsProperty.getLinuxOutputPath());
 			return RestResult.getSucessRestResult(" File export success. ");
-		} catch (JSchException e) {
+		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
 		}

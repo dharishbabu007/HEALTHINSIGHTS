@@ -98,7 +98,6 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 		
 		PreparedStatement statement = null;
 		Connection connection = null;
-		RestResult restResult = new RestResult();
 		Statement statementObj = null;
 		ResultSet resultSet = null;
 		try {	
@@ -123,58 +122,52 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			while (resultSet.next()) {
 				lifeCycleId = resultSet.getInt(1)+1;
 			}
-			
+			resultSet.close();
 			statement = connection.prepareStatement(sqlStatementInsert);
 			Set<CloseGap> closeGapSet = closeGaps.getCareGaps();
-			for (CloseGap closeGap : closeGapSet) {
-				int i=0;							
-				statement.setString(++i, memberId);
-				statement.setString(++i, measureId);
-				statement.setString(++i, closeGap.getIntervention());
-				statement.setString(++i, closeGap.getPriority());
-				statement.setString(++i, closeGap.getPayerComments());
-				statement.setString(++i, closeGap.getProviderComments());
-				statement.setString(++i, closeGap.getStatus());	
-				
-//				Format formatter = new SimpleDateFormat("dd-MMM-yy");
-//				String gapDate = formatter.format(new java.util.Date());				
-
-				Date date = new Date();				
-				Timestamp timestamp = new Timestamp(date.getTime());	
-				statement.setTimestamp(++i, timestamp);				
-				
-				statement.setString(++i, "Y");
-				statement.setTimestamp(++i, timestamp);
-				statement.setTimestamp(++i, timestamp);
-				statement.setString(++i, "Y");
-				statement.setString(++i, "A");
-				statement.setTimestamp(++i, timestamp);
-				statement.setString(++i, "UI");				
-				
-				if(userData != null && userData.getName() != null)
-					statement.setString(++i, userData.getName());
-				else 
-					statement.setString(++i, userName);
-				
-				statement.setInt(++i, lifeCycleId);
-				statement.setString(++i, productId);
-				statement.setString(++i, hedisGapsSK);
-				statement.addBatch();
-				break;
-			}			
-			int[] exes = statement.executeBatch();
-			restResult.setStatus(RestResult.SUCCESS_STATUS);
-			restResult.setMessage(" Close Gaps updation Success. ");
+			if(closeGapSet.isEmpty()) {
+				return RestResult.getFailRestResult("Close Gap not found in Request body. ");
+			}
+			CloseGap closeGap = closeGapSet.iterator().next();
+			int i=0;							
+			statement.setString(++i, memberId);
+			statement.setString(++i, measureId);
+			statement.setString(++i, closeGap.getIntervention());
+			statement.setString(++i, closeGap.getPriority());
+			statement.setString(++i, closeGap.getPayerComments());
+			statement.setString(++i, closeGap.getProviderComments());
+			statement.setString(++i, closeGap.getStatus());	
+			
+			Date date = new Date();				
+			Timestamp timestamp = new Timestamp(date.getTime());	
+			statement.setTimestamp(++i, timestamp);				
+			
+			statement.setString(++i, "Y");
+			statement.setTimestamp(++i, timestamp);
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "Y");
+			statement.setString(++i, "A");
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "UI");				
+			
+			if(userData != null && userData.getName() != null)
+				statement.setString(++i, userData.getName());
+			else 
+				statement.setString(++i, userName);
+			
+			statement.setInt(++i, lifeCycleId);
+			statement.setString(++i, productId);
+			statement.setString(++i, hedisGapsSK);
+			statement.executeUpdate();
+			return RestResult.getSucessRestResult(" Close Gaps updation Success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
-			restResult.setStatus(RestResult.FAIL_STATUS);
-			restResult.setMessage(e.getMessage());			
+			return RestResult.getFailRestResult(e.getMessage());
 		}
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
 			qmsConnection.closeJDBCResources(null, statement, connection);
-		}	
-		return restResult;		
+		}			
 		
 	}
 
