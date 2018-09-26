@@ -7,6 +7,8 @@ import org.apache.hadoop.fs.Path;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Component
 public class HdfsAppendExample {
@@ -73,9 +75,11 @@ public class HdfsAppendExample {
      * @param fileSystem
      * @param hdfsFilePath
      * @return file content
+     * @throws URISyntaxException 
      */
-    public String readFromHdfs(FileSystem fileSystem, String hdfsFilePath) {
-        Path hdfsPath = new Path(hdfsFilePath);
+    public String readFromHdfs(FileSystem fileSystem, String hdfsFilePath) throws URISyntaxException {
+    	URI uri = URI.create(hdfsFilePath);
+        Path hdfsPath = new Path(uri);
         StringBuilder fileContent = new StringBuilder("");
         try{
             BufferedReader bfr=new BufferedReader(new InputStreamReader(fileSystem.open(hdfsPath)));
