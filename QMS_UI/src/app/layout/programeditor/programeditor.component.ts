@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProgramcreatorService } from './programcreator.service';
+import { ProgrameditorService } from './programeditor.service';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -8,11 +8,11 @@ import { MessageService } from '../../shared/services/message.service';
 
 
 @Component({
-  selector: 'app-programcreator',
-  templateUrl: './programcreator.component.html',
-  styleUrls: ['./programcreator.component.scss']
+  selector: 'app-programeditor',
+  templateUrl: './programeditor.component.html',
+  styleUrls: ['./programeditor.component.scss']
 })
-export class ProgramcreatorComponent implements OnInit {
+export class ProgrameditorComponent implements OnInit {
 
   public myForm: FormGroup;
 
@@ -20,13 +20,15 @@ export class ProgramcreatorComponent implements OnInit {
   title: string;
   measureId: string;
   constructor(private _fb: FormBuilder,
-    private programCreatorService: ProgramcreatorService,
+    private ProgrameditorService: ProgrameditorService,
     private router: Router,
     private route: ActivatedRoute,
   private msgService: MessageService) {
    
     this.route.params.subscribe(params => {
             this.measureId = params['measureId'];
+            this.type = params['type'];
+            this.title = (this.type === '1' ) ? 'Progaram Creator' : 'Program Editor';
         }); }
 
   ngOnInit() {
@@ -91,7 +93,7 @@ onSubmit() {
       modelPC.endDate = this.formatDate(modelPC.endDate);
   
       console.log( 'Model' + JSON.stringify(modelPC));
-    this.programCreatorService.programCreatorSubmit(modelPC).subscribe((res: any) => {
+    this.ProgrameditorService.programCreatorSubmit(modelPC).subscribe((res: any) => {
 
       console.log(res)
       if (res.status == 'SUCCESS') {

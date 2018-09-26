@@ -46,6 +46,7 @@ import { PanelModule } from 'primeng/panel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import {TooltipModule} from 'primeng/tooltip';
 import { ProgramcreatorComponent } from './programcreator/programcreator.component';
+import { ProgrameditorComponent } from './programeditor/programeditor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -112,6 +113,7 @@ import {ChartModule} from 'primeng/chart';
         MemberGapInfoComponent,
         MeasurecreatorComponent,
         ProgramcreatorComponent,
+        ProgrameditorComponent,
         UserSettingComponent,
         FileManagerComponent,
         Csv1Component,

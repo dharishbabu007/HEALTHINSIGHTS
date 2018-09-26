@@ -26,6 +26,8 @@
         "@ng-bootstrap/ng-bootstrap": "^2.0.0",
         "@ngx-translate/core": "^10.0.1",
         "@ngx-translate/http-loader": "^3.0.1",
+        "@types/annyang": "^2.6.1",
+        "annyang": "^2.6.1",
         "chart.js": "^2.7.2",
         "core-js": "^2.5.5",
         "font-awesome": "^4.7.0",
