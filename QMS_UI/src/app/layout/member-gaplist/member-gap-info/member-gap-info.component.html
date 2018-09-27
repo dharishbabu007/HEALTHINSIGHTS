@@ -9,7 +9,7 @@
                             <div class="col col-lg-2 col-xl-2 ">
                                 <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
-                            <div class="col col-lg-2 col-xl-2">
+                            <div class="col col-lg-4 col-xl-4">
                                 <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]">{{closeGaps.name}}</a>
                              </div>
                         </div>
@@ -37,31 +37,66 @@
                         </tr>
                     </thead>
                     <tbody >
+                         <tr>
+                             <td>
+                                    <span > 
+                                            {{measureTitle}}
+                                        </span>
+                             </td>
+                             <td>
+                                     <span>
+                                            <textarea formControlName="intervention"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
+                                     </span>
+                             </td>
+                             <td>
+                                    <p-dropdown formControlName="priority"  [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                             </td>
+                             <td>
+                                    <textarea formControlName="providerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
+                             </td>
+                             <td>
+                                    <p-dropdown formControlName="status" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                             </td>
+                         </tr>
                         <tr *ngFor="let gapsElement of gaps; let i=index;" >
                             <td *ngFor="let col of cols" >
+                                 
                                 <span *ngIf="col.field == 'measureTitle'"> 
                                     {{gapsElement[col.field]}}
                                 </span>
                                 <span *ngIf="col.field == 'dateTime'"> 
                                     {{gapsElement[col.field] | date}}
                                 </span>
+
+                               
+                                <!-- <p-dropdown  *ngIf="col.field == 'status' && i ==0" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown> -->
+                                  <span *ngIf= "col.field == 'priority'" >
+                                       
+                                        {{gapsElement[col.field]}} 
+                                  </span>
                                 
-                                <p-dropdown formControlName="status" *ngIf="col.field == 'status' && i ==0" [(ngModel)]="gapsElement[col.field]" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown>
-                                <p-dropdown formControlName="priority" *ngIf="col.field == 'priority' && i ==0" [(ngModel)]="gapsElement[col.field]" [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                                <span *ngIf= "col.field == 'status'" >
+                                      
+                                        {{gapsElement[col.field]}} 
+                                  </span>
+                               
                                 <span *ngIf="col.field == 'payerComments' && i ==0" >
-                                    <textarea formControlName="payerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
+                                        {{gapsElement[col.field]}}
                                 </span> 
                                 <span *ngIf="col.field == 'providerComments' && i ==0" >
-                                    <textarea formControlName="providerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
-                                </span> 
-                                <span *ngIf="col.field == 'intervention' && i ==0" >
-                                    <textarea formControlName="intervention"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize">{{gapsElement[col.field]}}</textarea>
-                                </span>  
-                                <span *ngIf="i > 0 && (col.field != 'dateTime' && col.field != 'measureTitle')"> 
                                         {{gapsElement[col.field]}}
-                                    </span>
+                                </span> 
+                                <span *ngIf="col.field == 'intervention'" >
+                                   {{gapsElement[col.field]}}
+                                </span>  
+                               
+                                <!--  <span *ngIf="i > 0 && (col.field != 'dateTime' && col.field != 'measureTitle')"> 
+                                        {{gapsElement[col.field]}}
+                                    </span>-->
                             </td>
+                          
                         </tr>
+                       
                     </tbody>
                 </table>
                 </form>

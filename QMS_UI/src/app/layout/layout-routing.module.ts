@@ -5,6 +5,7 @@ import { MemberCareGapListComponent } from './member-care-gaplist/member-care-ga
 import { MemberGapListComponent } from './member-gaplist/member-gaplist.component';
 import { MemberGapInfoComponent } from './member-gaplist/member-gap-info/member-gap-info.component';
 import { ProgramcreatorComponent } from './programcreator/programcreator.component';
+import { ProgrameditorComponent } from './programeditor/programeditor.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FrameUrlComponent } from './frame-url/frame-url.component';
 import { QualityCentralComponent } from './quality-central/quality-central.component';
@@ -34,6 +35,7 @@ const routes: Routes = [
             { path: 'member-care-gap-list', component: MemberCareGapListComponent },
             { path: 'member-gap/:gapId/:memberId', component: MemberGapInfoComponent },
             { path: 'programcreator', component: ProgramcreatorComponent},
+            { path: 'programeditor', component: ProgrameditorComponent},
             { path: 'quality-central', component: QualityCentralComponent },
             { path: 'measureworklist', component: MeasureworklistComponent},
             { path: 'measureworklist', component: MeasureworklistComponent},

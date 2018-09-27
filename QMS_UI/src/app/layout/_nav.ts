@@ -56,9 +56,16 @@ export const navItems = [
             url: '/programcreator',
             icon: 'fa fa-sliders'
           },
+         
           {
             name: 'Measure Creator',
             url: '/measurecreator',
+            icon: 'fa fa-sliders'
+          },
+
+          {
+            name: 'Program Editor',
+            url: '/programeditor',
             icon: 'fa fa-sliders'
           },
           // {

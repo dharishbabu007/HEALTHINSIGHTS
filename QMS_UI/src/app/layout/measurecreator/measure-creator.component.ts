@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   providers: [GapsService]
 })
 export class MeasurecreatorComponent implements OnInit {
-
+  value: Date;
   public myForm: FormGroup;
   disableForm = false;
   disableOnCopy = false;
@@ -92,9 +92,10 @@ export class MeasurecreatorComponent implements OnInit {
       this.setMeasureInfo(data);
     });
    }
-      
-  }
 
+
+  }
+ 
  setMeasureInfo(measureInfo) {
    if (measureInfo.isActive === 'N' && this.type== '1') {
     this.myForm.disable();
@@ -119,6 +120,7 @@ export class MeasurecreatorComponent implements OnInit {
    this.myForm.controls['target'].setValue(measureInfo.target);
 
    if (measureInfo.startDate) {
+     console.log(measureInfo.startDate)
     this.myForm.controls['startDate'].setValue(new Date(measureInfo.startDate));
    }
    if (measureInfo.endDate) {
