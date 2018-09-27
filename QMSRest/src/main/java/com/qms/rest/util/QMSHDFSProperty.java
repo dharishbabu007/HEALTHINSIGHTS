@@ -10,7 +10,8 @@ public class QMSHDFSProperty {
 	private String coreSite;
 	private String hdfsSite;
 	private String hdfsURL;
-	private String hdfsFile;
+	private String readFile;
+	private String writePath;
 	
 	public String getCoreSite() {
 		return coreSite;
@@ -30,12 +31,17 @@ public class QMSHDFSProperty {
 	public void setHdfsURL(String hdfsURL) {
 		this.hdfsURL = hdfsURL;
 	}
-	public String getHdfsFile() {
-		return hdfsFile;
+	public String getWritePath() {
+		return writePath;
 	}
-	public void setHdfsFile(String hdfsFile) {
-		this.hdfsFile = hdfsFile;
+	public void setWritePath(String writePath) {
+		this.writePath = writePath;
 	}
-	
+	public String getReadFile() {
+		return readFile;
+	}
+	public void setReadFile(String readFile) {
+		this.readFile = readFile;
+	}	
 	
 }

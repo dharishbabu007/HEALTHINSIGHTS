@@ -1,9 +1,6 @@
 package com.qms.rest.util;
 
-import java.io.IOException;
 import java.net.URI;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -11,6 +8,7 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,74 +19,67 @@ public class HDFSFileUtil {
 	
 	private static final Logger logger = Logger.getLogger("com.qms.rest.util.HDFSFileUtil");
 	
-	FileSystem fs;
+	@Autowired
+	QMSHDFSProperty qmsHDFSProperty;	
 	
-	//@PostConstruct
-    public void init() {		
-		Configuration conf = new Configuration();
-		String hdfsuri = "hdfs://hdp-master1.datalab.com:8020/";
-		conf.set("fs.defaultFS", hdfsuri);
-		conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-		conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());		
-		System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");
-		System.setProperty("hadoop.home.dir", "/");	
-		try {
-			fs = FileSystem.get(URI.create(hdfsuri), conf);
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}		
-    }
-	
-	public void createSubFolder() throws IOException {
-		//==== Create folder if not exists
-		Path workingDir=fs.getWorkingDirectory();
-		System.out.println("workingDir.getName() --> " + workingDir.getName());
-		Path newFolderPath= new Path("/user/hdp-hadoop/curis");
-		if(!fs.exists(newFolderPath)) {
-		   // Create new Directory
-		   System.out.println(" Creating directory.. ");	
-		   fs.mkdirs(newFolderPath);
-		   System.out.println(" Dir created");
-		}	
-		System.out.println(" Dir created");
-	}
-		
-	public void putFile (MultipartFile file) throws IOException {
-		//==== Write file
-		System.out.println("Begin Write file into hdfs");
-		//Create a path
-		Path hdfswritepath = new Path("/user/hdp-hadoop/curis/"+file.getOriginalFilename());
-		//Init output stream
-		FSDataOutputStream outputStream=fs.create(hdfswritepath);
-		//Cassical output stream usage
-		outputStream.writeBytes(new String(file.getBytes()));
-		outputStream.close();
-		System.out.println("End Write file into hdfs");
-	}
-	
-	public void getFile () throws IOException {
-		//==== Read file
-		System.out.println("Read file from hdfs");
-		//Create a path
-		Path hdfsreadpath = new Path("");
-		//Init input stream
-		FSDataInputStream inputStream = fs.open(hdfsreadpath);
-		//Classical input stream usage
-		String out= IOUtils.toString(inputStream, "UTF-8");
-		System.out.println(out);
-		inputStream.close();
-		fs.close();		
-	}
-	
-//	public static void main(String[] args) {
-//		HDFSFileUtil utils = new HDFSFileUtil();
-//		
-//		try {
-//			utils.createSubFolder();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//	public void createSubFolder() throws IOException {
+//		//==== Create folder if not exists
+//		Path workingDir=fs.getWorkingDirectory();
+//		System.out.println("workingDir.getName() --> " + workingDir.getName());
+//		Path newFolderPath= new Path("/user/hdp-hadoop/curis");
+//		if(!fs.exists(newFolderPath)) {
+//		   // Create new Directory
+//		   System.out.println(" Creating directory.. ");	
+//		   fs.mkdirs(newFolderPath);
+//		   System.out.println(" Dir created");
+//		}	
+//		System.out.println(" Dir created");
 //	}
+	
+			
+	public void putFile (MultipartFile uploadFile) throws Exception {
+		FSDataOutputStream outputStream=null;
+		FileSystem file=null;
+		try {
+	        String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
+	        URI uri = URI.create (hdfsFilePath);
+			System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");
+	        Configuration conf = new Configuration();
+	        file = FileSystem.get (uri, conf);		
+	        System.out.println("Creating the file in hdfs --> "+hdfsFilePath);
+			outputStream=file.create(new Path(uri));
+			System.out.println("writing bytes size --> "+uploadFile.getBytes().length);
+			outputStream.write(uploadFile.getBytes());
+			System.out.println("End Write file into hdfs");
+		} catch (Exception ex) {
+			throw ex;
+		}
+		finally {
+			if(outputStream != null) outputStream.close();
+			if(file != null) file.close();
+		}
+	}
+	
+	public void getFile (String path) throws Exception {
+		FSDataInputStream inputStream=null;
+		FileSystem file=null;		
+		try{
+	        String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+path;
+	        URI uri = URI.create (hdfsFilePath);
+	        Configuration conf = new Configuration();
+	        file = FileSystem.get (uri, conf);
+	        inputStream = file.open(new Path(uri));
+			String out= IOUtils.toString(inputStream, "UTF-8");
+			System.out.println(out);
+			inputStream.close();
+			file.close();
+		} catch (Exception ex) {
+			throw ex;
+		}
+		finally {
+			if(inputStream != null) inputStream.close();
+			if(file != null) file.close();
+		}		
+	}
 	
 }

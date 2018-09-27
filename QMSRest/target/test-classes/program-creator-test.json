@@ -1,0 +1,16 @@
+{
+  "programName":"programName",
+  "startDate":1531812316415,
+  "endDate":1531812316419,
+  "programCategorys":[
+    {
+      "categoryName":"New Category1",
+      "maxPoints":10,
+      "maxScore":25
+    },
+    {
+      "categoryName":"categoryName2",
+      "maxPoints":10,
+      "maxScore":30
+    }]
+}
