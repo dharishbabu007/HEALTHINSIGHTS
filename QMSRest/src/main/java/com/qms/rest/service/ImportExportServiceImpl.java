@@ -5,14 +5,13 @@ import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
-import com.qms.rest.util.Launcher;
+import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 	String windowsCopyPath;
 	
 	@Autowired
-	Launcher hdfsLauncher;
+	HDFSFileUtil hdfsFileUtil;
 
 	@PostConstruct
     public void init() {
@@ -54,9 +53,11 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult importFile(MultipartFile file) {
 		try {			
-			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
-					qmsAnalyticsProperty.getPassword(), file, 
-					qmsAnalyticsProperty.getLinuxUploadPath());
+//			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
+//					qmsAnalyticsProperty.getPassword(), file, 
+//					qmsAnalyticsProperty.getLinuxUploadPath());
+			
+			hdfsFileUtil.putFile(file);
 			
 			return RestResult.getSucessRestResult(" File import success. ");
 		} catch (Exception e) {
@@ -68,10 +69,11 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult exportFile(String fileName) {
 		try {
-			hdfsLauncher.callLauncher();
+			hdfsFileUtil.getFile(fileName);
+			
 			//getFile(qmsAnalyticsProperty.getLinuxOutputPath());
 			return RestResult.getSucessRestResult(" File export success. ");
-		} catch (IOException | URISyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
 		}
