@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { navItems } from './_nav';
 import { Router } from '@angular/router';
 import {AnnyangService} from '../shared/services/annyang.service';
+
+
 @Component({
     selector: 'app-layout',
     templateUrl: './layout.component.html',
@@ -34,43 +36,37 @@ export class LayoutComponent {
     var user =  JSON.parse(localStorage.getItem('currentUser'));
          
        this.username= user.loginId;
+       
+        
+   
+   
+    if(this.annyang){
+         this.annyang.start();
+       this.annyang.debug();
+       console.log("started");
+     }
 
-
-
-        if(this.annyang.start){
-          console.log("started")
-        }
-        this.annyang.start();
-        this.annyang.commands = {
-          'Open Quality Central': (val)=>{
-        
-              console.log("command start")
-        
-              this.newFun(val)
-          },
-          'Open Quality Measure': (val)=>{
-        
-            console.log("command start")
-      
-            this.newFun(val)
-        },
-        'Open My Measures': (val)=>{
-        
+     this.annyang.commands = {
+      'Open *': (val)=>{
+    
           console.log("command start")
     
           this.newFun(val)
       },
-      'Open Program Creator': (val)=>{
-        
+      'Open quality Central': (val) =>{
         console.log("command start")
-  
-        this.newFun(val)
-    }
-    }
+    
+        this.newFun1(val)
+      }
+
+}
   }
+
   newFun(val){
-    this.router.navigate['./quality-central']
- 
-   }
+    this.router.navigateByUrl('/' + val);  
+}
+newFun1(val){
+  this.router.navigateByUrl('/Quality Central');  
+}
     
 }

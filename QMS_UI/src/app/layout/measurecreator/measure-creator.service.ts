@@ -30,7 +30,7 @@ export class MeasurecreatorService {
   MeasurecreatorSubmit(model: any): Observable<any> {
         console.log('MeasurecreatorClick');
 
-        return this.http.post('http://10.6.122.180:8080/curis/qms/createProgram', model, httpOptions)
+        return this.http.post('http://healthinsight:8080/curis/qms/createProgram', model, httpOptions)
         . pipe(
             catchError(this.handleError('MeasurecreatorSubmit', model))
           );

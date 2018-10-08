@@ -5,9 +5,12 @@ declare let annyang:any
 export class AnnyangService {
   start() {
     annyang.addCommands(this.commands);
-    annyang.debug(true);
-    annyang.start();
+    
+    annyang.start({continuous:false});
   }
 
   commands = {};
+ debug(){
+  annyang.debug(true);
+ }
 }

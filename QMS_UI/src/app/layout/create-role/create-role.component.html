@@ -1,0 +1,62 @@
+
+    <app-page-header [heading]="'Role Creation'" [icon]="'fa-user'"></app-page-header>
+<div class="card ">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+
+            <!--<div class="form-group row">
+              <label class="col-md-3 col-form-label font-weight-bold" for="hf-RoleName">Role Name</label>
+              <div class="col-md-9">
+                <input type="text" class="form-control" formControlName="RoleName">
+             </div>
+            </div> -->
+            <div class="form-group row">
+                    <label class="col-md-3 col-form-label font-weight-bold" for="hf-RoleName">Role Name</label>
+                    <div class="col-md-9">
+                      <p-dropdown placeholder="Create/Select a Role"  [options]="roleList" formControlName="RoleName"></p-dropdown> <!--  editable="true" to makie it editable-->
+                    </div>
+                   
+            </div>
+            <div class="form-group row">
+                    <label class="col-md-3 col-form-label font-weight-bold">Pages to be visible for the Role</label>
+         
+                    <p-tree [value]="files" selectionMode="checkbox" [(selection)]="selectedFiles2" [style]="{'width':'265px', 'border': 'none'}">
+                        <ng-template let-node  pTemplate="default">
+                          
+                          <div>
+                            {{node.label}}
+                    
+                          </div>
+                            
+                        </ng-template>
+                    </p-tree>
+               <!--  
+                <div class="ui-g" style="width:250px;margin-bottom:10px">
+                    <div class="ui-g-12"><p-checkbox name="group1" value="Quality Management" label="Quality Management" inputId="qm"  [formControl]="myForm.controls['cities']"></p-checkbox></div>
+                    <div class="ui-g-12"><p-checkbox name="group1" value="Gaps in Care" label="Gaps in Care"  inputId="gc" [formControl]="myForm.controls['cities']"></p-checkbox></div>
+                    <div class="ui-g-12"><p-checkbox name="group1" value="PHM" label="PHM" inputId="pm" [formControl]="myForm.controls['cities']"></p-checkbox></div>
+                    <div class="ui-g-12"><p-checkbox name="group1" value="Analytics Workbench" label="Analytics Workbench" inputId="aw" [formControl]="myForm.controls['cities']"></p-checkbox></div>
+                    <div class="ui-g-12"><p-checkbox name="group1" value="BI Workbench" label="BI Workbench" inputId="bi" [formControl]="myForm.controls['cities']"></p-checkbox></div>
+                </div>
+              -->
+                <div>
+                    Selected Pages: <span *ngFor="let city of selectedFiles2" style="margin-right:10px">{{city.data}}</span>
+                  </div>
+            </div>
+              
+           </form>
+        </div>
+        <div class="card-footer text-right">
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()" >
+              <i class="fa fa-dot-circle-o"></i> Create Role
+            </button>&nbsp;&nbsp;
+     
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
