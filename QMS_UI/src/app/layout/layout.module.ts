@@ -55,6 +55,12 @@ import { HttpClientModule } from '@angular/common/http';
 
 import {ListboxModule} from 'primeng/listbox';
 import {ChartModule} from 'primeng/chart';
+import { CreateUserComponent } from './create-user/create-user.component';
+import { CreateRoleComponent } from './create-role/create-role.component';
+import {CheckboxModule} from 'primeng/checkbox';
+
+import {TreeModule} from 'primeng/tree';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -73,9 +79,11 @@ import {ChartModule} from 'primeng/chart';
         AutoCompleteModule,
         FormsModule,
         TooltipModule,
+        CheckboxModule,
         HttpClientModule,
         ListboxModule,
         ChartModule,
+        TreeModule,
         NgbDropdownModule.forRoot(),
     ],
 
@@ -117,7 +125,9 @@ import {ChartModule} from 'primeng/chart';
         UserSettingComponent,
         FileManagerComponent,
         Csv1Component,
-        Csv2Component],
+        Csv2Component,
+        CreateUserComponent,
+        CreateRoleComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

@@ -6,7 +6,7 @@ export const navItems = [
     children: [
       {
         name: 'Quality Central',
-        url: '/quality-central',
+        url: '/Quality Central',
         icon: 'fa fa-line-chart'
       },
       {
@@ -191,6 +191,35 @@ export const navItems = [
     icon: 'fa fa-line-chart',
     }
   ]
+},
+{
+  name: 'BI Workbench',
+  url: '#',
+  icon: 'fa fa-table',
+  children: 
+  [{
+    name: 'Tableau',
+      url: 'http://192.168.184.70/t/CurisSite/views/Gaps_in_Care_Dashboard/CareGapSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      icon: 'fa fa-table',
+  }]
+
+},
+{
+  name: 'User Management',
+  url: '#',
+  icon: 'fa fa-user-o',
+  children: 
+  [{
+    name: 'Role Creation',
+      url: '/create-role',
+      icon: 'fa fa-user-o',
+  },
+{
+  name: 'User Creation',
+      url: '/create-user',
+      icon: 'fa fa-user-o',
+}]
+
 }
 
 ];

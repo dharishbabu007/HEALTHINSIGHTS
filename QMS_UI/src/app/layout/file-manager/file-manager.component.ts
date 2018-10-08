@@ -136,6 +136,20 @@ else{
 
 }
 
+TestRun(){
+
+  if(this.selectedModel!=null && this.Uploded==true){
+  
+    this.router.navigateByUrl('/csv1');
+}
+else if( this.Uploded==true && this.selectedModel==null){
+  this.msgService.error("Please Select a model");
+}
+else{
+  this.msgService.error("Please upload a file");
+}
+}
+
 }
 export interface Filemanager {
  

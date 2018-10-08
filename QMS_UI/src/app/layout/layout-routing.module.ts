@@ -20,6 +20,8 @@ import { UserSettingComponent } from './usersettings/userSetting.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { Csv1Component } from './csv1/csv1.component';
 import { Csv2Component } from './csv2/csv2.component';
+import { CreateRoleComponent } from './create-role/create-role.component';
+import { CreateUserComponent } from './create-user/create-user.component';
 
 const routes: Routes = [
     {
@@ -36,7 +38,7 @@ const routes: Routes = [
             { path: 'member-gap/:gapId/:memberId', component: MemberGapInfoComponent },
             { path: 'programcreator', component: ProgramcreatorComponent},
             { path: 'programeditor', component: ProgrameditorComponent},
-            { path: 'quality-central', component: QualityCentralComponent },
+            { path: 'Quality Central', component: QualityCentralComponent },
             { path: 'measureworklist', component: MeasureworklistComponent},
             { path: 'measureworklist', component: MeasureworklistComponent},
             { path: 'measurelibrary', component: MeasurelibraryComponent},
@@ -49,6 +51,8 @@ const routes: Routes = [
             { path: 'file-manager', component: FileManagerComponent},
             { path: 'csv1', component: Csv1Component},
             { path: 'csv2', component: Csv2Component},
+            { path: 'create-role', component: CreateRoleComponent},
+            { path: 'create-user', component: CreateUserComponent}
 
         ]
     }
