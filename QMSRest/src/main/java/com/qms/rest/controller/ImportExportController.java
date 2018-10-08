@@ -2,6 +2,9 @@ package com.qms.rest.controller;
 
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +23,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.ConfusionMatric;
+import com.qms.rest.model.FileUpload;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.QMSFile;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.User;
 import com.qms.rest.service.ImportExportService;
+import com.qms.rest.util.QMSConstants;
 
 @RestController
 @RequestMapping("/qms_file")
@@ -36,6 +42,9 @@ public class ImportExportController {
 	@Autowired
 	ImportExportService importExportService;
 	
+	@Autowired 
+	private HttpSession httpSession;	
+	
 	@RequestMapping(value = "/import", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> importFile(@RequestParam("file") MultipartFile uploadfile) {
 		
@@ -44,11 +53,29 @@ public class ImportExportController {
 		headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");		
 		
 		if (uploadfile.isEmpty()) {            
-            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("please select a file!"), headers, 
+            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File is empty. Please select a valid file!"), headers, 
             		HttpStatus.BAD_REQUEST);
-        }		
+        }
 		
-		RestResult restResult = importExportService.importFile(uploadfile);		
+		String extension = FilenameUtils.getExtension(uploadfile.getOriginalFilename());
+		if(!extension.equalsIgnoreCase("CSV")) {
+            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid file. File type should be CSV. "), headers, 
+            		HttpStatus.BAD_REQUEST);			
+		}
+		
+		User user = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+		FileUpload fileUpload = new FileUpload();
+		fileUpload.setFileName(uploadfile.getOriginalFilename());
+		fileUpload.setDateTime(new java.util.Date());
+		if(user != null) {
+			fileUpload.setUserName(user.getLoginId());
+		}
+		fileUpload = importExportService.saveFileUpload(fileUpload);
+		if(fileUpload == null) {
+			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
+		} 
+		
+		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());		
 		
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);

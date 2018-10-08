@@ -2,9 +2,11 @@ package com.qms.rest.service;
 
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.ConfusionMatric;
+import com.qms.rest.model.FileUpload;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.repository.FileUpoadRepository;
 import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
 
@@ -13,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +43,9 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Autowired
 	private QMSAnalyticsProperty qmsAnalyticsProperty;
 	
+	@Autowired
+	private FileUpoadRepository fileUpoadRepository;	
+	
 	String windowsCopyPath;
 	
 	@Autowired
@@ -51,13 +57,13 @@ public class ImportExportServiceImpl implements ImportExportService {
     }	
 
 	@Override
-	public RestResult importFile(MultipartFile file) {
+	public RestResult importFile(MultipartFile file, int fileId) {
 		try {			
-//			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
-//					qmsAnalyticsProperty.getPassword(), file, 
-//					qmsAnalyticsProperty.getLinuxUploadPath());
+			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
+					qmsAnalyticsProperty.getPassword(), file, 
+					qmsAnalyticsProperty.getLinuxUploadPath());
 			
-			hdfsFileUtil.putFile(file);
+//			hdfsFileUtil.putFile(file, fileId);
 			
 			return RestResult.getSucessRestResult(" File import success. ");
 		} catch (Exception e) {
@@ -69,9 +75,9 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult exportFile(String fileName) {
 		try {
-			hdfsFileUtil.getFile(fileName);
+			//hdfsFileUtil.getFile(fileName);
 			
-			//getFile(qmsAnalyticsProperty.getLinuxOutputPath());
+			getFile(qmsAnalyticsProperty.getLinuxOutputPath());
 			return RestResult.getSucessRestResult(" File export success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,6 +87,10 @@ public class ImportExportServiceImpl implements ImportExportService {
 
 	@Override
 	public RestResult runRFile(String modelType) {
+		
+		if(true)
+			return RestResult.getSucessRestResult(" RFile execution success. ");
+		
 //		String rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
 //		if(modelType.equalsIgnoreCase("model1")) {
 //			rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
@@ -364,6 +374,17 @@ public class ImportExportServiceImpl implements ImportExportService {
 			}
 		}
 		return output;
+	}
+
+	@Override
+	public FileUpload saveFileUpload(FileUpload fileUpload) {
+		List<FileUpload> uploades = fileUpoadRepository.getFileUpoadByMaxFileId();
+		int fileId = 1;
+		if(uploades != null && !uploades.isEmpty()) {
+			fileId = uploades.get(0).getFileId() + 1;
+		}
+		fileUpload.setFileId(fileId);
+		return fileUpoadRepository.save(fileUpload);
 	}    
 	
 

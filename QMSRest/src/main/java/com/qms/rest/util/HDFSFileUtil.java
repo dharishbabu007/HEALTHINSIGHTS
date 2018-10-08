@@ -22,33 +22,41 @@ public class HDFSFileUtil {
 	@Autowired
 	QMSHDFSProperty qmsHDFSProperty;	
 	
-//	public void createSubFolder() throws IOException {
-//		//==== Create folder if not exists
-//		Path workingDir=fs.getWorkingDirectory();
-//		System.out.println("workingDir.getName() --> " + workingDir.getName());
-//		Path newFolderPath= new Path("/user/hdp-hadoop/curis");
-//		if(!fs.exists(newFolderPath)) {
-//		   // Create new Directory
-//		   System.out.println(" Creating directory.. ");	
-//		   fs.mkdirs(newFolderPath);
-//		   System.out.println(" Dir created");
-//		}	
-//		System.out.println(" Dir created");
-//	}
-	
-			
-	public void putFile (MultipartFile uploadFile) throws Exception {
-		FSDataOutputStream outputStream=null;
+	public String createSubFolder(int fileId) throws Exception {
 		FileSystem file=null;
 		try {
-	        String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
+			String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId;		
 	        URI uri = URI.create (hdfsFilePath);
-			System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");
+	        Path dirPath = new Path(uri);
+	        Configuration conf = new Configuration();
+	        file = FileSystem.get (uri, conf);	
+	        if(!file.exists(dirPath)) {
+	        	System.out.println(" Creating directory.. " + hdfsFilePath);        	
+	        	file.mkdirs(dirPath);
+	        	System.out.println(" Dir created");
+	        }
+	        return hdfsFilePath;
+		} catch (Exception ex) {
+			throw ex;
+		}
+		finally {
+			if(file != null) file.close();
+		}		
+	}
+	
+			
+	public void putFile (MultipartFile uploadFile, int fileId) throws Exception {
+		FSDataOutputStream outputStream=null;
+		FileSystem file=null;
+		System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");		
+		try {
+			String hdfsFilePath = createSubFolder(fileId)+"/"+uploadFile.getOriginalFilename();
+	        //String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
+	        URI uri = URI.create (hdfsFilePath);
 	        Configuration conf = new Configuration();
 	        file = FileSystem.get (uri, conf);		
 	        System.out.println("Creating the file in hdfs --> "+hdfsFilePath);
 			outputStream=file.create(new Path(uri));
-			System.out.println("writing bytes size --> "+uploadFile.getBytes().length);
 			outputStream.write(uploadFile.getBytes());
 			System.out.println("End Write file into hdfs");
 		} catch (Exception ex) {
