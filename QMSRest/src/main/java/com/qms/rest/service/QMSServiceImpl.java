@@ -378,7 +378,6 @@ public class QMSServiceImpl implements QMSService {
 			Date date = new Date();
 			Timestamp timestamp = new Timestamp(date.getTime());
 			statement.setTimestamp(++i, timestamp);			
-			System.out.println(measureCreator.getStatus() + " KKKKKKKKKKKKstatus " + statusMap.get(measureCreator.getStatus()==null?"Open":measureCreator.getStatus()));
 			statement.setString(++i, statusMap.get(measureCreator.getStatus()==null?QMSConstants.MEASURE_DEFAULT_STATUS:measureCreator.getStatus()));
 			statement.setString(++i, isActive);
 			statement.setString(++i, QMSConstants.MEASURE_REVIEWER_ID);
