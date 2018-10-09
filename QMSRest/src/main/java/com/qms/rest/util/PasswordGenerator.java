@@ -9,10 +9,11 @@ public class PasswordGenerator {
     private static final String ALPHA_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String ALPHA = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMERIC = "0123456789";
-    private static final String SPECIAL_CHARS = "!@#$%^&*_=+-/";
+    //private static final String SPECIAL_CHARS = "!@#$%^&*_=+-/";
     
     private static final int PASSWORD_LENGTH = 10;    
-    private static final String PASSWORD_DICTIONARIES = ALPHA_CAPS+NUMERIC+ALPHA+SPECIAL_CHARS;
+    //private static final String PASSWORD_DICTIONARIES = ALPHA_CAPS+NUMERIC+ALPHA+SPECIAL_CHARS;
+    private static final String PASSWORD_DICTIONARIES = ALPHA_CAPS+NUMERIC+ALPHA;
 
     public static String generatePassword() {
 	    String result = "";
