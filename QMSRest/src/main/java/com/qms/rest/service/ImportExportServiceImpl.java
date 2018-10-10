@@ -9,11 +9,13 @@ import com.qms.rest.model.RestResult;
 import com.qms.rest.repository.FileUpoadRepository;
 import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
+import com.qms.rest.util.QMSConstants;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,11 +61,11 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult importFile(MultipartFile file, int fileId) {
 		try {			
-			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
-					qmsAnalyticsProperty.getPassword(), file, 
-					qmsAnalyticsProperty.getLinuxUploadPath());
+//			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
+//					qmsAnalyticsProperty.getPassword(), file, 
+//					qmsAnalyticsProperty.getLinuxUploadPath());
 			
-//			hdfsFileUtil.putFile(file, fileId);
+			hdfsFileUtil.putFile(file, fileId);
 			
 			return RestResult.getSucessRestResult(" File import success. ");
 		} catch (Exception e) {
@@ -378,7 +380,19 @@ public class ImportExportServiceImpl implements ImportExportService {
 
 	@Override
 	public FileUpload saveFileUpload(FileUpload fileUpload) {
+		Date currentDate  = new Date();
+		fileUpload.setCurrentFlag("Y");
+		fileUpload.setRecCreateDate(currentDate);
+		fileUpload.setRecUpdateDate(currentDate);
+		fileUpload.setLatestFlag("Y");
+		fileUpload.setActiveFlag("Y");
+		fileUpload.setIngestionDate(currentDate);
+		fileUpload.setSource(QMSConstants.MEASURE_SOURCE_NAME);
+		if(fileUpload.getUserName() == null) {
+			fileUpload.setUserName(QMSConstants.MEASURE_USER_NAME);
+		}		
 		List<FileUpload> uploades = fileUpoadRepository.getFileUpoadByMaxFileId();
+		
 		int fileId = 1;
 		if(uploades != null && !uploades.isEmpty()) {
 			fileId = uploades.get(0).getFileId() + 1;

@@ -68,8 +68,9 @@ public class ImportExportController {
 		fileUpload.setFileName(uploadfile.getOriginalFilename());
 		fileUpload.setDateTime(new java.util.Date());
 		if(user != null) {
+			fileUpload.setUsersName(user.getLoginId());			
 			fileUpload.setUserName(user.getLoginId());
-		}
+		} 
 		fileUpload = importExportService.saveFileUpload(fileUpload);
 		if(fileUpload == null) {
 			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
