@@ -2,6 +2,7 @@ package com.qms.rest.util;
 
 import java.net.URI;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -50,8 +51,11 @@ public class HDFSFileUtil {
 		FileSystem file=null;
 		System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");		
 		try {
-			String hdfsFilePath = createSubFolder(fileId)+"/"+uploadFile.getOriginalFilename();
-	        //String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
+			//String hdfsFilePath = createSubFolder(fileId)+"/"+uploadFile.getOriginalFilename();
+			//String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
+			System.out.println(" Writing the actual file to HDFS --> " + uploadFile.getOriginalFilename());
+			String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());			
+	        String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId+"."+extension;
 	        URI uri = URI.create (hdfsFilePath);
 	        Configuration conf = new Configuration();
 	        file = FileSystem.get (uri, conf);		
