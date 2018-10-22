@@ -76,12 +76,12 @@ public class ImportExportController {
 			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
 		} 
 		
-		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());		
-		
+		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());				
 		if(RestResult.isSuccessRestResult(restResult)) {
+			httpSession.setAttribute(QMSConstants.INPUT_FILE_ID, fileUpload.getFileId());
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
 		}
-
+		restResult = importExportService.callHivePatitioning();
 		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

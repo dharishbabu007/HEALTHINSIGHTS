@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "QMS_FILE_UPLOAD")
+@Table(name = "QMS_FILE_INPUT")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

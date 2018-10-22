@@ -23,5 +23,6 @@ public interface ImportExportService {
 	Set<ConfusionMatric> getCSVConfusionMatric();	
 	ModelScore getCSVModelScore();
 	
-	FileUpload saveFileUpload(FileUpload fileUpload);
+	FileUpload saveFileUpload(FileUpload fileUpload);	
+	RestResult callHivePatitioning ();
 }
