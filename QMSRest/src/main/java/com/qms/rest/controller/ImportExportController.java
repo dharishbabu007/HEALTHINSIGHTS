@@ -75,14 +75,22 @@ public class ImportExportController {
 		if(fileUpload == null) {
 			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
 		} 
-		
+		System.out.println(" Saving the file metadata sucess. ");
 		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());				
 		if(RestResult.isSuccessRestResult(restResult)) {
 			httpSession.setAttribute(QMSConstants.INPUT_FILE_ID, fileUpload.getFileId());
-			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
+			//return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
+		System.out.println(" Saved the file in HDFS. ");
 		restResult = importExportService.callHivePatitioning();
-		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+		System.out.println(" Alter HIVE Partition success. ");
+		if(RestResult.isSuccessRestResult(restResult)) {
+			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@RequestMapping(value = "/export", method = RequestMethod.POST)

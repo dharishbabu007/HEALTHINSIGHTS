@@ -82,7 +82,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 			
 			hdfsFileUtil.putFile(file, fileId);
 			
-			return RestResult.getSucessRestResult(" File import success. ");
+			return RestResult.getSucessRestResult(" File upload success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
@@ -429,6 +429,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		if(uploades != null && !uploades.isEmpty()) {
 			fileId = uploades.get(0).getFileId() + 1;
 		}
+		System.out.println(" Creating qms_file_input with fileId -->" + fileId);
 		fileUpload.setFileId(fileId);
 		return fileUpoadRepository.save(fileUpload);
 	}
@@ -449,8 +450,9 @@ public class ImportExportServiceImpl implements ImportExportService {
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();	
 			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;
-			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");			
-			return RestResult.getSucessRestResult("Alter Hive table by File Id is success ");
+			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+			System.out.println(" Alter table success for file id --> " + fileId);
+			return RestResult.getSucessRestResult(" File upload success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
