@@ -449,8 +449,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();	
 			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;
-			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");
-			
+			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");			
 			return RestResult.getSucessRestResult("Alter Hive table by File Id is success ");
 		} catch (Exception e) {
 			e.printStackTrace();

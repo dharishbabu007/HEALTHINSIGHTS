@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,15 +37,21 @@ public class UserRoleController {
 	}
 	
 
-	@RequestMapping(value = "/add_role_pages", method = RequestMethod.POST)
+	@RequestMapping(value = "/add_role_screens", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> addRolePage(@RequestBody RoleScreen rolePage, UriComponentsBuilder ucBuilder) {
 		
-		RestResult restResult = userRoleService.addRolePage(rolePage);
+		RestResult restResult = userRoleService.addRolescreens(rolePage);
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
+	}	
+	
+	@RequestMapping(value = "/get_role_screens/{userId}", method = RequestMethod.GET)
+	public ResponseEntity<RoleScreen> getRoleScreens(@PathVariable("userId") int userId) {		
+		RoleScreen roleScreen = userRoleService.getRoleScreens(userId);
+		return new ResponseEntity<RoleScreen>(roleScreen, HttpStatus.OK);
 	}	
 	
 }

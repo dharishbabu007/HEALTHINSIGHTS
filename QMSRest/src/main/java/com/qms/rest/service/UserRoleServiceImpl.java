@@ -45,10 +45,11 @@ public class UserRoleServiceImpl implements UserRoleService{
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			
-			String sqlStatementUpdate = "update QMS_USER_MASTER set USER_ROLE_ID=? where USER_ID=?";
+			String sqlStatementUpdate = "update QMS_USER_MASTER set USER_ROLE_ID=?, STATUS=? where USER_ID=?";
 			prepStatement = connection.prepareStatement(sqlStatementUpdate);
 			prepStatement.setInt(1, userRole.getRoleId());
-			prepStatement.setInt(2, userRole.getUserId());
+			prepStatement.setString(2, userRole.getStatus());
+			prepStatement.setInt(3, userRole.getUserId());
 			prepStatement.executeUpdate();
 			
 			restResult = RestResult.getSucessRestResult(" User role mapping success.");
@@ -66,7 +67,7 @@ public class UserRoleServiceImpl implements UserRoleService{
 	}
 	
 	@Override
-	public RestResult addRolePage(RoleScreen rolePage) {
+	public RestResult addRolescreens(RoleScreen rolePage) {
 		PreparedStatement statement = null;
 		PreparedStatement updateStatement = null;
 		Connection connection = null;
@@ -172,7 +173,7 @@ public class UserRoleServiceImpl implements UserRoleService{
 	}
 
 	@Override
-	public RoleScreen getRolePage(String userId) {
+	public RoleScreen getRoleScreens(int userId) {
 		RoleScreen rolePage = new RoleScreen();
 		
 		Statement statement = null;
