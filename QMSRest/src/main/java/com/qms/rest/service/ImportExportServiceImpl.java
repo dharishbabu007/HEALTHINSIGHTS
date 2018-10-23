@@ -1,5 +1,35 @@
 package com.qms.rest.service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.SftpProgressMonitor;
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
@@ -9,33 +39,9 @@ import com.qms.rest.model.RestResult;
 import com.qms.rest.repository.FileUpoadRepository;
 import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
+import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SftpProgressMonitor;
-import com.jcraft.jsch.ChannelExec;
+import com.qms.rest.util.QMSHDFSProperty;
 
 @Service("importExportService")
 public class ImportExportServiceImpl implements ImportExportService {
@@ -52,6 +58,15 @@ public class ImportExportServiceImpl implements ImportExportService {
 	
 	@Autowired
 	HDFSFileUtil hdfsFileUtil;
+	
+	@Autowired 
+	private HttpSession httpSession;	
+	
+	@Autowired
+	private QMSConnection qmsConnection;	
+	
+	@Autowired
+	QMSHDFSProperty qmsHDFSProperty;
 
 	@PostConstruct
     public void init() {
@@ -86,19 +101,16 @@ public class ImportExportServiceImpl implements ImportExportService {
 			return RestResult.getFailRestResult(e.getMessage());
 		}
 	}
-
-	@Override
-	public RestResult runRFile(String modelType) {
-		
-		if(true)
-			return RestResult.getSucessRestResult(" RFile execution success. ");
+	
+	private RestResult executeRInLinux (String modelType) {
 		
 //		String rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
 //		if(modelType.equalsIgnoreCase("model1")) {
 //			rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
 //		} else if(modelType.equalsIgnoreCase("model1")) {
 //			rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
-//		}
+//		}		
+		
 		String command1="Rscript "+qmsAnalyticsProperty.getLinuxRScriptPath();
 		//String command1="ls -ltr";
 		try {
@@ -152,7 +164,27 @@ public class ImportExportServiceImpl implements ImportExportService {
 		} catch (IOException | JSchException e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
-		} 
+		} 		
+	}
+
+	@Override
+	public RestResult runRFile(String modelType) {
+		if(true)
+			return RestResult.getSucessRestResult(" RFile execution success. ");
+		
+		int fileId = 0;
+		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
+			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+		else
+			return RestResult.getFailRestResult(" Input file id is null. ");
+		
+		String rApiUrl = qmsHDFSProperty.getrApiURL();
+		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
+		System.out.println("Calling R API Url --> " + rApiUrl);
+		RestTemplate restTemplate = new RestTemplate();		
+		String result = restTemplate.getForObject(rApiUrl, String.class);
+        System.out.println(" R API Rest Result --> " + result);
+        return RestResult.getSucessRestResult(" RFile execution success. ");
 	}
 	
     private void putFile(String hostname, String username, String password, MultipartFile copyFrom, String copyTo)
@@ -399,6 +431,34 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}
 		fileUpload.setFileId(fileId);
 		return fileUpoadRepository.save(fileUpload);
+	}
+
+	@Override
+	public RestResult callHivePatitioning() {
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		
+		int fileId = 0;
+		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
+			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+		else
+			return RestResult.getFailRestResult(" Input file id is null. ");		
+		
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();	
+			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;
+			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+			
+			return RestResult.getSucessRestResult("Alter Hive table by File Id is success ");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestResult.getFailRestResult(e.getMessage());
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
 	}    
 	
 

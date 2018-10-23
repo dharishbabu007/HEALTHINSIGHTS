@@ -10,6 +10,6 @@ import com.qms.rest.model.FileUpload;
 
 @RepositoryRestResource
 public interface FileUpoadRepository extends CrudRepository<FileUpload, Integer> {
-    @Query(value = "select * from QMS_FILE_UPLOAD where FILE_ID in (select max(FILE_ID) from QMS_FILE_UPLOAD)", nativeQuery = true)
+    @Query(value = "select * from QMS_FILE_INPUT where FILE_ID in (select max(FILE_ID) from QMS_FILE_INPUT)", nativeQuery = true)
     List<FileUpload> getFileUpoadByMaxFileId();	
 }

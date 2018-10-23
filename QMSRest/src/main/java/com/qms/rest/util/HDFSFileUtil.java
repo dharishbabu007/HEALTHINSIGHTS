@@ -51,18 +51,17 @@ public class HDFSFileUtil {
 		FileSystem file=null;
 		System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");		
 		try {
-			//String hdfsFilePath = createSubFolder(fileId)+"/"+uploadFile.getOriginalFilename();
+			String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
+			String hdfsFilePath = createSubFolder(fileId)+"/"+fileId+"."+extension;;
 			//String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
-			System.out.println(" Writing the actual file to HDFS --> " + uploadFile.getOriginalFilename());
-			String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());			
-	        String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId+"."+extension;
+			System.out.println(" Writing the actual file to HDFS --> " + uploadFile.getOriginalFilename());			
+	        //String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId+"."+extension;
 	        URI uri = URI.create (hdfsFilePath);
 	        Configuration conf = new Configuration();
 	        file = FileSystem.get (uri, conf);		
-	        System.out.println("Creating the file in hdfs --> "+hdfsFilePath);
 			outputStream=file.create(new Path(uri));
 			outputStream.write(uploadFile.getBytes());
-			System.out.println("End Write file into hdfs");
+			System.out.println("End Write file into hdfs"+hdfsFilePath);
 		} catch (Exception ex) {
 			throw ex;
 		}

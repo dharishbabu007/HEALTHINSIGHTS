@@ -12,7 +12,14 @@ public class QMSHDFSProperty {
 	private String hdfsURL;
 	private String readFile;
 	private String writePath;
+	private String rApiURL;
 	
+	public String getrApiURL() {
+		return rApiURL;
+	}
+	public void setrApiURL(String rApiURL) {
+		this.rApiURL = rApiURL;
+	}
 	public String getCoreSite() {
 		return coreSite;
 	}

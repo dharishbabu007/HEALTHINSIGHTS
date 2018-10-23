@@ -1,6 +1,7 @@
 package com.qms.rest.service;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -100,9 +101,14 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		try {						
 			connection = qmsConnection.getOracleConnection();
+			
+//			Class.forName("org.apache.phoenix.jdbc.PhoenixDriver");
+//			connection = DriverManager.getConnection("jdbc:phoenix:192.168.184.66,192.168.184.68,192.168.184.69:2181:/hbase-unsecure");
+			
 			statement = connection.createStatement();
 			if(password != null)
-				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+				//resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+				resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
 			else
 				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"'");
 			while (resultSet.next()) {
@@ -119,6 +125,7 @@ public class UserServiceImpl implements UserService {
 				user.setSecurityAnswer(resultSet.getString("SECURITY_ANSWER"));
 				user.setSecurityQuestion(resultSet.getString("SECURITY_QUESTION"));
 				user.setResetPassword(resultSet.getString("RESET_PASSWORD"));
+				user.setStatus(resultSet.getString("STATUS"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,9 +169,9 @@ public class UserServiceImpl implements UserService {
 			System.out.println(" Adding the user with user id --> " + userId);
 			
 			String sqlStatementInsert = "insert into QMS_USER_MASTER(USER_LOGINID,FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
-					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD,USER_ROLE_ID,USER_ID,"
+					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD,USER_ROLE_ID,USER_ID,STATUS,"
 					+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,"
-					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;
 			statement.setString(++i, user.getLoginId());
@@ -177,6 +184,7 @@ public class UserServiceImpl implements UserService {
 			statement.setString(++i, user.getPassword());
 			statement.setString(++i, QMSConstants.DEFAULT_USER_ROLE_ID);
 			statement.setInt(++i, userId);
+			statement.setString(++i, "New");  //status
 			
 			Date date = new Date();				
 			Timestamp timestamp = new Timestamp(date.getTime());				

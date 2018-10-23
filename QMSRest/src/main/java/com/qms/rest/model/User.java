@@ -13,6 +13,7 @@ public class User {
 	private String phoneNumber;
 	private String password;	
 	private String resetPassword;
+	private String status;
 	
 	public String getId() {
 		return id;
@@ -86,5 +87,10 @@ public class User {
 	public void setResetPassword(String resetPassword) {
 		this.resetPassword = resetPassword;
 	}
-	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
