@@ -350,5 +350,41 @@ public class UserServiceImpl implements UserService {
 		
 		return questions;		
 	}
+
+	@Override
+	public User getUserInfoByUserId(int userId) {
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		User user = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_ID="+userId);
+			while (resultSet.next()) {
+				user = new User();
+				user.setEmail(resultSet.getString("USER_EMAIL"));
+				user.setId(resultSet.getString("USER_ID"));
+				user.setLoginId(resultSet.getString("USER_LOGINID"));
+				user.setRoleId(resultSet.getString("USER_ROLE_ID"));
+				user.setFirstName(resultSet.getString("FIRST_NAME"));
+				user.setLastName(resultSet.getString("LAST_NAME"));
+				user.setPassword(resultSet.getString("PASSWORD"));
+				user.setPhoneNumber(resultSet.getString("PHONE_NO"));
+				user.setSecurityAnswer(resultSet.getString("SECURITY_ANSWER"));
+				user.setSecurityQuestion(resultSet.getString("SECURITY_QUESTION"));
+				user.setResetPassword(resultSet.getString("RESET_PASSWORD"));
+				user.setStatus(resultSet.getString("STATUS"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		
+		return user;		
+	}
 	
 }

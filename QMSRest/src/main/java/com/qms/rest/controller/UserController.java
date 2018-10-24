@@ -91,6 +91,21 @@ public class UserController {
 		}
 		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(value = "/get_user_by_id/{userId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserDetailsByUserId(@PathVariable("userId") int userId) {
+		System.out.println("Fetching user details for loginId " + userId);
+		User user = userService.getUserInfoByUserId(userId);
+		if (user == null) {
+			return new ResponseEntity(new CustomErrorType("User details with loginId " + userId 
+					+ " not found"), HttpStatus.NOT_FOUND);
+		} else {
+			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
+		}
+		System.out.println("Returned user name for loginId " + userId + " : " + user.getName());
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}	
 
 	
