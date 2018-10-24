@@ -173,7 +173,7 @@ public class UserRoleServiceImpl implements UserRoleService{
 	}
 
 	@Override
-	public RoleScreen getRoleScreens(int userId) {
+	public RoleScreen getRoleScreens(int roleId) {
 		RoleScreen rolePage = new RoleScreen();
 		
 		Statement statement = null;
@@ -184,12 +184,12 @@ public class UserRoleServiceImpl implements UserRoleService{
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
 			
-			resultSet = statement.executeQuery("select USER_ROLE_ID from QMS_USER_MASTER where USER_ID="+userId);
-			int roleId = 0;
-			if (resultSet.next()) {
-				roleId = resultSet.getInt("USER_ROLE_ID");
-			}
-			resultSet.close();
+//			resultSet = statement.executeQuery("select USER_ROLE_ID from QMS_USER_MASTER where USER_ID="+userId);
+//			int roleId = 0;
+//			if (resultSet.next()) {
+//				roleId = resultSet.getInt("USER_ROLE_ID");
+//			}
+//			resultSet.close();
 			
 			resultSet = statement.executeQuery("select * from QMS_ROLE_ACCESS where ROLE_ID="+roleId);
 			rolePage.setRoleId(roleId);

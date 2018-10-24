@@ -21,5 +21,7 @@ public interface UserService {
 	
 	User getUserInfo(String userName);
 	
+	User getUserInfoByUserId(int userId);
+	
 	Set<SecurityQuestion> getSecurityQuestions();
 }

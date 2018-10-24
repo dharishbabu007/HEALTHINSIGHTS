@@ -1,5 +1,9 @@
 package com.qms.rest.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,7 @@ import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RoleScreen;
 import com.qms.rest.model.UserRole;
 import com.qms.rest.service.UserRoleService;
+import com.qms.rest.util.QMSProperty;
 
 
 @RestController
@@ -24,6 +29,9 @@ public class UserRoleController {
 
 	@Autowired
 	UserRoleService userRoleService;	
+	
+	@Autowired
+	private QMSProperty qmsProperty;
 	
 	@RequestMapping(value = "/add_user_role", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> addUserRole(@RequestBody UserRole userRole, UriComponentsBuilder ucBuilder) {
@@ -48,10 +56,19 @@ public class UserRoleController {
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}	
 	
-	@RequestMapping(value = "/get_role_screens/{userId}", method = RequestMethod.GET)
-	public ResponseEntity<RoleScreen> getRoleScreens(@PathVariable("userId") int userId) {		
-		RoleScreen roleScreen = userRoleService.getRoleScreens(userId);
+	@RequestMapping(value = "/get_role_screens/{roleId}", method = RequestMethod.GET)
+	public ResponseEntity<RoleScreen> getRoleScreens(@PathVariable("roleId") int roleId) {		
+		RoleScreen roleScreen = userRoleService.getRoleScreens(roleId);
 		return new ResponseEntity<RoleScreen>(roleScreen, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/get_user_status_list", method = RequestMethod.GET)
+	public ResponseEntity<List<String>> getUserStatusList() {
+		
+		String userStatusListStr = qmsProperty.getUserStatusList();		
+		List<String> userStatusList = new ArrayList<String>(Arrays.asList(userStatusListStr.split(",")));
+				
+		return new ResponseEntity<List<String>>(userStatusList, HttpStatus.OK);
 	}	
 	
 }

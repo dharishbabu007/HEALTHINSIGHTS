@@ -17,8 +17,15 @@ public class QMSProperty {
 	
 	private String hiveJDBCUrl;
 	private String hiveUserName;
-	private String hivePassword;
+	private String hivePassword;	
+	private String userStatusList;
 	
+	public String getUserStatusList() {
+		return userStatusList;
+	}
+	public void setUserStatusList(String userStatusList) {
+		this.userStatusList = userStatusList;
+	}	
 	public String getOracleJDBCUrl() {
 		return oracleJDBCUrl;
 	}
