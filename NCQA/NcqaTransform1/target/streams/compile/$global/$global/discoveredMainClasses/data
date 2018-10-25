@@ -1,0 +1,1 @@
+["com.itc.ncqa.transform.NcqaDimMember","com.itc.ncqa.transform.NcqaDimProvider","com.itc.ncqa.transform.NcqaFactClaims","com.itc.ncqa.transform.NcqaFactLabs","com.itc.ncqa.transform.NcqaFactMembership","com.itc.ncqa.transform.NcqaFactObservation","com.itc.ncqa.transform.NcqaFactPharmacyClinical","com.itc.ncqa.transform.NcqaFactRxClaims"]

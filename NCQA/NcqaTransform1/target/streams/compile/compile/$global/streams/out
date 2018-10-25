@@ -1,0 +1,7 @@
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\Intelj_Workspace\NcqaTransform1\src\main\scala\com\itc\ncqa\transform\NcqaFactRxClaims.scala:46:5: illegal start of simple pattern[0m
+[0m[[0m[31merror[0m] [0m[0m    val skCreatedRxClaimDf = auditColumnsAddedRxClaimDf1.withColumn("RX_CLAIM_SK",abs(lit(concat(lit($"RX_CLAIM_ID"),lit($"RX_CLAIM_LINE_ID"),lit($"LATEST_FLAG"),lit($"REC_UPDATE_DATE")).hashCode())))[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\Intelj_Workspace\NcqaTransform1\src\main\scala\com\itc\ncqa\transform\NcqaFactRxClaims.scala:48:1: '=' expected but ';' found.[0m
+[0m[[0m[31merror[0m] [0m[0m    val schemaArray = UtilFunctions.dataForValidationFromSchemaRdd(schemaRdd)[0m
+[0m[[0m[31merror[0m] [0m[0m^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
