@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.qms.rest.model.CSVOutPut;
+import com.qms.rest.model.CSVOutPut1;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
 import com.qms.rest.model.ModelScore;
@@ -122,6 +123,13 @@ public class ImportExportController {
 		Set<CSVOutPut> setCSVOutPut = importExportService.getCSVOutPut();
 		return new ResponseEntity<Set<CSVOutPut>>(setCSVOutPut, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/csv_output1", method = RequestMethod.GET)
+	public ResponseEntity<Set<CSVOutPut1>> getOutputCSVData1() {
+		System.out.println("Fetching Output.csv data ");
+		Set<CSVOutPut1> setCSVOutPut = importExportService.getCSVOutPut1();
+		return new ResponseEntity<Set<CSVOutPut1>>(setCSVOutPut, HttpStatus.OK);
+	}	
 	
 	@RequestMapping(value = "/csv_modelSummary", method = RequestMethod.GET)
 	public ResponseEntity<Set<ModelSummary>> getModelSummaryCSVData() {
