@@ -31,6 +31,7 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 import com.qms.rest.model.CSVOutPut;
+import com.qms.rest.model.CSVOutPut1;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
 import com.qms.rest.model.ModelScore;
@@ -310,6 +311,54 @@ public class ImportExportServiceImpl implements ImportExportService {
 	    
 		return setOutput;
 	}
+	
+
+	@Override
+	public Set<CSVOutPut1> getCSVOutPut1() {
+		
+		Set<CSVOutPut1> setOutput = new HashSet<>();
+	    BufferedReader br = null;
+		try {		
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output1.csv"));			
+		    int i = 0;
+		    String line = null;
+		    CSVOutPut1 output = null;
+		    while ((line = br.readLine()) != null) {
+		    	i++;
+		    	if(i == 1) continue;
+		    	String[] values = line.split(",");
+		    	if(values.length > 10 && values[8] !=null && values[8].trim().equalsIgnoreCase("1")) {		    		
+			    	output = new CSVOutPut1();	
+			    	output.setPatientId(values[0]);
+			    	output.setName(values[1]);
+			    	output.setAppointmentId(values[2]);
+			    	output.setGender(values[3]);
+			    	output.setDayClass(values[4]);
+			    	output.setAppointmentDay(values[5]);
+			    	output.setAge(values[6]);
+			    	output.setLogOdds(values[7]);
+			    	output.setNoshow(values[8]);
+			    	output.setCountCareGaps(values[9]);
+			    	output.setRiskGrade(values[10]);
+				    setOutput.add(output);
+		    	}
+		    	i++;
+		    }		    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(br != null) br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	    
+	    
+		return setOutput;
+	}	
+	
 
 	@Override
 	public Set<ModelSummary> getCSVModelSummary() {
