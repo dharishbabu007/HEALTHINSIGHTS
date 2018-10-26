@@ -20,6 +20,7 @@ public class CSVOutPut1 {
 	private String dayClass;
 	private String appointmentDay;
 	private String age;
+	private String neighbourhood;
 	private String logOdds;
 	private String noshow;
 	private String countCareGaps;

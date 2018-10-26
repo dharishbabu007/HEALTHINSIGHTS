@@ -275,12 +275,11 @@ public class ImportExportServiceImpl implements ImportExportService {
 		Set<CSVOutPut> setOutput = new HashSet<>();
 	    BufferedReader br = null;
 		try {		
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output.csv"));			
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output100.csv"));			
 		    int i = 0;
 		    String line = null;
 		    CSVOutPut output = null;
 		    while ((line = br.readLine()) != null) {
-		    	System.out.println("data-" + line);
 		    	i++;
 		    	if(i == 1) continue;
 		    	String[] values = line.split(",");
@@ -319,7 +318,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		Set<CSVOutPut1> setOutput = new HashSet<>();
 	    BufferedReader br = null;
 		try {		
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output1.csv"));			
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output32.csv"));			
 		    int i = 0;
 		    String line = null;
 		    CSVOutPut1 output = null;
@@ -327,19 +326,21 @@ public class ImportExportServiceImpl implements ImportExportService {
 		    	i++;
 		    	if(i == 1) continue;
 		    	String[] values = line.split(",");
-		    	if(values.length > 10 && values[8] !=null && values[8].trim().equalsIgnoreCase("1")) {		    		
+		    	if(values.length > 10 && values[9] !=null && values[9].trim().equalsIgnoreCase("1")) {
+		    		int counter=0;
 			    	output = new CSVOutPut1();	
-			    	output.setPatientId(values[0]);
-			    	output.setName(values[1]);
-			    	output.setAppointmentId(values[2]);
-			    	output.setGender(values[3]);
-			    	output.setDayClass(values[4]);
-			    	output.setAppointmentDay(values[5]);
-			    	output.setAge(values[6]);
-			    	output.setLogOdds(values[7]);
-			    	output.setNoshow(values[8]);
-			    	output.setCountCareGaps(values[9]);
-			    	output.setRiskGrade(values[10]);
+			    	output.setPatientId(values[counter++]);
+			    	output.setName(values[counter++]);
+			    	output.setAppointmentId(values[counter++]);
+			    	output.setGender(values[counter++]);
+			    	output.setDayClass(values[counter++]);
+			    	output.setAppointmentDay(values[counter++]);
+			    	output.setAge(values[counter++]);
+			    	output.setNeighbourhood(values[counter++]);
+			    	output.setLogOdds(values[counter++]);
+			    	output.setNoshow(values[counter++]);
+			    	output.setCountCareGaps(values[counter++]);
+			    	output.setRiskGrade(values[counter++]);
 				    setOutput.add(output);
 		    	}
 		    	i++;
