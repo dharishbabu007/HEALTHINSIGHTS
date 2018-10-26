@@ -32,7 +32,7 @@ import { UserSettingComponent } from './usersettings/userSetting.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { Csv1Component } from './csv1/csv1.component';
 import { Csv2Component } from './csv2/csv2.component';
-
+import { NoShowGapListComponent } from './noshowG/noshowG.component';
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
     MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective } from '../shared/modules/layout.directive';
@@ -60,7 +60,10 @@ import { CreateRoleComponent } from './create-role/create-role.component';
 import {CheckboxModule} from 'primeng/checkbox';
 
 import {TreeModule} from 'primeng/tree';
-
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import {AccordionModule} from 'primeng/accordion';
 @NgModule({
     imports: [
         CommonModule,
@@ -84,7 +87,11 @@ import {TreeModule} from 'primeng/tree';
         ListboxModule,
         ChartModule,
         TreeModule,
+        ConfirmDialogModule,
+        AccordionModule,
         NgbDropdownModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
+        NgxPermissionsModule.forRoot(),
     ],
 
     declarations: [LayoutComponent,
@@ -127,7 +134,8 @@ import {TreeModule} from 'primeng/tree';
         Csv1Component,
         Csv2Component,
         CreateUserComponent,
-        CreateRoleComponent],
+        CreateRoleComponent,
+        NoShowGapListComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

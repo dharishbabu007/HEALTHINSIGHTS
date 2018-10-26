@@ -28,7 +28,8 @@
               "node_modules/primeng/resources/primeng.min.css"
             ],
             "scripts": [
-              "node_modules/chart.js/dist/Chart.js"
+              "node_modules/chart.js/dist/Chart.js",
+              "src/assets/js/annyang.min.js"
             ]
           },
           "configurations": {

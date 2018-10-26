@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, CanActivate } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { MemberCareGapListComponent } from './member-care-gaplist/member-care-gaplist.component';
 import { MemberGapListComponent } from './member-gaplist/member-gaplist.component';
@@ -22,6 +22,8 @@ import { Csv1Component } from './csv1/csv1.component';
 import { Csv2Component } from './csv2/csv2.component';
 import { CreateRoleComponent } from './create-role/create-role.component';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { NoShowGapListComponent } from './noshowG/noshowG.component';
+  import {  RoleGuardService} from '../shared/services/RouteGuard.service';
 
 const routes: Routes = [
     {
@@ -39,6 +41,10 @@ const routes: Routes = [
             { path: 'programcreator', component: ProgramcreatorComponent},
             { path: 'programeditor', component: ProgrameditorComponent},
             { path: 'Quality Central', component: QualityCentralComponent },
+            { path: 'Quality central', component: QualityCentralComponent },
+            { path: 'quality Central', component: QualityCentralComponent },
+            { path: 'quality central', component: QualityCentralComponent },
+            { path: 'kwality central', component: QualityCentralComponent },
             { path: 'measureworklist', component: MeasureworklistComponent},
             { path: 'measureworklist', component: MeasureworklistComponent},
             { path: 'measurelibrary', component: MeasurelibraryComponent},
@@ -49,10 +55,17 @@ const routes: Routes = [
             { path: 'spv/:memberId', component: SpvComponent},
             { path: 'usersettings', component: UserSettingComponent},
             { path: 'file-manager', component: FileManagerComponent},
-            { path: 'csv1', component: Csv1Component},
+            { path: 'csv1', component: Csv1Component },
             { path: 'csv2', component: Csv2Component},
-            { path: 'create-role', component: CreateRoleComponent},
-            { path: 'create-user', component: CreateUserComponent}
+            { path: 'create-role', component: CreateRoleComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '3'
+            } },
+            { path: 'create-user', component: CreateUserComponent,  canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '3'
+            } },
+            { path: 'noshowGapList', component: NoShowGapListComponent}
 
         ]
     }

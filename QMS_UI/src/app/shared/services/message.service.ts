@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Message } from 'primeng/primeng';
+import {ConfirmationService} from 'primeng/api';
+
 
 @Injectable()
 export class MessageService {
     message: Message[];
 
-    constructor() {
+    constructor(private ConfirmationService:ConfirmationService) {
         this.message = [];
     }
 
@@ -24,7 +26,23 @@ export class MessageService {
     error(detail: string, summary?: string, multiple: boolean = true): void {
         this.pushMsg('error', detail, summary, multiple);
     }
+     
 
+    confirm(detail: string, summary?: string, multiple: boolean = true): void {
+        this.ConfirmationService.confirm({
+            message: 'Are you sure that you want to proceed?',
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.pushMsg('success', detail, summary, multiple);
+            },
+            reject: () => {
+                this.pushMsg('success', detail, summary, multiple);
+            }
+        });
+    } 
+
+    
     pushMsg(severity, detail, summary, multiple) {
         if (!multiple) {
             this.message[0] = {
@@ -40,4 +58,6 @@ export class MessageService {
     clear() {
         this.message = [];
     }
+    
+
 }

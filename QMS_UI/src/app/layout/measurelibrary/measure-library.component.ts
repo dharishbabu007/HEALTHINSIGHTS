@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { Router } from '@angular/router';
+import { NgxPermissionsService, NgxRolesService} from 'ngx-permissions';
 @Component({
     selector: 'app-tables',
     templateUrl: './measure-library.component.html',
@@ -16,7 +17,7 @@ export class MeasurelibraryComponent implements OnInit {
     programType = 'test';
     programValue = 'test';
     statusTypes = [{label: 'Active', value: 'Approved'}, {label: 'Decommission', value: 'In-active'}];
-    constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router) {
+    constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router,  private permissionsService: NgxPermissionsService,) {
         this.route.params.subscribe(params => {
             if (params['type']) {
                 this.programType = params['type'];
@@ -43,7 +44,12 @@ export class MeasurelibraryComponent implements OnInit {
         ];
     }
     copytoCreator(id, newType) {
-         this.router.navigate(['/measurecreator', id, newType]);
+       let perms = this.permissionsService.getPermissions();
+       if(perms.write){
+        this.router.navigate(['/measurecreator', id, newType]);
+       }
+
+       
         
     }
 }

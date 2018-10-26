@@ -16,7 +16,7 @@ export const navItems = [
         children: [
           {
             name: 'MIPS',
-            url: 'http://192.168.184.70/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+            url: 'http://192.168.184.70/t/CurisSite/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
             icon: 'fa fa-line-chart'
           },
           {
@@ -43,7 +43,7 @@ export const navItems = [
       },
       {
         name: 'Member Compliance',
-        url: 'http://192.168.184.70/views/Member_Measure_Compliance_Dashboard/MemberMeasure?:iid=1&:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/Member_Measure_Compliance_Dashboard/MemberMeasure?:iid=1&:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-line-chart'
       },
       {
@@ -93,7 +93,7 @@ export const navItems = [
     children: [
       {
         name: 'Care Summary',
-        url: 'http://192.168.184.70/views/Gaps_in_Care_Dashboard/CareGapSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/Gaps_in_Care_Dashboard/CareGapSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-handshake-o'
       },
       {
@@ -115,17 +115,17 @@ export const navItems = [
     children: [
       {
         name: 'PHM SUMMARY',
-        url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/PHMsummary/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       {
         name: 'Risk Assessment',
-        url: 'http://192.168.184.70/views/PHMRiskDashboard_0/PHMRisk_Dashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/PHMRiskDashboard_0/PHMRisk_Dashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       {
         name: 'Measure Analysis',
-        url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/PHMMeasuressDashboard/Measures?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       // {
@@ -135,12 +135,12 @@ export const navItems = [
       // },
       {
         name: 'Geo Analysis',
-        url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/Location_Dashboard/Template_2?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       {
         name: 'Cohort',
-        url: 'http://192.168.184.70/views/FinalDashboardPHM/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/FinalDashboardPHM/SummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
       // {
@@ -155,7 +155,7 @@ export const navItems = [
       // },
       {
         name: 'Provider Analysis',
-        url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+        url: 'http://192.168.184.70/t/CurisSite/views/Provider_Dashboard/ProviderDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
         icon: 'fa fa-user-o'
       },
     ]
@@ -194,14 +194,9 @@ export const navItems = [
 },
 {
   name: 'BI Workbench',
-  url: '#',
+  url: 'http://192.168.184.70/t/CurisSite/views/CreateyourownAnalysis/Sheet1?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
   icon: 'fa fa-table',
-  children: 
-  [{
-    name: 'Tableau',
-      url: 'http://192.168.184.70/t/CurisSite/views/Gaps_in_Care_Dashboard/CareGapSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-      icon: 'fa fa-table',
-  }]
+
 
 },
 {
@@ -210,12 +205,12 @@ export const navItems = [
   icon: 'fa fa-user-o',
   children: 
   [{
-    name: 'Role Creation',
+    name: 'Role Mapping',
       url: '/create-role',
       icon: 'fa fa-user-o',
   },
 {
-  name: 'User Creation',
+  name: 'User Mapping',
       url: '/create-user',
       icon: 'fa fa-user-o',
 }]

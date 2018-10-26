@@ -22,7 +22,7 @@
                                </div>
                               <div *ngSwitchCase="'timePeriod'">
                                        
-                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"  [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
+                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"   styleClass="calendarClass"  mode="inline" [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
                                         
                                </div>
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
