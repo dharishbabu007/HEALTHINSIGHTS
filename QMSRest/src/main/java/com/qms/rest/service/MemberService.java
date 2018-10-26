@@ -35,7 +35,8 @@ public class MemberService {
         String sqlQuery = isNumeric ? DIM_MEMBEER_QUERY_ID : DIM_MEMBEER_QUERY_NAME;
 
         try {
-            connection = qmsConnection.getHiveConnection();
+            //connection = qmsConnection.getHiveConnection();
+        	connection = qmsConnection.getOracleConnection();
             System.out.println("Service after connection: " + connection);
             statement = connection.prepareStatement(sqlQuery);
             memberId = "%"+memberId.toLowerCase()+"%";
