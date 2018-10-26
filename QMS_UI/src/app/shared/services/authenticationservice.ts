@@ -28,9 +28,12 @@ export class AuthenticationService {
           // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
           return of(err.message);
         }
+        else{
+            this.messageSevice.error("caught unexpected error")
+        }
         throw Error;
       }
-
+      
     login(username: string, password: string) {
         return this.http.get<any>(`http://healthinsight:8082/curis/user/login/${username}/${password}`)
             .pipe(
@@ -81,5 +84,17 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
+    }
+
+    public isAuthenticated(): boolean {
+        var user =  JSON.parse(localStorage.getItem('currentUser'));
+        if(user){
+            console.log("true")
+        return true;}
+        else{
+        return false;}
+      }
+
+      error(message: string, keepAfterNavigationChange = false) {
     }
 }

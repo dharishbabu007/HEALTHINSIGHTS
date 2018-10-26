@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
     public myForm: FormGroup;
     public submitted: boolean;
     returnUrl: string;
-
+    loading = false;
     constructor(private _fb: FormBuilder,
     public router: Router,
     public route: ActivatedRoute,
@@ -23,7 +23,7 @@ public msgService :MessageService,
 public authenticService :AuthenticationService) {}
   
         ngOnInit() {
-          console.log("came here2");
+          //console.log("came here2");
          this.myForm = this._fb.group({
              username: ['', [Validators.required]],
           
@@ -57,23 +57,23 @@ public authenticService :AuthenticationService) {}
 onSubmit(model: Login,isValid:boolean) {
   this.submitted = true;
 
-  console.log(isValid);
+ // console.log(isValid);
   if(isValid){
 
 
-        console.log("came here");
+     //   console.log("came here");
          this.submitted = true;
-        console.log( 'Model' + JSON.stringify(model));
+      //  console.log( 'Model' + JSON.stringify(model));
 
-
+        this.loading = true;
   this.authenticService.login(model.username, model.password)
       .pipe(first())
       .subscribe((res: any) => {
-        console.log(res)
-        console.log(res.loginId);
-        console.log(res.resetPassword);
+       // console.log(res)
+       // console.log(res.loginId);
+      //  console.log(res.resetPassword);
         if (res.loginId === model.username && res.resetPassword === 'Y') {
-
+          this.loading = false;
           this.msgService.success('Please reset your password');
           this.router.navigateByUrl('/reset-password');  
         } 
@@ -83,9 +83,14 @@ onSubmit(model: Login,isValid:boolean) {
           
         }
         else{
+          this.loading = false;
           this.msgService.error("please enter valid credentials");
         }
 
+      },
+      error => {
+          this.authenticService.error(error);
+          this.loading = false;
       } );
 }
 else{

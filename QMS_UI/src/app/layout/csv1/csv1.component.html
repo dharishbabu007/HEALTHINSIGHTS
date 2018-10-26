@@ -10,8 +10,10 @@
             <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" class="btn-space"></button> 
 
             <button type="button" pButton label="Statistics" [routerLink]="['/csv2/']" style="float:left" class="btn-space"></button> 
+
+
             <a [routerLink]="['/frame-url','http://192.168.184.70/views/NoShowsAnalysisDashboard/Dashboard6?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"> <button type="button" pButton label="Dashboard" style="float:left" class="btn-space"></button> </a>
-      
+            <button type="button" pButton label="Care Gaps" [routerLink]="['/noshowGapList/']" style="float:left" class="btn-space"></button> 
 
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" exportFilename="No_Show_Likelihood">
                 <ng-template pTemplate="header">

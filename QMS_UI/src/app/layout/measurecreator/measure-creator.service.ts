@@ -29,8 +29,9 @@ export class MeasurecreatorService {
 
   MeasurecreatorSubmit(model: any): Observable<any> {
         console.log('MeasurecreatorClick');
+        console.log(model)
 
-        return this.http.post('http://healthinsight:8080/curis/qms/createProgram', model, httpOptions)
+        return this.http.post('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
         . pipe(
             catchError(this.handleError('MeasurecreatorSubmit', model))
           );

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GapsService } from '../../shared/services/gaps.service';
-import { FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, FormArray} from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ActivatedRoute } from '@angular/router';
@@ -14,120 +14,192 @@ import {TreeNode} from 'primeng/api';
     providers: [GapsService]
 })
 export class CreateRoleComponent implements OnInit {
-
-    files:any[];
     public myForm: FormGroup;
-    selectedFiles2: any[];
     measureId: string;
-    roleList: any[];
+    roleList: any;
+    Repositry: any;
+    pageList: any;
+    pageListRepositry: any;
+    indi: any;
+    i:any;
+    k: any;
+    selectWrite: boolean;
+    readvalue: any;
+    writevalue:any;
+    downloadvalue: any;
+    arr: Array<Object>;
     constructor(private _fb: FormBuilder,
       private GapsService: GapsService,
       private router: Router,
       private route: ActivatedRoute,
-    private msgService: MessageService) {
-     
+    private msgService: MessageService,) {
       this.route.params.subscribe(params => {
               this.measureId = params['measureId'];
           }); }
   
     ngOnInit() {
-
         this.myForm = this._fb.group({
             RoleName: [''],
-            'cities': new FormControl(),
-        
+            read: [''],
+            roleCategorys: this._fb.array([
+                this.initRoleCategorys(),
+            ])
+             
           });
+        this.GapsService.getRoleList().subscribe((data: any) => {
+            this.roleList =[];
+            this.Repositry = data;
+            data.forEach(item => {
+            this.roleList.push({label: item.name, value: item.name});
+            });
+        });
+        this.GapsService.getPageList().subscribe((data : any) =>{
+            this.pageList =[];
+            this.pageListRepositry = data;
+            data.forEach(item => {
+            this.pageList.push({label: item.name, value: item.name});
+            });
+        });
 
+        //(<FormArray>this.myForm.controls['roleCategorys']).controls[0]['controls']['download'].disable();
 
-          this.files = [
-            {
-                "label": "Quality Management",
-                "data": "QualityManagement",
-               
-                "children": [{
-                        "label": "Quality Central",
-                        "data": "QualityCentral",
-                     
-                        "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                    },
-                    {
-                        "label": "Quality Central",
-                        "data": "QualityMeasures",
-                   
-                        "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                    }]
-            },
-            {
-                "label": "Gaps in Care",
-                "data": "Gaps in Care",
-                "children": [{
-                    "label": "Gaps Registry",
-                    "data": "GapsRegistry",
-                 
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                },
-                {
-                    "label": "Close Gap Patient",
-                    "data": "CloseGapPatient",
-               
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                }]
-            },
-            {
-                "label": "PHM",
-                "data": "PHM",
-                "children": [{
-                    "label": "PHM Summary",
-                    "data": "PHMSummary",
-                 
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                },
-                {
-                    "label": "Risk Assessment",
-                    "data": "RiskAssessment",
-               
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                }]
-            },
-            {
-                "label": "Analytics Workbench",
-                "data": "AnalyticsWorkbench",
-             
-                "children": [{
-                    "label": "Development Studio",
-                    "data": "DevelopmentStudio",
-                 
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                },
-                {
-                    "label": "Use Cases",
-                    "data": "UseCases",
-               
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                }]
-            },
-            {
-                "label": "User Management",
-                "data": "UserManagement",
-             
-                "children": [{
-                    "label": "Role Creation",
-                    "data": "RoleCreation",
-                 
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                },
-                {
-                    "label": "User Creation",
-                    "data": "UserCreation",
-               
-                    "children": [{"label": "Read", "data": "Read"}, {"label": "Write", "data": "Write"}]
-                }]
-            }
-        ]
-
-
-    }
-    onSubmit(){
+     
         
     }
+
+    get formData() { return <FormArray>this.myForm.get('roleCategorys'); }
+
+  addCategory(j) {
+      const control = <FormArray>this.myForm.controls['roleCategorys'];
+      let newGroup = this._fb.group({
+        parentPage: [''],
+            read: [''],
+            write: [''],
+            download: ['']
+    });
+      control.push(newGroup);
+     // console.log(j);
+     //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['write'].disable();
+     //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['download'].disable();
+
+  }
+
+  removeCategory(i: number) {
+      const control = <FormArray>this.myForm.controls['roleCategorys'];
+      control.removeAt(i);
+  }
+
+
+    initRoleCategorys(){
+        return this._fb.group({
+            parentPage: [''],
+            read: [''],
+            write: [''],
+            download: ['']
+          }); 
+    }
+
+    checkedRead(event,i){
+        console.log(event)
+        if(event == true){
+         //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['write'].enable();
+         //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['download'].enable();
+        }
+        else{
+         //   (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['write'].disable();
+         //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['download'].disable();
+        }
+    }
+
+    filterColumnRole(event){
+      if((<FormArray>this.myForm.controls['roleCategorys']).length >1){
+        this.myForm.controls['roleCategorys'].reset();
+          let araylenght = (<FormArray>this.myForm.controls['roleCategorys']).length;
+   
+          for(this.i=0; this.i<=araylenght+1 ;  this.i++){
+            const control = <FormArray>this.myForm.controls['roleCategorys'];
+            control.removeAt(this.i);
+          }
+      }
+
+        const roleId1 = this.Repositry.filter(item => item.name === event.value);
+        
+        this.pageListRepositry;
+        this.GapsService.getRoleData(roleId1[0].value).subscribe((data: any) => {
+
+                    this.k = data.screenPermissions.length;
+   
+                    //console.log(data.screenPermissions)
+                     if(this.k>0){
+                    for(this.i= 0; this.i<this.k; this.i++){
+               
+                      let pagename = this.pageListRepositry.filter(item => item.value == data.screenPermissions[this.i].screenId);
+                 
+                    (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['parentPage'].patchValue(pagename[0].name);
+                    if(data.screenPermissions[this.i].write == "Y"){
+                    (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['write'].patchValue("write");}
+                    if(data.screenPermissions[this.i].read == "Y"){
+                        (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['read'].patchValue("read");}
+                        if(data.screenPermissions[this.i].download == "Y"){
+                            (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['download'].patchValue("download");}
+                    this.addCategory(this.i+1) 
+
+                    }
+                }
+                else{
+
+                }
+                //this.pageList.push({label: item.name, value: item.name});
+    
+        });
+    
+    }
+
+    onSubmit(model,valid: boolean){      
+
+   let roleId = this.Repositry.filter(item=> item.name === model.RoleName);
+   for(this.i=0; this.i<model.roleCategorys.length; this.i++){
+       let screenid = this.pageListRepositry.filter(item => item.name === model.roleCategorys[this.i].parentPage);
+
+
+       if(model.roleCategorys[this.i].read[0] == "read")
+       {
+           this.readvalue = "Y"
+       }
+       else{
+        this.readvalue = "N" 
+       }
+       if(model.roleCategorys[this.i].write[0] == "write")
+       {
+           this.writevalue = "Y"
+       }
+       else{
+        this.writevalue = "N" 
+       }
+       if(model.roleCategorys[this.i].download[0] == "download")
+       {
+           this.downloadvalue = "Y"
+       }
+       else{
+        this.downloadvalue = "N" 
+       }
+
+       this.arr =[{
+         screenid : screenid[0].value,
+        read: this.readvalue,
+        write: this.writevalue,
+       download: this.downloadvalue
+      }]
+   }
+
+   this.GapsService.createRole(roleId[0].value,this.arr).subscribe( (res: any) => {
+    if (res.status === 'SUCCESS') {
+      this.msgService.success('Role Pages Mapping Successfully');
+      this.myForm.reset();
+    } else {
+      this.msgService.error(res.message);
+    }
+    });
+    }   
+
 }

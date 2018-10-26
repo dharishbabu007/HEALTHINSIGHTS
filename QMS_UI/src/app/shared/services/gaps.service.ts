@@ -98,4 +98,44 @@ export class GapsService {
       getDate(event){
           return this.http.get(`http://healthinsight:8082/curis/qms/program/${event}`)
       }
+      getRoleList(){
+          return this.http.get('http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_ROLE/ROLE_ID/ROLE_NAME');
+      }
+      getUserList(){
+        return this.http.get('http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_USER_MASTER/USER_ID/USER_LOGINID');
+      }
+      getPageList(){
+        return this.http.get( 'http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_SCREEN/SCREEN_ID/SCREEN_NAME');
+      }
+      getRoleData(roleId){
+        return this.http.get( `http://healthinsight:8082/curis/user_role/get_role_screens/${roleId}`);
+      }
+      getStatusList(){
+
+        return this.http.get( 'http://healthinsight:8082/curis/user_role/get_user_status_list');
+      }
+      createRole(roleid, array){
+        return this.http.post(`http://healthinsight:8082/curis/user_role/add_role_screens`,{
+            "roleId": roleid,
+            "screenPermissions": [
+                                            {
+                                            "screenId": array[0].screenid,
+                                            "read":array[0].read,
+                                            "write":array[0].write,
+                                            "download": array[0].download
+                                            }
+                            ]
+            }
+            );
+      }
+      getUserData(userId){
+     return this.http.get(`http://healthinsight:8082/curis/user/get_user_by_id/${userId}`)
+    }
+    UserMappingSubmit(userId,roleId,status){
+        return this.http.post(`http://healthinsight:8082/curis/user_role/add_user_role`, {"userId": userId,"roleId": roleId,"status": status});
+    }
+    getNoshowGaps()
+    {
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_output1`)
+    }
 }

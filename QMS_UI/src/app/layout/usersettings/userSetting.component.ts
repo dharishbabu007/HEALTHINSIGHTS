@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { GapsService } from '../../shared/services/gaps.service';
 import { MessageService } from '../../shared/services/message.service';
 import { UserSetting } from './userSetting.component';
-import { isTemplateExpression } from '../../../../node_modules/typescript';
+import { isTemplateExpression } from 'typescript';
 
 @Component({
   selector: 'app-userSetting',

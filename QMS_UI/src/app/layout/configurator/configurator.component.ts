@@ -29,6 +29,7 @@ export class ConfiguratorComponent implements OnInit {
           });
         this.gapsService.getTableName().subscribe((data: any) => {
             this.TableNameList = [];
+          
             this.tableRepository = data;
             data.forEach(element => {
                 this.TableNameList.push({label: element.name, value: element.name});
@@ -59,9 +60,10 @@ export class ConfiguratorComponent implements OnInit {
   
 
     }
-    filterColumn(event){
+    filterColumn(event, index){
         this.ColumnNameList = [];
         const columnArray = this.tableRepository.filter(item => item.name === event.value);
+
         columnArray[0].columnList.forEach(element => {
           this.ColumnNameList.push({label: element.name, value: element.name});
         });

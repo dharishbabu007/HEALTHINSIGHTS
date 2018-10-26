@@ -29,11 +29,19 @@
   </app-sidebar>
   <!-- Main content -->
   <main class="main">
+      <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
+      <!--
+      <div *ngxPermissionsOnly="['read']">
+        <div>You can see this text congrats ADMIN</div>
+    </div>-->
+   
     <!-- Breadcrumb -->
     <div class="container-fluid">
       <router-outlet></router-outlet>
     </div><!-- /.container-fluid -->
   </main>
+
+  
   <!-- <app-aside [fixed]="true" [display]="false">
     <tabset>
       <tab>
