@@ -4,7 +4,7 @@
 		module="ncqafirststage$sources"
 		revision="0.1"
 		status="integration"
-		publication="20181018090359"
+		publication="20181025120909"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
