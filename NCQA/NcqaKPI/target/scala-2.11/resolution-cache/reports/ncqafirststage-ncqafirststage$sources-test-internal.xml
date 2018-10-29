@@ -7,7 +7,7 @@
 		revision="0.1"
 		conf="test-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20181018090359"/>
+		date="20181025120909"/>
 	<dependencies>
 		<module organisation="org.scala-lang" name="scalap">
 			<revision name="2.11.11" status="release" pubdate="20170414012110" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="110">
@@ -1470,7 +1470,7 @@
 		</module>
 		<module organisation="org.apache.curator" name="curator-recipes">
 			<revision name="2.6.0" status="release" pubdate="20140708083148" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="95">
-				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\NcqaKPI/LICENSE"/>
+				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI/LICENSE"/>
 				<metadata-artifact status="no" details="" size="13694" time="0" location="C:\Users\25865\.ivy2\cache\org.apache.curator\curator-recipes\ivy-2.6.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/curator/curator-recipes/2.6.0/curator-recipes-2.6.0.pom"/>
 				<caller organisation="ncqafirststage" name="ncqafirststage$sources" conf="test, compile, provided, test-internal, runtime, optional" rev="2.6.0" rev-constraint-default="2.6.0" rev-constraint-dynamic="2.6.0" callerrev="0.1"/>
 				<artifacts>
@@ -1494,7 +1494,7 @@
 		</module>
 		<module organisation="org.apache.curator" name="curator-framework">
 			<revision name="2.6.0" status="release" pubdate="20140708083112" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="27">
-				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\NcqaKPI/LICENSE"/>
+				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI/LICENSE"/>
 				<metadata-artifact status="no" details="" size="13541" time="0" location="C:\Users\25865\.ivy2\cache\org.apache.curator\curator-framework\ivy-2.6.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/curator/curator-framework/2.6.0/curator-framework-2.6.0.pom"/>
 				<caller organisation="ncqafirststage" name="ncqafirststage$sources" conf="test, compile, provided, test-internal, runtime, optional" rev="2.6.0" rev-constraint-default="2.6.0" rev-constraint-dynamic="2.6.0" callerrev="0.1"/>
 				<artifacts>
@@ -1506,7 +1506,7 @@
 		</module>
 		<module organisation="org.apache.curator" name="curator-client">
 			<revision name="2.6.0" status="release" pubdate="20140708083047" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="46">
-				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\NcqaKPI/LICENSE"/>
+				<license name="The Apache Software License, Version 2.0" url="file://D:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI/LICENSE"/>
 				<metadata-artifact status="no" details="" size="13589" time="0" location="C:\Users\25865\.ivy2\cache\org.apache.curator\curator-client\ivy-2.6.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/curator/curator-client/2.6.0/curator-client-2.6.0.pom"/>
 				<caller organisation="ncqafirststage" name="ncqafirststage$sources" conf="test, compile, provided, test-internal, runtime, optional" rev="2.6.0" rev-constraint-default="2.6.0" rev-constraint-dynamic="2.6.0" callerrev="0.1"/>
 				<artifacts>

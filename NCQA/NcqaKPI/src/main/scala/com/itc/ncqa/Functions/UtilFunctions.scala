@@ -1,7 +1,8 @@
 package com.itc.ncqa.Functions
 
+import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
@@ -24,10 +25,8 @@ object UtilFunctions {
 
     val newDf1 = df.withColumn("curr_date",lit(current_date))
     val newDf2 = newDf1.withColumn("curr_date",newDf1.col("curr_date").cast(DateType))
-    newDf2.withColumn("dateDiff", datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25 ).select("member_sk","dateDiff").distinct().show(200)
+    //newDf2.withColumn("dateDiff", datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25 ).select("member_sk","dateDiff").distinct().show(200)
     val newdf3 = newDf2.filter((datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25).<=(upper.toInt))
-
-    //newDf.withColumn("date_diff",expr("datediff(current_date,"+colName+")/365.25"))
     newdf3.drop("curr_date")
   }
 
@@ -43,6 +42,12 @@ object UtilFunctions {
   }
 
 
+  def dateBetweenFilter(df:DataFrame,colName:String,date1:String,date2:String):DataFrame={
+
+    val expressionString = colName +"BETWEEN " +date1 + " AND "+date2
+    val newDf = df.filter(expressionString)
+    newDf
+  }
 
 
   def mostRececntHba1cTest(df:DataFrame,colName:String,year:String):DataFrame={
@@ -55,50 +60,22 @@ object UtilFunctions {
   }
 
 
-  /*def joinWithHedisFunction(spark:SparkSession,df1:DataFrame,df2:DataFrame,col1:String,col2:String,joinType:String):DataFrame={
-
-    var newDf = spark.emptyDataFrame
-    var inDf = df1
-    var arrayOfColumn_temp = df1.columns
-    val list = List("measureid","valueset","codesystem")
 
 
-    if(arrayOfColumn_temp.contains("measureid")) {
-        inDf = inDf.drop(list:_*)
-      //inDf.printSchema()
-      }
-    else {
-      arrayOfColumn_temp = arrayOfColumn_temp.:+("valueset").:+("codesystem")
-      }
+  def joinForCommonFilterFunction(spark:SparkSession,dimMemberDf:DataFrame,factClaimDf:DataFrame,factMembershipDf:DataFrame,dimLocationDf:DataFrame,refLobDf:DataFrame,lobName:String,measureTitle:String):DataFrame ={
+    import spark.implicits._
 
-    val arrayOfColumn = arrayOfColumn_temp.filter(f=>(!f.equals("measureid")))
+    val joinedDf = dimMemberDf.as("df1").join(factMembershipDf.as("df2"),dimMemberDf.col(KpiConstants.memberskColName) === factMembershipDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).join(factClaimDf.as("df3"),
+                   factMembershipDf.col(KpiConstants.memberskColName) === factClaimDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).join(refLobDf.as("df4"),factMembershipDf.col(KpiConstants.lobIdColName) === refLobDf.col(KpiConstants.lobIdColName),KpiConstants.innerJoinType).filter(refLobDf.col(KpiConstants.lobColName).===(lobName))
+                   .select("df1.member_sk",KpiConstants.arrayOfColumn:_*)
 
-    if(col1.equals("procedure_code"))
-      {
-        newDf = inDf.join(df2.as("df2"),df1.col(col1) === df2.col(col2) /*|| df1.col("PROCEDURE_CODE_MODIFIER1")=== df2.col(col2) || df1.col("PROCEDURE_CODE_MODIFIER2")=== df2.col(col2) ||
-          df1.col("PROCEDURE_HCPCS_CODE")=== df2.col(col2) || df1.col("CPT_II")=== df2.col(col2) || df1.col("CPT_II_MODIFIER")=== df2.col(col2)*/
-        ,joinType).select("measureid",arrayOfColumn:_*)
-      }
-    else
-    {
-
-      newDf = inDf.join(df2,df1.col(col1) === df2.col(col2) /*|| df1.col("DIAGNOSIS_CODE_2")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_3")=== df2.col(col2)||
-        df1.col("DIAGNOSIS_CODE_4")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_5")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_6")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_7")=== df2.col(col2) ||
-        df1.col("DIAGNOSIS_CODE_8")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_9")=== df2.col(col2) || df1.col("DIAGNOSIS_CODE_10")=== df2.col(col2)*/
-      ,joinType).select("measureid",arrayOfColumn:_*)
-    }
-    //println("---------------------------------------------------------------------------------------")
-    newDf
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
+    val dobDateValAddedDf = joinedDf.as("df1").join(dimDateDf.as("df2"), joinedDf.col(KpiConstants.dobskColame) === dimDateDf.col(KpiConstants.dateSkColName),KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "dob_temp").drop(KpiConstants.dobskColame)
+    val resultantDf = dobDateValAddedDf.withColumn(KpiConstants.dobColName, to_date($"dob_temp", "dd-MMM-yyyy")).drop("dob_temp")
+    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark,measureTitle).toString()
+    val finalResultantDf = resultantDf.withColumn(KpiConstants.qualityMsrSkColName,lit(qualityMeasureSk))
+    finalResultantDf
   }
-*/
-
-
-
-
-
-
-
-
 
 
 
@@ -109,26 +86,25 @@ object UtilFunctions {
 
     import spark.implicits._
 
-    /*val measureId = measureId
-    val valueSet = valueSet
-    val codeSystem = codeSystem*/
     var newDf = spark.emptyDataFrame
     if(col1.equalsIgnoreCase("procedure_code"))
     {
       newDf = dimMemberDf.join(factClaimDf,dimMemberDf.col("member_sk") === factClaimDf.col("member_sk"),joinType).join(refhedisDf,factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1")=== refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2")=== refhedisDf.col("code") ||
-        factClaimDf.col("PROCEDURE_HCPCS_CODE")=== refhedisDf.col("code") || factClaimDf.col("CPT_II")=== refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER")=== refhedisDf.col("code") ,joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet:_*)).&&(refhedisDf.col("codesystem").isin(codeSystem:_*))).select(dimMemberDf.col("member_sk"),factClaimDf.col("start_date_sk"),factClaimDf.col("provider_sk"))
+        factClaimDf.col("PROCEDURE_HCPCS_CODE")=== refhedisDf.col("code") || factClaimDf.col("CPT_II")=== refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER")=== refhedisDf.col("code") ,joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet:_*)).&&(refhedisDf.col("codesystem").isin(codeSystem:_*))).select(dimMemberDf.col("member_sk"),factClaimDf.col("start_date_sk"),factClaimDf.col("provider_sk"),factClaimDf.col("admit_date_sk"),factClaimDf.col("discharge_date_sk"))
     }
     else
     {
       val code = codeSystem(0)
       newDf = dimMemberDf.join(factClaimDf,dimMemberDf.col("member_sk") === factClaimDf.col("member_sk"),joinType).join(refhedisDf,factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_2")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_3")=== refhedisDf.col("code")||
       factClaimDf.col("DIAGNOSIS_CODE_4")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_5")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_6")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_7")=== refhedisDf.col("code") ||
-      factClaimDf.col("DIAGNOSIS_CODE_8")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10")=== refhedisDf.col("code"),joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet:_*)).&&(refhedisDf.col("codesystem").like(code))).select(dimMemberDf.col("member_sk"),factClaimDf.col("start_date_sk"),factClaimDf.col("provider_sk"))
+      factClaimDf.col("DIAGNOSIS_CODE_8")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9")=== refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10")=== refhedisDf.col("code"),joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet:_*)).&&(refhedisDf.col("codesystem").like(code))).select(dimMemberDf.col("member_sk"),factClaimDf.col("start_date_sk"),factClaimDf.col("provider_sk"),factClaimDf.col("admit_date_sk"),factClaimDf.col("discharge_date_sk"))
     }
 
     val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
     val startDateValAddedDf = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-    val dateTypeDf = startDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop( "start_temp")
+    val admitDateValAddedDf = startDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.admit_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "admit_temp").drop("admit_date_sk")
+    val dischargeDateValAddedDf = admitDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.discharge_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "discharge_temp").drop("discharge_date_sk")
+    val dateTypeDf = dischargeDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
     dateTypeDf
   }
 
@@ -141,7 +117,7 @@ object UtilFunctions {
 def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):DataFrame={
 
   val df1 = df.filter(df.col(colName).isin(headervalues:_*))
-  /*df1.show()*/
+  //df1.show()
   val returnDf = df.except(df1)
   returnDf
 }

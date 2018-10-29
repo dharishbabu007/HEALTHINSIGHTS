@@ -4,22 +4,47 @@ object KpiConstants {
 
 
   /*Common Constants*/
-  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "primary_diagnosis", "procedure_code", "start_date_sk" /*"PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
+
+  val ncqaDataSource = "SELF"
+  val clientDataSource = ""
+  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   val dbName = "ncqa_sample"
-  //val dbName = "healthin"
+
+  /*Table Names*/
   val dimMemberTblName = "dim_member"
+  val dimDateTblName = "dim_date"
+  val dimProviderTblName = "dim_provider"
+  val dimLocationTblName = "dim_location"
+  val dimQltyMsrTblName = "dim_quality_measure"
   val factClaimTblName = "fact_claims"
   val factMembershipTblName = "fact_membership"
   val factRxClaimTblName = "fact_rx_claims"
   val refHedisTblName = "ref_hedis2016"
-  val dimDateTblName = "dim_date"
-  val dimProviderTblName = "dim_provider"
   val refLobTblName = "ref_lob"
   val refmedValueSetTblName = "ref_med_value_set"
   val view45Days = "45_days"
   val view60Days = "60_days"
 
+  /*Measure Title constants*/
+  val abaMeasureTitle = "Adult BMI Assessment"
 
+
+  /*columnname constants*/
+  val memberskColName = "member_sk"
+  val lobIdColName = "lob_id"
+  val lobColName = "lob"
+  val dobskColame = "date_of_birth_sk"
+  val dateSkColName = "date_sk"
+  val calenderDateColName = "calendar_date"
+  val dobColName = "dob"
+  val qualityMsrSkColName = "quality_measure_sk"
+  val proceedureCodeColName = "procedure_code"
+  val primaryDiagnosisColname = "primary_diagnosis"
+
+
+  /*Join Type Constants*/
+  val innerJoinType = "inner"
+  val leftOuterJoinType = "left_outer"
 
   /*Common Queries*/
   val dimMemberLoadQuery = "select * from "+dbName+"."+dimMemberTblName
@@ -27,7 +52,7 @@ object KpiConstants {
   val factMembershipLoadQuery = "select * from "+dbName+"."+factMembershipTblName
   val factRxClaimLoadQuery = "select * from "+dbName+"."+factRxClaimTblName
   val refHedisLoadQuery = "select * from "+dbName+"."+refHedisTblName
-  val dimDateLoadQuery = "select * from "+dbName+"."+dimDateTblName
+  val dimDateLoadQuery = "select date_sk, calendar_date from "+dbName+"."+dimDateTblName
   val refLobLoadQuery =  "select * from "+dbName+"."+refLobTblName
   val dimProviderLoadQuery = "select * from "+dbName+"."+dimProviderTblName
   val refmedvaluesetLoadQuery = "select * from "+dbName+"."+refmedValueSetTblName
@@ -47,6 +72,7 @@ object KpiConstants {
   val chlMeasureId = "CHL"
   val lsMeasureId =   "LSC"
   val spdMeasureId = "SPD"
+  val omwMeasureId = "OMW"
 
 
   /*ABA Constants*/
@@ -150,6 +176,14 @@ object KpiConstants {
   /*AWC Constants*/
   val awcWcvValueSet = List("Well-Care")
   val awcWcvCodeSystem = List("CPT","HCPCS")
+
+  /*OMW Constants*/
+  val omwOutPatientValueSet = List("Outpatient","Observation","ED")
+  val omwOutPatientCodeSystem = List("CPT","HCPCS","UBREV")
+  val omwFractureValueSet = List("Fractures")
+  val omwFractureCodeSystem = List("CPT","HCPCS")
+  val omwInpatientStayValueSet = List("Inpatient Stay")
+  val omwInpatientStayCodeSystem = List("UBREV")
 
 
 

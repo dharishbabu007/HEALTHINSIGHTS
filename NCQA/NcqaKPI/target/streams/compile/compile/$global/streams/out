@@ -1,10 +1,3 @@
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\Intelj_Workspace\NcqaKPI\src\main\scala\com\itc\ncqa\Functions\UtilFunctions.scala:103:21: recursive value measureId needs type[0m
-[0m[[0m[31merror[0m] [0m[0m    val measureId = measureId[0m
-[0m[[0m[31merror[0m] [0m[0m                    ^[0m
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\Intelj_Workspace\NcqaKPI\src\main\scala\com\itc\ncqa\Functions\UtilFunctions.scala:104:20: recursive value valueSet needs type[0m
-[0m[[0m[31merror[0m] [0m[0m    val valueSet = valueSet[0m
-[0m[[0m[31merror[0m] [0m[0m                   ^[0m
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\Intelj_Workspace\NcqaKPI\src\main\scala\com\itc\ncqa\Functions\UtilFunctions.scala:105:22: recursive value codeSystem needs type[0m
-[0m[[0m[31merror[0m] [0m[0m    val codeSystem = codeSystem[0m
-[0m[[0m[31merror[0m] [0m[0m                     ^[0m
-[0m[[0m[31merror[0m] [0m[0mthree errors found[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaABA.scala:43:41: value dataLoadFromTragetModel is not a member of object com.itc.ncqa.Functions.DataLoadFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val dimMemberDf = DataLoadFunctions.dataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.dimMemberTblName,data_source)[0m
+[0m[[0m[31merror[0m] [0m[0m                                        ^[0m
