@@ -170,8 +170,8 @@ public class ImportExportServiceImpl implements ImportExportService {
 
 	@Override
 	public RestResult runRFile(String modelType) {
-		if(true)
-			return RestResult.getSucessRestResult(" RFile execution success. ");
+//		if(true)
+//			return RestResult.getSucessRestResult(" RFile execution success. ");
 		
 		int fileId = 0;
 		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)

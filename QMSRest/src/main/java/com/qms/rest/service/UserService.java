@@ -13,7 +13,7 @@ public interface UserService {
 	
 	RestResult forgotPassword (String email);
 	
-	User getUserInfo(String userName, String password);
+	User getUserInfo(String userName, String password) throws Exception;
 	
 	RestResult addUser(User user);
 	
