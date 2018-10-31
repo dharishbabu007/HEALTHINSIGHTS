@@ -17,8 +17,11 @@ public class QMSProperty {
 	
 	private String hiveJDBCUrl;
 	private String hiveUserName;
-	private String hivePassword;	
+	private String hivePassword;
+	
 	private String userStatusList;
+	private String adminEMailId;	
+	private int passwordExpiryTime;
 	
 	public String getUserStatusList() {
 		return userStatusList;
@@ -79,6 +82,18 @@ public class QMSProperty {
 	}
 	public void setOracleMeasureConfigPassword(String oracleMeasureConfigPassword) {
 		this.oracleMeasureConfigPassword = oracleMeasureConfigPassword;
+	}
+	public String getAdminEMailId() {
+		return adminEMailId;
+	}
+	public void setAdminEMailId(String adminEMailId) {
+		this.adminEMailId = adminEMailId;
+	}
+	public int getPasswordExpiryTime() {
+		return passwordExpiryTime;
+	}
+	public void setPasswordExpiryTime(int passwordExpiryTime) {
+		this.passwordExpiryTime = passwordExpiryTime;
 	}
 	
 }

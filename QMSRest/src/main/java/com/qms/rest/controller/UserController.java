@@ -66,16 +66,28 @@ public class UserController {
 	public ResponseEntity<?> getUserDetails(@PathVariable("loginId") String loginId, @PathVariable("password") String password) {
 		logger.info("Fetching user details for loginId {}", loginId);
 		System.out.println("Fetching user details for loginId " + loginId);
-		User user = userService.getUserInfo(loginId, password);
-		if (user == null) {
-			logger.error("User details with loginId {} not found.", loginId);
-			return new ResponseEntity(new CustomErrorType("User details with loginId " + loginId 
-					+ " not found"), HttpStatus.NOT_FOUND);
-		} else {
-			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
+		User user=null;
+		try {
+			user = userService.getUserInfo(loginId, password);
+			if(user != null) {
+				httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
+				System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
+				return new ResponseEntity<User>(user, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(new CustomErrorType("User details not found. "), HttpStatus.NOT_FOUND);	
+			}
+		} catch (Exception e) {
+			return new ResponseEntity(new CustomErrorType(e.getMessage()), HttpStatus.NOT_FOUND);
 		}
-		System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+//		if (user == null) {
+//			logger.error("User details with loginId {} not found.", loginId);
+//			return new ResponseEntity(new CustomErrorType("User details with loginId " + loginId 
+//					+ " not found"), HttpStatus.NOT_FOUND);
+//		} else {
+//			httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
+//		}
+//		
+//		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
 
