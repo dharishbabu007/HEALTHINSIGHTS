@@ -1,3 +1,5 @@
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaABA.scala:43:41: value dataLoadFromTragetModel is not a member of object com.itc.ncqa.Functions.DataLoadFunctions[0m
-[0m[[0m[31merror[0m] [0m[0m    val dimMemberDf = DataLoadFunctions.dataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.dimMemberTblName,data_source)[0m
-[0m[[0m[31merror[0m] [0m[0m                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\Test.scala:60:46: not enough arguments for method ageFilter: (df: org.apache.spark.sql.DataFrame, colName: String, year: String, lower: String, upper: String, lowerIncl: Boolean, upperIncl: Boolean)org.apache.spark.sql.DataFrame.[0m
+[0m[[0m[31merror[0m] [0m[0mUnspecified value parameters lowerIncl, upperIncl.[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75") .select("member_sk").distinct()[0m
+[0m[[0m[31merror[0m] [0m[0m                                             ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

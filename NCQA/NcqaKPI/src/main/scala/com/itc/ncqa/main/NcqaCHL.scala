@@ -75,7 +75,7 @@ object NcqaCHL {
     /*loading ref_hedis table*/
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
 
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"16","24")
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"16","24",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
     //println("The ageFilterDf count is :"+ageFilterDf.count())
     val genderFilterDf =ageFilterDf.filter($"gender".===("F")).select("member_sk","dob")
 

@@ -71,7 +71,7 @@ object NcqaSPD {
 
     /*loading ref_hedis table*/
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"40","75")
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"40","75",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
 
 
 

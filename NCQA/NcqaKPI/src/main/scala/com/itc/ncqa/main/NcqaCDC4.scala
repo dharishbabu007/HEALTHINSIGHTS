@@ -55,7 +55,7 @@ object NcqaCDC4 {
     val dateTypeDf = dobDateValAddedDf.withColumn("dob", to_date($"dob_temp", "dd-MMM-yyyy")).drop("dob_temp")
 
     /*doing age filter */
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "85") .select("member_sk").distinct()
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "85",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal) .select("member_sk").distinct()
     //ageFilterDf.show(50)
     /*loading ref_hedis table*/
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)

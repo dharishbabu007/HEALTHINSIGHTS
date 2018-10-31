@@ -54,7 +54,7 @@ object NcqaCDC3 {
     val dateTypeDf = dobDateValAddedDf.withColumn("dob", to_date($"dob_temp", "dd-MMM-yyyy")).drop("dob_temp")
 
     /*doing age filter */
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75") .select("member_sk","dob").distinct()
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal) .select("member_sk","dob").distinct()
     /*loading ref_hedis table*/
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
 
@@ -94,7 +94,7 @@ object NcqaCDC3 {
 
 
     /*dinominator Exclusion 3 (Age filter  Exclusion)*/
-    val dinominatorAgeFilterExclDf = UtilFunctions.ageFilter(ageFilterDf,"dob",year,"65","75").select("member_sk").distinct()
+    val dinominatorAgeFilterExclDf = UtilFunctions.ageFilter(ageFilterDf,"dob",year,"65","75",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal).select("member_sk").distinct()
 
     /*dinominator Exclusion 4 (CABG Exclusion)*/
     val hedisJoinedForCabgValueExclDf =  UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdc3CabgValueSet,KpiConstants.cdc4DiabetescodeSystem)

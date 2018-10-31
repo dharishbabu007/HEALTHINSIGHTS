@@ -71,7 +71,7 @@ object NcqaAWC {
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
 
     /*Dinominator (Allowable age group)*/
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"12","21").select("member_sk")
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"12","21",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal).select("member_sk")
 
 
     /*Numerator1 (Well-Care Value Set as procedure code with PCP or an OB/GYN practitioner during the measurement year)*/
