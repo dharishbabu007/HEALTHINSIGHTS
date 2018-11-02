@@ -77,7 +77,7 @@ public class UserController {
 				return new ResponseEntity(new CustomErrorType("User details not found. "), HttpStatus.NOT_FOUND);	
 			}
 		} catch (Exception e) {
-			return new ResponseEntity(new CustomErrorType(e.getMessage()), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType(e.getMessage()), HttpStatus.CONFLICT);
 		}
 //		if (user == null) {
 //			logger.error("User details with loginId {} not found.", loginId);

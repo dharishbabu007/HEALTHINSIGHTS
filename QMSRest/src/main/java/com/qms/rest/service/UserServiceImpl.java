@@ -20,6 +20,7 @@ import com.qms.rest.model.ResetPassword;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
 import com.qms.rest.util.PasswordGenerator;
+import com.qms.rest.util.PasswordStrength;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
@@ -58,10 +59,10 @@ public class UserServiceImpl implements UserService {
 			if(!getUser.getPassword().equals(resetPassword.getOldPassword())) {
 				restResult = RestResult.getFailRestResult(" Old password is not correct. ");
 				return restResult; 
-			}			
+			}
 			
-			if(!resetPassword.getNewPassword().equals(resetPassword.getConformPassword())) {
-				restResult = RestResult.getFailRestResult(" New password and conform password should be same. ");
+			if(!PasswordStrength.metPasswordStrength(resetPassword.getNewPassword())) {
+				restResult = RestResult.getFailRestResult(" New password should be 8 characters length and should contain atleast one number, uppercase and lowercase letters. ");
 				return restResult;				
 			}
 			
@@ -69,6 +70,11 @@ public class UserServiceImpl implements UserService {
 				restResult = RestResult.getFailRestResult(" New password and Old password is same. ");
 				return restResult;				
 			}			
+			
+			if(!resetPassword.getNewPassword().equals(resetPassword.getConformPassword())) {
+				restResult = RestResult.getFailRestResult(" New password and conform password should be same. ");
+				return restResult;				
+			}
 			
 			String sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=? where USER_LOGINID=?";			
 			if(getUser.getStatus() != null && getUser.getStatus().equalsIgnoreCase(QMSConstants.USER_STATUS_NEW)) {	
@@ -101,7 +107,6 @@ public class UserServiceImpl implements UserService {
 			restResult = RestResult.getFailRestResult(e.getMessage());
 		}
 		finally {
-			//qmsConnection.closeJDBCResources(resultSet, statement, null);
 			qmsConnection.closeJDBCResources(null, prepStatement, connection);
 		}
 		return restResult;
@@ -144,6 +149,10 @@ public class UserServiceImpl implements UserService {
 				user.setStatus(resultSet.getString("STATUS"));
 				modifiedDate = resultSet.getTimestamp("REC_UPDATE_DATE");
 			}
+			if(modifiedDate != null && password != null && user.getStatus() != null && 
+					user.getStatus().equalsIgnoreCase(QMSConstants.USER_STATUS_INACTIVE)) {
+				throw new Exception ("Inactive user. Please contact administrator.");
+			}
 			if(modifiedDate != null && password != null && user.getResetPassword() != null && 
 					user.getResetPassword().equalsIgnoreCase("Y")) {
 				Date date = new Date();				
@@ -151,7 +160,8 @@ public class UserServiceImpl implements UserService {
 				Timestamp expiryDate = new Timestamp(modifiedDate.getTime()+(qmsProperty.getPasswordExpiryTime()*60*1000));
 				System.out.println("currentTimestamp --> " + currentTimestamp);
 				System.out.println("      expiryDate --> " + expiryDate);
-				if(expiryDate.after(currentTimestamp)) {
+				System.out.println("currentTimestamp.after(expiryDate) --> " + currentTimestamp.after(expiryDate));				
+				if(currentTimestamp.after(expiryDate)) {
 					throw new Exception ("Password expired. Please use Forgot password link to get new one. ");
 				}
 			}
@@ -373,7 +383,7 @@ public class UserServiceImpl implements UserService {
 		Mail mail = new Mail();
 		mail.setFrom("raghunadha.konda@itcinfotech.com");
 		mail.setTo(email);
-		mail.setSubject(" Healthin - User Activation");
+		mail.setSubject(" Healthin - Request for new user Activation");
 		String text = "<html><body>Done Email Varification. Please activate the below user. <br>";
 		text = text + userDetails;
 		text = text + "<body></html>";
