@@ -10,4 +10,5 @@ public interface QMSConstants {
 	public static final String INPUT_FILE_ID = "INPUT_FILE_ID";
 	public static final String USER_STATUS_NEW = "New";
 	public static final String USER_STATUS_VERIFIED = "Verified";	
+	public static final String USER_STATUS_INACTIVE = "Inactive";
 }
