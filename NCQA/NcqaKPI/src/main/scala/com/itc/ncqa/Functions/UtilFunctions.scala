@@ -2,7 +2,7 @@ package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date,hash}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
@@ -256,20 +256,32 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
                                                         .withColumn(KpiConstants.outLatestFlagColName,lit(KpiConstants.yesVal))
                                                         .withColumn(KpiConstants.outSourceNameColName,lit(sourceName))
                                                         .withColumn(KpiConstants.outUserColName,lit(KpiConstants.userNameVal))
-                                                        .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
-                                                        .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
+                                                        .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
                                                         .withColumn(KpiConstants.outDateSkColName,lit(dateSkVal))
-                                                        .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
 
     /*Adding datesk to the Dataframe*/
-    val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName,abs(lit(concat( lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)) ))))
-
+    val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName,abs(hash(lit(concat(lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)))))))
+    //hedisSkColAddedDf.select(KpiConstants.outHedisGapsSkColName).show()
     /*selecting the outformatted Dataframe in the order of columns*/
     val outColFormattedDf = hedisSkColAddedDf.select(KpiConstants.outFormattedArray.head,KpiConstants.outFormattedArray.tail:_*)
     outColFormattedDf
   }
 
 
+
+  def outputCreationForHedisQmsTable(spark:SparkSession,factMembershipDf:DataFrame,qualityMeasureSk:String):DataFrame ={
+
+    val quality_Msr_Sk = "'"+qualityMeasureSk+"'"
+    val hedisDataDfLoadQuery = "select "+KpiConstants.outQualityMeasureSkColName+","+KpiConstants.outDateSkColName+","+KpiConstants.outProductPlanSkColName+","+KpiConstants.outFacilitySkColName+","+KpiConstants.outInNumColName+","+KpiConstants.outInDinoColName+","+KpiConstants.outInDinoExclColName+","+KpiConstants.outInNumExclColName+","+KpiConstants.outInDinoExcColName+","+KpiConstants.outInNumExcColName+" from ncqa_sample.fact_hedis_gaps_in_care where quality_measure_sk ="+quality_Msr_Sk
+    val hedisDataDf = spark.sql(hedisDataDfLoadQuery)
+    //hedisDataDf.show()
+    val lobIdColAddedDf = hedisDataDf.as("df1").join(factMembershipDf.as("df2"),hedisDataDf.col(KpiConstants.outProductPlanSkColName) === factMembershipDf.col(KpiConstants.outProductPlanSkColName),KpiConstants.innerJoinType).select("df1.*","df2.lob_id")
+    
+    val outDf = spark.emptyDataFrame
+    outDf
+  }
 
 
 

@@ -122,6 +122,14 @@ object NcqaABA {
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark,dinominatorForOutput,dinominatorExcl,abanumeratorFinalDf,numExclDf,listForOutput,data_source)
     //outFormatDf.show()
     outFormatDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_gaps_in_care")
+
+    val qualityMeasureSk =  DataLoadFunctions.qualityMeasureLoadFunction(spark,KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val factMembershipDfForoutDf = factMembershipDf.select("product_plan_sk","lob_id")
+    val df = UtilFunctions.outputCreationForHedisQmsTable(spark,factMembershipDfForoutDf,qualityMeasureSk)
+
+
+
+
     import spark.implicits._
 
    /* val lobdetailsData = dinominator.as("df1").join(factMembershipDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df1.member_sk","df2.lob_id")

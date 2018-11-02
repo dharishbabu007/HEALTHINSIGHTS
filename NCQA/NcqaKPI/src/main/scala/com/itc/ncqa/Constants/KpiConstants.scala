@@ -53,7 +53,7 @@ object KpiConstants {
   val view60Days = "60_days"
 
   /*Measure Title constants*/
-  val abaMeasureTitle = "Adult BMI Assessment"
+  val abaMeasureTitle = "Adult BMI Assessment (ABA)"
 
 
   /*columnname constants*/
