@@ -7,8 +7,34 @@ object KpiConstants {
 
   val ncqaDataSource = "SELF"
   val clientDataSource = ""
-  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
+  val userNameVal = "ETL"
+  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   val dbName = "ncqa_sample"
+  val yesVal =  "Y"
+  val noVal  =  "N"
+  val actFlgVal = "A"
+  val emptyStrVal = ""
+  val emptyList = List.empty[String]
+  val boolTrueVal = true
+  val boolFalseval = false
+
+
+  /*age calculation constants*/
+  val abaAgeFilterLower = "18"
+  val abaAgeFilterUpper = "74"
+  val abaAge20Lower = "20"
+  val abaAge20Lesser = "19.99"
+
+
+
+
+  /*measurement Year Constants*/
+  val measurementYearLower = 0
+  val measurementOneyearUpper = 365
+  val measuremetTwoYearUpper = 730
+
+
+
 
   /*Table Names*/
   val dimMemberTblName = "dim_member"
@@ -16,6 +42,7 @@ object KpiConstants {
   val dimProviderTblName = "dim_provider"
   val dimLocationTblName = "dim_location"
   val dimQltyMsrTblName = "dim_quality_measure"
+  val dimFacilityTblName = "dim_facility"
   val factClaimTblName = "fact_claims"
   val factMembershipTblName = "fact_membership"
   val factRxClaimTblName = "fact_rx_claims"
@@ -40,6 +67,51 @@ object KpiConstants {
   val qualityMsrSkColName = "quality_measure_sk"
   val proceedureCodeColName = "procedure_code"
   val primaryDiagnosisColname = "primary_diagnosis"
+  val startDateColName = "start_date"
+  val locationSkColName = "location_sk"
+  val facilitySkColName = "facility_sk"
+
+  /*Output column names*/
+  val outMemberSkColName = "member_sk"
+  val outProductPlanSkColName = "product_plan_sk"
+  val outQualityMeasureSkColName = "quality_measure_sk"
+  val outFacilitySkColName = "facility_sk"
+  val outInDinoColName = "in_denominator"
+  val outInDinoExclColName = "in_denominator_exclusion"
+  val outInDinoExcColName = "in_denominator_exception"
+  val outInNumColName = "in_numerator"
+  val outInNumExclColName = "in_numerator_exclusion"
+  val outInNumExcColName = "in_numerator_exception"
+  val outReasonColName = "reason"
+  val outDateSkColName = "date_sk"
+  val outCurrFlagColName = "curr_flag"
+  val outRecCreateDateColName = "rec_create_date"
+  val outRecUpdateColName = "rec_update_date"
+  val outLatestFlagColName = "latest_flag"
+  val outActiveFlagColName = "active_flag"
+  val outIngestionDateColName = "ingestion_date"
+  val outSourceNameColName = "source_name"
+  val outUserColName = "user_name"
+  val outNu1ReasonColName = "nu_reason_1"
+  val outNu2ReasonColName = "nu_reason_2"
+  val outNu3ReasonColName = "nu_reason_3"
+  val outNu4ReasonColName = "nu_reason_4"
+  val outNu5ReasonColName = "nu_reason_5"
+  val outDinoExcl1ReasonColName = "de_ex_reason_1"
+  val outDinoExcl2ReasonColName = "de_ex_reason_2"
+  val outDinoExcl3ReasonColName = "de_ex_reason_3"
+  val outNumExcl1ReasonColName = "nu_ex_reason_1"
+  val outNumExcl2ReasonColName = "nu_ex_reason_2"
+  val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
+
+  val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
+                                ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
+                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outCurrFlagColName
+                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outSourceNameColName,outUserColName)
+
+
+
+
 
 
   /*Join Type Constants*/
@@ -70,7 +142,7 @@ object KpiConstants {
   val awcMeasureId = "AWC"
   val cdcMeasureId = "CDC"
   val chlMeasureId = "CHL"
-  val lsMeasureId =   "LSC"
+  val lsMeasureId  = "LSC"
   val spdMeasureId = "SPD"
   val omwMeasureId = "OMW"
 
@@ -79,8 +151,9 @@ object KpiConstants {
   val abavalueSetForDinominator = List("Outpatient")
   val abscodeSystemForDinominator = List("CPT","HCPCS","UBREV")
   val abavaluesetForDinExcl = List("Pregnancy")
-  val abacodeSytemForExcl = List("ICD%")
-  val abanumeratorValueSet = List("BMI","BMI Percentile")
+  //val abacodeSytemForExcl = List("ICD%")
+  val abaNumeratorBmiValueSet = List("BMI")
+  val abaNumeratorBmiPercentileValueSet = List("BMI Percentile")
 
 
   /*CHL Constants*/

@@ -73,7 +73,7 @@ object NcqaADV {
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
 
     /*Dinominator*/
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"2","3")
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,KpiConstants.dobColName,year,"2","3",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
 
     /*Dinominator Exclusion*/
     val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf)

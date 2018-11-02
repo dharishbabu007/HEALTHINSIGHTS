@@ -57,7 +57,7 @@ object Test {
     val dateTypeDf = dobDateValAddedDf.withColumn("dob", to_date($"dob_temp", "dd-MMM-yyyy")).drop("dob_temp")
 
     /*doing age filter */
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75") .select("member_sk").distinct()
+    //val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75") .select("member_sk").distinct()
     //ageFilterDf.orderBy("member_sk").show(50)
   }
 }

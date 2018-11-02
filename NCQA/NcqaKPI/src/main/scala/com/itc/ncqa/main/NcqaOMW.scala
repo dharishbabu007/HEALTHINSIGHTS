@@ -65,7 +65,7 @@ object NcqaOMW {
     val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
 
     /*Age filter*/
-    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"67","85").select("member_sk","gender","dob")
+    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf,"dob",year,"67","85",KpiConstants.boolTrueVal,KpiConstants.boolTrueVal).select("member_sk","gender","dob")
     val genderFilter = ageFilterDf.filter($"gender".===("F")).select("member_sk","dob")
 
 
