@@ -2,7 +2,7 @@ package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
@@ -148,12 +148,14 @@ object UtilFunctions {
 
     /*getting calender dates fro start_date_sk,admit_date_sk and discharge_date_sk*/
     val startDateValAddedDf = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-    val admitDateValAddedDf = startDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.admit_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "admit_temp").drop("admit_date_sk")
-    val dischargeDateValAddedDf = admitDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.discharge_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "discharge_temp").drop("discharge_date_sk")
+   /* val admitDateValAddedDf = startDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.admit_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "admit_temp").drop("admit_date_sk")
+    val dischargeDateValAddedDf = admitDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.discharge_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "discharge_temp").drop("discharge_date_sk")*/
 
-    /*convert all the dates into dd-MMM-yyy format*/
-    val dateTypeDf = dischargeDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
+
+    /*convert the start_date date into dd-MMM-yyy format*/
+    val dateTypeDf = startDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")) //.withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
     dateTypeDf
+
   }
 
 
@@ -200,7 +202,7 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
 
 
 
-  def commonOutputDfCreation(spark:SparkSession,dinominatorDf:DataFrame,dinoExclDf:DataFrame,numeratorDf:DataFrame,numExclDf:DataFrame,outValueList:List[List[String]]/*dimMemberDf:DataFrame,measVal:String*/):DataFrame={
+  def commonOutputDfCreation(spark:SparkSession,dinominatorDf:DataFrame,dinoExclDf:DataFrame,numeratorDf:DataFrame,numExclDf:DataFrame,outValueList:List[List[String]],sourceName:String):DataFrame={
 
 
     //var resultantDf = spark.emptyDataFrame
@@ -243,9 +245,28 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
 
     /*Adding Numerator Exclusion reason Columns*/
     val numoExclValueSetColAddedDf = dinoExclValueSetColAddedDf.withColumn(KpiConstants.outNumExcl1ReasonColName, when(dinoExclValueSetColAddedDf.col(KpiConstants.outInNumExcColName).===(KpiConstants.noVal),KpiConstants.emptyStrVal).otherwise(if (numExclValueSet.length -1 < 0) KpiConstants.emptyStrVal else numExclValueSet.get(0)))
-                                                               .withColumn(KpiConstants.outNumExcl1ReasonColName, when(dinoExclValueSetColAddedDf.col(KpiConstants.outInNumExcColName).===(KpiConstants.noVal),KpiConstants.emptyStrVal).otherwise(if (numExclValueSet.length -1 < 0) KpiConstants.emptyStrVal else numExclValueSet.get(0)))
+                                                               .withColumn(KpiConstants.outNumExcl2ReasonColName, when(dinoExclValueSetColAddedDf.col(KpiConstants.outInNumExcColName).===(KpiConstants.noVal),KpiConstants.emptyStrVal).otherwise(if (numExclValueSet.length -1 < 0) KpiConstants.emptyStrVal else numExclValueSet.get(0)))
 
-    numoExclValueSetColAddedDf
+
+    val dateSkVal = DataLoadFunctions.dimDateLoadFunction(spark).filter($"calendar_date".===(date_format(current_date(),"dd-MMM-yyyy"))).select("date_sk").as[String].collectAsList()(0)
+
+    /*Adding Audit columns to the Dataframe*/
+    val auditColumnsAddedDf = numoExclValueSetColAddedDf.withColumn(KpiConstants.outCurrFlagColName,lit(KpiConstants.yesVal))
+                                                        .withColumn(KpiConstants.outActiveFlagColName,lit(KpiConstants.actFlgVal))
+                                                        .withColumn(KpiConstants.outLatestFlagColName,lit(KpiConstants.yesVal))
+                                                        .withColumn(KpiConstants.outSourceNameColName,lit(sourceName))
+                                                        .withColumn(KpiConstants.outUserColName,lit(KpiConstants.userNameVal))
+                                                        .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outDateSkColName,lit(dateSkVal))
+                                                        .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+
+    /*Adding datesk to the Dataframe*/
+    val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName,abs(lit(concat( lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)) ))))
+
+    /*selecting the outformatted Dataframe in the order of columns*/
+    val outColFormattedDf = hedisSkColAddedDf.select(KpiConstants.outFormattedArray.head,KpiConstants.outFormattedArray.tail:_*)
+    outColFormattedDf
   }
 
 

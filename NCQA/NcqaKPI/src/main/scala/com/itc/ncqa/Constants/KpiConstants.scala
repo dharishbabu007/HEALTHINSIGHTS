@@ -7,10 +7,12 @@ object KpiConstants {
 
   val ncqaDataSource = "SELF"
   val clientDataSource = ""
+  val userNameVal = "ETL"
   val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   val dbName = "ncqa_sample"
   val yesVal =  "Y"
   val noVal  =  "N"
+  val actFlgVal = "A"
   val emptyStrVal = ""
   val emptyList = List.empty[String]
   val boolTrueVal = true
@@ -70,6 +72,10 @@ object KpiConstants {
   val facilitySkColName = "facility_sk"
 
   /*Output column names*/
+  val outMemberSkColName = "member_sk"
+  val outProductPlanSkColName = "product_plan_sk"
+  val outQualityMeasureSkColName = "quality_measure_sk"
+  val outFacilitySkColName = "facility_sk"
   val outInDinoColName = "in_denominator"
   val outInDinoExclColName = "in_denominator_exclusion"
   val outInDinoExcColName = "in_denominator_exception"
@@ -96,6 +102,12 @@ object KpiConstants {
   val outDinoExcl3ReasonColName = "de_ex_reason_3"
   val outNumExcl1ReasonColName = "nu_ex_reason_1"
   val outNumExcl2ReasonColName = "nu_ex_reason_2"
+  val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
+
+  val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
+                                ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
+                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outCurrFlagColName
+                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outSourceNameColName,outUserColName)
 
 
 
