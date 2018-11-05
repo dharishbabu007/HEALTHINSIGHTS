@@ -12,6 +12,20 @@ object UtilFunctions {
 
 
 
+
+
+
+
+  def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):DataFrame={
+
+    val df1 = df.filter(df.col(colName).isin(headervalues:_*))
+    //df1.show()
+    val returnDf = df.except(df1)
+    returnDf
+  }
+
+
+
   /*Function Name:ageFilter
   * Input Argument: df-Datframe(Input DataFrame)
   * Input Argument: colName-String(date column name )
@@ -164,18 +178,29 @@ object UtilFunctions {
 
 
 
-def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):DataFrame={
-
-  val df1 = df.filter(df.col(colName).isin(headervalues:_*))
-  //df1.show()
-  val returnDf = df.except(df1)
-  returnDf
-}
 
 
 
 
-  def outputDfCreation(spark:SparkSession,superDf:DataFrame,dfexclusionDf:DataFrame,numDf:DataFrame,dimMemberDf:DataFrame,measVal:String):DataFrame={
+
+  def hospiceMemberDfFunction(spark:SparkSession,dimMemberDf:DataFrame,factClaimDf:DataFrame,refhedisDf:DataFrame):DataFrame={
+
+    import spark.implicits._
+
+    val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"),$"df2.PROCEDURE_HCPCS_CODE" === "df3.code","cross").filter($"df3.code".===("G0155")).select("df1.member_sk","start_date_sk")
+    val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
+    val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop( "start_temp")
+    dateTypeDfForDinoExcl.select("member_sk","start_date")
+  }
+
+
+
+
+
+
+
+  /*def outputDfCreation(spark:SparkSession,superDf:DataFrame,dfexclusionDf:DataFrame,numDf:DataFrame,dimMemberDf:DataFrame,measVal:String):DataFrame={
 
 
     //var resultantDf = spark.emptyDataFrame
@@ -189,7 +214,7 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
     val formattedOutPutDf = numAdded.select("MemID","Meas","Payer","Epop","Excl","Num","RExcl","Ind")
     formattedOutPutDf
 
-  }
+  }*/
 
 
 
@@ -278,27 +303,11 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
     val hedisDataDf = spark.sql(hedisDataDfLoadQuery)
     //hedisDataDf.show()
     val lobIdColAddedDf = hedisDataDf.as("df1").join(factMembershipDf.as("df2"),hedisDataDf.col(KpiConstants.outProductPlanSkColName) === factMembershipDf.col(KpiConstants.outProductPlanSkColName),KpiConstants.innerJoinType).select("df1.*","df2.lob_id")
-    
+    lobIdColAddedDf.printSchema()
     val outDf = spark.emptyDataFrame
     outDf
   }
 
-
-
-
-
-
-
-def hospiceMemberDfFunction(spark:SparkSession,dimMemberDf:DataFrame,factClaimDf:DataFrame,refhedisDf:DataFrame):DataFrame={
-
-  import spark.implicits._
-
-  val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"),$"df2.PROCEDURE_HCPCS_CODE" === "df3.code","cross").filter($"df3.code".===("G0155")).select("df1.member_sk","start_date_sk")
-  val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
-  val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-  val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop( "start_temp")
-  dateTypeDfForDinoExcl.select("member_sk","start_date")
-}
 
 
 
