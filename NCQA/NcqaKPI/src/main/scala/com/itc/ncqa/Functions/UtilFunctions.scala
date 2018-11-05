@@ -2,7 +2,7 @@ package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date,hash}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date,hash,count}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
@@ -296,16 +296,39 @@ object UtilFunctions {
 
 
 
-  def outputCreationForHedisQmsTable(spark:SparkSession,factMembershipDf:DataFrame,qualityMeasureSk:String):DataFrame ={
+  def outputCreationForHedisQmsTable(spark:SparkSession,factMembershipDf:DataFrame,qualityMeasureSk:String,sourceName:String):DataFrame ={
 
     val quality_Msr_Sk = "'"+qualityMeasureSk+"'"
-    val hedisDataDfLoadQuery = "select "+KpiConstants.outQualityMeasureSkColName+","+KpiConstants.outDateSkColName+","+KpiConstants.outProductPlanSkColName+","+KpiConstants.outFacilitySkColName+","+KpiConstants.outInNumColName+","+KpiConstants.outInDinoColName+","+KpiConstants.outInDinoExclColName+","+KpiConstants.outInNumExclColName+","+KpiConstants.outInDinoExcColName+","+KpiConstants.outInNumExcColName+" from ncqa_sample.fact_hedis_gaps_in_care where quality_measure_sk ="+quality_Msr_Sk
+    val hedisDataDfLoadQuery = "select "+KpiConstants.memberskColName+","+KpiConstants.outQualityMeasureSkColName+","+KpiConstants.outDateSkColName+","+KpiConstants.outProductPlanSkColName+","+KpiConstants.outFacilitySkColName+","+KpiConstants.outInNumColName+","+KpiConstants.outInDinoColName+","+KpiConstants.outInDinoExclColName+","+KpiConstants.outInNumExclColName+","+KpiConstants.outInDinoExcColName+","+KpiConstants.outInNumExcColName+" from ncqa_sample.fact_hedis_gaps_in_care where quality_measure_sk ="+quality_Msr_Sk
     val hedisDataDf = spark.sql(hedisDataDfLoadQuery)
     //hedisDataDf.show()
-    val lobIdColAddedDf = hedisDataDf.as("df1").join(factMembershipDf.as("df2"),hedisDataDf.col(KpiConstants.outProductPlanSkColName) === factMembershipDf.col(KpiConstants.outProductPlanSkColName),KpiConstants.innerJoinType).select("df1.*","df2.lob_id")
-    lobIdColAddedDf.printSchema()
-    val outDf = spark.emptyDataFrame
-    outDf
+    val lobIdColAddedDf = hedisDataDf.as("df1").join(factMembershipDf.as("df2"),hedisDataDf.col(KpiConstants.memberskColName) === factMembershipDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*","df2.lob_id")
+    //lobIdColAddedDf.printSchema()
+    val groupByDf = lobIdColAddedDf.groupBy(KpiConstants.qualityMsrSkColName,KpiConstants.dateSkColName,KpiConstants.outProductPlanSkColName,KpiConstants.facilitySkColName,"lob_id").agg(count(when(lobIdColAddedDf.col(KpiConstants.outInDinoColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsDinominatorColName),
+                                                                                                                                                                                          count(when(lobIdColAddedDf.col(KpiConstants.outInNumColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsNumeratorColName),
+                                                                                                                                                                                          count(when(lobIdColAddedDf.col(KpiConstants.outInNumExclColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsNumExclColName),
+                                                                                                                                                                                          count(when(lobIdColAddedDf.col(KpiConstants.outInDinoExclColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsDinoExclColName),
+                                                                                                                                                                                          count(when(lobIdColAddedDf.col(KpiConstants.outInNumExcColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsNumExcColName),
+                                                                                                                                                                                          count(when(lobIdColAddedDf.col(KpiConstants.outInDinoExcColName).===(KpiConstants.yesVal),true)).alias(KpiConstants.outHedisQmsDinoExcColName))
+
+
+    val ratioAndBonusColAddedDf =  groupByDf.withColumn(KpiConstants.outHedisQmsRatioColName,(groupByDf.col(KpiConstants.outHedisQmsNumeratorColName)./(groupByDf.col(KpiConstants.outHedisQmsDinominatorColName))).*(100)).withColumn(KpiConstants.outHedisQmsBonusColName,lit(0)).withColumn(KpiConstants.outHedisQmsPerformanceColName,lit(0))
+
+    val auditColumnsAddedDf = ratioAndBonusColAddedDf.withColumn(KpiConstants.outCurrFlagColName,lit(KpiConstants.yesVal))
+                                                     .withColumn(KpiConstants.outActiveFlagColName,lit(KpiConstants.actFlgVal))
+                                                     .withColumn(KpiConstants.outLatestFlagColName,lit(KpiConstants.yesVal))
+                                                     .withColumn(KpiConstants.outSourceNameColName,lit(sourceName))
+                                                     .withColumn(KpiConstants.outUserColName,lit(KpiConstants.userNameVal))
+                                                     .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
+                                                     .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
+                                                     .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
+
+
+    val outHedisQmsSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisQmsSkColName,abs(hash(lit(concat(lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outHedisQmsLobidColName)),lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)))))))
+
+    val outFormattedDf = outHedisQmsSkColAddedDf.select(KpiConstants.outFactHedisQmsFormattedList.head,KpiConstants.outFactHedisQmsFormattedList.tail:_*)
+    //outFormattedDf.printSchema()
+    outFormattedDf
   }
 
 
