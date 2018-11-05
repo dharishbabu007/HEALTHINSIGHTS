@@ -2,13 +2,27 @@ package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year,current_date,hash}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
 import scala.collection.JavaConversions._
 
 object UtilFunctions {
+
+
+
+
+
+
+
+  def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):DataFrame={
+
+    val df1 = df.filter(df.col(colName).isin(headervalues:_*))
+    //df1.show()
+    val returnDf = df.except(df1)
+    returnDf
+  }
 
 
 
@@ -164,18 +178,29 @@ object UtilFunctions {
 
 
 
-def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):DataFrame={
-
-  val df1 = df.filter(df.col(colName).isin(headervalues:_*))
-  //df1.show()
-  val returnDf = df.except(df1)
-  returnDf
-}
 
 
 
 
-  def outputDfCreation(spark:SparkSession,superDf:DataFrame,dfexclusionDf:DataFrame,numDf:DataFrame,dimMemberDf:DataFrame,measVal:String):DataFrame={
+
+  def hospiceMemberDfFunction(spark:SparkSession,dimMemberDf:DataFrame,factClaimDf:DataFrame,refhedisDf:DataFrame):DataFrame={
+
+    import spark.implicits._
+
+    val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"),$"df2.PROCEDURE_HCPCS_CODE" === "df3.code","cross").filter($"df3.code".===("G0155")).select("df1.member_sk","start_date_sk")
+    val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
+    val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop( "start_temp")
+    dateTypeDfForDinoExcl.select("member_sk","start_date")
+  }
+
+
+
+
+
+
+
+  /*def outputDfCreation(spark:SparkSession,superDf:DataFrame,dfexclusionDf:DataFrame,numDf:DataFrame,dimMemberDf:DataFrame,measVal:String):DataFrame={
 
 
     //var resultantDf = spark.emptyDataFrame
@@ -189,7 +214,7 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
     val formattedOutPutDf = numAdded.select("MemID","Meas","Payer","Epop","Excl","Num","RExcl","Ind")
     formattedOutPutDf
 
-  }
+  }*/
 
 
 
@@ -256,14 +281,14 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
                                                         .withColumn(KpiConstants.outLatestFlagColName,lit(KpiConstants.yesVal))
                                                         .withColumn(KpiConstants.outSourceNameColName,lit(sourceName))
                                                         .withColumn(KpiConstants.outUserColName,lit(KpiConstants.userNameVal))
-                                                        .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
-                                                        .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outRecCreateDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
+                                                        .withColumn(KpiConstants.outRecUpdateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
                                                         .withColumn(KpiConstants.outDateSkColName,lit(dateSkVal))
-                                                        .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_date(),"dd-MMM-yyyy")))
+                                                        .withColumn(KpiConstants.outIngestionDateColName,lit(date_format(current_timestamp(),"dd-MMM-yyyy hh:mm:ss")))
 
     /*Adding datesk to the Dataframe*/
-    val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName,abs(lit(concat( lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)) ))))
-
+    val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName,abs(hash(lit(concat(lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)),lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)))))))
+    //hedisSkColAddedDf.select(KpiConstants.outHedisGapsSkColName).show()
     /*selecting the outformatted Dataframe in the order of columns*/
     val outColFormattedDf = hedisSkColAddedDf.select(KpiConstants.outFormattedArray.head,KpiConstants.outFormattedArray.tail:_*)
     outColFormattedDf
@@ -271,22 +296,18 @@ def removeHeaderFromDf(df:DataFrame,headervalues:Array[String],colName:String):D
 
 
 
+  def outputCreationForHedisQmsTable(spark:SparkSession,factMembershipDf:DataFrame,qualityMeasureSk:String):DataFrame ={
 
+    val quality_Msr_Sk = "'"+qualityMeasureSk+"'"
+    val hedisDataDfLoadQuery = "select "+KpiConstants.outQualityMeasureSkColName+","+KpiConstants.outDateSkColName+","+KpiConstants.outProductPlanSkColName+","+KpiConstants.outFacilitySkColName+","+KpiConstants.outInNumColName+","+KpiConstants.outInDinoColName+","+KpiConstants.outInDinoExclColName+","+KpiConstants.outInNumExclColName+","+KpiConstants.outInDinoExcColName+","+KpiConstants.outInNumExcColName+" from ncqa_sample.fact_hedis_gaps_in_care where quality_measure_sk ="+quality_Msr_Sk
+    val hedisDataDf = spark.sql(hedisDataDfLoadQuery)
+    //hedisDataDf.show()
+    val lobIdColAddedDf = hedisDataDf.as("df1").join(factMembershipDf.as("df2"),hedisDataDf.col(KpiConstants.outProductPlanSkColName) === factMembershipDf.col(KpiConstants.outProductPlanSkColName),KpiConstants.innerJoinType).select("df1.*","df2.lob_id")
+    lobIdColAddedDf.printSchema()
+    val outDf = spark.emptyDataFrame
+    outDf
+  }
 
-
-
-
-
-def hospiceMemberDfFunction(spark:SparkSession,dimMemberDf:DataFrame,factClaimDf:DataFrame,refhedisDf:DataFrame):DataFrame={
-
-  import spark.implicits._
-
-  val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"),$"df2.PROCEDURE_HCPCS_CODE" === "df3.code","cross").filter($"df3.code".===("G0155")).select("df1.member_sk","start_date_sk")
-  val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
-  val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-  val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop( "start_temp")
-  dateTypeDfForDinoExcl.select("member_sk","start_date")
-}
 
 
 

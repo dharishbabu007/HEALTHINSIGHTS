@@ -1,5 +1,34 @@
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\Test.scala:60:46: not enough arguments for method ageFilter: (df: org.apache.spark.sql.DataFrame, colName: String, year: String, lower: String, upper: String, lowerIncl: Boolean, upperIncl: Boolean)org.apache.spark.sql.DataFrame.[0m
-[0m[[0m[31merror[0m] [0m[0mUnspecified value parameters lowerIncl, upperIncl.[0m
-[0m[[0m[31merror[0m] [0m[0m    val ageFilterDf = UtilFunctions.ageFilter(dateTypeDf, "dob", year, "18", "75") .select("member_sk").distinct()[0m
-[0m[[0m[31merror[0m] [0m[0m                                             ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaADV.scala:100:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,measurementDinominatorExclDf,advNumeratorDf,dimMemberDf,KpiConstants.advMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaAWC.scala:99:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,measurementDinominatorExclDf,awcNumeratorDf,dimMemberDf,KpiConstants.advMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC1.scala:113:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc1NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC10.scala:125:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc10NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC2.scala:125:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc2NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC3.scala:236:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,unionOfAllDinominatorExclDf,cdc3NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC4.scala:171:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc4NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC7.scala:180:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc7numeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCDC9.scala:123:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,cdc9NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaCHL.scala:182:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,dinominatorExclusionDf,numeratorDistinctDf,dimMemberDf,"CHL")[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaLS.scala:80:43: value outputDfCreation is not a member of object com.itc.ncqa.Functions.UtilFunctions[0m
+[0m[[0m[31merror[0m] [0m[0m    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,hospiceDf,dayFilterCondionNumeratorDf,dimMemberDf,"LSC")[0m
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m11 errors found[0m
