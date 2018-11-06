@@ -104,6 +104,7 @@ object KpiConstants {
   val outNumExcl2ReasonColName = "nu_ex_reason_2"
   val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
 
+  /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
                                 ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
                                 ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outCurrFlagColName
@@ -113,6 +114,24 @@ object KpiConstants {
 
 
 
+  /*fact_hedis_qms table column names*/
+  val outHedisQmsSkColName = "hedis_qms_sk"
+  val outHedisQmsLobidColName = "lob_id"
+  val outHedisQmsDinominatorColName = "denominator"
+  val outHedisQmsNumeratorColName = "numerator"
+  val outHedisQmsRatioColName = "ratio"
+  val outHedisQmsNumExclColName = "num_exclusion"
+  val outHedisQmsDinoExclColName = "deno_exclusion"
+  val outHedisQmsNumExcColName = "num_exception"
+  val outHedisQmsDinoExcColName = "deno_exception"
+  val outHedisQmsPerformanceColName = "performance"
+  val outHedisQmsBonusColName = "bonus"
+
+
+  /*order of columns in fact_hedis_qms*/
+  val outFactHedisQmsFormattedList = List(outHedisQmsSkColName,outQualityMeasureSkColName,outDateSkColName,outFacilitySkColName,outHedisQmsLobidColName,outProductPlanSkColName,outHedisQmsNumeratorColName,outHedisQmsDinominatorColName,outHedisQmsRatioColName,
+                                          outHedisQmsNumExclColName,outHedisQmsDinoExclColName,outHedisQmsNumExcColName,outHedisQmsDinoExcColName,outHedisQmsPerformanceColName,outHedisQmsBonusColName,outCurrFlagColName,outRecCreateDateColName,outRecUpdateColName,
+                                          outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outSourceNameColName,outUserColName)
 
   /*Join Type Constants*/
   val innerJoinType = "inner"
