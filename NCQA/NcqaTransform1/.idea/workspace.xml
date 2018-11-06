@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="007fad10-c3d0-4c3c-8ab8-be510852afe7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/Test.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/Test.scala" afterDir="false" />
-    </list>
+    <list default="true" id="007fad10-c3d0-4c3c-8ab8-be510852afe7" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -88,6 +84,7 @@
     <session id="-2065522018">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
