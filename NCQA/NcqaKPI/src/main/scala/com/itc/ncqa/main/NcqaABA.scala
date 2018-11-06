@@ -111,21 +111,21 @@ object NcqaABA {
 
 
     /*Common output format (data to fact_hedis_gaps_in_care)*/
-    //val outputFormattedDf = UtilFunctions.commonOutputDfCreation(spark,dinominatorForOutput,dinominatorExcl,abanumeratorFinalDf,)
     val numeratorValueSet = KpiConstants.abaNumeratorBmiValueSet:::KpiConstants.abaNumeratorBmiPercentileValueSet
     val dinominatorExclValueSet = KpiConstants.abavaluesetForDinExcl
     val numeratorExclValueSet = KpiConstants.emptyList
 
     val listForOutput = List(numeratorValueSet,dinominatorExclValueSet,numeratorExclValueSet)
-    //listForOutput.foreach(f=>print(f))
 
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark,dinominatorForOutput,dinominatorExcl,abanumeratorFinalDf,numExclDf,listForOutput,data_source)
     //outFormatDf.show()
     outFormatDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_gaps_in_care")
 
+    /*Data populating to fact_hedis_qms*/
     val qualityMeasureSk =  DataLoadFunctions.qualityMeasureLoadFunction(spark,KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    val factMembershipDfForoutDf = factMembershipDf.select("product_plan_sk","lob_id")
-    //val df = UtilFunctions.outputCreationForHedisQmsTable(spark,factMembershipDfForoutDf,qualityMeasureSk)
+    val factMembershipDfForoutDf = factMembershipDf.select("member_sk","lob_id")
+    val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark,factMembershipDfForoutDf,qualityMeasureSk,data_source)
+    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
 
   }
 }
