@@ -153,18 +153,18 @@ public class UserServiceImpl implements UserService {
 					user.getStatus().equalsIgnoreCase(QMSConstants.USER_STATUS_INACTIVE)) {
 				throw new Exception ("Inactive user. Please contact administrator.");
 			}
-			if(modifiedDate != null && password != null && user.getResetPassword() != null && 
-					user.getResetPassword().equalsIgnoreCase("Y")) {
-				Date date = new Date();				
-				Timestamp currentTimestamp = new Timestamp(date.getTime());				
-				Timestamp expiryDate = new Timestamp(modifiedDate.getTime()+(qmsProperty.getPasswordExpiryTime()*60*1000));
-				System.out.println("currentTimestamp --> " + currentTimestamp);
-				System.out.println("      expiryDate --> " + expiryDate);
-				System.out.println("currentTimestamp.after(expiryDate) --> " + currentTimestamp.after(expiryDate));				
-				if(currentTimestamp.after(expiryDate)) {
-					throw new Exception ("Password expired. Please use Forgot password link to get new one. ");
-				}
-			}
+//			if(modifiedDate != null && password != null && user.getResetPassword() != null && 
+//					user.getResetPassword().equalsIgnoreCase("Y")) {
+//				Date date = new Date();				
+//				Timestamp currentTimestamp = new Timestamp(date.getTime());				
+//				Timestamp expiryDate = new Timestamp(modifiedDate.getTime()+(qmsProperty.getPasswordExpiryTime()*60*1000));
+//				System.out.println("currentTimestamp --> " + currentTimestamp);
+//				System.out.println("      expiryDate --> " + expiryDate);
+//				System.out.println("currentTimestamp.after(expiryDate) --> " + currentTimestamp.after(expiryDate));				
+//				if(currentTimestamp.after(expiryDate)) {
+//					throw new Exception ("Password expired. Please use Forgot password link to get new one. ");
+//				}
+//			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

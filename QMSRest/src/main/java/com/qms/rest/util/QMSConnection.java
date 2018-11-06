@@ -49,15 +49,17 @@ public class QMSConnection {
 		return connection;
 	}	
 	
+	public Connection getHiveThriftConnection() throws Exception {
+		Class.forName(HIVE_JDBC_DRIVER);
+		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCThriftUrl(), qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
+		return connection;
+	}
+	
 	public Connection getHiveConnection() throws Exception {
-		//HIVE
 		Class.forName(HIVE_JDBC_DRIVER);
 		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCUrl(), qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
 		return connection;
-		
-//		System.out.println(" HIVE DATASOURCE = " + dataSource);
-//	    return dataSource.getConnection();		
-	}
+	}	
 	
 	public void closeJDBCResources (ResultSet resultSet, Statement statement, Connection connection) {
 		try {

@@ -16,6 +16,7 @@ public class QMSProperty {
 	private String oracleMeasureConfigPassword;	
 	
 	private String hiveJDBCUrl;
+	private String hiveJDBCThriftUrl;
 	private String hiveUserName;
 	private String hivePassword;
 	
@@ -94,6 +95,12 @@ public class QMSProperty {
 	}
 	public void setPasswordExpiryTime(int passwordExpiryTime) {
 		this.passwordExpiryTime = passwordExpiryTime;
+	}
+	public String getHiveJDBCThriftUrl() {
+		return hiveJDBCThriftUrl;
+	}
+	public void setHiveJDBCThriftUrl(String hiveJDBCThriftUrl) {
+		this.hiveJDBCThriftUrl = hiveJDBCThriftUrl;
 	}
 	
 }
