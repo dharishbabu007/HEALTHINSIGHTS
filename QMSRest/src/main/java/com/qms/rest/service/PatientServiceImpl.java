@@ -39,7 +39,7 @@ public class PatientServiceImpl implements PatientService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getHiveThriftConnection();
 			statement = connection.createStatement();			
 			resultSet = statement.executeQuery("select member_id from HEDIS_MEMBER_WEB_VIEW limit "+cacheSize);
 			Set<String> memberIds = new HashSet<String>();
@@ -55,7 +55,7 @@ public class PatientServiceImpl implements PatientService {
 			System.out.println(" finished caches .. ");
 			for (String memberId : memberIds) {
 				if(connection == null || connection.isClosed()) {
-					connection = qmsConnection.getHiveConnection();
+					connection = qmsConnection.getHiveThriftConnection();
 					statement = connection.createStatement();
 				}
 				i++;	
@@ -91,7 +91,7 @@ public class PatientServiceImpl implements PatientService {
 		} else {
 			System.out.println(memberId + " Getting member id from HIVE ");
 			try {
-				connection = qmsConnection.getHiveConnection();
+				connection = qmsConnection.getHiveThriftConnection();
 				statement = connection.createStatement();
 				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
 				cacheMap.put(memberId, dimPatient);
@@ -319,7 +319,7 @@ public class PatientServiceImpl implements PatientService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getHiveThriftConnection();
 			statement = connection.createStatement();			
 			
 			String memberSQL = "SELECT pat_id,EMAIL_ADDRESS,ETHNICITY,GENDER,pat_mrn,"+
@@ -390,7 +390,7 @@ public class PatientServiceImpl implements PatientService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getHiveThriftConnection();
 			statement = connection.createStatement();			
 //			resultSet = statement.executeQuery("select hmv.* from hedis_member_view hmv "+
 //						"inner join HEDIS_SUMMARY_VIEW hsv on hmv.QUALITY_MEASURE_SK = hsv.quality_measure_sk");

@@ -185,7 +185,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		RestTemplate restTemplate = new RestTemplate();		
 		String result = restTemplate.getForObject(rApiUrl, String.class);
         System.out.println(" R API Rest Result --> " + result);
-        return RestResult.getSucessRestResult(" RFile execution success. ");
+        return RestResult.getSucessRestResult(result);
 	}
 	
     private void putFile(String hostname, String username, String password, MultipartFile copyFrom, String copyTo)
@@ -272,42 +272,80 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public Set<CSVOutPut> getCSVOutPut() {
 		
+		RestResult result = runRFile("model1");		
+		System.out.println(" R API Output --> " + result.getMessage());
+//		if(result != null && result.getMessage().contains("Completed!")) {
+//			
+//		}
+		
+		int fileId = 0;
+		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
+			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);		
+		
+		System.out.println(" Getting the data from ns_file_output for file id " + fileId);
 		Set<CSVOutPut> setOutput = new HashSet<>();
-	    BufferedReader br = null;
-		try {		
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output100.csv"));			
-		    int i = 0;
-		    String line = null;
-		    CSVOutPut output = null;
-		    while ((line = br.readLine()) != null) {
-		    	i++;
-		    	if(i == 1) continue;
-		    	String[] values = line.split(",");
-		    	if(values.length > 17) {
-			    	output = new CSVOutPut();			    
-				    output.setAppointmentDay(values[7]);
-				    output.setAppointmentID(values[2]);
-				    output.setLikelihood(values[16]);
-				    output.setNeighbourhood(values[9]);
-				    output.setNoShow(values[17]);
-				    output.setPatientId(values[0]);
-				    output.setPatientName(values[1]);
-				    setOutput.add(output);
-		    	}
-		    	i++;
-		    }		    
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from ns_file_output where file_id='"+fileId+"' limit 500");
+			//resultSet = statement.executeQuery("select * from ns_file_output where file_id='45' limit 500");
+			CSVOutPut output = null;
+			while (resultSet.next()) {
+		    	output = new CSVOutPut();			    
+			    output.setAppointmentDay(resultSet.getString("appointmentday"));
+			    output.setAppointmentID(resultSet.getString("appointmentid"));
+			    output.setLikelihood(resultSet.getString("logodds"));
+			    output.setNeighbourhood(resultSet.getString("neighbourhood"));
+			    output.setNoShow(resultSet.getString("predictednoshow"));
+			    output.setPatientId("2012530");
+			    output.setPatientName("Pam Sharl Hedden");
+			    setOutput.add(output);
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();			
 		}
 		finally {
-			try {
-				if(br != null) br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	    
-	    
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(fileId+" Data returned from ns_file_output " + setOutput.size());
+		
+//	    BufferedReader br = null;
+//		try {		
+//			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output100.csv"));			
+//		    int i = 0;
+//		    String line = null;
+//		    CSVOutPut output = null;
+//		    while ((line = br.readLine()) != null) {
+//		    	i++;
+//		    	if(i == 1) continue;
+//		    	String[] values = line.split(",");
+//		    	if(values.length > 17) {
+//			    	output = new CSVOutPut();			    
+//				    output.setAppointmentDay(values[7]);
+//				    output.setAppointmentID(values[2]);
+//				    output.setLikelihood(values[16]);
+//				    output.setNeighbourhood(values[9]);
+//				    output.setNoShow(values[17]);
+//				    output.setPatientId(values[0]);
+//				    output.setPatientName(values[1]);
+//				    setOutput.add(output);
+//		    	}
+//		    	i++;
+//		    }		    
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			try {
+//				if(br != null) br.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 		return setOutput;
 	}
 	
@@ -364,42 +402,102 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public Set<ModelSummary> getCSVModelSummary() {
 		Set<ModelSummary> setOutput = new HashSet<>();
-	    BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/ModelSummary.csv"));
-		    String line = null;
-		    ModelSummary output = null;
-		    int i = 0;
-		    while ((line = br.readLine()) != null) {
-		    	i++;
-		    	if(i == 1) continue;
-		    	String[] values = line.split(",");
-		    	if(values.length > 4) {
-			    	output = new ModelSummary();			    
-			    	output.setAttributes(values[0]);
-			    	output.setEstimate(values[1]);
-			    	output.setPrz(values[4]);
-			    	output.setStdError(values[2]);
-			    	output.setzValue(values[3]);
-				    setOutput.add(output);
-		    	}
-		    }		    
+		
+		
+		int fileId = 0;
+		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
+			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);		
+		
+		System.out.println(" Getting the ns_model_summary data for file id " + fileId);
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from ns_model_summary where file_id='"+fileId+"'");			
+			ModelSummary output = null;
+			while (resultSet.next()) {
+		    	output = new ModelSummary();			    
+		    	output.setAttributes(resultSet.getString("attributes"));
+		    	output.setEstimate(resultSet.getString("estimate"));
+		    	output.setPrz(resultSet.getString("probability"));
+		    	output.setStdError(resultSet.getString("std_error"));
+		    	output.setzValue(resultSet.getString("z_value"));
+			    setOutput.add(output);
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();			
 		}
 		finally {
-			try {
-				if(br != null) br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(fileId+" ModelSummary records size --> " + setOutput.size());
+		
+		
+//	    BufferedReader br = null;
+//		try {
+//			br = new BufferedReader(new FileReader(windowsCopyPath+"/ModelSummary.csv"));
+//		    String line = null;
+//		    ModelSummary output = null;
+//		    int i = 0;
+//		    while ((line = br.readLine()) != null) {
+//		    	i++;
+//		    	if(i == 1) continue;
+//		    	String[] values = line.split(",");
+//		    	if(values.length > 4) {
+//			    	output = new ModelSummary();			    
+//			    	output.setAttributes(values[0]);
+//			    	output.setEstimate(values[1]);
+//			    	output.setPrz(values[4]);
+//			    	output.setStdError(values[2]);
+//			    	output.setzValue(values[3]);
+//				    setOutput.add(output);
+//		    	}
+//		    }		    
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			try {
+//				if(br != null) br.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 		return setOutput;
 	}
 
 	@Override
 	public Set<ConfusionMatric> getCSVConfusionMatric() {
 		Set<ConfusionMatric> setOutput = new HashSet<>();
+		
+		
+//		Statement statement = null;
+//		ResultSet resultSet = null;		
+//		Connection connection = null;
+//		try {						
+//			connection = qmsConnection.getHiveConnection();
+//			statement = connection.createStatement();			
+//			resultSet = statement.executeQuery("select * from ns_confusion_metric");
+//			ConfusionMatric output = null;
+//			while (resultSet.next()) {
+//		    	output = new ConfusionMatric();
+//		    	output.setId(resultSet.getString(""));
+//		    	output.setZero(resultSet.getString(""));
+//		    	output.setOne(resultSet.getString(""));
+//			    setOutput.add(output);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();			
+//		}
+//		finally {
+//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+//		}		
+		
+		
+		
 	    BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(windowsCopyPath+"/ConfusionMatric.csv"));
@@ -428,12 +526,35 @@ public class ImportExportServiceImpl implements ImportExportService {
 				e.printStackTrace();
 			}
 		}
+		
 		return setOutput;
 	}
 
 	@Override
 	public ModelScore getCSVModelScore() {
 		ModelScore output = new ModelScore();
+		
+		
+//		Statement statement = null;
+//		ResultSet resultSet = null;		
+//		Connection connection = null;
+//		try {						
+//			connection = qmsConnection.getHiveConnection();
+//			statement = connection.createStatement();			
+//			resultSet = statement.executeQuery("select * from ns_model_score");
+//			while (resultSet.next()) {
+//		    	output = new ModelScore();	
+//		    	output.setScore(resultSet.getString("score"));
+//		    	output.setImageFullPath(windowsCopyPath+"/ROCplot.PNG");
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();			
+//		}
+//		finally {
+//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+//		}		
+		
+		
 	    BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(windowsCopyPath+"/ModelScore.csv"));
@@ -457,6 +578,8 @@ public class ImportExportServiceImpl implements ImportExportService {
 				e.printStackTrace();
 			}
 		}
+		
+		
 		return output;
 	}
 
@@ -497,7 +620,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 			return RestResult.getFailRestResult(" Input file id is null. ");		
 		
 		try {						
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getHiveThriftConnection();
 			statement = connection.createStatement();	
 			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;
 			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (file_id="+fileId+") LOCATION '"+hdfsInputLocation+"'");
