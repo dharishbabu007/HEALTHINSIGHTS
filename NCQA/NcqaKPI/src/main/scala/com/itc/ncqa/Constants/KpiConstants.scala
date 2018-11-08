@@ -17,6 +17,8 @@ object KpiConstants {
   val emptyList = List.empty[String]
   val boolTrueVal = true
   val boolFalseval = false
+  val commercialLobName = "Commercial"
+  val medicaidLobName = ""
 
 
   /*age calculation constants*/
@@ -24,6 +26,10 @@ object KpiConstants {
   val abaAgeFilterUpper = "74"
   val abaAge20Lower = "20"
   val abaAge20Lesser = "19.99"
+  val advAgeLower = "2"
+  val advAgeUpper = "20"
+  val awcAgeLower = "12"
+  val awcAgeUpper = "21"
 
 
 
@@ -54,6 +60,8 @@ object KpiConstants {
 
   /*Measure Title constants*/
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
+  val advMeasureTitle = "Annual Dental Visit (ADV)"
+  val awcMeasureTitle = "Adolescent WellCare Visits (AWC)"
 
 
   /*columnname constants*/
@@ -70,6 +78,9 @@ object KpiConstants {
   val startDateColName = "start_date"
   val locationSkColName = "location_sk"
   val facilitySkColName = "facility_sk"
+  val providerSkColName = "provider_sk"
+  val pcpColName = "pcp"
+  val obgynColName = "obgyn"
 
   /*Output column names*/
   val outMemberSkColName = "member_sk"
