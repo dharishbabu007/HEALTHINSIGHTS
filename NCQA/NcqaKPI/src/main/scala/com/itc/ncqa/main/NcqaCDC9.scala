@@ -65,7 +65,7 @@ object NcqaCDC9 {
     /*Dinominator First condition */
     /*val valueSetForDinominatorCdc4 = List("Diabetes")
     val codeSystemForDinominatorCdc4 = List("ICD%")*/
-    val hedisJoinedForFirstDino = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdc4DiabetesvalueSet,KpiConstants.cdc4DiabetescodeSystem)
+    val hedisJoinedForFirstDino = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesvalueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measurementForFirstDino = UtilFunctions.mesurementYearFilter(hedisJoinedForFirstDino,"start_date",year,0,730).select("member_sk","start_date")
     val firstDinominatorDf = measurementForFirstDino.select("member_sk")
 
@@ -90,7 +90,7 @@ object NcqaCDC9 {
     val measurementDinominatorExclDf = UtilFunctions.mesurementYearFilter(hospiceDf,"start_date",year,0,365).select("member_sk").distinct()
 
     /*dinominator Exclusion 2*/
-    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesExclValueSet,KpiConstants.cdc4DiabetescodeSystem)
+    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesExclValueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measurementDiabetesExclDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDiabetesExclDf,"start_date",year,0,730).select("member_sk").distinct()
 
     /*Union of Dinominator Exclusion*/

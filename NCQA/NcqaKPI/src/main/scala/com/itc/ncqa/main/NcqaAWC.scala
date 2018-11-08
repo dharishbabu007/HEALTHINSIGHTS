@@ -3,7 +3,7 @@ package com.itc.ncqa.main
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions.to_date
 
 import scala.collection.JavaConversions._
@@ -13,11 +13,12 @@ object NcqaAWC {
   def main(args: Array[String]): Unit = {
 
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAPOC")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAAWC")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
+    val dbName = args(3)
     var data_source =""
 
     /*define data_source based on program type. */
@@ -27,7 +28,7 @@ object NcqaAWC {
     else {
       data_source = KpiConstants.clientDataSource
     }
-
+    KpiConstants.setDbName(dbName)
     import spark.implicits._
 
 
@@ -52,13 +53,13 @@ object NcqaAWC {
 
 
 
-    if(args(1).equals(KpiConstants.commercialLobName))
+    if((KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)) ||(KpiConstants.medicareLobName.equalsIgnoreCase(lob_name)))
     {
-      lookupTableDf = spark.sql(KpiConstants.view45DaysLoadQuery)
+      lookupTableDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
     }
     else
     {
-      lookupTableDf = spark.sql(KpiConstants.view60DaysLoadQuery)
+      lookupTableDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view60Days)
     }
 
     /*common filter checking*/
@@ -74,10 +75,10 @@ object NcqaAWC {
 
 
     /*loading ref_hedis table*/
-    val refHedisDf = spark.sql(KpiConstants.refHedisLoadQuery)
+    val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
     /*Dinominator for output format (Allowable age group)*/
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf,KpiConstants.dobColName,year,KpiConstants.awcAgeLower,KpiConstants.awcAgeUpper,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
+    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf,KpiConstants.dobColName,year,KpiConstants.age12Val,KpiConstants.age21Val,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
 
     /*Dinominator For calculation*/
     val dinominatorDf = ageFilterDf.select(KpiConstants.memberskColName).distinct()
@@ -119,8 +120,19 @@ object NcqaAWC {
 
     /*create empty NumeratorExcldf*/
     val numExclDf = spark.emptyDataFrame
+    val dinoExclDf = spark.emptyDataFrame
+
+    /*Calling function for creating the output format*/
+    val commonOutputFormatDf = UtilFunctions.commonOutputDfCreation(spark,ageFilterDf,dinoExclDf,awcNumeratorDf,numExclDf,outValueSetForOutput,data_source)
+    //commonOutputFormatDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factGapsInHedisTblName)
 
 
+
+    /*Data loading to fact_hedis_qms table.*/
+    val qualityMeasureSk =  DataLoadFunctions.qualityMeasureLoadFunction(spark,KpiConstants.awcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val factMembershipDfForoutDf = factMembershipDf.select(KpiConstants.memberskColName,KpiConstants.lobIdColName)
+    val qmsoutFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark,factMembershipDfForoutDf,qualityMeasureSk,data_source)
+    //qmsoutFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factHedisQmsTblName)
 
   }
 }
