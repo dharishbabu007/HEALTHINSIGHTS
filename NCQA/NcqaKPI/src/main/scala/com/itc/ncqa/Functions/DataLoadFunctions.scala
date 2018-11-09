@@ -52,7 +52,8 @@ object DataLoadFunctions {
     * @usecase This function is used to load the date_sk and calender_date from the dim_date table.
     */
   def dimDateLoadFunction(spark:SparkSession):DataFrame ={
-    val dimDateDf = spark.sql(KpiConstants.dimDateLoadQuery)
+    val sqlQuery = "select date_sk, calendar_date from "+KpiConstants.dbName+"."+KpiConstants.dimDateTblName
+    val dimDateDf = spark.sql(sqlQuery)
     dimDateDf
   }
 
@@ -83,8 +84,8 @@ object DataLoadFunctions {
   def viewLoadFunction(spark:SparkSession,viewName:String):DataFrame = {
 
     val newDf = viewName match {
-        case KpiConstants.view45Days => spark.sql(KpiConstants.view45DaysLoadQuery)
-        case KpiConstants.view60Days => spark.sql(KpiConstants.view60DaysLoadQuery)
+        case KpiConstants.view45Days => spark.sql("select * from "+KpiConstants.dbName+"."+KpiConstants.view45Days)
+        case KpiConstants.view60Days => spark.sql("select * from "+KpiConstants.dbName+"."+KpiConstants.view60Days)
     }
     newDf
   }

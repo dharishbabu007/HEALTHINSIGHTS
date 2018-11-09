@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaADV.scala:106:165: java.util.List[String] does not take parameters[0m
-[0m[[0m[31merror[0m] [0m[0m    val qualityMeasureSk =  DataLoadFunctions.qualityMeasureLoadFunction(spark,KpiConstants.advMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                                                                                                    ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\Test.scala:29:8: value toDF is not a member of org.apache.spark.rdd.RDD[employee][0m
+[0m[[0m[31merror[0m] [0m[0m    df.toDF("id","gender","designation","state")[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

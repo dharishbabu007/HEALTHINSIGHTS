@@ -3,13 +3,16 @@ package com.itc.ncqa.Constants
 object KpiConstants {
 
 
+
+
+
   /*Common Constants*/
 
   val ncqaDataSource = "SELF"
   val clientDataSource = ""
   val userNameVal = "ETL"
   val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
-  val dbName = "ncqa_sample"
+  var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
   val actFlgVal = "A"
@@ -18,18 +21,25 @@ object KpiConstants {
   val boolTrueVal = true
   val boolFalseval = false
   val commercialLobName = "Commercial"
-  val medicaidLobName = ""
+  val medicareLobName = "Medicare"
+  val medicaidLobName = "Medicaid"
 
+  /*function for setting the dbName with the value getting as argument */
+  def setDbName(dbVal:String):String={
+    dbName = dbVal
+    dbName
+  }
 
   /*age calculation constants*/
-  val abaAgeFilterLower = "18"
-  val abaAgeFilterUpper = "74"
-  val abaAge20Lower = "20"
-  val abaAge20Lesser = "19.99"
-  val advAgeLower = "2"
-  val advAgeUpper = "20"
-  val awcAgeLower = "12"
-  val awcAgeUpper = "21"
+  val age18Val = "18"
+  val age74Val = "74"
+  val age1999Val = "19.99"
+  val age2Val = "2"
+  val age20Val = "20"
+  val age12Val = "12"
+  val age21Val = "21"
+  val age75Val = "75"
+  val age65Val = "65"
 
 
 
@@ -52,6 +62,8 @@ object KpiConstants {
   val factClaimTblName = "fact_claims"
   val factMembershipTblName = "fact_membership"
   val factRxClaimTblName = "fact_rx_claims"
+  val factGapsInHedisTblName = "fact_hedis_gaps_in_care"
+  val factHedisQmsTblName = "fact_hedis_qms"
   val refHedisTblName = "ref_hedis2016"
   val refLobTblName = "ref_lob"
   val refmedValueSetTblName = "ref_med_value_set"
@@ -62,6 +74,7 @@ object KpiConstants {
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
   val advMeasureTitle = "Annual Dental Visit (ADV)"
   val awcMeasureTitle = "Adolescent WellCare Visits (AWC)"
+  val cdcMeasureTitle = "Comprehensive Diabetes Care (CDC)"
 
 
   /*columnname constants*/
@@ -81,6 +94,8 @@ object KpiConstants {
   val providerSkColName = "provider_sk"
   val pcpColName = "pcp"
   val obgynColName = "obgyn"
+  val eyeCareProvColName = "eye_care_provider"
+  val nephrologistColName = "nephrologist"
 
   /*Output column names*/
   val outMemberSkColName = "member_sk"
@@ -205,11 +220,11 @@ object KpiConstants {
 
 
   /*CDC1 Constants*/
-  val cdc1NumeratorValueSet = List("HbA1c Tests")
+  val cdcNumerator1ValueSet = List("HbA1c Tests")
   val cdc1NumeratorCodeSystem = List("CPT","LOINC")
 
   /*CDC2 Constants*/
-  val cdc2NumeratorValueSet = List("HbA1c Level Greater Than 9.0")
+  val cdc2Numerator2ValueSet = List("HbA1c Level Greater Than 9.0")
   val cdc2NumeratorCodeSystem = List("CPT")
 
   /*CDC3 constants*/
@@ -236,8 +251,8 @@ object KpiConstants {
 
 
   /*CDC4 Constants*/
-  val cdc4DiabetesvalueSet = List("Diabetes")
-  val cdc4DiabetescodeSystem = List("ICD%")
+  val cdcDiabetesvalueSet = List("Diabetes")
+  //val cdc4DiabetescodeSystem = List("ICD%")
   val cdc4ValueSetForFirstNumerator = List("Diabetic Retinal Screening")
   val cdc4CodeSystemForFirstNumerator = List("CPT","HCPCS")
   val cdc4eyeCareListForFirstNumerator = List("optometrist","ophthalmologist")
