@@ -94,6 +94,8 @@ object KpiConstants {
   val providerSkColName = "provider_sk"
   val pcpColName = "pcp"
   val obgynColName = "obgyn"
+  val eyeCareProvColName = "eye_care_provider"
+  val nephrologistColName = "nephrologist"
 
   /*Output column names*/
   val outMemberSkColName = "member_sk"
