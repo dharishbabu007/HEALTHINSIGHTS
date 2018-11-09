@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -179,6 +181,14 @@ public class ImportExportServiceImpl implements ImportExportService {
 		else
 			return RestResult.getFailRestResult(" Input file id is null. ");
 		
+		int processedFileId = 0;
+		if(httpSession.getAttribute("PROCESSED_FILE_ID") != null)
+			processedFileId = (int) httpSession.getAttribute("PROCESSED_FILE_ID");		
+		if(processedFileId == fileId) {
+			return RestResult.getFailRestResult(" Already processed/processing for file id : "+fileId);
+		}
+		httpSession.setAttribute("PROCESSED_FILE_ID", fileId);
+		
 		String rApiUrl = qmsHDFSProperty.getrApiURL();
 		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
 		System.out.println("Calling R API Url --> " + rApiUrl);
@@ -274,16 +284,15 @@ public class ImportExportServiceImpl implements ImportExportService {
 		
 		RestResult result = runRFile("model1");		
 		System.out.println(" R API Output --> " + result.getMessage());
+		Set<CSVOutPut> setOutput = new HashSet<>();
 //		if(result != null && result.getMessage().contains("Completed!")) {
-//			
 //		}
-		
+			
 		int fileId = 0;
 		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
 			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);		
 		
-		System.out.println(" Getting the data from ns_file_output for file id " + fileId);
-		Set<CSVOutPut> setOutput = new HashSet<>();
+		System.out.println(" Getting the data from ns_file_output for file id " + fileId);		
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
@@ -345,7 +354,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 //				e.printStackTrace();
 //			}
 //		}
-		
+				
 		return setOutput;
 	}
 	
@@ -354,48 +363,141 @@ public class ImportExportServiceImpl implements ImportExportService {
 	public Set<CSVOutPut1> getCSVOutPut1() {
 		
 		Set<CSVOutPut1> setOutput = new HashSet<>();
-	    BufferedReader br = null;
-		try {		
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output32.csv"));			
-		    int i = 0;
-		    String line = null;
-		    CSVOutPut1 output = null;
-		    while ((line = br.readLine()) != null) {
-		    	i++;
-		    	if(i == 1) continue;
-		    	String[] values = line.split(",");
-		    	if(values.length > 10 && values[9] !=null && values[9].trim().equalsIgnoreCase("1")) {
-		    		int counter=0;
-			    	output = new CSVOutPut1();	
-			    	output.setPatientId(values[counter++]);
-			    	output.setName(values[counter++]);
-			    	output.setAppointmentId(values[counter++]);
-			    	output.setGender(values[counter++]);
-			    	output.setDayClass(values[counter++]);
-			    	output.setAppointmentDay(values[counter++]);
-			    	output.setAge(values[counter++]);
-			    	output.setNeighbourhood(values[counter++]);
-			    	output.setLogOdds(values[counter++]);
-			    	output.setNoshow(values[counter++]);
-			    	output.setCountCareGaps(values[counter++]);
-			    	output.setRiskGrade(values[counter++]);
-				    setOutput.add(output);
-		    	}
-		    	i++;
-		    }		    
+		
+		int fileId = 0;
+		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
+			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);		
+		System.out.println(" Getting OutPut1 results for file id --> " + fileId);
+		
+		//ORACLE
+		Statement statement1 = null;
+		ResultSet resultSet1 = null;		
+		Connection connection1 = null;
+		Map<String, String[]> memberIdMap = new HashMap<>();
+		Map<String, String> openMemberIdMap = new HashMap<>();
+		String memberCregapListQry = "SELECT * FROM FINDMEMGAPLISTFORALL ORDER BY TIME_PERIOD DESC";
+		String memberId = null;
+		try {						
+			connection1 = qmsConnection.getOracleConnection();
+			statement1 = connection1.createStatement();			
+			resultSet1 = statement1.executeQuery(memberCregapListQry);
+			while (resultSet1.next()) {
+				memberId = resultSet1.getString("MEMBER_ID");
+				if(!memberIdMap.containsKey(memberId)) {
+					memberIdMap.put(memberId, new String[]{resultSet1.getString("STATUS"), 
+							resultSet1.getString("COUNT_OF_CARE_GAPS")});
+				} 
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();			
 		}
 		finally {
-			try {
-				if(br != null) br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			qmsConnection.closeJDBCResources(resultSet1, statement1, connection1);
 		}
+		
+		Set<String> keySet = memberIdMap.keySet();
+		for (String key : keySet) {
+			String[] values = memberIdMap.get(key);
+			if(values[0].contains("Open") || values[0].contains("open")) 
+				openMemberIdMap.put(key, values[1]);
+		}		
+		
+		memberIdMap.clear();
+		System.out.println(" Opened member ids list --> " + openMemberIdMap.size());
+		
+		//HIVE
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from ns_file_output where file_id='"+fileId+"' and predictednoshow='1' limit 500");
+			CSVOutPut1 output = null;
+			while (resultSet.next()) {
+		    	output = new CSVOutPut1();	
+		    	output.setAppointmentId(resultSet.getString("appointmentid"));
+		    	output.setAge(resultSet.getString("age"));
+		    	output.setAppointmentDay(resultSet.getString("appointmentday"));
+		    	output.setDayClass(resultSet.getString("dayclass"));
+		    	output.setGender(resultSet.getString("gender"));
+		    	output.setLogOdds(resultSet.getString("logodds"));
+		    	output.setNeighbourhood(resultSet.getString("neighbourhood"));
+		    	output.setNoshow(resultSet.getString("predictednoshow"));
+		    	//output.setCountCareGaps(resultSet.getString("appointmentid"));
+		    	//output.setRiskGrade(resultSet.getString("appointmentid"));		    	
+		    	//output.setPatientId(resultSet.getString("appointmentid"));
+		    	//output.setName(resultSet.getString("appointmentid"));		
+		    	output.setRiskGrade(this.getRiskBasedOnCareGap(openMemberIdMap.get("2012530")));
+		    	output.setCountCareGaps(openMemberIdMap.get("2012530"));
+			    output.setPatientId("2012530");
+			    output.setName("Pam Sharl Hedden");		    	
+			    setOutput.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}				
+		System.out.println(" Results returned from HIVE --> " + setOutput.size());
+		
+//		setOutput = new HashSet<>();
+//	    BufferedReader br = null;
+//		try {		
+//			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output32.csv"));			
+//		    int i = 0;
+//		    String line = null;
+//		    CSVOutPut1 output = null;
+//		    while ((line = br.readLine()) != null) {
+//		    	i++;
+//		    	if(i == 1) continue;
+//		    	String[] values = line.split(",");
+//		    	if(values.length > 10 && values[9] !=null && values[9].trim().equalsIgnoreCase("1")) {
+//		    		int counter=0;
+//			    	output = new CSVOutPut1();	
+//			    	output.setPatientId(values[counter++]);
+//			    	output.setName(values[counter++]);
+//			    	output.setAppointmentId(values[counter++]);
+//			    	output.setGender(values[counter++]);
+//			    	output.setDayClass(values[counter++]);
+//			    	output.setAppointmentDay(values[counter++]);
+//			    	output.setAge(values[counter++]);
+//			    	output.setNeighbourhood(values[counter++]);
+//			    	output.setLogOdds(values[counter++]);
+//			    	output.setNoshow(values[counter++]);
+//			    	output.setCountCareGaps(values[counter++]);
+//			    	output.setRiskGrade(values[counter++]);
+//				    setOutput.add(output);
+//		    	}
+//		    	i++;
+//		    }		    
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			try {
+//				if(br != null) br.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	    
 	    
 		return setOutput;
+	}
+	
+	private String getRiskBasedOnCareGap(String carGapStr) {
+		int carGap = Integer.parseInt(carGapStr.trim());
+		String risk = "LOW";
+		if(carGap == 2 || carGap ==3) {
+			risk = "MEDIUM";
+		}else if(carGap > 3 && carGap < 7) {
+			risk = "HIGH";
+		}else if(carGap > 6) {
+			risk = "CATASTROPHIC";
+		}
+		return risk;
 	}	
 	
 
