@@ -52,11 +52,20 @@ object NcqaABA {
     val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark,dimMemberDf,factClaimDf,factMembershipDf,dimLocationDf,refLobDf,dimFacilityDf,lob_name,KpiConstants.abaMeasureTitle)
     //initialJoinedDf.show(50)
 
-    val view45Df = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
-    val commonFilterDf = initialJoinedDf.as("df1").join(view45Df.as("df2"),initialJoinedDf.col(KpiConstants.memberskColName) === view45Df.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(view45Df.col("start_date").isNull).select("df1.*")
+    var lookUpDf = spark.emptyDataFrame
+
+    if(lob_name.equalsIgnoreCase(KpiConstants.commercialLobName)) {
+
+      lookUpDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
+      }
+    else{
+
+      lookUpDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view60Days)
+    }
+
+    val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"),initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
     val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf,KpiConstants.dobColName,year,KpiConstants.abaAgeFilterLower,KpiConstants.abaAgeFilterUpper,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
-    //ageFilterDf.show(100)
-    //println("-----------------ageFilterDf.count-------------:"+ageFilterDf.count())
+
 
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
@@ -111,24 +120,23 @@ object NcqaABA {
 
 
     /*Common output format (data to fact_hedis_gaps_in_care)*/
-    //val outputFormattedDf = UtilFunctions.commonOutputDfCreation(spark,dinominatorForOutput,dinominatorExcl,abanumeratorFinalDf,)
     val numeratorValueSet = KpiConstants.abaNumeratorBmiValueSet:::KpiConstants.abaNumeratorBmiPercentileValueSet
     val dinominatorExclValueSet = KpiConstants.abavaluesetForDinExcl
     val numeratorExclValueSet = KpiConstants.emptyList
 
     val listForOutput = List(numeratorValueSet,dinominatorExclValueSet,numeratorExclValueSet)
-    //listForOutput.foreach(f=>print(f))
 
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark,dinominatorForOutput,dinominatorExcl,abanumeratorFinalDf,numExclDf,listForOutput,data_source)
     //outFormatDf.show()
     outFormatDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_gaps_in_care")
-    import spark.implicits._
 
-   /* val lobdetailsData = dinominator.as("df1").join(factMembershipDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df1.member_sk","df2.lob_id")
-    val payerNamedAdded = lobdetailsData.as("df1").join(ref_lobDf.as("df2"),$"df1.lob_id" === $"df2.lob_id").select("df1.member_sk","df2.lob_name")
-    val dataDf = payerNamedAdded.as("df1").join(dimMemberDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df2.member_id","df1.lob_name")
-    val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,intersect,numerator2Df,dimMemberDf,"ABA")
-    formattedOutPutDf.show()*/
+
+
+    /*Data populating to fact_hedis_qms*/
+    val qualityMeasureSk =  DataLoadFunctions.qualityMeasureLoadFunction(spark,KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val factMembershipDfForoutDf = factMembershipDf.select("member_sk","lob_id")
+    val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark,factMembershipDfForoutDf,qualityMeasureSk,data_source)
+    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
 
   }
 }

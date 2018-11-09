@@ -229,12 +229,12 @@ object NcqaCDC3 {
     val cdc3NumeratorDf = numeratorDf.intersect(cdc3DinominatorForKpiDf)
 
     /*outputformat*/
-    val lobdetailsData = dinominatorDf.as("df1").join(factMembershipDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df1.member_sk","df2.lob_id")
+   /* val lobdetailsData = dinominatorDf.as("df1").join(factMembershipDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df1.member_sk","df2.lob_id")
     val payerNamedAdded = lobdetailsData.as("df1").join(ref_lobDf.as("df2"),$"df1.lob_id" === $"df2.lob_id").select("df1.member_sk","df2.lob_name")
     val dataDf = payerNamedAdded.as("df1").join(dimMemberDf.as("df2"),$"df1.member_sk" === $"df2.member_sk").select("df2.member_id","df1.lob_name")
 
     val formattedOutPutDf = UtilFunctions.outputDfCreation(spark,dataDf,unionOfAllDinominatorExclDf,cdc3NumeratorDf,dimMemberDf,KpiConstants.cdcMeasureId)
-    formattedOutPutDf.orderBy("MemID").show(100)
+    formattedOutPutDf.orderBy("MemID").show(100)*/
   }
 
 }
