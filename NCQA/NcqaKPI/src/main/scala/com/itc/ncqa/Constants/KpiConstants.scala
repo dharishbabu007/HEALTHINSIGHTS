@@ -40,6 +40,8 @@ object KpiConstants {
   val age21Val = "21"
   val age75Val = "75"
   val age65Val = "65"
+  val age16Val = "16"
+  val age24Val = "24"
 
 
 
@@ -96,6 +98,14 @@ object KpiConstants {
   val obgynColName = "obgyn"
   val eyeCareProvColName = "eye_care_provider"
   val nephrologistColName = "nephrologist"
+  val ndcNmberColName = "ndc_number"
+  val ndcCodeColName = "ndc_code"
+  val measureIdColName = "measure_id"
+  val startDateSkColName = "start_date_sk"
+  val startTempColName = "start_temp"
+  val rxStartTempColName = "rx_start_date"
+  val diagStartColName = "dig_start_date"
+
 
   /*Output column names*/
   val outMemberSkColName = "member_sk"
@@ -129,12 +139,13 @@ object KpiConstants {
   val outNumExcl1ReasonColName = "nu_ex_reason_1"
   val outNumExcl2ReasonColName = "nu_ex_reason_2"
   val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
+  val outMeasureIdColName = "measureId"
 
   /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
                                 ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
-                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outCurrFlagColName
-                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outSourceNameColName,outUserColName)
+                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outCurrFlagColName
+                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outUserColName,outDateSkColName,outSourceNameColName,outMeasureIdColName)
 
 
 
@@ -203,7 +214,7 @@ object KpiConstants {
 
   /*CHL Constants*/
   val chlSexualActivityValueSet = List("Sexual Activity","Pregnancy")
-  val chlSexualActivitycodeSytem = List("ICD%")
+  val chlDiagRadValueSet = List("Diagnostic Radiology")
   val chlpregnancyValueSet = List("Pregnancy Tests")
   val chlpregnancycodeSystem = List("CPT","HCPCS","UBREV")
   val chlPregnancyExclusionvalueSet = List("Pregnancy Test Exclusion")
