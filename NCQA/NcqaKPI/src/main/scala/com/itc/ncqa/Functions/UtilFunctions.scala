@@ -2,11 +2,12 @@ package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, month, to_date, when, year, current_date, hash, count}
+import org.apache.spark.sql.functions.{abs, concat, count, current_date, current_timestamp, date_add, date_format, datediff, expr, hash, lit, month, to_date, when, year}
 import org.apache.spark.sql.types.DateType
 
 import scala.util.Try
 import scala.collection.JavaConversions._
+import collection.mutable._
 
 object UtilFunctions {
 
@@ -273,9 +274,9 @@ object UtilFunctions {
     //var resultantDf = spark.emptyDataFrame
 
     import spark.implicits._
-    val dinoExclList = if(dinoExclDf.count()>0) List(dinoExclDf.as[String].collectAsList()) else List("")
-    val numList = if(numeratorDf.count() > 0) List(numeratorDf.as[String].collectAsList()) else List("")
-    val numExclList = if (numExclDf.count() > 0) List(numExclDf.as[String].collectAsList()) else List("")
+    val dinoExclList = if(dinoExclDf.count() > 0) dinoExclDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val numList = if (numeratorDf.count() > 0) numeratorDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val numExclList = if(numExclDf.count()> 0) numExclDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
     val numeratorValueSet = outValueList(0)
     val dinoExclValueSet = outValueList(1)
     val numExclValueSet = outValueList(2)

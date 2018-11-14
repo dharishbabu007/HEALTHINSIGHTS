@@ -65,7 +65,7 @@ object NcqaCDC10 {
     /*Dinominator First condition */
     /*val valueSetForDinominatorCdc4 = List("Diabetes")
     val codeSystemForDinominatorCdc4 = List("ICD%")*/
-    val hedisJoinedForFirstDino = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdc4DiabetesvalueSet,KpiConstants.cdc4DiabetescodeSystem)
+    val hedisJoinedForFirstDino = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesvalueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measurementForFirstDino = UtilFunctions.mesurementYearFilter(hedisJoinedForFirstDino,"start_date",year,0,730).select("member_sk","start_date")
     val firstDinominatorDf = measurementForFirstDino.select("member_sk")
 
@@ -90,7 +90,7 @@ object NcqaCDC10 {
     val measurementDinominatorExclDf = UtilFunctions.mesurementYearFilter(hospiceDf,"start_date",year,0,365).select("member_sk").distinct()
 
     /*dinominator Exclusion 2*/
-    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesExclValueSet,KpiConstants.cdc4DiabetescodeSystem)
+    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"primary_diagnosis","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcDiabetesExclValueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measurementDiabetesExclDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDiabetesExclDf,"start_date",year,0,730).select("member_sk").distinct()
 
     /*Union of Dinominator Exclusion*/
@@ -102,7 +102,7 @@ object NcqaCDC10 {
 
     /*Numerator Calculation starts*/
     /*Numerator (most recent HbA1c test during the measurement year)*/
-    val hedisJoinedForHba1cDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"procedure_code","inner",KpiConstants.cdcMeasureId,KpiConstants.cdc1NumeratorValueSet,KpiConstants.cdc1NumeratorCodeSystem)
+    val hedisJoinedForHba1cDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"procedure_code","inner",KpiConstants.cdcMeasureId,KpiConstants.cdcNumerator1ValueSet,KpiConstants.cdc1NumeratorCodeSystem)
     val measurementForHba1cDf = UtilFunctions.mesurementYearFilter(hedisJoinedForHba1cDf,"start_date",year,0,365).select("member_sk","start_date")
     val numeratorMrecentHba1cDf = UtilFunctions.mostRececntHba1cTest(measurementForHba1cDf,"start_date",year).select("member_sk")
 
