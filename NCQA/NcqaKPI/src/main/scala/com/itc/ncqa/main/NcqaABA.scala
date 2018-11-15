@@ -121,13 +121,13 @@ object NcqaABA {
     val numeratorExclValueSet = KpiConstants.emptyList
     val listForOutput = List(numeratorValueSet, dinominatorExclValueSet, numeratorExclValueSet)
 
+    /*add sourcename and measure id into a list*/
+    val sourceAndMsrIdList = List(data_source,KpiConstants.abaMeasureId)
+
 
     val numExclDf = spark.emptyDataFrame
-    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, abanumeratorFinalDf, numExclDf, listForOutput, data_source)
-    val newOutDf = outFormatDf.withColumn("measureId",lit("ABA"))
-    newOutDf.write.format("parquet").mode(SaveMode.Append).insertInto("ncqa_sample.gaps_in_hedis_test")
-    //df.write.format("parquet").mode("append").partitionBy("gender","state").saveAsTable("ncqa_sample.Employee_test")
-    //outFormatDf.show()
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, abanumeratorFinalDf, numExclDf, listForOutput, sourceAndMsrIdList)
+    outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto("ncqa_sample.gaps_in_hedis_test")
     //outFormatDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_gaps_in_care")
 
 

@@ -105,13 +105,14 @@ object NcqaAWC {
     val dinominatorExclValueSet = KpiConstants.emptyList
     val numExclValueSet = KpiConstants.emptyList
     val outValueSetForOutput = List(numeratorValueSet, dinominatorExclValueSet, numExclValueSet)
+    val sourceAndMsrList = List(data_source,KpiConstants.awcMeasureId)
 
     /*create empty NumeratorExcldf*/
     val numExclDf = spark.emptyDataFrame
     val dinoExclDf = spark.emptyDataFrame
 
     /*Calling function for creating the output format*/
-    val commonOutputFormatDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, dinoExclDf, awcNumeratorDf, numExclDf, outValueSetForOutput, data_source)
+    val commonOutputFormatDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, dinoExclDf, awcNumeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
     //commonOutputFormatDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factGapsInHedisTblName)
 
 

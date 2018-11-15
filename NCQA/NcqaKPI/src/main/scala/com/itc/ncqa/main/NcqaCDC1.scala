@@ -125,11 +125,12 @@ object NcqaCDC1 {
     val dinoExclValueReasonSet = KpiConstants.cdcDiabetesExclValueSet
     val numExclValueReasonSet = KpiConstants.emptyList
     val outValueReasonSet = List(numeratorValueReasonSet, dinoExclValueReasonSet, numExclValueReasonSet)
+    val sourceAndMsrList = List(data_source,KpiConstants.cdc1MeasureId)
 
 
     /*create Numexcl empty dataframe */
     val numExclDf = spark.emptyDataFrame
-    val commonOutputGapsInHedisDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc1NumeratorDf, numExclDf, outValueReasonSet, data_source)
+    val commonOutputGapsInHedisDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc1NumeratorDf, numExclDf, outValueReasonSet, sourceAndMsrList)
     commonOutputGapsInHedisDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName + "." + KpiConstants.factGapsInHedisTblName)
     /*common output creation1 (data to fact_in_gaps_hedis table) ends*/
 
