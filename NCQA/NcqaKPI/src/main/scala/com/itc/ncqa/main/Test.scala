@@ -10,24 +10,40 @@ import scala.collection.JavaConversions._
 
 object Test {
 
-
+  case class employee(id:String,gender:String,designation:String,state:String)
 
   def main(args: Array[String]): Unit = {
 
 
 
-    /*val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACDC2")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACDC2")
+    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
-    case class employee(id:String,gender:String,designation:String,state:String)
-    val e1 = employee("1","A","d1","kerala")
-    val e2 = employee("2","B","d2","karnataka")
 
-    import.spark.implicits._
-    val list = List(e1,e2)
+    val e1 = employee("1","M","d1","kerala")
+   // val e2 = employee("2","M","d2","karnataka")
+    val e3 = employee("3","F","d3","Bengal")
+    val e4 = employee("4","F","d4","kerala")
+    val e5 = employee("5","M","d5","Andhra")
+    val e6 = employee("6","F","d6","MP")
+    val e7 = employee("7","M","d7","UP")
+    val e8 = employee("8","F","d8","TN")
+    val e2 = employee("2","M","d2","karnataka")
+    val e10 = employee("10","M","d10","Delhi")
+    import spark.sqlContext.implicits._
 
-    val df  = spark.sparkContext.parallelize(list).map(f=> Row(f))*/
+    //val list = List(e1,e2,e3,e4,e5,e6,e7,e8)
+    val list = List(e1,e3,e4,e5,e6,e2,e7,e8,e10)
 
+    val df  = spark.sparkContext.parallelize(list).toDF("id","gender","designation","state")
+    /*df.show()
+    df.printSchema()*/
+    //df.write.mode(SaveMode.Append).partitionBy("gender","state").parquet("/home/hbase/ncqa/test/employee/")
+    //df.write.mode(SaveMode.Append).partitionBy("gender").bucketBy(2,"designation").parquet("/home/hbase/ncqa/test/employee_wtb/")
+    df.select("id","designation","gender","state").write.format("parquet").mode(SaveMode.Append).insertInto("ncqa_sample.employee_test")
 
+   /* val newDf = spark.read.parquet("/home/hbase/ncqa/test/employee_wtb/")
+    newDf.show()*/
 
 
    /* val programType = args(0)

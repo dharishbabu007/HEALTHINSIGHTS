@@ -95,11 +95,11 @@ object NcqaADV {
     val dinominatorExclValueSet = KpiConstants.emptyList
     val numExclValueSet = KpiConstants.emptyList
     val outValueSetForOutput = List(numeratorValueSet, dinominatorExclValueSet, numExclValueSet)
-
+    val sourceAndMsrList = List(data_source,KpiConstants.advMeasureId)
 
     /*create empty NumeratorExcldf*/
     val numExclDf = spark.emptyDataFrame
-    val outFormattedDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, measurementDinominatorExclDf, advNumeratorDf, numExclDf, outValueSetForOutput, data_source)
+    val outFormattedDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, measurementDinominatorExclDf, advNumeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
     //outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factGapsInHedisTblName)
 
 

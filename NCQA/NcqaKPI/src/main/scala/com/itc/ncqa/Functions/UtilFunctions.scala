@@ -268,7 +268,7 @@ object UtilFunctions {
     * @usecase Function is used to create the output format from the dinominator and other df and the resultant dataframe will use to populate to
     *          fact_gaps_in_hedis table in hive.
     */
-  def commonOutputDfCreation(spark: SparkSession, dinominatorDf: DataFrame, dinoExclDf: DataFrame, numeratorDf: DataFrame, numExclDf: DataFrame, outValueList: List[List[String]], sourceName: String): DataFrame = {
+  def commonOutputDfCreation(spark: SparkSession, dinominatorDf: DataFrame, dinoExclDf: DataFrame, numeratorDf: DataFrame, numExclDf: DataFrame, outValueList: List[List[String]], sourceAndMsrList: List[String]): DataFrame = {
 
 
     //var resultantDf = spark.emptyDataFrame
@@ -331,12 +331,13 @@ object UtilFunctions {
     val auditColumnsAddedDf = numoExclValueSetColAddedDf.withColumn(KpiConstants.outCurrFlagColName, lit(KpiConstants.yesVal))
       .withColumn(KpiConstants.outActiveFlagColName, lit(KpiConstants.actFlgVal))
       .withColumn(KpiConstants.outLatestFlagColName, lit(KpiConstants.yesVal))
-      .withColumn(KpiConstants.outSourceNameColName, lit(sourceName))
+      .withColumn(KpiConstants.outSourceNameColName, lit(sourceAndMsrList(0)))
       .withColumn(KpiConstants.outUserColName, lit(KpiConstants.userNameVal))
       .withColumn(KpiConstants.outRecCreateDateColName, lit(date_format(current_timestamp(), "dd-MMM-yyyy hh:mm:ss")))
       .withColumn(KpiConstants.outRecUpdateColName, lit(date_format(current_timestamp(), "dd-MMM-yyyy hh:mm:ss")))
       .withColumn(KpiConstants.outDateSkColName, lit(dateSkVal))
       .withColumn(KpiConstants.outIngestionDateColName, lit(date_format(current_timestamp(), "dd-MMM-yyyy hh:mm:ss")))
+      .withColumn(KpiConstants.outMeasureIdColName,lit(sourceAndMsrList(1)))
 
     /*Adding hedisSk to the Dataframe*/
     val hedisSkColAddedDf = auditColumnsAddedDf.withColumn(KpiConstants.outHedisGapsSkColName, abs(hash(lit(concat(lit(auditColumnsAddedDf.col(KpiConstants.outMemberSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outProductPlanSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outQualityMeasureSkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outFacilitySkColName)), lit(auditColumnsAddedDf.col(KpiConstants.outDateSkColName)))))))

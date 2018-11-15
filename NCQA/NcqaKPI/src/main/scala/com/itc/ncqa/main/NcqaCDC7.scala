@@ -186,9 +186,10 @@ object NcqaCDC7 {
     val dinoExclReasonValueSet = KpiConstants.cdcDiabetesExclValueSet
     val numExclReasonValueSet = KpiConstants.emptyList
     val outReasonValueSet = List(numeratorReasonValueSet, dinoExclReasonValueSet, numExclReasonValueSet)
+    val sourceAndMsrList = List(data_source,KpiConstants.cdc7MeasureId)
 
     val numExclDf = spark.emptyDataFrame
-    val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc7numeratorDf, numExclDf, outReasonValueSet, data_source)
+    val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc7numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
     //commonOutputFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factGapsInHedisTblName)
 
 
