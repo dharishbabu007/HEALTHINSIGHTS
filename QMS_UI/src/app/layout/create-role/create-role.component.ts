@@ -78,7 +78,7 @@ export class CreateRoleComponent implements OnInit {
             download: ['']
     });
       control.push(newGroup);
-     // console.log(j);
+    //  console.log(j);
      //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['write'].disable();
      //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['download'].disable();
 
@@ -100,7 +100,7 @@ export class CreateRoleComponent implements OnInit {
     }
 
     checkedRead(event,i){
-        console.log(event)
+       // console.log(event)
         if(event == true){
          //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['write'].enable();
          //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['download'].enable();
@@ -118,7 +118,8 @@ export class CreateRoleComponent implements OnInit {
    
           for(this.i=0; this.i<=araylenght+1 ;  this.i++){
             const control = <FormArray>this.myForm.controls['roleCategorys'];
-            control.removeAt(this.i);
+            //control.removeAt(this.i);
+            this.removeCategory(this.i) 
           }
       }
 
@@ -128,13 +129,14 @@ export class CreateRoleComponent implements OnInit {
         this.GapsService.getRoleData(roleId1[0].value).subscribe((data: any) => {
 
                     this.k = data.screenPermissions.length;
-   
+                      // console.log(data)
                     //console.log(data.screenPermissions)
                      if(this.k>0){
+                        
                     for(this.i= 0; this.i<this.k; this.i++){
                
                       let pagename = this.pageListRepositry.filter(item => item.value == data.screenPermissions[this.i].screenId);
-                 
+                
                     (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['parentPage'].patchValue(pagename[0].name);
                     if(data.screenPermissions[this.i].write == "Y"){
                     (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['write'].patchValue("write");}
@@ -142,12 +144,12 @@ export class CreateRoleComponent implements OnInit {
                         (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['read'].patchValue("read");}
                         if(data.screenPermissions[this.i].download == "Y"){
                             (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['download'].patchValue("download");}
-                    this.addCategory(this.i+1) 
-
-                    }
+                    this.addCategory(this.i) 
+                        }
+                        this.removeCategory(this.k) 
                 }
                 else{
-
+                        return false
                 }
                 //this.pageList.push({label: item.name, value: item.name});
     
@@ -158,25 +160,42 @@ export class CreateRoleComponent implements OnInit {
     onSubmit(model,valid: boolean){      
 
    let roleId = this.Repositry.filter(item=> item.name === model.RoleName);
+
    for(this.i=0; this.i<model.roleCategorys.length; this.i++){
+     console.log(model.roleCategorys[this.i].parentPage)
+     if(model.roleCategorys[this.i].parentPage != ""){
+      console.log(model.roleCategorys[this.i].parentPage)
        let screenid = this.pageListRepositry.filter(item => item.name === model.roleCategorys[this.i].parentPage);
-
-
+console.log(model.roleCategorys[this.i])
        if(model.roleCategorys[this.i].read[0] == "read")
        {
            this.readvalue = "Y"
        }
-       else{
-        this.readvalue = "N" 
+       else if(model.roleCategorys[this.i].read == "read"){
+        this.readvalue = "Y"
        }
+       else{
+        this.readvalue = "N"  
+       }
+
        if(model.roleCategorys[this.i].write[0] == "write")
+       {
+           this.writevalue = "Y"
+       }
+       else if(model.roleCategorys[this.i].write == "write")
        {
            this.writevalue = "Y"
        }
        else{
         this.writevalue = "N" 
        }
+
+       
        if(model.roleCategorys[this.i].download[0] == "download")
+       {
+           this.downloadvalue = "Y"
+       }
+       else if(model.roleCategorys[this.i].download == "download")
        {
            this.downloadvalue = "Y"
        }
@@ -190,16 +209,19 @@ export class CreateRoleComponent implements OnInit {
         write: this.writevalue,
        download: this.downloadvalue
       }]
+    }
+   console.log(this.arr);
+    this.GapsService.createRole(roleId[0].value,this.arr).subscribe( (res: any) => {
+        if (res.status === 'SUCCESS') {
+          this.msgService.success('Role Pages Mapping Successfully');
+          this.myForm.reset();
+        } else {
+          this.msgService.error(res.message);
+        }
+        });
    }
 
-   this.GapsService.createRole(roleId[0].value,this.arr).subscribe( (res: any) => {
-    if (res.status === 'SUCCESS') {
-      this.msgService.success('Role Pages Mapping Successfully');
-      this.myForm.reset();
-    } else {
-      this.msgService.error(res.message);
-    }
-    });
+
     }   
 
 }

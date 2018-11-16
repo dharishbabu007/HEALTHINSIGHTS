@@ -45,6 +45,7 @@ export class MeasurelibraryComponent implements OnInit {
     }
     copytoCreator(id, newType) {
        let perms = this.permissionsService.getPermissions();
+       console.log(perms)
        if(perms.write){
         this.router.navigate(['/measurecreator', id, newType]);
        }

@@ -89,7 +89,7 @@ export class AuthenticationService {
     public isAuthenticated(): boolean {
         var user =  JSON.parse(localStorage.getItem('currentUser'));
         if(user){
-            console.log("true")
+           // console.log("true")
         return true;}
         else{
         return false;}

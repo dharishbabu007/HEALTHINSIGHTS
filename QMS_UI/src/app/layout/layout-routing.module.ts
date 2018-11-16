@@ -34,36 +34,74 @@ const routes: Routes = [
             { path: 'configurator', component: ConfiguratorComponent },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'frame-url/:url', component: FrameUrlComponent },
-            { path: 'member-gap-list', component: MemberGapListComponent },
-            { path: 'member-gap-list/:memberId', component: MemberGapListComponent },
-            { path: 'member-care-gap-list', component: MemberCareGapListComponent },
-            { path: 'member-gap/:gapId/:memberId', component: MemberGapInfoComponent },
-            { path: 'programcreator', component: ProgramcreatorComponent},
-            { path: 'programeditor', component: ProgrameditorComponent},
-            { path: 'Quality Central', component: QualityCentralComponent },
+            { path: 'member-gap-list', component: MemberGapListComponent ,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '11'
+            } },
+            { path: 'member-gap-list/:memberId', component: MemberGapListComponent ,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '11'
+            } },
+            { path: 'member-care-gap-list', component: MemberCareGapListComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '9'
+            }  },
+            { path: 'member-gap/:gapId/:memberId', component: MemberGapInfoComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '10'
+            }  },
+            { path: 'programcreator', component: ProgramcreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '2'
+            } },
+            { path: 'programeditor', component: ProgrameditorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '3'
+            } },
+            { path: 'Quality Central', component: QualityCentralComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '1'
+            }  },
             { path: 'Quality central', component: QualityCentralComponent },
             { path: 'quality Central', component: QualityCentralComponent },
             { path: 'quality central', component: QualityCentralComponent },
             { path: 'kwality central', component: QualityCentralComponent },
-            { path: 'measureworklist', component: MeasureworklistComponent},
-            { path: 'measureworklist', component: MeasureworklistComponent},
-            { path: 'measurelibrary', component: MeasurelibraryComponent},
-            { path: 'measurelibrary/:type/:value', component: MeasurelibraryComponent},
+            { path: 'measureworklist', component: MeasureworklistComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '7'
+            } },
+            { path: 'measurelibrary', component: MeasurelibraryComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '6'
+            } },
+            { path: 'measurelibrary/:type/:value', component: MeasurelibraryComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '6'
+            } },
             { path: 'member-list', component: MemberListComponent},
-            { path: 'measurecreator', component: MeasurecreatorComponent},
-            { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent},
-            { path: 'spv/:memberId', component: SpvComponent},
+            { path: 'measurecreator', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '4'
+            } },
+            { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '4' || '5'
+            } },
+            { path: 'spv/:memberId', component: SpvComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '8'
+            } },
             { path: 'usersettings', component: UserSettingComponent},
             { path: 'file-manager', component: FileManagerComponent},
             { path: 'csv1', component: Csv1Component },
             { path: 'csv2', component: Csv2Component},
-            { path: 'create-role', component: CreateRoleComponent,   canActivate: [RoleGuardService], 
+            { path: 'create-role', component: CreateRoleComponent,  canActivate: [RoleGuardService], 
             data: { 
-              expectedRole: '3'
+              expectedRole: '13'
             } },
             { path: 'create-user', component: CreateUserComponent,  canActivate: [RoleGuardService], 
             data: { 
-              expectedRole: '3'
+              expectedRole: '14'
             } },
             { path: 'noshowGapList', component: NoShowGapListComponent}
 

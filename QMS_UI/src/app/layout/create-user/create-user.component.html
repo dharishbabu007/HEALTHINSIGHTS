@@ -13,7 +13,8 @@
                             <p-autoComplete  [suggestions]="filteredusers" (completeMethod)="filteredUsers($event)" [size]="30"
                            placeholder="select/search user" [dropdown]="true" (onSelect)="getUserValues($event)" formControlName="user">
                             <ng-template let-user pTemplate="item" >
-                               <div>{{user}}</div>
+                               <div><span>{{user}}</span>
+                            <span class="NameStyle">{{value}}</span></div>
                             </ng-template>
                         </p-autoComplete>
                         <small *ngIf="!myForm.controls.user.valid && myForm.controls.user.touched" class="text-danger">
