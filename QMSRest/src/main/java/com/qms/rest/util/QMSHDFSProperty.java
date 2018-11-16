@@ -13,6 +13,7 @@ public class QMSHDFSProperty {
 	private String readFile;
 	private String writePath;
 	private String rApiURL;
+	private String hdfsUser;
 	
 	public String getrApiURL() {
 		return rApiURL;
@@ -49,6 +50,13 @@ public class QMSHDFSProperty {
 	}
 	public void setReadFile(String readFile) {
 		this.readFile = readFile;
+	}
+	public String getHdfsUser() {
+		return hdfsUser;
+	}
+	public void setHdfsUser(String hdfsUser) {
+		this.hdfsUser = hdfsUser;
 	}	
+	
 	
 }

@@ -1,6 +1,7 @@
 package com.qms.rest.util;
 
 import java.net.URI;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -13,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.logging.Logger;
-
 @Component
 public class HDFSFileUtil {
 	
@@ -26,7 +25,8 @@ public class HDFSFileUtil {
 	public String createSubFolder(int fileId) throws Exception {
 		FileSystem file=null;
 		try {
-			String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId;		
+			String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId;
+			System.out.println(" hdfsFilePath createSubFolder --> "+hdfsFilePath);
 	        URI uri = URI.create (hdfsFilePath);
 	        Path dirPath = new Path(uri);
 	        Configuration conf = new Configuration();
@@ -38,6 +38,7 @@ public class HDFSFileUtil {
 	        }
 	        return hdfsFilePath;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw ex;
 		}
 		finally {
@@ -49,10 +50,10 @@ public class HDFSFileUtil {
 	public void putFile (MultipartFile uploadFile, int fileId) throws Exception {
 		FSDataOutputStream outputStream=null;
 		FileSystem file=null;
-		System.setProperty("HADOOP_USER_NAME", "hdp-hadoop");		
+		System.setProperty("HADOOP_USER_NAME", qmsHDFSProperty.getHdfsUser());		
 		try {
 			String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
-			String hdfsFilePath = createSubFolder(fileId)+"/"+fileId+"."+extension;;
+			String hdfsFilePath = createSubFolder(fileId)+"/"+fileId+"."+extension;
 			//String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+uploadFile.getOriginalFilename();
 			System.out.println(" Writing the actual file to HDFS --> " + uploadFile.getOriginalFilename());			
 	        //String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId+"."+extension;
@@ -63,6 +64,7 @@ public class HDFSFileUtil {
 			outputStream.write(uploadFile.getBytes());
 			System.out.println("End Write file into hdfs"+hdfsFilePath);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw ex;
 		}
 		finally {
@@ -70,6 +72,26 @@ public class HDFSFileUtil {
 			if(file != null) file.close();
 		}
 	}
+	
+
+//	public void putFilesInAzure() {
+//		try {
+//			Configuration conf = new Configuration();
+//	        String hdfsUri = "hdfs://Healthinsight-HDI-ssh.azurehdinsight.net/";
+//	        conf.set("fs.defaultFS", hdfsUri);
+//	        FileSystem fileSystem;			
+//			fileSystem = FileSystem.get(URI.create(hdfsUri), conf);
+//			System.out.println("fileSystem --> " + fileSystem);
+//	        RemoteIterator<LocatedFileStatus> fileStatusIterator = fileSystem.listFiles(new Path("/tmp"), true);
+//	        while(fileStatusIterator.hasNext()) {
+//	            System.out.println(" Files in azure" + fileStatusIterator.next().getPath().toString());
+//	        }			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+	
 	
 	public void getFile (String path) throws Exception {
 		FSDataInputStream inputStream=null;
