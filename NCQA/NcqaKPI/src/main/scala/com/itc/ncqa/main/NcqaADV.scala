@@ -15,6 +15,7 @@ object NcqaADV {
 
 
     val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAADV")
+    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     val year = args(0)
     val lob_name = args(1)
@@ -100,7 +101,7 @@ object NcqaADV {
     /*create empty NumeratorExcldf*/
     val numExclDf = spark.emptyDataFrame
     val outFormattedDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, measurementDinominatorExclDf, advNumeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
-    //outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factGapsInHedisTblName)
+
 
 
     /*Data loading to fact_hedis_qms table.*/

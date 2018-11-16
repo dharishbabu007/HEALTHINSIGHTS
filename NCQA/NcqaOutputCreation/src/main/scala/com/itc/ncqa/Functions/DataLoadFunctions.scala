@@ -7,10 +7,10 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataLoadFunctions {
 
-  def dataLoadFromGapsHedisTable(spark:SparkSession,qualityMsrSk:String):DataFrame ={
+  def dataLoadFromGapsHedisTable(spark:SparkSession,msriDName:String):DataFrame ={
 
-    val source_name = "'"+qualityMsrSk+"'"
-    val query = "select * from "+ OutputCreateConstants.dbName+"."+ OutputCreateConstants.gapsInHedisTblName+" where "+OutputCreateConstants.qultyMsrSkColName+" ="+source_name
+    val measure_name = "'"+msriDName+"'"
+    val query = "select * from "+ OutputCreateConstants.dbName+"."+ OutputCreateConstants.gapsInHedisTblName+" where "+OutputCreateConstants.ncqaMeasureIdColName+" ="+measure_name
     val dfinit = spark.sql(query)
     dfinit
   }

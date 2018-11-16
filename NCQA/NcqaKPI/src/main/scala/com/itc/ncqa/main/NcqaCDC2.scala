@@ -14,6 +14,7 @@ object NcqaCDC2 {
 
 
     val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACDC2")
+    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     val year = args(0)
     val lob_name = args(1)

@@ -42,6 +42,8 @@ object KpiConstants {
   val age65Val = "65"
   val age16Val = "16"
   val age24Val = "24"
+  val age67Val = "67"
+  val age85Val = "85"
 
 
 
@@ -71,12 +73,16 @@ object KpiConstants {
   val refmedValueSetTblName = "ref_med_value_set"
   val view45Days = "45_days"
   val view60Days = "60_days"
+  val outGapsInHedisTestTblName = "gaps_in_hedis_test"
+  val outFactHedisGapsInTblName = "fact_hedis_gaps_in_care"
+  val outFactQmsTblName = "fact_hedis_qms"
 
   /*Measure Title constants*/
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
   val advMeasureTitle = "Annual Dental Visit (ADV)"
   val awcMeasureTitle = "Adolescent WellCare Visits (AWC)"
   val cdcMeasureTitle = "Comprehensive Diabetes Care (CDC)"
+  val lscMeasureTitle = "Lead Screening in Children (LSC)"
 
 
   /*columnname constants*/
@@ -139,7 +145,7 @@ object KpiConstants {
   val outNumExcl1ReasonColName = "nu_ex_reason_1"
   val outNumExcl2ReasonColName = "nu_ex_reason_2"
   val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
-  val outMeasureIdColName = "measureId"
+  val outMeasureIdColName = "ncqa_measureid"
 
   /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName

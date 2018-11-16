@@ -14,6 +14,7 @@ object NcqaCDC1 {
 
 
     val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACDC1")
+    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     val year = args(0)
     val lob_name = args(1)
@@ -131,14 +132,15 @@ object NcqaCDC1 {
     /*create Numexcl empty dataframe */
     val numExclDf = spark.emptyDataFrame
     val commonOutputGapsInHedisDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc1NumeratorDf, numExclDf, outValueReasonSet, sourceAndMsrList)
-    commonOutputGapsInHedisDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName + "." + KpiConstants.factGapsInHedisTblName)
+    commonOutputGapsInHedisDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    //commonOutputGapsInHedisDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName + "." + KpiConstants.factGapsInHedisTblName)
     /*common output creation1 (data to fact_in_gaps_hedis table) ends*/
 
     /*common output creation2 (data to fact_hedis_qms table)*/
-    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.cdcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+   /* val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.cdcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
     val factMembershipDfForoutDf = factMembershipDf.select(KpiConstants.memberskColName, KpiConstants.lobIdColName)
     val qmsoutFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    qmsoutFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
+    qmsoutFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")*/
     /*common output creation2 (data to fact_hedis_qms table) ends*/
 
     //print("counts:"+dinoMemberSkDf.count()+","+dinominatorExclusionDf.count()+","+cdc1NumeratorDf.count())
