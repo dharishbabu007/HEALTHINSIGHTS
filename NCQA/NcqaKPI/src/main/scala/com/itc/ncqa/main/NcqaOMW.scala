@@ -5,7 +5,7 @@ import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.to_date
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when,date_sub}
 object NcqaOMW {
 
 
@@ -54,19 +54,15 @@ object NcqaOMW {
     /*Initial join function call for prepare the data fro common filter*/
     val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.abaMeasureTitle)
     //initialJoinedDf.show(50)
-    lookupTableDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
-
-
-
-
+    //lookupTableDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
     /*common filter checking*/
-    val commonFilterDf = initialJoinedDf.as("df1").join(lookupTableDf.as("df2"),initialJoinedDf.col(KpiConstants.memberskColName) === lookupTableDf.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(lookupTableDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
+    //val commonFilterDf = initialJoinedDf.as("df1").join(lookupTableDf.as("df2"),initialJoinedDf.col(KpiConstants.memberskColName) === lookupTableDf.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(lookupTableDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
 
 
 
 
     /*Age & Gender filter*/
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf,KpiConstants.dobColName,year,KpiConstants.age67Val,KpiConstants.age85Val,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
+    val ageFilterDf = UtilFunctions.ageFilter(initialJoinedDf,KpiConstants.dobColName,year,KpiConstants.age67Val,KpiConstants.age85Val,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
     val genderFilter = ageFilterDf.filter($"gender".===("F"))
 
 
@@ -77,35 +73,41 @@ object NcqaOMW {
 
     /*Dinominator Calculation starts*/
     /*intake dates calculation*/
-    val firstIntakeDate = "01-JUL-"+(year.toInt-1).toString
-    val secondIntakeDate = "30-JUN-"+year
+    val firstIntakeDate = year.toInt-1+"-01-01"
+    val secondIntakeDate = year+"-06-30"
 
     /*Dinominator1 Starts*/
     /*outpatient visit (Outpatient Value Set), an observation visit (Observation Value Set) or an ED visit (ED Value Set)*/
     val hedisJoinedForDinominator1Df = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwOutPatientValueSet,KpiConstants.omwOutPatientCodeSystem)
-    val mesurementFilterDf = UtilFunctions.dateBetweenFilter(hedisJoinedForDinominator1Df,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate)
+    val mesurementFilterForOutpatientDf = UtilFunctions.dateBetweenFilter(hedisJoinedForDinominator1Df,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate)
+
 
     /*fracture (Fractures Value Set) AS Primary Diagnosis*/
     val hedisJoinedForFractureAsDiagDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwFractureValueSet,KpiConstants.primaryDiagnosisCodeSystem)
-    val mesurementFilterForFractureAsDiagDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsDiagDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate)
+    val mesurementFilterForFractureAsDiagDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsDiagDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
 
 
     /*fracture (Fractures Value Set) AS Procedure Code*/
     val hedisJoinedForFractureAsProDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwFractureValueSet,KpiConstants.omwFractureCodeSystem)
-    val mesurementFilterForFractureAsProDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsProDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate)
+    val mesurementFilterForFractureAsProDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsProDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
 
     /*Fracture Dinominator (Union of Fractures Value Set AS Primary Diagnosis and Fractures Value Set AS Procedure Code)*/
     val fractureUnionDf = mesurementFilterForFractureAsDiagDf.union(mesurementFilterForFractureAsProDf)
 
-    /*First Sub Condition of First Dinominator */
-    val dinominatorOne_SuboneDf = mesurementFilterDf.intersect(fractureUnionDf)
+    /*Mmebers who has fracture and any of the values(Outpatient,Observation,ED)*/
+    val fractureAndOutObsEdDf = mesurementFilterForOutpatientDf.select("*").as("df1").join(fractureUnionDf.as("df2"),mesurementFilterForOutpatientDf.col(KpiConstants.memberskColName) === fractureUnionDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+    //fractureAndOutObsEdDf.printSchema()
+    val dinominatorOne_SuboneDf = fractureAndOutObsEdDf.select(KpiConstants.memberskColName)
 
 
     /*Second Sub Condition for the First Dinominator*/
     val hedisJoinedForInpatientStDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,"procedure_code","inner",KpiConstants.omwMeasureId,KpiConstants.omwInpatientStayValueSet,KpiConstants.omwInpatientStayCodeSystem)
-    val mesurementFilterForInPatientStayDf = UtilFunctions.mesurementYearFilter(hedisJoinedForInpatientStDf,"start_date",year,184,548).select("member_sk")
+    val mesurementFilterForInPatientStayDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsProDf,KpiConstants.dischargeDateColName,firstIntakeDate,secondIntakeDate)
 
-    val dinominatorOne_SubTwoDf = mesurementFilterForInPatientStayDf.intersect(fractureUnionDf)
+    /*Members who has fracture and acute or nonacute inpatient valueset*/
+    val fractureAndInpatientDf = mesurementFilterForInPatientStayDf.select("*").as("df1").join(fractureUnionDf.as("df2"),mesurementFilterForInPatientStayDf.col(KpiConstants.memberskColName) === fractureUnionDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+
+    val dinominatorOne_SubTwoDf = fractureAndInpatientDf.select(KpiConstants.memberskColName)
 
 
     /*Dinominator1 (union of dinominatorOne_SuboneDf and dinominatorOne_SubTwoDf)*/
@@ -113,7 +115,15 @@ object NcqaOMW {
     /*Dinominator1 Ends*/
 
 
-    /*Dinominator2 Starts*/
+    /*Dinominator2(Negative Diagnosis History. Exclude members who had either of the following during the 60-day (2 months) period prior to the IESD ) Starts*/
+
+    /*Dinominator2 sub1 (for outpatient)*/
+    /*iesd date column added to the fractureAndOutObsEdDf*/
+    val iesdAddedForfractureAndOutObsEdDf = fractureAndOutObsEdDf.withColumn("iesd_date",date_sub(fractureAndOutObsEdDf.col(KpiConstants.startDateColName),60))
+
+    /*join iesdAddedForfractureAndOutObsEdDf with fractureAndOutObsEdDf based on member_sk and filter out who has a history in the last 60 days period*/
+    val fractureAndOutObsEdDfWNhistoryDf = iesdAddedForfractureAndOutObsEdDf.as("df1").join(fractureAndOutObsEdDf.as("df2"),iesdAddedForfractureAndOutObsEdDf.col(KpiConstants.memberskColName) === fractureAndOutObsEdDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter($"df2.start_date".>=($"df1.iesd_date") && $"df2.start_date".<=($"df1.start_date")).select("df1.*")
+    val dinominatorSecond_SubOneDf = fractureAndOutObsEdDfWNhistoryDf.select(KpiConstants.memberskColName)
 
     /*Dinominator2 Ends*/
 

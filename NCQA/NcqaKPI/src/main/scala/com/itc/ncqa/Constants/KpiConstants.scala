@@ -97,6 +97,8 @@ object KpiConstants {
   val proceedureCodeColName = "procedure_code"
   val primaryDiagnosisColname = "primary_diagnosis"
   val startDateColName = "start_date"
+  val admitDateColName = "admit_date"
+  val dischargeDateColName = "discharge_date"
   val locationSkColName = "location_sk"
   val facilitySkColName = "facility_sk"
   val providerSkColName = "provider_sk"
