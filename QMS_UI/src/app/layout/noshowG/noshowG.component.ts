@@ -48,14 +48,15 @@ export class NoShowGapListComponent implements OnInit {
         this.cols = [
             { field: 'patientId', header: 'Patient ID' },
             { field: 'name', header: 'Name' },
-            { field: 'appointmentId', header: 'appointment ID' },
+            { field: 'appointmentId', header: 'Appointment ID' },
             { field: 'gender', header: 'Gender' },
             { field: 'dayClass', header: 'DayClass' },
             { field: 'appointmentDay', header: 'AppointmentDay' },
             { field: 'age', header: 'Age' },
+            { field: 'neighbourhood', header: 'Neighbourhood' },
             { field: 'logOdds', header: 'LogOdds' },
             { field: 'countCareGaps', header: 'Count of Care Gaps' },
-            { field: 'riskGrade', header: 'Risk Grade' },
+            { field: 'riskGrade', header: 'Risk Grade' }
             
 
         ];

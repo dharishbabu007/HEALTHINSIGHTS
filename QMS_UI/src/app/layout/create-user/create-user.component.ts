@@ -42,8 +42,9 @@ statusList:any;
         this.UserList =[];
         this.Repositry = data;
         data.forEach(item => {
-          this.UserList.push({label: item.name, value: item.name});
-        });  });
+          this.UserList.push({label: item.name, value: item.value});
+        });
+        });
         this.GapsService.getRoleList().subscribe((data: any) => {
           this.roleList =[];
           this.roleListRepositry = data;
@@ -73,7 +74,7 @@ onSubmit(model,isValid){
   if (this.myForm.valid) {
     
   
-  console.log(model);
+ // console.log(model);
            let userId = this.Repositry.filter(item => item.name === model.user);
            let roleId = this.roleListRepositry.filter(item => item.name === model.roleName);
            console.log(userId[0].value,roleId[0].value,model.status)
@@ -95,7 +96,9 @@ onSubmit(model,isValid){
 filteredUsers(event) {
   this.filteredusers = [];
     for(let i = 0; i <  this.Repositry.length; i++) {
+      console.log(this.Repositry)
       let user =  this.Repositry[i].name;
+      let value = this.Repositry[i].value;
       if(user.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredusers.push(user);
       
@@ -110,8 +113,7 @@ getUserValues(event){
        this.userDataRepository = data;
        let roleId = this.roleListRepositry.filter(item => item.value === this.userDataRepository.roleId);
        this.myForm.controls['roleName'].setValue(roleId[0].name);
-       this.myForm.controls['status'].setValue(this.userDataRepository.status)
-       
+       this.myForm.controls['status'].setValue(this.userDataRepository.status)       
 });
 
 }

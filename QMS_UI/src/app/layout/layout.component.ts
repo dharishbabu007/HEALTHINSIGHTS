@@ -28,12 +28,13 @@ export class LayoutComponent {
   roledata: any;
   roleList: any;
   repositry:any;
+  pageId: any;
+  screens: any;
   public navItems = navItems;
   public micEnabled = true;
   public sidebarMinimized = true;
   private changes: MutationObserver;
   public element: HTMLElement = document.body;
-
   username: any;
   constructor(private router: Router,
     private annyang: AnnyangService,
@@ -79,34 +80,39 @@ export class LayoutComponent {
   ngOnInit() {
     var user =  JSON.parse(localStorage.getItem('currentUser'));
     this.username= user.loginId;
- 
+    this.screens =[];
     this.GapsService.getRoleData(user.roleId).subscribe((data: any)=>{
       this.roledata = data;
+     // console.log(this.roledata)
       var perm =[];
-      if( this.roledata.screenPermissions[2].read == "Y"){
-       
-        perm.push("read");
-      }
-      if (this.roledata.screenPermissions[2].write == "Y"){
-       
-        perm.push("write");
-      }
-      if (this.roledata.screenPermissions[2].download == "Y"){
-       perm.push("download");
-      }
-    
-      this.permissionsService.loadPermissions(perm);
-         
-       //this.http.get('url').subscribe((permissions) => {
-  
-        // this.permissionsService.loadPermissions(perm);
-      //  })
-       
-      let perms = this.permissionsService.getPermissions();
-      this.rolesService.addRole(user.role , [user.permissions]);
-    
-      });
 
+      for( let i=0; i<this.roledata.screenPermissions.length; i++){
+        this.screens.push(this.roledata.screenPermissions[i].screenId)
+        if( this.roledata.screenPermissions[i].read == "Y"){
+       
+          perm.push(this.screens[i]+"R");
+        }
+        if (this.roledata.screenPermissions[i].write == "Y"){
+         
+          perm.push(this.screens[i]+"W");
+        }
+        if (this.roledata.screenPermissions[i].download == "Y"){
+          perm.push(this.screens[i]+"D");
+        }
+     
+      }
+  //   console.log(perm)
+      this.permissionsService.loadPermissions(perm);
+           
+      //this.http.get('url').subscribe((permissions) => {
+ 
+       // this.permissionsService.loadPermissions(perm);
+     //  })
+      
+     let perms = this.permissionsService.getPermissions();
+     this.rolesService.addRole(user.role , [user.permissions]);
+     
+      });
     
      this.commands = {
       'open *': (val)=>{

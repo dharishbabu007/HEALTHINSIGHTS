@@ -5,7 +5,8 @@
         <div class="row">
             <div class="col col-lg-12">
                 <button class="btn btn-sm btn-info float-left" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" ></button>
-                <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="No_Show_GapList">
+                <button type="button" pButton label="back" [routerLink]="['/csv1/']" style="float:left" class="btn-space"></button> 
+                <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" exportFilename="No_Show_GapList">
                     <ng-template pTemplate="header" >
                         <tr>
                             <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
@@ -16,7 +17,7 @@
                         <tr>
                             <th *ngFor="let col of cols" [ngSwitch]="col.field">
                                     <div *ngSwitchCase="'age'">
-                                            Age > {{ageFilter}}
+                                            Age > {{ageFilter}} 
                                             <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                             <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
                                    </div>

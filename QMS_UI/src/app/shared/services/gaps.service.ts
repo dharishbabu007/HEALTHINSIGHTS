@@ -108,7 +108,11 @@ export class GapsService {
         return this.http.get( 'http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_SCREEN/SCREEN_ID/SCREEN_NAME');
       }
       getRoleData(roleId){
-        return this.http.get( `http://healthinsight:8082/curis/user_role/get_role_screens/${roleId}`);
+        return this.http.get( `http://healthinsight:8082/curis/user_role/get_role_screens/${roleId}`)
+      }
+      getRoleData1(roleId){
+        return this.http.get( `http://healthinsight:8082/curis/user_role/get_role_screens/${roleId}`)
+        .toPromise();
       }
       getStatusList(){
 

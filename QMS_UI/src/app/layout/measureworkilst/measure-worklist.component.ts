@@ -4,6 +4,7 @@ import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { MessageService } from '../../shared/services/message.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { NgxPermissionsService, NgxRolesService} from 'ngx-permissions';
 @Component({
     selector: 'app-tables',
     templateUrl: './measure_worklist.component.html',
@@ -16,7 +17,8 @@ export class MeasureworklistComponent implements OnInit {
     constructor(private gapsService: GapsService,
         private msgService: MessageService,
         public router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private permissionsService: NgxPermissionsService,
         ) {
             this.route.queryParams.subscribe(params => {
                 if (params['fetch']) {
@@ -40,6 +42,12 @@ export class MeasureworklistComponent implements OnInit {
         ];
     }
     copytoCreator(id, newType) {
+        let perms = this.permissionsService.getPermissions();
+       
+        if(perms.write){
+         this.router.navigate(['/measurecreator', id, newType]);
+        }
+ 
          this.router.navigate(['/measurecreator', id, newType]);
     }
    statusClickImg(status, id) {
@@ -54,4 +62,5 @@ export class MeasureworklistComponent implements OnInit {
           }
        });
    }
+   
 }
