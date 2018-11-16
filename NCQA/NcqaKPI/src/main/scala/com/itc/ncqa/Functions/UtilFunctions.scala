@@ -228,7 +228,7 @@ object UtilFunctions {
 
 
     /*convert the start_date date into dd-MMM-yyy format*/
-    val dateTypeDf = startDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")) //.withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
+    val dateTypeDf = startDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp") //.withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
     dateTypeDf
 
   }

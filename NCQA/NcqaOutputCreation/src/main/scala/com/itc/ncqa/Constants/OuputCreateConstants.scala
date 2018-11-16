@@ -26,7 +26,7 @@ object OutputCreateConstants {
 
   /*Table Names*/
   val dimQltyMsrTblName = "dim_quality_measure"
-  val gapsInHedisTblName = "fact_hedis_gaps_in_care"
+  val gapsInHedisTblName = "gaps_in_hedis_test"
   val dimMemberTblName = "dim_member"
   val dimLobTblName = "ref_lob"
   val factMembershipTblName = "fact_membership"
@@ -40,6 +40,7 @@ object OutputCreateConstants {
   val lobIdColName = "lob_id"
   val lobNameColName = "lob_name"
   val productPlanSkColName = "product_plan_sk"
+  val ncqaMeasureIdColName = "ncqa_measureid"
 
 
   /*NCQA outputformat Column Names*/
