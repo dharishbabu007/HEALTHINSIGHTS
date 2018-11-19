@@ -114,7 +114,7 @@ object NcqaAWC {
 
     /*Calling function for creating the output format*/
     val commonOutputFormatDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, dinoExclDf, awcNumeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
-
+    //commonOutputFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
 
     /*Data loading to fact_hedis_qms table.*/

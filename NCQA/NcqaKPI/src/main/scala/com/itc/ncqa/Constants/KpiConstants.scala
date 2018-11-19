@@ -113,6 +113,7 @@ object KpiConstants {
   val startTempColName = "start_temp"
   val rxStartTempColName = "rx_start_date"
   val diagStartColName = "dig_start_date"
+  val iesdDateColName = "iesd_date"
 
 
   /*Output column names*/
@@ -328,6 +329,11 @@ object KpiConstants {
   val omwFractureCodeSystem = List("CPT","HCPCS")
   val omwInpatientStayValueSet = List("Inpatient Stay")
   val omwInpatientStayCodeSystem = List("UBREV")
+  val omwBmdTestValueSet = List("Bone Mineral Density Tests")
+  val omwBmdTestCodeSystem = List("CPT","HCPCS")
+  val omwOsteoprosisValueSet = List("Osteoporosis Medications")
+  val omwOsteoprosisCodeSystem = List("HCPCS")
+  val omwLongOsteoprosisValueSet = List("Long-Acting Osteoporosis Medications")
 
 
 

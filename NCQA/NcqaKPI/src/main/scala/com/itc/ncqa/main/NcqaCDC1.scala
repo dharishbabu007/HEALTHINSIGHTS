@@ -133,8 +133,7 @@ object NcqaCDC1 {
     val numExclDf = spark.emptyDataFrame
     val commonOutputGapsInHedisDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc1NumeratorDf, numExclDf, outValueReasonSet, sourceAndMsrList)
     commonOutputGapsInHedisDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
-    //commonOutputGapsInHedisDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName + "." + KpiConstants.factGapsInHedisTblName)
-    /*common output creation1 (data to fact_in_gaps_hedis table) ends*/
+
 
     /*common output creation2 (data to fact_hedis_qms table)*/
    /* val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.cdcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)

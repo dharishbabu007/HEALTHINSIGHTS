@@ -74,12 +74,10 @@ object NcqaABA {
 
     /*Dinominator Calculation ((Outpatient Value Set during year or previous year)*/
     val hedisJoinedForDinominator = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.abaMeasureId, KpiConstants.abavalueSetForDinominator, KpiConstants.abscodeSystemForDinominator)
-   // hedisJoinedForDinominator.orderBy("member_sk").select("member_sk","start_date"/*,"admit_date","discharge_date"*/).show(100)
     val measurement = UtilFunctions.mesurementYearFilter(hedisJoinedForDinominator, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select("member_sk").distinct()
     val dinominatorForOutput = ageFilterDf.as("df1").join(measurement.as("df2"), ageFilterDf.col(KpiConstants.memberskColName) === measurement.col(KpiConstants.memberskColName)).select("df1.member_sk", "df1.product_plan_sk", "df1.quality_measure_sk", "df1.facility_sk")
     val dinominator = ageFilterDf.as("df1").join(measurement.as("df2"), ageFilterDf.col(KpiConstants.memberskColName) === measurement.col(KpiConstants.memberskColName)).select("df1.member_sk").distinct()
-    //print("-----------------refHedisDf count , dinominatorForOutput count is----------------- :"+refHedisDf.count()+ ","+ dinominatorForOutput.count())
-    //dinominatorForOutput.orderBy("member_sk").show(50)
+
 
     /*Dinominator Exclusion1 (Pregnancy Value Set during year or previous year)*/
     val joinForDinominatorExcl = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.abaMeasureId, KpiConstants.abavaluesetForDinExcl, KpiConstants.primaryDiagnosisCodeSystem)
@@ -111,10 +109,10 @@ object NcqaABA {
     val abaNumeratorDf = numeratorBmiDf.union(numeratorBmiPercentileDf)
     /*Final Numerator(Elements who are present in dinominator and numerator)*/
     val abanumeratorFinalDf = abaNumeratorDf.intersect(finalDinominatorDf).select(KpiConstants.memberskColName).distinct()
-    //abanumeratorFinalDf.show()
-    // print("--------------Dinominator count,Numerator count-------------:"+dinominator.count()+","+abanumeratorFinalDf.count())
 
 
+
+    //<editor-fold desc="Description">
     /*Common output format (data to fact_hedis_gaps_in_care)*/
     val numeratorValueSet = KpiConstants.abaNumeratorBmiValueSet ::: KpiConstants.abaNumeratorBmiPercentileValueSet
     val dinominatorExclValueSet = KpiConstants.abavaluesetForDinExcl
@@ -128,6 +126,7 @@ object NcqaABA {
     val numExclDf = spark.emptyDataFrame
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, abanumeratorFinalDf, numExclDf, listForOutput, sourceAndMsrIdList)
     outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    //</editor-fold>
 
 
     /*Data populating to fact_hedis_qms*/

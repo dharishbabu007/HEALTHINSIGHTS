@@ -7,7 +7,7 @@
 		revision="0.1"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20181106102311"/>
+		date="20181119093701"/>
 	<dependencies>
 		<module organisation="org.scala-lang" name="scalap">
 			<revision name="2.11.11" status="release" pubdate="20170414012110" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="110">
