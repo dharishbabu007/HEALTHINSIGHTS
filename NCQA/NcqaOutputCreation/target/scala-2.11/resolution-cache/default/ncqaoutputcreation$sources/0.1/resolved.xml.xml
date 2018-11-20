@@ -4,7 +4,7 @@
 		module="ncqaoutputcreation$sources"
 		revision="0.1"
 		status="integration"
-		publication="20181106102311"
+		publication="20181119093701"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>

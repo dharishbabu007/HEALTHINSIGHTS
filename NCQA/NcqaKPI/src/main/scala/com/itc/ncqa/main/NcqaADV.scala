@@ -101,7 +101,7 @@ object NcqaADV {
     /*create empty NumeratorExcldf*/
     val numExclDf = spark.emptyDataFrame
     val outFormattedDf = UtilFunctions.commonOutputDfCreation(spark, ageFilterDf, measurementDinominatorExclDf, advNumeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
-
+    //outFormattedDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
 
     /*Data loading to fact_hedis_qms table.*/
