@@ -53,7 +53,7 @@ object NcqaOMW {
 
 
     /*Initial join function call for prepare the data fro common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.abaMeasureTitle)
+    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.omwMeasureTitle)
     /*Age & Gender filter*/
     val ageFilterDf = UtilFunctions.ageFilter(initialJoinedDf,KpiConstants.dobColName,year,KpiConstants.age67Val,KpiConstants.age85Val,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal)
     val genderFilter = ageFilterDf.filter($"gender".===("F"))
@@ -198,7 +198,7 @@ object NcqaOMW {
 
 
     /*fractureAndInpatientDf as DimMember(convert the discharge_date column to the iesd_date)*/
-    val fractureAndInpatientAsDimMemberDf = fractureAndInpatientDf.withColumnRenamed(KpiConstants.dischargeDateColName,KpiConstants.iesdDateColName).select(KpiConstants.memberskColName,KpiConstants.iesdDateColName)
+    val fractureAndInpatientAsDimMemberDf = fractureAndInpatientDf.withColumnRenamed(KpiConstants.dischargeDateColName,KpiConstants.iesdDateColName).select(KpiConstants.memberskColName,KpiConstants.iesdDateColName,KpiConstants.admitDateColName)
 
     /*Getting the member_sk, start_date for the members who has done the BMD test as primary Diagnosis and who has fracture and inpatient value*/
     val bmdAsPrimDiagForFraAndInpatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,fractureAndInpatientAsDimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwBmdTestValueSet,KpiConstants.primaryDiagnosisCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
@@ -245,14 +245,14 @@ object NcqaOMW {
     /*Dinominator Calculation Ends*/
     //</editor-fold>
 
-
+    //<editor-fold desc="Numerator">
     /*Numerator Starts*/
 
     /*Numerator1(BMD test (Bone Mineral Density Tests Value Set) for outpatient during 180 days after IESD date)*/
     val numBmdTestForOutPatDf = fractureAndOutObsEdAsDimMemberDf.as("df1").join(bmdvalDf.as("df2"),fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.memberskColName) === bmdvalDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(bmdvalDf.col(KpiConstants.startDateColName),fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.iesdDateColName)).<=(180)).select(fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.memberskColName))
 
     /*Numerator2(BMD test (Bone Mineral Density Tests Value Set) for Inpatient during 180 days after IESD date)*/
-    val numBmdTestForInPatDf =  fractureAndInpatientAsDimMemberDf.as("df1").join(bmdvalForFraAndInpatDf.as("df2"),fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName) === bmdvalForFraAndInpatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(bmdvalForFraAndInpatDf.col(KpiConstants.startDateColName),fractureAndInpatientAsDimMemberDf.col(KpiConstants.iesdDateColName)).<=(180)).select(fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName))
+    val numBmdTestForInPatDf =  fractureAndInpatientAsDimMemberDf.as("df1").join(bmdvalForFraAndInpatDf.as("df2"),fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName) === bmdvalForFraAndInpatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(bmdvalForFraAndInpatDf.col(KpiConstants.startDateColName),fractureAndInpatientAsDimMemberDf.col(KpiConstants.admitDateColName)).>=(0) &&  datediff(fractureAndInpatientAsDimMemberDf.col(KpiConstants.iesdDateColName),bmdvalForFraAndInpatDf.col(KpiConstants.startDateColName)).>=(0)).select(fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName))
 
     /*Numerator3 (Osteoporosis therapy (Osteoporosis Medications Value Set) for outpatient during 180 days after Iesd date)*/
     val numOsteoTestForOutPatDf = fractureAndOutObsEdAsDimMemberDf.as("df1").join(osteoForFractureAndOutPatDf.as("df2"),fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.memberskColName) === osteoForFractureAndOutPatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(osteoForFractureAndOutPatDf.col(KpiConstants.startDateColName),fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.iesdDateColName)).<=(180)).select(fractureAndOutObsEdAsDimMemberDf.col(KpiConstants.memberskColName))
@@ -263,11 +263,11 @@ object NcqaOMW {
 
 
     /*Numerator4 (Osteoporosis therapy (Osteoporosis Medications Value Set) for inpatient during 180 days after Iesd date)*/
-    val numOsteoTestForInPatDf = fractureAndInpatientAsDimMemberDf.as("df1").join(longosteoForFractureAndInPatDf.as("df2"),fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName) === osteoForFractureAndInPatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(osteoForFractureAndInPatDf.col(KpiConstants.startDateColName),fractureAndInpatientAsDimMemberDf.col(KpiConstants.iesdDateColName)).<=(180) &&()).select(fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName))
+    val numOsteoTestForInPatDf = fractureAndInpatientAsDimMemberDf.as("df1").join(longosteoForFractureAndInPatDf.as("df2"),fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName) === osteoForFractureAndInPatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(longosteoForFractureAndInPatDf.col(KpiConstants.startDateColName),fractureAndInpatientAsDimMemberDf.col(KpiConstants.admitDateColName)).>=(0) &&   datediff(fractureAndInpatientAsDimMemberDf.col(KpiConstants.iesdDateColName),longosteoForFractureAndInPatDf.col(KpiConstants.startDateColName)).>=(0)).select(fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName))
 
     val numeratorUnionDf = numBmdTestForOutPatDf.union(numBmdTestForInPatDf).union(numOsteoTestForOutPatDf).union(numOsteoTestForInPatDf)
-
     /*Numerator Ends*/
+    //</editor-fold>
 
   }
 }

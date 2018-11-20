@@ -44,6 +44,8 @@ object KpiConstants {
   val age24Val = "24"
   val age67Val = "67"
   val age85Val = "85"
+  val age40Val = "40"
+
 
 
 
@@ -83,6 +85,8 @@ object KpiConstants {
   val awcMeasureTitle = "Adolescent WellCare Visits (AWC)"
   val cdcMeasureTitle = "Comprehensive Diabetes Care (CDC)"
   val lscMeasureTitle = "Lead Screening in Children (LSC)"
+  val omwMeasureTitle = "Osteoporosis Management in Women Who Had a Fracture (OMW)"
+  val spdMeasureTitle = "Statin Therapy for Patients with Diabetes (SPD)"
 
 
   /*columnname constants*/
@@ -247,6 +251,7 @@ object KpiConstants {
 
 
   /*CDC1 Constants*/
+  val cdcDiabetesvalueSet = List("Diabetes")
   val cdcNumerator1ValueSet = List("HbA1c Tests")
   val cdc1NumeratorCodeSystem = List("CPT","LOINC")
 
@@ -278,7 +283,7 @@ object KpiConstants {
 
 
   /*CDC4 Constants*/
-  val cdcDiabetesvalueSet = List("Diabetes")
+
   //val cdc4DiabetescodeSystem = List("ICD%")
   val cdc4ValueSetForFirstNumerator = List("Diabetic Retinal Screening")
   val cdc4CodeSystemForFirstNumerator = List("CPT","HCPCS")
@@ -335,6 +340,22 @@ object KpiConstants {
   val omwOsteoprosisCodeSystem = List("HCPCS")
   val omwLongOsteoprosisValueSet = List("Long-Acting Osteoporosis Medications")
 
-
+  /*SPDA Constants*/
+  val spdaAcuteInpatientValueSet = List("Acute Inpatient")
+  val spdaAcuteInpatientCodeSystem = List("CPT","UBREV")
+  val spdaTeleHealthValueSet = List("Telehealth Modifier","Telehealth POS")
+  val spdaTeleHealthCodeSystem = List("")
+  val spdOutPatientValueSet = List("Outpatient")
+  val spdOutPatientCodeSystem = List("CPT","HCPCS","UBREV")
+  val spdObservationValueSet = List("Observation")
+  val spdObservationCodeSystem = List("CPT")
+  val spdEdVisitValueSet = List("ED")
+  val spdEdVisitCodeSystem = List("CPT","UBREV")
+  val spdNonAcutePatValueSet =List("Nonacute Inpatient")
+  val spdNonAcutePatCodeSystem = List("CPT","UBREV")
+  val spdTelephoneVisitValueSet = List("Telephone Visits")
+  val spdTelephoneVisitCodeSystem = List("CPT")
+  val spdOnlineAssesValueSet = List("Online Assessments")
+  val spdOnlineAssesCodeSystem = List("")
 
 }
