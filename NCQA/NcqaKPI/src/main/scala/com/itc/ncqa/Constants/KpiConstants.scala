@@ -70,7 +70,7 @@ object KpiConstants {
   val factRxClaimTblName = "fact_rx_claims"
   val factGapsInHedisTblName = "fact_hedis_gaps_in_care"
   val factHedisQmsTblName = "fact_hedis_qms"
-  val refHedisTblName = "ref_hedis2016"
+  val refHedisTblName = "ref_hedis2019"
   val refLobTblName = "ref_lob"
   val refmedValueSetTblName = "ref_med_value_set"
   val view45Days = "45_days"
@@ -118,6 +118,7 @@ object KpiConstants {
   val rxStartTempColName = "rx_start_date"
   val diagStartColName = "dig_start_date"
   val iesdDateColName = "iesd_date"
+  val ipsdDateColName = "ipsd_date"
 
 
   /*Output column names*/
@@ -357,5 +358,25 @@ object KpiConstants {
   val spdTelephoneVisitCodeSystem = List("CPT")
   val spdOnlineAssesValueSet = List("Online Assessments")
   val spdOnlineAssesCodeSystem = List("")
+  val spdMiValueSet = List("MI")
+  val spdInPatStayValueSet = List("Inpatient Stay")
+  val spdInPatStayCodeSystem = List("UBREV")
+  val spdCabgAndPciValueSet = List("CABG","PCI","Other Revascularization")
+  val spdCabgAndPciCodeSytem = List("CPT","HCPCS")
+  val spdIvdValueSet = List("IVD")
+  val spdPregnancyValueSet = List("Pregnancy")
+  val spdIvfValueSet = List("IVF")
+  val spdIvfCodeSystem = List("HCPCS")
+  val spdEsrdValueSet = List("ESRD")
+  val spdEsrdCodeSystem = List("CPT","HCPCS","POS","UBREV","UBTOB")
+  val spdCirrhosisValueSet = List("Cirrhosis")
+  val spdMusPainDisValueSet = List("Muscular Pain and Disease")
+  val spdFralityValueSet = List("Frailty")
+  val spdFralityCodeSystem = List("CPT", "HCPCS")
+  val spdAdvancedIllValueSet = List("Advanced Illness")
+  val spdDiabetesMedicationListVal = List("Diabetes Medications")
+  val spdDementiaMedicationListVal = List("Dementia Medications")
+  val spdEstroAgonistsMedicationListVal = List("Estrogen Agonists Medications")
+  val spdHmismMedicationListVal = List("High and Moderate-Intensity Statin Medications","Low-Intensity Statin Medications")
 
 }
