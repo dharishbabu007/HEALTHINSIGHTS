@@ -1,7 +1,7 @@
 package com.qms.rest.service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +79,15 @@ public class ImportExportServiceImpl implements ImportExportService {
 
 	@Override
 	public RestResult importFile(MultipartFile file, int fileId) {
-		try {			
-//			putFile(qmsAnalyticsProperty.getHostname(), qmsAnalyticsProperty.getUsername(), 
-//					qmsAnalyticsProperty.getPassword(), file, 
-//					qmsAnalyticsProperty.getLinuxUploadPath());
+		try {	
+			//In Linux 			
+			putFile(file, fileId);
 			
-			hdfsFileUtil.putFile(file, fileId);
+			//In Hadoop
+//			hdfsFileUtil.putFile(file, fileId);
+			
+			//In windows
+//			createUploadFileInWindows(file, fileId);
 			
 			return RestResult.getSucessRestResult(" File upload success. ");
 		} catch (Exception e) {
@@ -198,15 +202,15 @@ public class ImportExportServiceImpl implements ImportExportService {
         return RestResult.getSucessRestResult(result);
 	}
 	
-    private void putFile(String hostname, String username, String password, MultipartFile copyFrom, String copyTo)
+    private void putFile(MultipartFile file, int fileId)
             throws JSchException, SftpException {
         System.out.println("Initiate sending file to Linux Server...");
         JSch jsch = new JSch();
         Session session = null;
         System.out.println("Trying to connect.....");
-        session = jsch.getSession(username, hostname, 22);
+        session = jsch.getSession(qmsAnalyticsProperty.getUsername(), qmsAnalyticsProperty.getHostname(), 22);
         session.setConfig("StrictHostKeyChecking", "no");
-        session.setPassword(password);
+        session.setPassword(qmsAnalyticsProperty.getPassword());
         session.connect();
         System.out.println("is server connected? " + session.isConnected());
 
@@ -215,8 +219,13 @@ public class ImportExportServiceImpl implements ImportExportService {
         ChannelSftp sftpChannel = (ChannelSftp) channel;
         System.out.println("Server's home directory: " + sftpChannel.getHome());
         try {
-            //sftpChannel.put(copyFrom, copyTo, monitor, ChannelSftp.OVERWRITE);
-        	sftpChannel.put(copyFrom.getInputStream(), copyTo+copyFrom.getOriginalFilename(), monitor, ChannelSftp.OVERWRITE);
+        	System.out.println(" Creating the directory under --> " + qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId);
+            //sftpChannel.put(copyFrom, copyTo, monitor, ChannelSftp.OVERWRITE);        	
+        	sftpChannel.mkdir(qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId);
+        	String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        	String filePath = qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId+"/"+fileId+"."+extension;
+        	System.out.println(" Creating the file under --> " + filePath);
+        	sftpChannel.put(file.getInputStream(), filePath, monitor, ChannelSftp.OVERWRITE);
         } catch (SftpException | IOException e) {
         	e.printStackTrace();
         }
@@ -687,6 +696,25 @@ public class ImportExportServiceImpl implements ImportExportService {
 		
 		return output;
 	}
+	
+	private void createUploadFileInWindows(MultipartFile uploadFile, int fileId) throws Exception {
+		
+		String extension = FilenameUtils.getExtension(uploadFile.getOriginalFilename());
+		File inputDir = new File(qmsAnalyticsProperty.getWindowsCopyPath()+"/input/");
+		if(!inputDir.exists()) {
+			inputDir.mkdir();
+			System.out.println(" input dir created..");
+		}
+		File fileIdDir = new File(qmsAnalyticsProperty.getWindowsCopyPath()+"/input/"+fileId);
+		boolean dirCreated = fileIdDir.mkdir();
+		System.out.println(dirCreated +" fileId dir created.." + fileIdDir.getAbsolutePath());
+		if(dirCreated) {
+			FileOutputStream out = new FileOutputStream(qmsAnalyticsProperty.getWindowsCopyPath()+"/input/"+fileId+"/"+fileId+"."+extension);
+			out.write(uploadFile.getBytes());
+			out.close();	
+			System.out.println(" file created success in windows ..");
+		}		
+	}
 
 	@Override
 	public FileUpload saveFileUpload(FileUpload fileUpload) {
@@ -725,10 +753,17 @@ public class ImportExportServiceImpl implements ImportExportService {
 			return RestResult.getFailRestResult(" Input file id is null. ");		
 		
 		try {						
-			connection = qmsConnection.getHiveThriftConnection();
+//			connection = qmsConnection.getHiveThriftConnection();
+			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();	
-			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;
-			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+//			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
+//			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+			
+			//String inputFilePath = qmsAnalyticsProperty.getWindowsCopyPath()+"/input/"+fileId+"/"+fileId+".csv";
+			String inputFilePath = qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId+"/"+fileId+".csv";
+			System.out.println("Loading the file in hive --> " + inputFilePath);
+			statement.executeUpdate("LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")");
+			
 			System.out.println(" Alter table success for file id --> " + fileId);
 			return RestResult.getSucessRestResult(" File upload success. ");
 		} catch (Exception e) {
