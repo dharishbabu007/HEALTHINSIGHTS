@@ -112,7 +112,7 @@ object NcqaABA {
 
 
 
-    //<editor-fold desc="Description">
+
     /*Common output format (data to fact_hedis_gaps_in_care)*/
     val numeratorValueSet = KpiConstants.abaNumeratorBmiValueSet ::: KpiConstants.abaNumeratorBmiPercentileValueSet
     val dinominatorExclValueSet = KpiConstants.abavaluesetForDinExcl
@@ -121,12 +121,10 @@ object NcqaABA {
 
     /*add sourcename and measure id into a list*/
     val sourceAndMsrIdList = List(data_source,KpiConstants.abaMeasureId)
-
-
     val numExclDf = spark.emptyDataFrame
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, abanumeratorFinalDf, numExclDf, listForOutput, sourceAndMsrIdList)
     outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
-    //</editor-fold>
+
 
 
     /*Data populating to fact_hedis_qms*/

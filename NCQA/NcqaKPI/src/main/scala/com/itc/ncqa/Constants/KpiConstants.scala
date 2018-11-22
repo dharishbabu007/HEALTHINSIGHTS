@@ -45,6 +45,8 @@ object KpiConstants {
   val age67Val = "67"
   val age85Val = "85"
   val age40Val = "40"
+  val age3Val = "3"
+  val age6Val = "6"
 
 
 
@@ -87,6 +89,8 @@ object KpiConstants {
   val lscMeasureTitle = "Lead Screening in Children (LSC)"
   val omwMeasureTitle = "Osteoporosis Management in Women Who Had a Fracture (OMW)"
   val spdMeasureTitle = "Statin Therapy for Patients with Diabetes (SPD)"
+  val w34MeasureTitle = "WellChild Visits in the Third Fourth Fifth and Sixth Years of Life (W34)"
+  val w15MeasureTitle = "WellChild Visits in the First 15 Months of Life (W15)"
 
 
   /*columnname constants*/
@@ -226,7 +230,11 @@ object KpiConstants {
   val chlMeasureId = "CHL"
   val lsMeasureId  = "LSC"
   val spdMeasureId = "SPD"
+  val spdaMeasureId = "SPDA"
+  val spdbMeasureId = "SPDB"
   val omwMeasureId = "OMW"
+  val w34MeasureId  = "W34"
+  val w150MeasureId = "W150"
 
 
   /*ABA Constants*/
@@ -383,5 +391,14 @@ object KpiConstants {
   val spdDementiaMedicationListVal = List("Dementia Medications")
   val spdEstroAgonistsMedicationListVal = List("Estrogen Agonists Medications")
   val spdHmismMedicationListVal = List("High and Moderate-Intensity Statin Medications","Low-Intensity Statin Medications")
+
+
+  /*W34 Constants*/
+  val w34ValueSetForNumerator =List("Well-Care")
+  val w34CodeSystemForNum = List("CPT","HCPCS")
+
+  /*W15 Constants*/
+  val w15ValueSetForNumerator = List("Well-Care")
+  val w15CodeSystemForNum = List("CPT","HCPCS")
 
 }

@@ -5,6 +5,7 @@ import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import scala.collection.JavaConversions._
 
 object NcqaSPDB {
 
@@ -90,7 +91,7 @@ object NcqaSPDB {
     /*Dinominator Exclusion starts*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
-    /*Hospice Exclusion*/
+    /*Dinominator Exclusion1(Hospice Exclusion)*/
     val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf)
 
     /*Find out the members who are not in diabetes valueset*/
@@ -98,7 +99,18 @@ object NcqaSPDB {
     val measurementForDiab1Df = UtilFunctions.mesurementYearFilter(joinedForDiabetesDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
     val membersWithoutDiabetesDf = dimMemberDf.select(KpiConstants.memberskColName).except(measurementForDiab1Df)
 
+    /*Members who has diabetes exclusion valueset*/
+    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.spdMeasureId, KpiConstants.cdcDiabetesExclValueSet, KpiConstants.primaryDiagnosisCodeSystem)
+    val measurementDiabetesExclDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDiabetesExclDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+
+    /*Dinominator Exclusion2(Members who do not have a diagnosis of diabetes (Diabetes Value Set) and have (Diabetes Exclusions Value Set))*/
+    val dinoExclusion2Df = membersWithoutDiabetesDf.intersect(measurementDiabetesExclDf)
+
+    val dinoExclDf = hospiceDf.select(KpiConstants.memberskColName).union(dinoExclusion2Df)
+    dinoExclDf.printSchema()
     /*Dinominator Exclusion ends*/
+
+    val dinoAfterExclDf = dinoForKpiCalDf.except(dinoExclDf)
 
 
     /*Numerator Calculation starts*/
@@ -122,11 +134,12 @@ object NcqaSPDB {
     /*step4(Find out the PDC using ((totalDays_statinMed/teratment_days)*100))*/
     val joinedForPdcDf = treatmentDaysAddedDf.as("df1").join(sumOfDaysOfStatinDf.as("df2"),treatmentDaysAddedDf.col(KpiConstants.memberskColName) === sumOfDaysOfStatinDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select(treatmentDaysAddedDf.col(KpiConstants.memberskColName),treatmentDaysAddedDf.col(KpiConstants.treatmentDaysColName),sumOfDaysOfStatinDf.col(KpiConstants.totalStatinDayColName))
     val pdcAddedDf = joinedForPdcDf.withColumn(KpiConstants.pdcColName,(joinedForPdcDf.col(KpiConstants.totalStatinDayColName) /(joinedForPdcDf.col(KpiConstants.treatmentDaysColName))).*(100))
-    pdcAddedDf.printSchema()
+    //pdcAddedDf.printSchema()
 
     /*Step5(find out the members who has pdc >80%)*/
-    val pdcMoreThan80Df = pdcAddedDf.filter(pdcAddedDf.col(KpiConstants.pdcColName).>(80))
-    pdcMoreThan80Df.count()
+    val pdcMoreThan80Df = pdcAddedDf.filter(pdcAddedDf.col(KpiConstants.pdcColName).>(80)).select(KpiConstants.memberskColName)
+    val numeratorDf = pdcMoreThan80Df.intersect(dinoAfterExclDf)
+    //pdcMoreThan80Df.count()
     /*Numerator Calculation ends*/
 
   }

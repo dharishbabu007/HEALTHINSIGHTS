@@ -3,11 +3,13 @@ package com.itc.ncqa.main
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.to_date
-import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when,date_sub}
-object NcqaOMW {
+import org.apache.spark.sql.{SaveMode, SparkSession}
+import org.apache.spark.sql.functions._
+import scala.collection.JavaConversions._
 
+
+
+object NcqaOMW {
 
   def main(args: Array[String]): Unit = {
 
@@ -116,7 +118,7 @@ object NcqaOMW {
     //</editor-fold>
 
     //<editor-fold desc="Dinominator2">
-    /*Dinominator2(Negative Diagnosis History. Exclude members who had either of the following during the 60-day (2 months) period prior to the IESD ) Starts*/
+    /*Dinominator2(Step2)(Negative Diagnosis History. Exclude members who had either of the following during the 60-day (2 months) period prior to the IESD ) Starts*/
 
     /*Dinominator2 sub1 (for outpatient)*/
     /*iesd date column added to the fractureAndOutObsEdDf*/
@@ -137,7 +139,7 @@ object NcqaOMW {
 
     /*Dinominator2(Negative History Mmebersks(who shas to exclude from Dinominator))*/
     val dinominator2Df = dinominatorSecond_SubOneDf.union(dinominatorSecond_SubtwoDf)
-    /*Dinominator2 Ends*/
+    /*Dinominator2(Step2) Ends*/
     //</editor-fold>
 
     //<editor-fold desc="Dinominator3">
@@ -175,7 +177,7 @@ object NcqaOMW {
     //</editor-fold>
 
     //<editor-fold desc="Dinominator4">
-    /*Dinominator4 (Required Exclusions starts)*/
+    /*Dinominator4(Step4) (Required Exclusions starts)*/
 
 
     //<editor-fold desc="Dinominator4Exclusion1">
@@ -240,9 +242,29 @@ object NcqaOMW {
     /*Dinominator3Exclusion starts*/
     /*Dinominator3Exclusion ends*/
 
+    val dinominator4UnionDf = dinoExcl1Df.union(dinoExcl2Df)
     //</editor-fold>
 
+
+
+    val dinominatorUnionDf = omwDinominatorOneDf.union(dino3Df)
+    val exclUnionDf = dinominator2Df.union(dinominator4UnionDf)
+    val finalDinoDf = dinominatorUnionDf.except(exclUnionDf)
+    val dinominatorDf = genderFilter.as("df1").join(finalDinoDf.as("df2"),genderFilter.col(KpiConstants.memberskColName) === finalDinoDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+    val dinoForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
+
     /*Dinominator Calculation Ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion">
+
+    /*Dinominator Exclusion Calculation starts*/
+    /*Dinominator Exclusion1(Hospice Exclusion) starts*/
+    val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf)
+    val dinominatorExclDf = hospiceDf.select(KpiConstants.memberskColName)
+    val dinoAfterExclDf = dinoForKpiCalDf.except(dinominatorExclDf)
+    /*Dinominator Exclusion3(Hospice Exclusion) ends*/
+    /*Dinominator Exclusion Calculation ends*/
     //</editor-fold>
 
     //<editor-fold desc="Numerator">
@@ -266,8 +288,39 @@ object NcqaOMW {
     val numOsteoTestForInPatDf = fractureAndInpatientAsDimMemberDf.as("df1").join(longosteoForFractureAndInPatDf.as("df2"),fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName) === osteoForFractureAndInPatDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(longosteoForFractureAndInPatDf.col(KpiConstants.startDateColName),fractureAndInpatientAsDimMemberDf.col(KpiConstants.admitDateColName)).>=(0) &&   datediff(fractureAndInpatientAsDimMemberDf.col(KpiConstants.iesdDateColName),longosteoForFractureAndInPatDf.col(KpiConstants.startDateColName)).>=(0)).select(fractureAndInpatientAsDimMemberDf.col(KpiConstants.memberskColName))
 
     val numeratorUnionDf = numBmdTestForOutPatDf.union(numBmdTestForInPatDf).union(numOsteoTestForOutPatDf).union(numOsteoTestForInPatDf)
+
+    val numeratorDf = numeratorUnionDf.intersect(dinoAfterExclDf)
     /*Numerator Ends*/
     //</editor-fold>
 
+    //<editor-fold desc="output to fact_hedis_gaps_in_care">
+
+    /*Common output format (data to fact_hedis_gaps_in_care) starts*/
+    /*create the reason valueset for output data*/
+    val numeratorValueSet = KpiConstants.omwBmdTestValueSet:::KpiConstants.omwOsteoprosisValueSet:::KpiConstants.omwOutPatientValueSet
+    val dinominatorExclValueSet = KpiConstants.emptyList
+    val numeratorExclValueSet = KpiConstants.emptyList
+    val listForOutput = List(numeratorValueSet,dinominatorExclValueSet,numeratorExclValueSet)
+
+    /*add sourcename and measure id into a list*/
+    val sourceAndMsrIdList = List(data_source,KpiConstants.omwMeasureId)
+
+    val numExclDf = spark.emptyDataFrame
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
+    outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    /*Common output format (data to fact_hedis_gaps_in_care) ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Output to fact_hedis_qms starts">
+
+    /*Data populating to fact_hedis_qms starts*/
+    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.omwMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
+    val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
+    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
+    /*Data populating to fact_hedis_qms ends*/
+    //</editor-fold>
+
+    spark.sparkContext.stop()
   }
 }
