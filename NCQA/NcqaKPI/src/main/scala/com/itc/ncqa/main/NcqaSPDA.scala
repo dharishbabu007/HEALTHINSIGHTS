@@ -3,9 +3,10 @@ package com.itc.ncqa.main
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions._
 
+import scala.collection.JavaConversions._
 
 object NcqaSPDA {
 
@@ -80,6 +81,10 @@ object NcqaSPDA {
     //<editor-fold desc="Dinominator Calculation">
     /*Dinominator starts*/
 
+
+    //<editor-fold desc="Dinominator1 (Step1)">
+
+    /*Dinominator1(Step1) starts*/
     /*Loading refhedis data*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
@@ -150,21 +155,15 @@ object NcqaSPDA {
     val joinedForOnlineAssesDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdOnlineAssesValueSet,KpiConstants.spdOnlineAssesCodeSystem)
     val mesrForOnlineAssesDf = UtilFunctions.mesurementYearFilter(joinedForOnlineAssesDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
     val onlineAssesAndDiabetesDf = mesrForOnlineAssesDf.intersect(diabetesValuesetDf)
-    /*Dinominator Union*/
+    /*Dinominator(Step1 Union)*/
     val dinominatorUnionDf = dinominator1Df.union(dinominator2Df).union(telephoneVisitAndDiabetesDf).union(onlineAssesAndDiabetesDf)
-
-    val dinominatorDf = ageFilterDf.as("df1").join(dinominatorUnionDf.as("df2"),ageFilterDf.col(KpiConstants.memberskColName) === dinominatorUnionDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
-    val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
-    dinominatorForKpiCalDf.show()
-    /*Dinominator ends*/
+    /*Dinominator1(Step1) starts*/
     //</editor-fold>
 
+    //<editor-fold desc="Dinominator2(Step2)">
 
-
-    //<editor-fold desc="Dinominator Exclusion">
-    /*Dinominator Exclusion starts*/
-
-    /*Dinominator Exclusion1(cardiovascular)*/
+    /*Dinominator2(Step2) Starts*/
+    /*(cardiovascular)*/
     /*Mi valueset for the last 2 years*/
     val joinedForMiValueSetDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdMiValueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measrForMiDf = UtilFunctions.mesurementYearFilter(joinedForMiValueSetDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
@@ -256,8 +255,12 @@ object NcqaSPDA {
     val joinedForMusPainDisDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdMusPainDisValueSet,KpiConstants.primaryDiagnosisCodeSystem)
     val measrForMusPainDisDf = UtilFunctions.mesurementYearFilter(joinedForMusPainDisDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
     /*Dinominator Exclusion8(Myalgia, myositis, myopathy or rhabdomyolysis (Muscular Pain and Disease Value Set)) ends*/
+    /*Dinominator2(Step2) ends*/
+    //</editor-fold>
 
+    //<editor-fold desc="Dinominator3 (Step3)">
 
+    /*Dinominator3 (Step3) starts*/
 
     /*DinominatorExclusion9(Enrolled in an Institutional SNP (I-SNP)) starts*/
     /*DinominatorExclusion9(Enrolled in an Institutional SNP (I-SNP)) ends*/
@@ -307,17 +310,34 @@ object NcqaSPDA {
     /*Dinominator Exclusion10(Members who has age 65 or more and has frailty (Frailty Value Set) and Advanced Ill)*/
     val fralityAndAdvIlDfAndAbove65Df = age65OrMoreDf.select(KpiConstants.memberskColName).intersect(fralityAndAdvIlDf)
     /*Dinominator Exclusion 10 (66 years of age and older with frailty and advanced illness) ends*/
+    /*Dinominator3 (Step3) ends*/
+    //</editor-fold>
 
+    /*Union of step2 dataframes and step3 dataframes which we have to exclude in dinominator calculation*/
+    val dinoexclUnionDf = cardiovascularDf.union(ivdDf).union(measrForPregnancyDf).union(measrForIvfDf).union(MeasurementForClomipheneDf).union(esrdWithoutTeleHealthDf).union(measrForCirrhosisDf).union(measrForMusPainDisDf).union(fralityAndAdvIlDfAndAbove65Df)
+
+    /*Dinominator after exclude step2,step3 members*/
+    val dinominatorCalDf = dinominatorUnionDf.except(dinoexclUnionDf)
+
+    /*Join with age filter to create dinominatordf for output creation*/
+    val dinominatorDf = ageFilterDf.as("df1").join(dinominatorCalDf.as("df2"),ageFilterDf.col(KpiConstants.memberskColName) === dinominatorUnionDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+    val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
+    dinominatorForKpiCalDf.show()
+    /*Dinominator ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion">
+
+    /*Dinominator Exclusion starts*/
     /*Hospice Exclusion*/
     val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf)
-
-    /*Union of all Dinominator Exclusions*/
-    val DinoExclDf = cardiovascularDf.union(ivdDf).union(measrForPregnancyDf).union(measrForIvfDf).union(MeasurementForClomipheneDf).union(esrdWithoutTeleHealthDf).union(measrForCirrhosisDf).union(measrForMusPainDisDf).union(fralityAndAdvIlDfAndAbove65Df).union(hospiceDf)
-    DinoExclDf.show()
+    val dinominatorExclDf = hospiceDf.select(KpiConstants.memberskColName)
+    dinominatorExclDf.show()
+    val dinominatorAfterExclDf = dinominatorForKpiCalDf.except(dinominatorExclDf)
     /*Dinominator Exclusion ends*/
     //</editor-fold>
 
-    val dinominatorAfterExclDf = dinominatorForKpiCalDf.except(DinoExclDf)
+    //<editor-fold desc="Numerator">
 
     /*Numerator Calculation starts*/
     val joinedForHmismDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"medication_list".isin(KpiConstants.spdHmismMedicationListVal:_*)).select("df1.member_sk", "df2.start_date_sk")
@@ -327,6 +347,36 @@ object NcqaSPDA {
     val numeratorDf = MeasurementForHmismDf.intersect(dinominatorAfterExclDf)
     numeratorDf.show()
     /*Numerator Calculation ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="output to fact_hedis_gaps_in_care">
+
+    /*Common output format (data to fact_hedis_gaps_in_care) starts*/
+    /*create the reason valueset for output data*/
+    val numeratorValueSet = KpiConstants.spdHmismMedicationListVal
+    val dinominatorExclValueSet = KpiConstants.emptyList
+    val numeratorExclValueSet = KpiConstants.emptyList
+    val listForOutput = List(numeratorValueSet,dinominatorExclValueSet,numeratorExclValueSet)
+
+    /*add sourcename and measure id into a list*/
+    val sourceAndMsrIdList = List(data_source,KpiConstants.spdaMeasureId)
+
+    val numExclDf = spark.emptyDataFrame
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
+    //outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    /*Common output format (data to fact_hedis_gaps_in_care) ends*/
+    //</editor-fold>
+
+
+    //<editor-fold desc="Output to fact_hedis_qms starts">
+
+    /*Data populating to fact_hedis_qms starts*/
+    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
+    val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
+    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
+    /*Data populating to fact_hedis_qms ends*/
+    //</editor-fold>
 
 
     spark.sparkContext.stop()
