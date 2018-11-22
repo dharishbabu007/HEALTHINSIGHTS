@@ -320,7 +320,6 @@ object NcqaSPDA {
     val dinominatorAfterExclDf = dinominatorForKpiCalDf.except(DinoExclDf)
 
     /*Numerator Calculation starts*/
-
     val joinedForHmismDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"medication_list".isin(KpiConstants.spdHmismMedicationListVal:_*)).select("df1.member_sk", "df2.start_date_sk")
     val startDateValAddedDfForHmismDf = joinedForHmismDf.as("df1").join(dimdateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
     val dateTypeDfForHmismDf = startDateValAddedDfForHmismDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")

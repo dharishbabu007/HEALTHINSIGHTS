@@ -103,6 +103,7 @@ object KpiConstants {
   val startDateColName = "start_date"
   val admitDateColName = "admit_date"
   val dischargeDateColName = "discharge_date"
+  val endDateColName = "end_date"
   val locationSkColName = "location_sk"
   val facilitySkColName = "facility_sk"
   val providerSkColName = "provider_sk"
@@ -119,6 +120,10 @@ object KpiConstants {
   val diagStartColName = "dig_start_date"
   val iesdDateColName = "iesd_date"
   val ipsdDateColName = "ipsd_date"
+  val treatmentDaysColName = "teratment_days"
+  val endstrtDiffColName = "endStrt_Diff"
+  val totalStatinDayColName = "totalDays_statinMed"
+  val pdcColName = "pdc"
 
 
   /*Output column names*/
