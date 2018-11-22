@@ -30,6 +30,7 @@ public class HDFSFileUtil {
 	        URI uri = URI.create (hdfsFilePath);
 	        Path dirPath = new Path(uri);
 	        Configuration conf = new Configuration();
+	        conf.set("fs.defaultFS", qmsHDFSProperty.getHdfsURL());
 	        file = FileSystem.get (uri, conf);	
 	        if(!file.exists(dirPath)) {
 	        	System.out.println(" Creating directory.. " + hdfsFilePath);        	
@@ -59,6 +60,7 @@ public class HDFSFileUtil {
 	        //String hdfsFilePath = qmsHDFSProperty.getHdfsURL()+qmsHDFSProperty.getWritePath()+fileId+"."+extension;
 	        URI uri = URI.create (hdfsFilePath);
 	        Configuration conf = new Configuration();
+	        conf.set("fs.defaultFS", qmsHDFSProperty.getHdfsURL());
 	        file = FileSystem.get (uri, conf);		
 			outputStream=file.create(new Path(uri));
 			outputStream.write(uploadFile.getBytes());
