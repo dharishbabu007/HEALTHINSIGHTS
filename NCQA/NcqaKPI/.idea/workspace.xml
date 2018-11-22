@@ -2,112 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6440086-ab20-4861-93c5-c9ad6934363b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDB.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaADV.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaADV.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAWC.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAWC.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC10.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC10.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC2.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC2.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC3.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC3.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC7.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC7.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC9.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC9.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaOMW.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaOMW.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/.history" beforeDir="false" afterPath="$PROJECT_DIR$/target/.history" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC1$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC1$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC2$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC2$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC4$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC4$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$$anonfun$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$$anonfun$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$$anonfun$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/ncqafirststage_2.11-0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/ncqafirststage_2.11-0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/compile/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compile/$global/streams/out" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/inputs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/modules/NcqaOutputCreation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/modules/NcqaOutputCreation.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$766396f06e8a1c63c0af$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$766396f06e8a1c63c0af.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$766396f06e8a1c63c0af.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$bc6d51b8b809ab15b8fe$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$bc6d51b8b809ab15b8fe.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$bc6d51b8b809ab15b8fe.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$c6a99aa5f07b677816d1$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$c6a99aa5f07b677816d1.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$c6a99aa5f07b677816d1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$d0c1bdeda1a969d8d729$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$d0c1bdeda1a969d8d729.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/config-classes/$d0c1bdeda1a969d8d729.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqaoutputcreation-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqaoutputcreation-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqaoutputcreation-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqaoutputcreation-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqaoutputcreation-build-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/ivyConfiguration/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/ivyConfiguration/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/update/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/compileIncremental/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/compileIncremental/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/copyResources/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/copyResources/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/dependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/dependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/compile/managedClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/dependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/dependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/fullClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/fullClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/project/target/streams/runtime/managedClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/.history" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/.history" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/default/ncqaoutputcreation$sources/0.1/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/default/ncqaoutputcreation$sources/0.1/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/default/ncqaoutputcreation$sources/0.1/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/default/ncqaoutputcreation$sources/0.1/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/scala-2.11/resolution-cache/reports/default-ncqaoutputcreation$sources-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/streams/$global/$global/dumpStructure/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/streams/$global/$global/dumpStructure/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/target/streams/$global/updateClassifiers/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/target/streams/$global/updateClassifiers/$global/streams/out" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -258,23 +165,23 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="scala" value="41842" />
+          <entry key="scala" value="50312" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Scala" value="41842" />
+          <entry key="Scala" value="50312" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="sbt" value="1" />
-          <entry key="scala" value="152" />
+          <entry key="scala" value="161" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Scala" value="152" />
+          <entry key="Scala" value="161" />
           <entry key="sbt" value="1" />
         </counts>
       </usages-collector>
@@ -285,13 +192,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaOMW.scala">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="267" column="137" selection-start-line="267" selection-start-column="137" selection-end-line="267" selection-end-column="137" />
+            <state relative-caret-position="192">
+              <caret line="94" column="54" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="94" selection-end-column="54" />
               <folding>
-                <element signature="e#14201#14246#0" />
+                <element signature="e#32#74#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="311" column="99" lean-forward="true" selection-start-line="310" selection-start-column="5" selection-end-line="311" selection-end-column="99" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
+                <element signature="e#3509#3555#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDB.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="321">
+              <caret line="108" column="8" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -300,8 +232,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="335" column="32" selection-start-line="335" selection-start-column="6" selection-end-line="335" selection-end-column="32" />
+            <state relative-caret-position="141">
+              <caret line="120" column="21" selection-start-line="120" selection-start-column="6" selection-end-line="120" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="256">
+              <caret line="189" column="29" selection-start-line="189" selection-start-column="4" selection-end-line="189" selection-end-column="29" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -343,8 +287,11 @@
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaADV.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC9.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC10.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/SPDA.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaOMW.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDB.scala" />
       </list>
     </option>
   </component>
@@ -421,7 +368,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542629803233" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542802111315" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../NcqaOutputCreation" />
     <property name="settings.editor.selected.configurable" value="editing.templates" />
   </component>
@@ -487,7 +434,7 @@
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49893844" visible="true" weight="0.18683812" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49893844" visible="true" weight="0.18683812" />
       <window_info id="Structure" order="1" sideWeight="0.50274724" side_tool="true" weight="0.078668684" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -513,7 +460,7 @@
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info anchor="right" id="sbt" order="7" visible="true" weight="0.22617246" />
+      <window_info active="true" anchor="right" id="sbt" order="7" visible="true" weight="0.16717096" />
       <window_info anchor="right" id="Maven Projects" order="8" />
     </layout>
   </component>
@@ -535,13 +482,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPD.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="63" selection-start-line="63" selection-end-line="63" />
         </state>
       </provider>
     </entry>
@@ -577,26 +517,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="74" column="20" selection-start-line="71" selection-start-column="5" selection-end-line="74" selection-end-column="20" />
-          <folding>
-            <element signature="e#32#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="181" column="27" selection-start-line="181" selection-start-column="27" selection-end-line="181" selection-end-column="27" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC3.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -617,34 +537,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="135" selection-start-line="135" selection-end-line="135" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAWC.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="134">
           <caret line="116" column="6" selection-start-line="116" selection-start-column="6" selection-end-line="116" selection-end-column="6" />
           <folding>
             <element signature="e#27#69#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="127" column="136" lean-forward="true" selection-start-line="127" selection-start-column="4" selection-end-line="127" selection-end-column="136" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-            <element signature="e#2780#2872#0" />
-            <element signature="e#2882#2974#0" />
           </folding>
         </state>
       </provider>
@@ -689,19 +587,84 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/SPDA.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="335" column="32" selection-start-line="335" selection-start-column="6" selection-end-line="335" selection-end-column="32" />
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="68" column="190" lean-forward="true" selection-start-line="56" selection-start-column="3" selection-end-line="68" selection-end-column="190" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="89" column="219" lean-forward="true" selection-start-line="84" selection-start-column="4" selection-end-line="89" selection-end-column="219" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaOMW.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="267" column="137" selection-start-line="267" selection-start-column="137" selection-end-line="267" selection-end-column="137" />
+        <state relative-caret-position="-1206">
+          <caret line="115" selection-start-line="115" selection-end-line="115" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="189" column="29" selection-start-line="189" selection-start-column="4" selection-end-line="189" selection-end-column="29" />
           <folding>
-            <element signature="e#14201#14246#0" />
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="311" column="99" lean-forward="true" selection-start-line="310" selection-start-column="5" selection-end-line="311" selection-end-column="99" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+            <element signature="e#3509#3555#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="120" column="21" selection-start-line="120" selection-start-column="6" selection-end-line="120" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="94" column="54" lean-forward="true" selection-start-line="93" selection-start-column="4" selection-end-line="94" selection-end-column="54" />
+          <folding>
+            <element signature="e#32#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPDB.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="108" column="8" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
           </folding>
         </state>
       </provider>
