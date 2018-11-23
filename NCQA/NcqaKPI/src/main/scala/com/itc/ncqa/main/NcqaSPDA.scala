@@ -164,13 +164,13 @@ object NcqaSPDA {
 
     /*Dinominator2(Step2) Starts*/
     /*(cardiovascular)*/
-    /*Mi valueset for the last 2 years*/
+    /*Mi valueset for the previous year*/
     val joinedForMiValueSetDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdMiValueSet,KpiConstants.primaryDiagnosisCodeSystem)
-    val measrForMiDf = UtilFunctions.mesurementYearFilter(joinedForMiValueSetDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val measrForMiDf = UtilFunctions.mesurementYearFilter(joinedForMiValueSetDf,KpiConstants.startDateColName,year,KpiConstants.measurementOneyearUpper,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
 
-    /*Inpatient stay in last two years*/
+    /*Inpatient stay for the previous year*/
     val joinedForInPatStayDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdInPatStayValueSet,KpiConstants.spdInPatStayCodeSystem)
-    val measrForInPatStayDf = UtilFunctions.mesurementYearFilter(joinedForInPatStayDf,KpiConstants.dischargeDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val measrForInPatStayDf = UtilFunctions.mesurementYearFilter(joinedForInPatStayDf,KpiConstants.dischargeDateColName,year,KpiConstants.measurementOneyearUpper,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
 
     /*Members who has MI valueset and Inpatient discharge in the measurement time.*/
     val miAndInPatStayDf = measrForMiDf.intersect(measrForInPatStayDf)
@@ -178,11 +178,11 @@ object NcqaSPDA {
 
     /*CABG and PCI as Primary diagnosis*/
     val joinedForCabgAndPciAsDiagDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdCabgAndPciValueSet,KpiConstants.primaryDiagnosisCodeSystem)
-    val measrForCabgAndPciAsDiagDf = UtilFunctions.mesurementYearFilter(joinedForCabgAndPciAsDiagDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val measrForCabgAndPciAsDiagDf = UtilFunctions.mesurementYearFilter(joinedForCabgAndPciAsDiagDf,KpiConstants.startDateColName,year,KpiConstants.measurementOneyearUpper,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
 
     /*CABG,PCI,Other Revascularization as Proceedure code*/
     val joinedForCabgAndPciAsprocDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdCabgAndPciValueSet,KpiConstants.spdCabgAndPciCodeSytem)
-    val measrForCabgAndPciAsprocDf = UtilFunctions.mesurementYearFilter(joinedForCabgAndPciAsprocDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val measrForCabgAndPciAsprocDf = UtilFunctions.mesurementYearFilter(joinedForCabgAndPciAsprocDf,KpiConstants.startDateColName,year,KpiConstants.measurementOneyearUpper,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
 
     /*members who has CABG and PCI and Other Revascularization as valueset during the measurement time*/
     val cabgAndPciDf = measrForCabgAndPciAsDiagDf.union(measrForCabgAndPciAsprocDf)
@@ -367,14 +367,13 @@ object NcqaSPDA {
     /*Common output format (data to fact_hedis_gaps_in_care) ends*/
     //</editor-fold>
 
-
     //<editor-fold desc="Output to fact_hedis_qms starts">
 
     /*Data populating to fact_hedis_qms starts*/
-    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
+    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.spdMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
     val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
     val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
+    //outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
     /*Data populating to fact_hedis_qms ends*/
     //</editor-fold>
 
