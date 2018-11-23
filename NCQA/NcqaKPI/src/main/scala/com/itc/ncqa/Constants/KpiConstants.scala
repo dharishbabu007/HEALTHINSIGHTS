@@ -89,6 +89,7 @@ object KpiConstants {
   val lscMeasureTitle = "Lead Screening in Children (LSC)"
   val omwMeasureTitle = "Osteoporosis Management in Women Who Had a Fracture (OMW)"
   val spdMeasureTitle = "Statin Therapy for Patients with Diabetes (SPD)"
+  val spcMeasureTitle = "Statin Therapy for Patients with Cardiovascular Disease (SPC)"
   val w34MeasureTitle = "WellChild Visits in the Third Fourth Fifth and Sixth Years of Life (W34)"
   val w15MeasureTitle = "WellChild Visits in the First 15 Months of Life (W15)"
 
@@ -101,6 +102,7 @@ object KpiConstants {
   val dateSkColName = "date_sk"
   val calenderDateColName = "calendar_date"
   val dobColName = "dob"
+  val genderColName = "gender"
   val qualityMsrSkColName = "quality_measure_sk"
   val proceedureCodeColName = "procedure_code"
   val primaryDiagnosisColname = "primary_diagnosis"
@@ -232,6 +234,11 @@ object KpiConstants {
   val spdMeasureId = "SPD"
   val spdaMeasureId = "SPDA"
   val spdbMeasureId = "SPDB"
+  val spcMeasureId = "SPC"
+  val spc1aMeasureId = "SPC1A"
+  val spc2aMeasureId = "SPC2A"
+  val spc1bMeasureId = "SPC1B"
+  val spc2bMeasureId = "SPC2B"
   val omwMeasureId = "OMW"
   val w34MeasureId  = "W34"
   val w150MeasureId = "W150"
@@ -391,6 +398,44 @@ object KpiConstants {
   val spdDementiaMedicationListVal = List("Dementia Medications")
   val spdEstroAgonistsMedicationListVal = List("Estrogen Agonists Medications")
   val spdHmismMedicationListVal = List("High and Moderate-Intensity Statin Medications","Low-Intensity Statin Medications")
+
+  /*SPC constants*/
+  val spcAcuteInpatientValueSet = List("Acute Inpatient")
+  val spcAcuteInpatientCodeSystem = List("CPT","UBREV")
+  val spcTeleHealthValueSet = List("Telehealth Modifier","Telehealth POS")
+  val spcTeleHealthCodeSystem = List("")
+  val spcOutPatientValueSet = List("Outpatient")
+  val spcOutPatientCodeSystem = List("CPT","HCPCS","UBREV")
+  val spcObservationValueSet = List("Observation")
+  val spcObservationCodeSystem = List("CPT")
+  val spcEdVisitValueSet = List("ED")
+  val spcEdVisitCodeSystem = List("CPT","UBREV")
+  val spcNonAcutePatValueSet =List("Nonacute Inpatient")
+  val spcNonAcutePatCodeSystem = List("CPT","UBREV")
+  val spcTelephoneVisitValueSet = List("Telephone Visits")
+  val spcTelephoneVisitCodeSystem = List("CPT")
+  val spcOnlineAssesValueSet = List("Online Assessments")
+  val spcOnlineAssesCodeSystem = List("")
+  val spcMiValueSet = List("MI")
+  val spcInPatStayValueSet = List("Inpatient Stay")
+  val spcInPatStayCodeSystem = List("UBREV")
+  val spcCabgAndPciValueSet = List("CABG","PCI","Other Revascularization")
+  val spcCabgAndPciCodeSytem = List("CPT","HCPCS")
+  val spcIvdValueSet = List("IVD")
+  val spcPregnancyValueSet = List("Pregnancy")
+  val spcIvfValueSet = List("IVF")
+  val spcIvfCodeSystem = List("HCPCS")
+  val spcEsrdValueSet = List("ESRD")
+  val spcEsrdCodeSystem = List("CPT","HCPCS","POS","UBREV","UBTOB")
+  val spcCirrhosisValueSet = List("Cirrhosis")
+  val spcMusPainDisValueSet = List("Muscular Pain and Disease")
+  val spcFralityValueSet = List("Frailty")
+  val spcFralityCodeSystem = List("CPT", "HCPCS")
+  val spcAdvancedIllValueSet = List("Advanced Illness")
+  val spcDiabetesMedicationListVal = List("Diabetes Medications")
+  val spcDementiaMedicationListVal = List("Dementia Medications")
+  val spcEstroAgonistsMedicationListVal = List("Estrogen Agonists Medications")
+  val spcHmismMedicationListVal = List("High and Moderate-Intensity Statin Medications")
 
 
   /*W34 Constants*/

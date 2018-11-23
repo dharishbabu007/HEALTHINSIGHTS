@@ -5,9 +5,8 @@ import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import scala.collection.JavaConversions._
 
-object NcqaSPDB {
+object NcqaSPC1B {
 
   def main(args: Array[String]): Unit = {
 
@@ -31,7 +30,7 @@ object NcqaSPDB {
     /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQASPDB")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQASPC1B")
     conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
 
@@ -71,7 +70,7 @@ object NcqaSPDB {
     val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
     /*filter out the members whoose age is between 40 and 75*/
     val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age40Val, KpiConstants.age75Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-
+    val genderFilterDf = ageFilterDf.filter(ageFilterDf.col(KpiConstants.genderColName).===("F"))
 
 
     //<editor-fold desc="Dinominator Calculation">
@@ -79,13 +78,13 @@ object NcqaSPDB {
     /*Dinominator Calculation Starts*/
     val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refmedValueSetTblName)
     val dimdateDf = DataLoadFunctions.dimDateLoadFunction(spark)
-    val joinedForHmismDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"medication_list".isin(KpiConstants.spdHmismMedicationListVal:_*)).select("df1.member_sk", "df2.start_date_sk","df2.end_date_sk","df3.medication_list")
+    val joinedForHmismDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"medication_list".isin(KpiConstants.spcHmismMedicationListVal:_*)).select("df1.member_sk", "df2.start_date_sk","df2.end_date_sk","df3.medication_list")
     val startDateValAddedDfForHmismDf = joinedForHmismDf.as("df1").join(dimdateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
     val endDateValAddedForHmismDf = startDateValAddedDfForHmismDf.as("df1").join(dimdateDf.as("df2"), $"df1.end_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "end_temp").drop("end_date_sk")
     val dateTypeDfForHmismDf = endDateValAddedForHmismDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).withColumn("end_date", to_date($"end_temp", "dd-MMM-yyyy")).drop("start_temp","end_temp")
     val measurementForHmismDf = UtilFunctions.mesurementYearFilter(dateTypeDfForHmismDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
     val dinoDf = measurementForHmismDf.select(KpiConstants.memberskColName)
-    val dinominatorDf = ageFilterDf.as("df1").join(dinoDf.as("df2"),ageFilterDf.col(KpiConstants.memberskColName) === dinoDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+    val dinominatorDf = genderFilterDf.as("df1").join(dinoDf.as("df2"),ageFilterDf.col(KpiConstants.memberskColName) === dinoDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
     val dinoForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
     /*Dinominator Calculation Ends*/
     //</editor-fold>
@@ -95,22 +94,8 @@ object NcqaSPDB {
     /*Dinominator Exclusion starts*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
-    /*Dinominator Exclusion1(Hospice Exclusion)*/
-    val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf)
-
-    /*Find out the members who are not in diabetes valueset*/
-    val joinedForDiabetesDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.spdMeasureId, KpiConstants.cdcDiabetesvalueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForDiab1Df = UtilFunctions.mesurementYearFilter(joinedForDiabetesDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
-    val membersWithoutDiabetesDf = dimMemberDf.select(KpiConstants.memberskColName).except(measurementForDiab1Df)
-
-    /*Members who has diabetes exclusion valueset*/
-    val hedisJoinedForDiabetesExclDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.spdMeasureId, KpiConstants.cdcDiabetesExclValueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementDiabetesExclDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDiabetesExclDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
-
-    /*Dinominator Exclusion2(Members who do not have a diagnosis of diabetes (Diabetes Value Set) and have (Diabetes Exclusions Value Set))*/
-    val dinoExclusion2Df = membersWithoutDiabetesDf.intersect(measurementDiabetesExclDf)
-
-    val dinominatorExclDf = hospiceDf.select(KpiConstants.memberskColName).union(dinoExclusion2Df)
+    /*Dinominator Exclusion(Hospice Exclusion)*/
+    val dinominatorExclDf = UtilFunctions.hospiceMemberDfFunction(spark,dimMemberDf,factClaimDf,refHedisDf).select(KpiConstants.memberskColName)
     dinominatorExclDf.printSchema()
     val dinoAfterExclDf = dinoForKpiCalDf.except(dinominatorExclDf)
     /*Dinominator Exclusion ends*/
@@ -157,7 +142,7 @@ object NcqaSPDB {
     val listForOutput = List(numeratorValueSet,dinominatorExclValueSet,numeratorExclValueSet)
 
     /*add sourcename and measure id into a list*/
-    val sourceAndMsrIdList = List(data_source,KpiConstants.spdbMeasureId)
+    val sourceAndMsrIdList = List(data_source,KpiConstants.spc1bMeasureId)
 
     val numExclDf = spark.emptyDataFrame
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
@@ -175,5 +160,6 @@ object NcqaSPDB {
     /*Data populating to fact_hedis_qms ends*/
     //</editor-fold>
 
+    spark.sparkContext.stop()
   }
 }
