@@ -9,7 +9,7 @@ export const navItems = [
         url: '/Quality Central',
         icon: 'fa fa-line-chart'
       },
-      {
+      { 
         name: 'Quality Program',
         url: 'http://healthinsight:8082/curis/hleft.jsp#!/',
         icon: 'fa fa-line-chart',
@@ -196,6 +196,13 @@ export const navItems = [
   name: 'BI Workbench',
   url: 'http://192.168.184.70/t/CurisSite/views/CreateyourownAnalysis/Sheet1?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
   icon: 'fa fa-table',
+
+
+},
+{
+  name: 'Member Engagement',
+  url: '/memberEngagement',
+  icon: 'fa fa-user-o',
 
 
 },

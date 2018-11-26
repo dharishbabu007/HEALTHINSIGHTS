@@ -16,14 +16,20 @@ import { MeasurecreatorComponent } from './measurecreator/measure-creator.compon
 import { SpvComponent } from './spv/spv.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
 import { UserSettingComponent } from './usersettings/userSetting.component';
-
+import { MemberEngageComponent } from './member-engage/member-engage.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { Csv1Component } from './csv1/csv1.component';
 import { Csv2Component } from './csv2/csv2.component';
 import { CreateRoleComponent } from './create-role/create-role.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { NoShowGapListComponent } from './noshowG/noshowG.component';
-  import {  RoleGuardService} from '../shared/services/RouteGuard.service';
+import {  RoleGuardService} from '../shared/services/RouteGuard.service';
+import { ClusterAnalysisComponent } from './cluster-analysis/cluster-analysis.component';
+import { CreatePersonasComponent } from './create-personas/create-personas.component';
+import { LikelihoodToChurnComponent } from './like-hood-churn/like-hood-churn.component';
+import { ClusterStatisticsComponent } from './cluster-statistics/cluster-statistics.component';
+import { ViewPersonaComponent } from './view-personas/view-personas.component';
+import { LikelihoodStatisticsComponent } from './likelihood-Statistics/likelihood-statistics.component';
 
 const routes: Routes = [
     {
@@ -103,7 +109,14 @@ const routes: Routes = [
             data: { 
               expectedRole: '14'
             } },
-            { path: 'noshowGapList', component: NoShowGapListComponent}
+            { path: 'noshowGapList', component: NoShowGapListComponent},
+            { path: 'memberEngagement', component: MemberEngageComponent},
+            { path: 'create-personas', component: CreatePersonasComponent},
+            { path: 'cluster-analysis', component: ClusterAnalysisComponent},
+            { path: 'likelihoodChurn', component: LikelihoodToChurnComponent},
+            { path: 'cluster-statistics', component: ClusterStatisticsComponent},
+            { path: 'create-persona', component: ViewPersonaComponent},
+            { path: 'likelihood-statistics', component: LikelihoodStatisticsComponent}
 
         ]
     }

@@ -43,10 +43,6 @@ export class MeasureworklistComponent implements OnInit {
     }
     copytoCreator(id, newType) {
         let perms = this.permissionsService.getPermissions();
-       
-        if(perms.write){
-         this.router.navigate(['/measurecreator', id, newType]);
-        }
  
          this.router.navigate(['/measurecreator', id, newType]);
     }

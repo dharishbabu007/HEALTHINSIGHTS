@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col col-lg-12 ">
 
-            <button type="button" *ngxPermissionsOnly="['6D']" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" exportFilename="Quality_Measures" >
                 <ng-template pTemplate="header">
                     <tr>

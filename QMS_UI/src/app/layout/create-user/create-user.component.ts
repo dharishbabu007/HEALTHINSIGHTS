@@ -26,6 +26,7 @@ statusList:any;
   Repositry: any;
   userDataRepository: any;
   roleListRepositry:any;
+  values: any;
   constructor(private _fb: FormBuilder,
     private GapsService: GapsService,
     private router: Router,
@@ -44,6 +45,7 @@ statusList:any;
         data.forEach(item => {
           this.UserList.push({label: item.name, value: item.value});
         });
+        console.log("came here")
         });
         this.GapsService.getRoleList().subscribe((data: any) => {
           this.roleList =[];
@@ -74,7 +76,7 @@ onSubmit(model,isValid){
   if (this.myForm.valid) {
     
   
- // console.log(model);
+ console.log(model);
            let userId = this.Repositry.filter(item => item.name === model.user);
            let roleId = this.roleListRepositry.filter(item => item.name === model.roleName);
            console.log(userId[0].value,roleId[0].value,model.status)
@@ -96,25 +98,34 @@ onSubmit(model,isValid){
 filteredUsers(event) {
   this.filteredusers = [];
     for(let i = 0; i <  this.Repositry.length; i++) {
-      console.log(this.Repositry)
-      let user =  this.Repositry[i].name;
-      let value = this.Repositry[i].value;
-      if(user.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        this.filteredusers.push(user);
-      
+      let user =  this.Repositry[i];
+    if(user.name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+       this.filteredusers.push(user);    
     }
-  }
-
   
+  }  
 }
 getUserValues(event){
-  let user = this.Repositry.filter(item => item.name === event)
+  let user = this.Repositry.filter(item => item.name === event.name);
+  this.myForm.controls['user'].setValue(event.name);
   this.GapsService.getUserData(user[0].value).subscribe((data: any) => {
        this.userDataRepository = data;
        let roleId = this.roleListRepositry.filter(item => item.value === this.userDataRepository.roleId);
        this.myForm.controls['roleName'].setValue(roleId[0].name);
-       this.myForm.controls['status'].setValue(this.userDataRepository.status)       
+       this.myForm.controls['status'].setValue(this.userDataRepository.status);
+      
 });
 
 }
+onChangeList(event){
+if( event == "Active"){
+ this.statusList = this.statusList.filter(item => item.label == "Inactive");
+}
+console.log(this.statusList)
+console.log(this.myForm.controls['status'].value)
+if(this.myForm.controls['status'].value == "New"){
+ this.statusList = this.statusList.filter(item => item.label !="New");
+}    
+}
+
 }
