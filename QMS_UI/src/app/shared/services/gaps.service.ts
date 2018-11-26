@@ -142,4 +142,16 @@ export class GapsService {
     {
         return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_output1`)
     }
+    getlikelihoodmodel(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/modelSummary`)
+    }
+    getlikelihoodconfusionmatric(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/confusionMatric`)
+    }
+    getlikelihoodmodelScore(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/modelScore`)
+    }
+    getClusterStatistics(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterAnalysis`)
+    }
 }

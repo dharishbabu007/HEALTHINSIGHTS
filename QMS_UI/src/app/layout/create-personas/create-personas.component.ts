@@ -5,14 +5,15 @@ import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { Router } from '@angular/router';
 import { NgxPermissionsService, NgxRolesService} from 'ngx-permissions';
+import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 @Component({
     selector: 'app-tables',
-    templateUrl: './measure-library.component.html',
-    styleUrls: ['./measure-library.component.scss'],
+    templateUrl: './create-personas.component.html',
+    styleUrls: ['./create-personas.component.scss'],
     animations: [routerTransition()],
     providers: [GapsService]
 })
-export class MeasurelibraryComponent implements OnInit {
+export class CreatePersonasComponent implements OnInit {
      
     programType = 'test';
     programValue = 'test';
@@ -30,9 +31,9 @@ export class MeasurelibraryComponent implements OnInit {
     membergaps: MemberCareGaps[];
     cols: any[];
     ngOnInit() {
-        this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: MemberCareGaps[]) => {
+     /*   this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: MemberCareGaps[]) => {
             this.membergaps = data;
-        });
+        }); */
         this.cols = [
             { field: 'id', header: 'Measure ID' },
             { field: 'name', header: 'Measure Name' },
@@ -43,13 +44,12 @@ export class MeasurelibraryComponent implements OnInit {
             { field: 'status', header: 'Status'}
         ];
     }
-    copytoCreator(id, newType) {
-       let perms = this.permissionsService.getPermissions();
-       
-        this.router.navigate(['/measurecreator', id, newType]);
-       
-
-       
-        
-    }
 }
+
+ /*{ field: 'persona', header: 'Persona' },
+            { field: 'description', header: 'Description' },
+            { field: 'id', header: 'Cluster' }, 
+            { field: 'attb1', header: 'Attb 1' },
+            { field: 'attb2', header: 'Attb 2' },
+            { field: 'attb3', header: 'Attb 3' },
+            { field: 'attb4', header: 'Attb 4'} */

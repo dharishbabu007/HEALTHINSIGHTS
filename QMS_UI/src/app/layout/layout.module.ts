@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -28,11 +29,17 @@ import { SpvComponent } from './spv/spv.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
 import { QualityCentralComponent } from './quality-central/quality-central.component';
 import { UserSettingComponent } from './usersettings/userSetting.component';
-
+import { LikelihoodToChurnComponent } from './like-hood-churn/like-hood-churn.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { Csv1Component } from './csv1/csv1.component';
 import { Csv2Component } from './csv2/csv2.component';
 import { NoShowGapListComponent } from './noshowG/noshowG.component';
+import { ClusterAnalysisComponent } from './cluster-analysis/cluster-analysis.component';
+import { MemberEngageComponent } from './member-engage/member-engage.component';
+import { CreatePersonasComponent } from './create-personas/create-personas.component';
+import { ClusterStatisticsComponent } from './cluster-statistics/cluster-statistics.component';
+import { ViewPersonaComponent } from './view-personas/view-personas.component';
+import { LikelihoodStatisticsComponent } from './likelihood-Statistics/likelihood-statistics.component';
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
     MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective } from '../shared/modules/layout.directive';
@@ -64,6 +71,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import {AccordionModule} from 'primeng/accordion';
+import {TieredMenuModule} from 'primeng/tieredmenu';
 @NgModule({
     imports: [
         CommonModule,
@@ -89,6 +97,8 @@ import {AccordionModule} from 'primeng/accordion';
         TreeModule,
         ConfirmDialogModule,
         AccordionModule,
+        TieredMenuModule,
+        NgbModule.forRoot(),
         NgbDropdownModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
         NgxPermissionsModule.forRoot(),
@@ -135,7 +145,14 @@ import {AccordionModule} from 'primeng/accordion';
         Csv2Component,
         CreateUserComponent,
         CreateRoleComponent,
-        NoShowGapListComponent],
+        NoShowGapListComponent,
+        MemberEngageComponent,
+        CreatePersonasComponent,
+        ClusterAnalysisComponent,
+        LikelihoodToChurnComponent,
+        ClusterStatisticsComponent,
+        ViewPersonaComponent,
+        LikelihoodStatisticsComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

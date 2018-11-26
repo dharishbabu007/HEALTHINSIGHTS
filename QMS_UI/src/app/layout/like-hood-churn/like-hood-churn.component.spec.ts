@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 import { RouterTestingModule } from '@angular/router/testing'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { LikelihoodToChurnComponent } from './like-hood-churn.component'
 
-import { DashboardComponent } from './dashboard.component'
-
-describe('DashboardComponent', () => {
-  let component: DashboardComponent
-  let fixture: ComponentFixture<DashboardComponent>
+describe('LikelihoodToChurnComponent', () => {
+  let component: LikelihoodToChurnComponent
+  let fixture: ComponentFixture<LikelihoodToChurnComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -14,13 +13,13 @@ describe('DashboardComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
        ],
-       declarations: [DashboardComponent]
+       declarations: [LikelihoodToChurnComponent]
     })
     .compileComponents()
   }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent)
+    fixture = TestBed.createComponent(LikelihoodToChurnComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })

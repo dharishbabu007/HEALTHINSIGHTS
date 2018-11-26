@@ -1,0 +1,34 @@
+<div >
+        <app-page-header [heading]="'Clustering Statistics'" [icon]="'fa-table'"></app-page-header>
+        <div class="card">
+        <div class="row">
+            <div class="col col-lg-12 ">
+    
+         
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th rowspan="2" width="3%"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr >
+                            <td *ngFor="let col of columns" style="cursor: pointer;"  [ngSwitch]="col.field" >
+                                 
+                                    <span *ngSwitchDefault>
+                                        {{rowData[col.field]}}
+                                    </span>
+                                
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    </div>
+    

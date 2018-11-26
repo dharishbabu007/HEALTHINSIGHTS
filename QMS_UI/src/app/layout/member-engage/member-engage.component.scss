@@ -1,0 +1,35 @@
+.brand-card-body{
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+.card {
+    .row{
+        min-height: 80vh;
+    } 
+}
+.text-value{
+        font-size: 1.5rem;
+        color: black;
+}
+.list-values{
+margin-left: 20px;
+font-size: 1rem;
+}
+.qmstable td{
+
+    padding-bottom: 30px;
+        padding-left: 10px;
+}
+.ui-tieredmenu .ui-submenu-list {
+    
+    width: 10.5em;
+}
+.ui-menuitem-text{
+color: black;
+font-size: 1.1em;
+}
+:host /deep/ .bs-popover-right{
+    margin-left: -11.5rem !important;
+    margin-top: -0.5em !important;
+}

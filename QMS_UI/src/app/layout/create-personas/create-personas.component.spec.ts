@@ -4,23 +4,23 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
-import { Csv2Component } from './csv2.component';
+import { CreatePersonasComponent } from './create-personas.component';
 import { PageHeaderModule } from '../../shared/modules/page-header/page-header.module';
 import { GapsService } from '../../shared/services/gaps.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-describe('Csv2Component', () => {
+describe('CreatePersonasComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [  RouterTestingModule, PageHeaderModule, SliderModule,
         FormsModule, TableModule, DropdownModule, HttpClientTestingModule ],
-      declarations: [Csv2Component],
+      declarations: [CreatePersonasComponent],
       providers: [GapsService]
     })
     .compileComponents();
   }));
 
   it('should create', () => {
-    const fixture = TestBed.createComponent(Csv2Component);
+    const fixture = TestBed.createComponent(CreatePersonasComponent);
     const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });

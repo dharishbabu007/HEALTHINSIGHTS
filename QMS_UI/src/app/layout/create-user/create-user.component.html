@@ -13,8 +13,8 @@
                             <p-autoComplete  [suggestions]="filteredusers" (completeMethod)="filteredUsers($event)" [size]="30"
                            placeholder="select/search user" [dropdown]="true" (onSelect)="getUserValues($event)" formControlName="user">
                             <ng-template let-user pTemplate="item" >
-                               <div><span>{{user}}</span>
-                            <span class="NameStyle">{{value}}</span></div>
+                               <div><span>{{user.name}}</span>
+                            <span class="NameStyle">{{user.value}}</span></div>
                             </ng-template>
                         </p-autoComplete>
                         <small *ngIf="!myForm.controls.user.valid && myForm.controls.user.touched" class="text-danger">
@@ -33,7 +33,7 @@
                 <div class="form-group row">
                         <label class="col-md-3 col-form-label font-weight-bold" for="hf-status">Status *</label>
                         <div class="col-md-9">
-                            <p-dropdown placeholder="Select a status" [style]="{'width':'250px'}" [autoDisplayFirst]="false"  styleClass="form-control" [options]="statusList" formControlName="status"></p-dropdown>
+                            <p-dropdown placeholder="Select a status" [style]="{'width':'250px'}" [autoDisplayFirst]="false"  styleClass="form-control" [options]="statusList" formControlName="status" ></p-dropdown> <!-- (ngModelChange)="onChangeList($event)"-->
                             <small *ngIf="!myForm.controls.status.valid && myForm.controls.status.touched" class="text-danger">
                                 status is required.
                             </small>
