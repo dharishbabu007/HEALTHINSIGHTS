@@ -193,7 +193,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}
 		httpSession.setAttribute("PROCESSED_FILE_ID", fileId);
 		
-		String rApiUrl = qmsHDFSProperty.getrApiURL();
+		String rApiUrl = qmsHDFSProperty.getRapiURL();
 		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
 		System.out.println("Calling R API Url --> " + rApiUrl);
 		RestTemplate restTemplate = new RestTemplate();		
