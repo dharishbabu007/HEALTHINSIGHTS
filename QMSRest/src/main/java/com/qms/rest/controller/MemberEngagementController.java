@@ -65,7 +65,7 @@ public class MemberEngagementController {
 	}	
 	
 	@RequestMapping(value = "/update_persona", method = RequestMethod.POST)
-	public ResponseEntity<RestResult> insertCloseGaps(@RequestBody ClusterPersona clusterPersona, 
+	public ResponseEntity<RestResult> updateClusteringPersona(@RequestBody ClusterPersona clusterPersona, 
 			UriComponentsBuilder ucBuilder) {
 		RestResult restResult = memberEngagementService.updateClusteringPersona(clusterPersona);
 		if(RestResult.isSuccessRestResult(restResult))
