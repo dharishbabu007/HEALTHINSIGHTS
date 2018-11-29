@@ -11,7 +11,7 @@ object KpiConstants {
   val ncqaDataSource = "SELF"
   val clientDataSource = ""
   val userNameVal = "ETL"
-  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
+  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
@@ -40,6 +40,7 @@ object KpiConstants {
   val age21Val = "21"
   val age75Val = "75"
   val age65Val = "65"
+  val age66Val = "66"
   val age16Val = "16"
   val age24Val = "24"
   val age67Val = "67"
@@ -47,6 +48,8 @@ object KpiConstants {
   val age40Val = "40"
   val age3Val = "3"
   val age6Val = "6"
+  val age51Val = "51"
+  val age52Val = "52"
 
 
 
@@ -56,6 +59,9 @@ object KpiConstants {
   val measurementYearLower = 0
   val measurementOneyearUpper = 365
   val measuremetTwoYearUpper = 730
+  val measurementFourYearUpper = 1460
+  val measurementNineYearUpper = 3287
+  val measurementThreeYearUpper = 1096
 
 
 
@@ -92,6 +98,9 @@ object KpiConstants {
   val spcMeasureTitle = "Statin Therapy for Patients with Cardiovascular Disease (SPC)"
   val w34MeasureTitle = "WellChild Visits in the Third Fourth Fifth and Sixth Years of Life (W34)"
   val w15MeasureTitle = "WellChild Visits in the First 15 Months of Life (W15)"
+  val cisMeasureTitle = "Childhood Immuniztions Status (CIS)"
+  val colMeasureTitle = "Colorectal Cancer Screening (COL)"
+
 
 
   /*columnname constants*/
@@ -102,10 +111,14 @@ object KpiConstants {
   val dateSkColName = "date_sk"
   val calenderDateColName = "calendar_date"
   val dobColName = "dob"
+  val memStartDateColName = "mem_start_date"
+  val memEndDateColName = "mem_end_date"
   val genderColName = "gender"
   val qualityMsrSkColName = "quality_measure_sk"
   val proceedureCodeColName = "procedure_code"
   val primaryDiagnosisColname = "primary_diagnosis"
+  val memPlanStartDateSkColName = "member_plan_start_date_sk"
+  val memPlanEndDateSkColName = "member_plan_end_date_sk"
   val startDateColName = "start_date"
   val admitDateColName = "admit_date"
   val dischargeDateColName = "discharge_date"
@@ -242,13 +255,156 @@ object KpiConstants {
   val omwMeasureId = "OMW"
   val w34MeasureId  = "W34"
   val w150MeasureId = "W150"
+  val w151MeasureId = "W151"
+  val w152MeasureId = "W152"
+  val w153MeasureId = "W153"
+  val w154MeasureId = "W154"
+  val w155MeasureId = "W155"
+  val w156MeasureId = "W156"
+  val cisDtpaMeasureId = "CISDTP"
+  val cisIpvMeasureId = "CISIPV"
+  val cisHiBMeasureId = "CISHIB"
+  val cisPneuMeasureId = "CISPNEU"
+  val cisInflMeasureId = "CISINFL"
+  val cisRotaMeasureId = "CISROTA"
+  val cisMmrMeasureId = "CISMMR"
+  val cisHepbMeasureId = "CISHEPB"
+  val cisVzvMeasureId = "CISVZV"
+  val cisHepaMeasureId = "CISHEPA"
+  val cisCmb10MeasureId = "CISCMB10"
+  val cisCmb9MeasureId = "CISCMB9"
+  val cisCmb8MeasureId = "CISCMB8"
+  val cisCmb7MeasureId = "CISCMB7"
+  val cisCmb6MeasureId = "CISCMB6"
+  val cisCmb5MeasureId = "CISCMB5"
+  val cisCmb4MeasureId = "CISCMB4"
+  val cisCmb3MeasureId = "CISCMB3"
+  val cisCmb2MeasureId = "CISCMB2"
+  val colMesureId = "COL"
+  val bcsMeasureId = "BCS"
+
+
+
+  /*Valueset Constants*/
+  val outPatientVal = "Outpatient"
+  val pregnancyVal = "Pregnancy"
+  val bmiVal = "BMI"
+  val bmiPercentileVal = "BMI Percentile"
+  val sexualActivityVal = "Sexual Activity"
+  val diagnosticRadVal = "Diagnostic Radiology"
+  val pregnancyTestVal = "Pregnancy Tests"
+  val pregnancyExcltestVal = "Pregnancy Test Exclusion"
+  val chalamdiaVal = "Chlamydia Tests"
+  val leadTestVal = "Lead Tests"
+  val diabetesVal = "Diabetes"
+  val hba1cTestVal = "HbA1c Tests"
+  val hba1cGtNineVal = "HbA1c Level Greater Than 9.0"
+  val hba1cLtSevenVal = "HbA1c Level Less Than 7.0"
+  val cabgVal = "CABG"
+  val pctVal = "PCI"
+  val ivdVal = "IVD"
+  val accuteInpatVal = "Acute Inpatient"
+  val thoraticAcriticVal = "Thoracic Aortic Aneurysm"
+  val chronicHeartFailureVal = "Chronic Heart Failure"
+  val miVal = "MI"
+  val esrdVal = "ESRD"
+  val esrdObsoleteVal = "ESRD Obsolete"
+  val ckdStage4Val = "CKD Stage 4"
+  val dementiaVal = "Dementia"
+  val fronDementiaVal = "Frontotemporal Dementia"
+  val blindnessVal = "Blindness"
+  val lowerExtrAmputationVal = "Lower Extremity Amputation"
+  val diabeticRetinalScreeningVal = "Diabetic Retinal Screening"
+  val optometristVal = "optometrist"
+  val opthoalmologistVal = "ophthalmologist"
+  val diabtesMellWoCompliVal = "Diabetes Mellitus without Complications"
+  val diabeticReScreeWECProfessionalVal = "Diabetic Retinal Screening with Eye Care Professional"
+  val diabeticRenScreNegativeVal = "Diabetic Retinal Screening Negative"
+  val unilateralEyeEnucleationVal = "Unilateral Eye Enucleation"
+  val unilateralEyeEnuLeftVal = "Unilateral Eye Enucleation Left"
+  val unilateralEyeEnuRightVal = "Unilateral Eye Enucleation Right"
+  val diabetesExclusionVal = "Diabetes Exclusions"
+  val urineProteinTestVal = "Urine Protein Tests"
+  val nephropathyTreatmentVal= "Nephropathy Treatment"
+  val kidneyTransplantVal = "Kidney Transplant"
+  val systolicLt140Val = "Systolic Less Than 140"
+  val diastolicLt80Val = "Diastolic Less Than 80"
+  val diastolicBtwn8090Val = "Diastolic 80–89"
+  val dentalVisitsVal = "Dental Visits"
+  val wellCareVal= "Well-Care"
+  val observationVal = "Observation"
+  val edVal = "ED"
+  val fracturesVal = "Fractures"
+  val inpatientStayVal = "Inpatient Stay"
+  val boneMinDenTestVal = "Bone Mineral Density Tests"
+  val osteoporosisMedicationVal  = "Osteoporosis Medications"
+  val longActingOsteoMedicationVal = "Long-Acting Osteoporosis Medications"
+  val acuteInpatientVal = "Acute Inpatient"
+  val telehealthModifierVal = "Telehealth Modifier"
+  val telehealthPosVal = "Telehealth POS"
+  val nonAcuteInPatientVal = "Nonacute Inpatient"
+  val telephoneVisitsVal = "Telephone Visits"
+  val onlineAssesmentVal = "Online Assessments"
+  val inPatientStayVal = "Inpatient Stay"
+  val pciVal = "PCI"
+  val otherRevascularizationVal = "Other Revascularization"
+  val ivfVal = "IVF"
+  val cirrhossisVal = "Cirrhosis"
+  val muscularPainAndDiseaseval = "Muscular Pain and Disease"
+  val fralityVal = "Frailty"
+  val advancedIllVal = "Advanced Illness"
+  val diabetesMedicationVal = "Diabetes Medications"
+  val dementiaMedicationVal = "Dementia Medications"
+  val estrogenAgonistsMediVal = "Estrogen Agonists Medications"
+  val highAndModerateStatinMedVal = "High and Moderate-Intensity Statin Medications"
+  val lowStatinMedVal = "Low-Intensity Statin Medications"
+  val fobtVal = "FOBT"
+  val flexibleSigmodoscopyVal = "Flexible Sigmoidoscopy"
+  val colonoscopyVal = "Colonoscopy"
+  val ctColonographyVal = "CT Colonography"
+  val fitDnaVal = "FIT-DNA"
+  val colorectalCancerVal = "Colorectal Cancer"
+  val totalColectomyVal = "Total Colectomy"
+  val bilateralMastectomyVal = "Bilateral Mastectomy"
+  val unilateralMastectomyVal = "Unilateral Mastectomy"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*Codesystem constants*/
+  val icdCodeVal = "ICD%"
+  val cptCodeVal = "CPT"
+  val hcpsCodeVal = "HCPCS"
+  val ubrevCodeVal = "UBREV"
+  val loincCodeVal = "LOINC"
+
 
 
   /*ABA Constants*/
   val abavalueSetForDinominator = List("Outpatient")
   val abscodeSystemForDinominator = List("CPT","HCPCS","UBREV")
   val abavaluesetForDinExcl = List("Pregnancy")
-  //val abacodeSytemForExcl = List("ICD%")
   val abaNumeratorBmiValueSet = List("BMI")
   val abaNumeratorBmiPercentileValueSet = List("BMI Percentile")
 
@@ -445,5 +601,61 @@ object KpiConstants {
   /*W15 Constants*/
   val w15ValueSetForNumerator = List("Well-Care")
   val w15CodeSystemForNum = List("CPT","HCPCS")
+
+
+  /*CISDTaP constants added by Thanuja*/
+
+  val cisDtpaValueSet = List("DTaP Vaccine Administered ")
+  val cisDtpaCodeSystem = List("CPT")
+
+  /*CISIPV constants added by Thanuja*/
+
+  val cisIpvValueSet = List("Inactivated Polio Vaccine (IPV) Administered")
+  val cisIpvCodeSystem = List("CPT", "CVX")
+
+  /*CISHIB constants added by Thanuja*/
+
+  val cisHiBValueSet = List("Haemophilus Influenzae Type B (HiB) Vaccine Administered")
+  val cisHiBCodeSystem = List("CPT", "CVX")
+
+
+
+  /*CIS constants added by Thanuja*/
+
+  val cisPneuValueSet = List("Pneumococcal Conjugate Vaccine Administered")
+  val cisPneuCodeSystem = List("CPT", "CVX", "HCPCS")
+
+  /*CIS constants added by Thanuja*/
+
+  val cisRota1ValueSet = List("Rotavirus Vaccine (2 Dose Schedule) Administered")
+  val cisRotaCodeSystem = List("CPT", "CVX")
+  val cisRota2ValueSet = List("Rotavirus Vaccine (3 Dose Schedule) Administered")
+  val cisRotaAllValueSet = List("Rotavirus Vaccine (2 Dose Schedule) Administered","Rotavirus Vaccine (3 Dose Schedule) Administered")
+
+  /*CIS constants added by Thanuja*/
+
+  val cisInflValueSet = List("Influenza Vaccine Administered")
+  val cisInflCodeSystem = List("CPT", "CVX", "HCPCS")
+
+  /*CIS MMR constants added by Thanuja*/
+
+  val cisMmrValueSet = List("Measles/Rubella Vaccine Administered","Mumps Vaccine Administered","Mumps","Measles Vaccine Administered","Measles","Rubella Vaccine Administered","Rubella","Mumps and Rubella (MMR) Vaccine Administered")
+  val cisMmrCodeSystem = List("CPT", "CVX")
+
+  /*CIS Hepb constants added by Thanuja*/
+
+  val cisHepbValueSet = List("Hepatitis B Vaccine Administered","Newborn Hepatitis B Vaccine Administered","Hepatitis B")
+  val cisHepbCodeSystem = List("CPT", "CVX")
+
+
+  /*CIS VZV constants added by Thanuja*/
+
+  val cisVzvValueSet = List("Varicella Zoster (VZV) Vaccine Administered","Varicella Zoster")
+  val cisVzvCodeSystem = List("CPT", "CVX")
+
+  /*CIS Hepa constants added by Thanuja*/
+
+  val cisHepaValueSet = List("Hepatitis A Vaccine Administered","Hepatitis A")
+  val cisHepaCodeSystem = List("CPT", "CVX")
 
 }

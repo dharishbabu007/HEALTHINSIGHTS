@@ -163,16 +163,18 @@ object UtilFunctions {
     val joinedDimLocationDf = joinedDf.as("df1").join(dimLocationDf.as("df2"), factClaimDf.col(KpiConstants.locationSkColName) === dimLocationDf.col(KpiConstants.locationSkColName), KpiConstants.innerJoinType).select("df1.*", "df2.facility_sk")
 
     /*Join with dimFacility for getting facility_sk*/
-    val facilityJoinedDf = joinedDimLocationDf.as("df1").join(facilityDf.as("df2"), joinedDimLocationDf.col(KpiConstants.facilitySkColName) === facilityDf.col(KpiConstants.facilitySkColName), KpiConstants.innerJoinType).select("df1.member_sk", "df1.date_of_birth_sk", "df1.gender", "df1.lob", "df1.product_plan_sk", "df2.facility_sk")
+    val facilityJoinedDf = joinedDimLocationDf.as("df1").join(facilityDf.as("df2"), joinedDimLocationDf.col(KpiConstants.facilitySkColName) === facilityDf.col(KpiConstants.facilitySkColName), KpiConstants.innerJoinType).select("df1.member_sk", "df1.date_of_birth_sk", "df1.gender", "df1.lob", "df1.product_plan_sk","df1.member_plan_start_date_sk","df1.member_plan_end_date_sk", "df2.facility_sk")
 
     /*Load the dim_date table*/
     val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
 
-    /*join the data with dim_date for getting calender date of dateofbirthsk*/
+    /*join the data with dim_date for getting calender date of dateofbirthsk,member_plan_start_date_sk,member_plan_end_date_sk*/
     val dobDateValAddedDf = facilityJoinedDf.as("df1").join(dimDateDf.as("df2"), joinedDf.col(KpiConstants.dobskColame) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "dob_temp").drop(KpiConstants.dobskColame)
+    val memStartDateAddedDf = dobDateValAddedDf.as("df1").join(dimDateDf.as("df2"), dobDateValAddedDf.col(KpiConstants.memPlanStartDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "mem_start_temp").drop(KpiConstants.memPlanStartDateSkColName)
+    val memEndDateAddedDf = memStartDateAddedDf.as("df1").join(dimDateDf.as("df2"), dobDateValAddedDf.col(KpiConstants.memPlanEndDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "mem_end_temp").drop(KpiConstants.memPlanEndDateSkColName)
 
     /*convert the dob column to date format (dd-MMM-yyyy)*/
-    val resultantDf = dobDateValAddedDf.withColumn(KpiConstants.dobColName, to_date($"dob_temp", "dd-MMM-yyyy")).drop("dob_temp")
+    val resultantDf = memEndDateAddedDf.withColumn(KpiConstants.dobColName, to_date($"dob_temp", "dd-MMM-yyyy")).withColumn(KpiConstants.memStartDateColName, to_date($"mem_start_temp", "dd-MMM-yyyy")).withColumn(KpiConstants.memEndDateColName, to_date($"mem_end_temp", "dd-MMM-yyyy")).drop("dob_temp","mem_start_temp","mem_end_temp")
 
     /*Finding the quality measure value from quality Measure Table*/
     val qualityMeasureSkList = DataLoadFunctions.qualityMeasureLoadFunction(spark, measureTitle).select("quality_measure_sk").as[String].collectAsList()
@@ -233,6 +235,40 @@ object UtilFunctions {
 
   }
 
+
+
+  def factClaimRefHedisJoinFunction(spark: SparkSession, factClaimDf: DataFrame, refhedisDf: DataFrame, col1: String, joinType: String, measureId: String, valueSet: List[String], codeSystem: List[String]): DataFrame = {
+
+    import spark.implicits._
+
+    var newDf = spark.emptyDataFrame
+
+    /*Joining dim_member,fact_claim and ref_hedis tables based on the condition( either with primary_diagnosis or with procedure_code)*/
+    if (col1.equalsIgnoreCase("procedure_code")) {
+      newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+        factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").isin(codeSystem: _*))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+    }
+    else {
+      val code = codeSystem(0)
+      newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_2") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_3") === refhedisDf.col("code") ||
+        factClaimDf.col("DIAGNOSIS_CODE_4") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_5") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_6") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_7") === refhedisDf.col("code") ||
+        factClaimDf.col("DIAGNOSIS_CODE_8") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").like(code))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+    }
+
+    /*Loading the dim_date table*/
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
+
+    /*getting calender dates fro start_date_sk,admit_date_sk and discharge_date_sk*/
+    val startDateValAddedDf = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val admitDateValAddedDf = startDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.admit_date_sk" === $"df2.date_sk",KpiConstants.leftOuterJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "admit_temp").drop("admit_date_sk")
+    val dischargeDateValAddedDf = admitDateValAddedDf.as("df1").join(dimDateDf.as("df2"), $"df1.discharge_date_sk" === $"df2.date_sk",KpiConstants.leftOuterJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "discharge_temp").drop("discharge_date_sk")
+
+
+    /*convert the start_date date into dd-MMM-yyy format*/
+    val dateTypeDf = dischargeDateValAddedDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).withColumn("admit_date", to_date($"admit_temp", "dd-MMM-yyyy")).withColumn("discharge_date", to_date($"discharge_temp", "dd-MMM-yyyy")).drop( "start_temp","admit_temp","discharge_temp")
+    dateTypeDf
+
+  }
 
   /**
     *
