@@ -2,21 +2,153 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad862981-c59f-4c78-8e51-25d9f955986e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPDB.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/.idea/libraries/sbt__commons_codec_commons_codec_1_11_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/.idea/modules/NcqaFirstStage.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/.idea/modules/NcqaFirstStage.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/.idea/sbt.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NcqaKPI/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/build.sbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$18d6d88d6be8c599dc37$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$18d6d88d6be8c599dc37.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$18d6d88d6be8c599dc37.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$93e61028ac38ca200a76$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$93e61028ac38ca200a76.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$93e61028ac38ca200a76.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$aae6c87c7b0fd18a6b54$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$aae6c87c7b0fd18a6b54.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$aae6c87c7b0fd18a6b54.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$c1a8f9cf7246c3ec32dd$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$c1a8f9cf7246c3ec32dd.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/config-classes/$c1a8f9cf7246c3ec32dd.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-optional.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-provided.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-runtime.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-scala-tool.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/ivyConfiguration/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/ivyConfiguration/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/update/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/$global/update/$global/streams/update_cache_2.12/output" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/dependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/dependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/compile/managedClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/dependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/dependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/fullClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/fullClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/project/target/streams/runtime/managedClasspath/$global/streams/export" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPDA.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPC1B.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPC1B.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPC2B.scala" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/src/main/scala/com/itc/ncqa/main/NcqaSPC2B.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/.history" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/.history" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/ncqafirststage_2.11-0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/ncqafirststage_2.11-0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/$global/$global/discoveredMainClasses/data" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/$global/$global/discoveredMainClasses/data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncremental/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncremental/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/inputs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/DataLoadFunctions$$anonfun$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/DataLoadFunctions$$anonfun$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/DataLoadFunctions$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/DataLoadFunctions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaADV$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaADV.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaAWC$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaAWC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC1$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC2$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC3$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC4$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC7$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCDC9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCHL$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaCHL.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaLSC$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaLSC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDB$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaW150$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaW150.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaW34$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/NcqaW34.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/Test$$typecreator5$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/Test$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/Test$employee$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/Test$employee.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/classes/com/itc/ncqa/main/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/ncqafirststage_2.11-0.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ivy-report.css" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ivy-report.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ivy-report.xsl" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ivy-report.xsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-optional.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-provided.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-scala-tool.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-optional.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-provided.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-runtime-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-runtime.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-scala-tool.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test-internal.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/$global/$global/streams/out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/ivyConfiguration/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/ivyConfiguration/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/update_cache_2.11/output" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/update/$global/streams/update_cache_2.11/output" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/updateClassifiers/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/$global/updateClassifiers/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/$global/$global/discoveredMainClasses/data" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compile/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compile/$global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncremental/$global/streams/export" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/compileIncremental/$global/streams/out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/copyResources/$global/streams/copy-resources" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/copyResources/$global/streams/out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/dependencyClasspath/$global/streams/export" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/internalDependencyClasspath/$global/streams/export" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/mainClass/$global/streams/out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/managedClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/inputs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/compile/packageBin/$global/streams/output" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/runtime/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/runtime/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/runtime/managedClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/test/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/test/externalDependencyClasspath/$global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NcqaKPI/target/streams/test/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaKPI/target/streams/test/managedClasspath/$global/streams/export" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -98,10 +230,10 @@
     <session id="1679639997">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.open.time.2" value="2" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -223,8 +355,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -263,11 +393,13 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541479591915" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../Intelj_Workspace/NewProject1" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -308,6 +440,7 @@
     </option>
     <option name="modificationStamps">
       <map>
+        <entry key="$PROJECT_DIR$" value="3081756333321" />
         <entry key="$PROJECT_DIR$/build.sbt" value="405365300" />
         <entry key="$PROJECT_DIR$/project/build.properties" value="2125951362" />
       </map>
@@ -328,9 +461,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15431164" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15658094" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -356,7 +488,7 @@
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info active="true" anchor="right" id="sbt" order="7" visible="true" weight="0.108169444" />
+      <window_info anchor="right" id="sbt" order="7" visible="true" weight="0.108169444" />
       <window_info anchor="right" id="Maven Projects" order="8" />
     </layout>
   </component>

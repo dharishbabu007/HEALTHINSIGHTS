@@ -6,6 +6,8 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
+import scala.collection.JavaConversions._
+
 object NcqaSPC2B {
 
   def main(args: Array[String]): Unit = {

@@ -110,11 +110,11 @@ object NcqaW150 {
 
     val w150WellCareJoinDf = dimProviderDf.as("df1").join(factClaimDf.as("df2"), ($"df1.provider_sk" === $"df2.provider_sk"), "inner").filter(($"df1.pcp" === KpiConstants.yesVal)).select("df2.member_sk", "df2.start_date_sk").distinct()
 
-    val w150WellCareCountZeroDf = w150WellCareJoinDf.groupBy("member_sk").agg(count("start_date_sk").alias("count1")).filter($"count1".===(0)).select(KpiConstants.memberskColName)
+    val w150JoinNumerator = w150NumeratorGeneral.as("df1").join(w150WellCareJoinDf.as("df2"), ($"df1.member_sk" === $"df2.member_sk"), joinType = "inner").select("df2.member_sk", "df2.start_date_sk")
 
-    val w150Numerator = w150NumeratorGeneral.intersect(w150WellCareCountZeroDf)
+    val w150WellCareCountZeroDf = w150JoinNumerator.groupBy("member_sk").agg(count("start_date_sk").alias("count1")).filter($"count1".===(0)).select(KpiConstants.memberskColName)
 
-    val w150NumeratorDf = w150Numerator.intersect(dinominatorAfterExclusionDf)
+    val w150NumeratorDf = w150WellCareCountZeroDf.intersect(dinominatorAfterExclusionDf)
     w150NumeratorDf.show()
 
     /*common output creation(data to fact_gaps_in_hedis table)*/
