@@ -243,17 +243,39 @@ object UtilFunctions {
 
     var newDf = spark.emptyDataFrame
 
-    /*Joining dim_member,fact_claim and ref_hedis tables based on the condition( either with primary_diagnosis or with procedure_code)*/
-    if (col1.equalsIgnoreCase("procedure_code")) {
-      newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
-        factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").isin(codeSystem: _*))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+    /*If measure id is empty dont use the measureid filter*/
+    if(KpiConstants.emptyMesureId.equals(measureId)) {
+
+      /*Joining dim_member,fact_claim and ref_hedis tables based on the condition( either with primary_diagnosis or with procedure_code)*/
+      if (col1.equalsIgnoreCase("procedure_code")) {
+        newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+          factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("valueset").isin(valueSet: _*).&&(refhedisDf.col("codesystem").isin(codeSystem: _*))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+      }
+      else {
+        val code = codeSystem(0)
+        newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_2") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_3") === refhedisDf.col("code") ||
+          factClaimDf.col("DIAGNOSIS_CODE_4") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_5") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_6") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_7") === refhedisDf.col("code") ||
+          factClaimDf.col("DIAGNOSIS_CODE_8") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("valueset").isin(valueSet: _*).&&(refhedisDf.col("codesystem").like(code))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+        }
+      }
+
+    else{
+
+      /*Joining dim_member,fact_claim and ref_hedis tables based on the condition( either with primary_diagnosis or with procedure_code)*/
+      if (col1.equalsIgnoreCase("procedure_code")) {
+        newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+          factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").isin(codeSystem: _*))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+      }
+      else {
+        val code = codeSystem(0)
+        newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_2") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_3") === refhedisDf.col("code") ||
+          factClaimDf.col("DIAGNOSIS_CODE_4") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_5") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_6") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_7") === refhedisDf.col("code") ||
+          factClaimDf.col("DIAGNOSIS_CODE_8") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").like(code))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
+      }
     }
-    else {
-      val code = codeSystem(0)
-      newDf = factClaimDf.join(refhedisDf, factClaimDf.col(col1) === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_2") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_3") === refhedisDf.col("code") ||
-        factClaimDf.col("DIAGNOSIS_CODE_4") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_5") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_6") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_7") === refhedisDf.col("code") ||
-        factClaimDf.col("DIAGNOSIS_CODE_8") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_9") === refhedisDf.col("code") || factClaimDf.col("DIAGNOSIS_CODE_10") === refhedisDf.col("code"), joinType).filter(refhedisDf.col("measureid").===(measureId).&&(refhedisDf.col("valueset").isin(valueSet: _*)).&&(refhedisDf.col("codesystem").like(code))).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"), factClaimDf.col("provider_sk"), factClaimDf.col("admit_date_sk"), factClaimDf.col("discharge_date_sk"))
-    }
+
+
+
 
     /*Loading the dim_date table*/
     val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
@@ -283,7 +305,10 @@ object UtilFunctions {
 
     import spark.implicits._
 
-    val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"), $"df2.PROCEDURE_HCPCS_CODE" === "df3.code", "cross").filter($"df3.code".===("G0155")).select("df1.member_sk", "start_date_sk")
+    val hospiceList = List(KpiConstants.hospiceVal)
+   // val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"), $"df2.PROCEDURE_HCPCS_CODE" === "df3.code", "cross").filter($"df3.code".===("G0155")).select("df1.member_sk", "start_date_sk")
+    val newDf = factClaimDf.join(refhedisDf, factClaimDf.col("procedure_code") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+                factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), "cross").filter(refhedisDf.col("valueset").isin(hospiceList: _*)).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"))
     val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
     val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
     val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")

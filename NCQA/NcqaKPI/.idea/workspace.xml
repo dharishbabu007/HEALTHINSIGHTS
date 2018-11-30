@@ -2,24 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6440086-ab20-4861-93c5-c9ad6934363b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../NcqaFirstStage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaFirstStage/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/sbt__commons_codec_commons_codec_1_11_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/NcqaFirstStage.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/NcqaFirstStage.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$18d6d88d6be8c599dc37$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$18d6d88d6be8c599dc37.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$18d6d88d6be8c599dc37.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$93e61028ac38ca200a76$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$93e61028ac38ca200a76.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$93e61028ac38ca200a76.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$aae6c87c7b0fd18a6b54$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$aae6c87c7b0fd18a6b54.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$aae6c87c7b0fd18a6b54.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$c1a8f9cf7246c3ec32dd$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$c1a8f9cf7246c3ec32dd.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$c1a8f9cf7246c3ec32dd.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$1927219c7921b59ae912$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$1927219c7921b59ae912.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$1927219c7921b59ae912.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$791864bfebd0195780aa$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$791864bfebd0195780aa.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$791864bfebd0195780aa.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$900ac99beb94b39744df$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$900ac99beb94b39744df.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$900ac99beb94b39744df.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$d7eb7b3b803add8ebccf$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$d7eb7b3b803add8ebccf.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$d7eb7b3b803add8ebccf.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$fce5d5af0b3af877dec9$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$fce5d5af0b3af877dec9.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$fce5d5af0b3af877dec9.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/default/ncqakpi-build/scala_2.12/sbt_1.0/0.1.0-SNAPSHOT/resolved.xml.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/scala-2.12/sbt-1.0/resolution-cache/reports/default-ncqakpi-build-compile-internal.xml" afterDir="false" />
@@ -48,36 +47,12 @@
       <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPC1B.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPC1B.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPC2B.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPC2B.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaW150.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaW150.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/.history" beforeDir="false" afterPath="$PROJECT_DIR$/target/.history" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Constants/KpiConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/Functions/UtilFunctions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaABA$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaOMW$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDA$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDB$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/com/itc/ncqa/main/NcqaSPDB$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/ncqafirststage_2.11-0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/ncqafirststage_2.11-0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage$sources/0.1/resolved.xml.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC1.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC10.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC10.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC2.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC2.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/ncqafirststage/ncqafirststage_2.11/0.1/resolved.xml.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ivy-report.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ivy-report.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ivy-report.xsl" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ivy-report.xsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-compile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-optional.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-provided.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-provided.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-runtime.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-scala-tool.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test-internal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage$sources-test.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile-internal.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-compile.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-optional.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-optional.xml" afterDir="false" />
@@ -89,26 +64,11 @@
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-scala-tool.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-scala-tool.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test-internal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test-internal.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.11/resolution-cache/reports/ncqafirststage-ncqafirststage_2.11-test.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/input_dsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/input_dsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/output_dsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/output_dsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/$global/$global/discoveredMainClasses/data" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/$global/$global/discoveredMainClasses/data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/compile/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compile/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncSetup/$global/streams/inc_compile_2.11.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/dependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/dependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/managedClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/inputs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/$global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/runtime/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/runtime/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/runtime/managedClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/test/externalDependencyClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/test/externalDependencyClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/test/managedClasspath/$global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/test/managedClasspath/$global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NcqaOutputCreation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/out" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -257,32 +217,33 @@
           <entry key="project.open.time.115" value="1" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.33" value="1" />
           <entry key="project.open.time.44" value="1" />
           <entry key="project.open.time.60" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="sbt" value="10" />
-          <entry key="scala" value="61743" />
+          <entry key="scala" value="63082" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Scala" value="61743" />
+          <entry key="Scala" value="63082" />
           <entry key="sbt" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="sbt" value="3" />
-          <entry key="scala" value="207" />
+          <entry key="scala" value="219" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Scala" value="207" />
+          <entry key="Scala" value="219" />
           <entry key="sbt" value="3" />
         </counts>
       </usages-collector>
@@ -296,17 +257,53 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="100" column="61" selection-start-line="100" selection-start-column="61" selection-end-line="100" selection-end-column="61" />
+            <state relative-caret-position="113">
+              <caret line="310" column="30" lean-forward="true" selection-start-line="310" selection-start-column="30" selection-end-line="310" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP1.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="212">
+              <caret line="148" lean-forward="true" selection-start-line="148" selection-end-line="148" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP2.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="149" lean-forward="true" selection-start-line="149" selection-end-line="149" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP3.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="147" lean-forward="true" selection-start-line="147" selection-end-line="147" />
+              <folding>
+                <element signature="e#27#69#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2C.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="176" column="6" selection-start-line="176" selection-start-column="6" selection-end-line="176" selection-end-column="6" />
+            <state relative-caret-position="193">
+              <caret line="71" column="137" selection-start-line="71" selection-start-column="137" selection-end-line="71" selection-end-column="137" />
               <folding>
                 <element signature="e#27#69#0" expanded="true" />
               </folding>
@@ -329,16 +326,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/DataLoad.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaMain.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/SchemaLoad.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA1.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPD.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/DataLoadFunctions.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/Test.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCHL1.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaLS.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaLSC.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCHL.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC7.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCDC4.scala" />
@@ -362,7 +349,6 @@
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaSPC1B.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaABA.scala" />
         <option value="$PROJECT_DIR$/build.sbt" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCOL.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaW150.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaW151.scala" />
@@ -378,8 +364,19 @@
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCISMmr.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCISPneu.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCISVzv.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1A.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1B.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1C.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2A.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAISINFL1.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2C.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2B.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP1.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP2.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP3.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala" />
       </list>
     </option>
   </component>
@@ -442,12 +439,12 @@
         </subPane>
       </pane>
       <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543465173213" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543584289027" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../NcqaFirstStage" />
     <property name="settings.editor.selected.configurable" value="sbt.project.settings.configurable" />
   </component>
@@ -490,7 +487,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="3083668298448" />
+        <entry key="$PROJECT_DIR$" value="3087158342014" />
         <entry key="$PROJECT_DIR$/build.sbt" value="2311482583" />
         <entry key="$PROJECT_DIR$/project/build.properties" value="2073824194" />
       </map>
@@ -513,7 +510,7 @@
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49893844" visible="true" weight="0.20499243" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49893844" visible="true" weight="0.20801815" />
       <window_info id="Structure" order="1" sideWeight="0.50274724" side_tool="true" weight="0.078668684" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -547,24 +544,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/SchemaLoad.scala" />
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/DataLoad.scala" />
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaMain.scala" />
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.apache.spark/spark-sql_2.11/srcs/spark-sql_2.11-2.3.0-sources.jar!/org/apache/spark/sql/Dataset.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="1457" column="6" selection-start-line="1457" selection-start-column="6" selection-end-line="1457" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/DataLoadFunctions.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="37" column="6" selection-start-line="37" selection-start-column="6" selection-end-line="37" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaCHL1.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/Test.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -675,9 +654,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="8" column="41" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -685,9 +661,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="131" column="52" selection-start-line="131" selection-start-column="52" selection-end-line="131" selection-end-column="52" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -709,15 +682,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="878">
           <caret line="316" column="107" selection-start-line="316" selection-start-column="107" selection-end-line="316" selection-end-column="107" />
-          <folding>
-            <element signature="e#3213#3248#0" />
-            <element signature="e#6892#6927#0" />
-            <element signature="e#9554#9589#0" />
-            <element signature="e#14034#14069#0" />
-            <element signature="e#14133#14178#0" />
-            <element signature="e#22327#22371#0" />
-            <element signature="e#22850#22882#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -725,9 +689,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="116">
           <caret line="168" column="136" lean-forward="true" selection-start-line="167" selection-start-column="3" selection-end-line="168" selection-end-column="136" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -735,31 +696,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="69" column="5" selection-start-line="62" selection-start-column="4" selection-end-line="69" selection-end-column="5" />
-          <folding>
-            <element signature="e#12266#12308#0" />
-            <element signature="e#22366#22409#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="93" column="38" lean-forward="true" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="38" />
-          <folding>
-            <element signature="e#32#74#0" expanded="true" />
-            <element signature="e#468#681#0" />
-            <element signature="e#468#915#0" />
-            <element signature="e#1988#2544#0" />
-            <element signature="e#1988#4037#0" />
-            <element signature="e#4042#4611#0" />
-            <element signature="e#5051#5492#0" />
-            <element signature="e#5782#6059#0" />
-            <element signature="e#5782#6405#0" />
-            <element signature="e#6410#7163#0" />
-            <element signature="e#10145#11250#0" />
-            <element signature="e#10145#15145#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -767,18 +703,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
           <caret line="83" column="37" lean-forward="true" selection-start-line="82" selection-start-column="4" selection-end-line="83" selection-end-column="37" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-            <element signature="e#3220#3254#0" />
-            <element signature="e#3574#3619#0" />
-            <element signature="e#12598#12643#0" />
-            <element signature="e#13841#13886#0" />
-            <element signature="e#12528#12561#0" />
-            <element signature="e#13325#13358#0" />
-            <element signature="e#15090#15123#0" />
-            <element signature="e#16756#16789#0" />
-            <element signature="e#17742#17775#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -793,9 +717,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-533">
           <caret line="95" column="211" selection-start-line="95" selection-start-column="211" selection-end-line="95" selection-end-column="211" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -803,9 +724,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -813,9 +731,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -823,9 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -833,9 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -843,9 +752,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -853,9 +759,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -863,9 +766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -873,9 +773,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
-          <folding>
-            <element signature="e#28#70#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -883,9 +780,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -893,9 +787,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -903,9 +794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
-          <folding>
-            <element signature="e#27#69#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -913,6 +801,99 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
           <caret line="136" lean-forward="true" selection-start-line="136" selection-end-line="136" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="586">
+          <caret line="176" column="6" selection-start-line="176" selection-start-column="6" selection-end-line="176" selection-end-column="6" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Functions/UtilFunctions.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="310" column="341" selection-start-line="310" selection-start-column="341" selection-end-line="310" selection-end-column="341" />
+          <folding>
+            <element signature="e#32#74#0" expanded="true" />
+            <element signature="e#468#681#0" />
+            <element signature="e#468#915#0" />
+            <element signature="e#1988#2544#0" />
+            <element signature="e#1988#4037#0" />
+            <element signature="e#4042#4611#0" />
+            <element signature="e#5051#5492#0" />
+            <element signature="e#5782#6059#0" />
+            <element signature="e#5782#6405#0" />
+            <element signature="e#6410#7163#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1A.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="74" column="136" selection-start-line="74" selection-start-column="136" selection-end-line="74" selection-end-column="136" />
+          <folding>
+            <element signature="e#29#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1B.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8">
+          <caret line="62" column="10" lean-forward="true" selection-start-line="62" selection-start-column="10" selection-end-line="62" selection-end-column="10" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC1C.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="74" column="106" selection-start-line="74" selection-start-column="106" selection-end-line="74" selection-end-column="106" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2A.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="70" column="137" selection-start-line="70" selection-start-column="129" selection-end-line="70" selection-end-column="137" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAISINFL1.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="138" column="4" selection-start-line="138" selection-start-column="4" selection-end-line="138" selection-end-column="4" />
+          <folding>
+            <element signature="e#3008#3054#0" />
+            <element signature="e#3133#3189#0" />
+            <element signature="e#3200#3245#0" />
+            <element signature="e#3771#3816#0" />
+            <element signature="e#5319#5364#0" />
+            <element signature="e#6104#6149#0" />
+            <element signature="e#6869#6914#0" />
+            <element signature="e#7728#7773#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2B.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="80" lean-forward="true" selection-start-line="80" selection-end-line="80" />
           <folding>
             <element signature="e#27#69#0" expanded="true" />
           </folding>
@@ -921,15 +902,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/Constants/KpiConstants.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="100" column="61" selection-start-line="100" selection-start-column="61" selection-end-line="100" selection-end-column="61" />
+        <state relative-caret-position="113">
+          <caret line="310" column="30" lean-forward="true" selection-start-line="310" selection-start-column="30" selection-end-line="310" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaBCS.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP1.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="176" column="6" selection-start-line="176" selection-start-column="6" selection-end-line="176" selection-end-column="6" />
+        <state relative-caret-position="212">
+          <caret line="148" lean-forward="true" selection-start-line="148" selection-end-line="148" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP2.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="149" lean-forward="true" selection-start-line="149" selection-end-line="149" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaAAP3.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="147" lean-forward="true" selection-start-line="147" selection-end-line="147" />
+          <folding>
+            <element signature="e#27#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/com/itc/ncqa/main/NcqaWCC2C.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="71" column="137" selection-start-line="71" selection-start-column="137" selection-end-line="71" selection-end-column="137" />
           <folding>
             <element signature="e#27#69#0" expanded="true" />
           </folding>
