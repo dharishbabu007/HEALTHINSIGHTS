@@ -132,7 +132,7 @@ object NcqaCDC1 {
     /*create Numexcl empty dataframe */
     val numExclDf = spark.emptyDataFrame
     val commonOutputGapsInHedisDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc1NumeratorDf, numExclDf, outValueReasonSet, sourceAndMsrList)
-    commonOutputGapsInHedisDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    //commonOutputGapsInHedisDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
 
     /*common output creation2 (data to fact_hedis_qms table)*/

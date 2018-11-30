@@ -50,6 +50,16 @@ object KpiConstants {
   val age6Val = "6"
   val age51Val = "51"
   val age52Val = "52"
+  val age11Val = "11"
+  val age13Val = "13"
+  val age10val = "10"
+  val age9Val = "9"
+  val age0Val = "0"
+  val age17Val = "17"
+  val age44Val = "44"
+  val age45Val = "45"
+  val age64Val = "64"
+  val age120Val = "120"
 
 
 
@@ -89,6 +99,7 @@ object KpiConstants {
 
   /*Measure Title constants*/
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
+  val chlMeasureTitle = "Chlamydia Screening in Women"
   val advMeasureTitle = "Annual Dental Visit (ADV)"
   val awcMeasureTitle = "Adolescent WellCare Visits (AWC)"
   val cdcMeasureTitle = "Comprehensive Diabetes Care (CDC)"
@@ -100,6 +111,9 @@ object KpiConstants {
   val w15MeasureTitle = "WellChild Visits in the First 15 Months of Life (W15)"
   val cisMeasureTitle = "Childhood Immuniztions Status (CIS)"
   val colMeasureTitle = "Colorectal Cancer Screening (COL)"
+  val bcsMeasureTitle = "Breast Cancer Screening (BCS)"
+  val ImamenMeasureTitle = "Immunizations for Adolescents (IMA)"
+  val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
 
 
 
@@ -231,6 +245,7 @@ object KpiConstants {
   val primaryDiagnosisCodeSystem = List("ICD%")
 
   /*Measure id constants*/
+  val emptyMesureId = ""
   val abaMeasureId = "ABA"
   val advMeasureId = "ADV"
   val awcMeasureId = "AWC"
@@ -282,6 +297,21 @@ object KpiConstants {
   val cisCmb2MeasureId = "CISCMB2"
   val colMesureId = "COL"
   val bcsMeasureId = "BCS"
+  val ImamenMeasureId = "IMAMEN"
+  val ImatdMeasureId = "IMATD"
+  val ImahpvMeasureId = "IMAHPV"
+  val Imacmb1MeasureId = "IMACMB1"
+  val Imacmb2MeasureId = "IMACMB2"
+  val aisMeasureId = "AIS"
+  val wcc1aMeasureId = "WCC1A"
+  val wcc2aMeasureId = "WCC2A"
+  val wcc1bMeasureId = "WCC1B"
+  val wcc2bMeasureId = "WCC2B"
+  val wcc1cMeasureId = "WCC1C"
+  val wcc2cMeasureId = "WCC2C"
+  val aap1MeasureId = "AAP1"
+  val aap2MeasureId = "AAP2"
+  val aap3MeasureId = "AAP3"
 
 
 
@@ -367,6 +397,26 @@ object KpiConstants {
   val totalColectomyVal = "Total Colectomy"
   val bilateralMastectomyVal = "Bilateral Mastectomy"
   val unilateralMastectomyVal = "Unilateral Mastectomy"
+  val bilateralModifierVal = "Bilateral Modifier"
+  val historyBilateralMastectomyVal = "History of Bilateral Mastectomy"
+  val leftModifierVal = "Left Modifier"
+  val rightModifierVal = "Right Modifier"
+  val absOfLeftBreastVal = "Absence of Left Breast"
+  val absOfRightBreastVal = "Absence of Right Breast"
+  val uniMasLeftVal = "Unilateral Mastectomy Left"
+  val uniMasRightVal = "Unilateral Mastectomy Right"
+  val ardvVal = "Anaphylactic Reaction Due To Vaccination"
+  val encephalopathyVal = "Encephalopathy Due To Vaccination"
+  val tdapVaccineVal = "Tdap Vaccine"
+  val boneMarowTransVal = "Bone Marrow Transplant"
+  val chemoTherappyVal = "Chemotherapy"
+  val immunoCompromisingVal = "Immunocompromising Conditions"
+  val cochlearImplantVal = "Cochlear Implant"
+  val afaVal = "Anatomic or Functional Asplenia"
+  val scaHbsdVal = "Sickle Cell Anemia and HB-S Disease"
+  val cflVal = "Cerebrospinal Fluid Leak"
+  val hospiceVal = "Hospice"
+
 
 
 
@@ -398,6 +448,9 @@ object KpiConstants {
   val hcpsCodeVal = "HCPCS"
   val ubrevCodeVal = "UBREV"
   val loincCodeVal = "LOINC"
+  val modifierCodeVal = "Modifier"
+  val cvxCodeVal = "CVX"
+  val snomedctCodeVal = "SNOMED CT US Edition"
 
 
 
@@ -608,6 +661,9 @@ object KpiConstants {
   val cisDtpaValueSet = List("DTaP Vaccine Administered ")
   val cisDtpaCodeSystem = List("CPT")
 
+
+  val cisDtpaExclValuSet = List("Anaphylactic Reaction Due To Vaccination","Encephalopathy Due To Vaccination","Vaccine Causing Adverse Effect")
+
   /*CISIPV constants added by Thanuja*/
 
   val cisIpvValueSet = List("Inactivated Polio Vaccine (IPV) Administered")
@@ -658,4 +714,37 @@ object KpiConstants {
   val cisHepaValueSet = List("Hepatitis A Vaccine Administered","Hepatitis A")
   val cisHepaCodeSystem = List("CPT", "CVX")
 
+  val cisMmrVzvInflDinoExclValueSet =  List("Disorders of the Immune System","Encephalopathy Due To Vaccination","HIV","HIV Type 2","Malignant Neoplasm of Lymphatic Tissue","Anaphylactic Reaction Due To Vaccination")
+
+  val cisRotaDinoExclValueSet = List("Severe Combined Immunodeficiency","Intussusception","Anaphylactic Reaction Due To Vaccination")
+
+
+  /*added by Thanuja2*/
+
+  /*CIS IMAMEN constants added by Thanuja*/
+
+  val cisImamenValueSet = List("Meningococcal Vaccine Administered")
+  val cisImamenCodeSystem = List("CPT", "CVX")
+
+  val cisImatdValueSet = List("Tdap Vaccine Administered")
+  val cisImatdCodeSystem = List("CPT", "CVX")
+
+
+  val cisImahpvValueSet = List("HPV Vaccine Administered")
+  val cisImahpvCodeSystem = List("CPT", "CVX")
+
+  val cisImamenDinoExclValueSet = List("Anaphylactic Reaction Due To Vaccination","Anaphylactic Reaction Due To Serum")
+
+
+  val wcc1bNutritionValueSet = List("Nutrition Counseling")
+
+  val wcc1bNutritionCodeSystem = List("CPT", "HCPCS")
+
+  val wcc1cPhysicalValueSet = List("Physical Activity Counseling")
+
+  val wcc1cPhysicalCodeSystem = List("HCPCS")
+
+  val aapValueSet = List("CPT","HCPCS","UBREV","Modifier")
+
+  val aapCodeSystem = List("Ambulatory Visits","Telehealth Modifier","Other Ambulatory Visits","Telephone Visits","Online Assessments")
 }

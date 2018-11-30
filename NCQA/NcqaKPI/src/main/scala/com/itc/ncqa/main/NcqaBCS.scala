@@ -4,7 +4,7 @@ import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{countDistinct, to_date}
+import org.apache.spark.sql.functions._
 
 object NcqaBCS {
 
@@ -78,6 +78,7 @@ object NcqaBCS {
 
     /*Dinominator Calculation starts*/
     val dinominatorDf = continiousEnrollDf
+    val dinoForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
     /*Dinominator Calculation ends*/
 
 
@@ -164,24 +165,142 @@ object NcqaBCS {
     /*Dinominator Exclusion2 (66 years of age or older with frailty and advanced illness) ends*/
     //</editor-fold>
 
+    //<editor-fold desc="Dinominator Exclusion3">
+
     /*Dinominator Exclusion3(Bilateral mastectomy (Bilateral Mastectomy Value Set) starts)*/
     val bilateralMastectomyValList = List(KpiConstants.bilateralMastectomyVal)
     val icdCodeSystem = List(KpiConstants.icdCodeVal)
-    val joinedForBilateralMastectomyDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,bilateralMastectomyValList,icdCodeSystem)
-    val measurementForBilateralMastectomyDf = UtilFunctions.mesurementYearFilter(joinedForBilateralMastectomyDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
+    val joinedForBilateralMastectomyDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,bilateralMastectomyValList,icdCodeSystem).select(KpiConstants.memberskColName)
     /*Dinominator Exclusion3(•	Bilateral mastectomy (Bilateral Mastectomy Value Set) ends)*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion4">
 
     /*Dinominator Exclusion4(Unilateral mastectomy (Unilateral Mastectomy Value Set) with a bilateral modifier (Bilateral Modifier Value Set) starts)*/
-
     /*Unilateral mastectomy as primary diagnosis*/
-    //val joinedForUniMastecAsDiag
+    val unilateralMastectomyValList = List(KpiConstants.unilateralMastectomyVal)
+    val joinedForUniMastecAsDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,unilateralMastectomyValList,icdCodeSystem)
 
+    /*Unilateral mastectomy as proceddure code*/
+    val unilateralMastectomyCodeSystem = List(KpiConstants.cptCodeVal)
+    val joinedForUniMastecAsProcDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,unilateralMastectomyValList,unilateralMastectomyCodeSystem)
+
+    /*Members who has a history of Unilateral mastectomy*/
+    val unilateralMastectomyDf = joinedForUniMastecAsDiagDf.union(joinedForUniMastecAsProcDf)
+
+    /*bilateral modifier (Bilateral Modifier Value Set)*/
+    val bilateralModifierValList = List(KpiConstants.bilateralModifierVal)
+    val bilateralModifierCodeSystem = List(KpiConstants.modifierCodeVal)
+    val joinedForBilaterlModifierDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,bilateralModifierValList,bilateralModifierCodeSystem).select(KpiConstants.memberskColName)
+
+    /*Dinominator Exclusion4*/
+    val unilatAndBilateDf = unilateralMastectomyDf.select(KpiConstants.memberskColName).union(joinedForBilaterlModifierDf)
     /*Dinominator Exclusion4(Unilateral mastectomy (Unilateral Mastectomy Value Set) with a bilateral modifier (Bilateral Modifier Value Set) ends)*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion5">
+
+    /*Dinominator Exclusion5(Two unilateral mastectomies (Unilateral Mastectomy Value Set) with service dates are 14 days or more apart) starts*/
+    /*membersks who has atleast 2 unilateral mastectomies*/
+    val atLeast2UnilMasMemskDf = unilateralMastectomyDf.groupBy(KpiConstants.memberskColName).agg(count(unilateralMastectomyDf.col(KpiConstants.startDateColName)).alias("count")).filter($"count".>=(2)).select(KpiConstants.memberskColName)
+
+    /*atleast 2 unilateral mastectomies*/
+    val atLest2UnilateralmasDf = unilateralMastectomyDf.as("df1").join(atLeast2UnilMasMemskDf.as("df2"),unilateralMastectomyDf.col(KpiConstants.memberskColName) === atLeast2UnilMasMemskDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.member_sk","df1.start_date")
+    //atLest2UnilateralmasDf.printSchema()
+    val at2Df = atLest2UnilateralmasDf.withColumnRenamed(KpiConstants.startDateColName,"start_date2")
+    /*Dinominator Exclusion5(membersks who has atleast 2 unilateral mastectomies and service dates are 14 or more days apart)*/
+    val atLest2UnilateralmasAnd14DaysDf = atLest2UnilateralmasDf.as("df1").join(at2Df.as("df2"),$"df1.member_sk" === $"df2.member_sk").filter(datediff($"df1.start_date",$"df2.start_date2").>=(14)).select($"df1.member_sk")
+    /*Dinominator Exclusion5(Two unilateral mastectomies (Unilateral Mastectomy Value Set) with service dates are 14 days or more apart) ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion6">
+
+    /*Dinominator Exclusion6(History of bilateral mastectomy (History of Bilateral Mastectomy Value Set) starts)*/
+    val historyBilateralMastectomyValList = List(KpiConstants.historyBilateralMastectomyVal)
+    val joinedForHisBilMastDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,historyBilateralMastectomyValList,icdCodeSystem).select(KpiConstants.memberskColName)
+    /*Dinominator Exclusion6(History of bilateral mastectomy (History of Bilateral Mastectomy Value Set) ends)*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion7">
+
+    /*Dinominator Exclusion7(Unilateral Mastectomy and left mastectomy with 14 days service date apart) starts*/
+    /*members who has leftModifier*/
+    val leftModifierValList = List(KpiConstants.leftModifierVal)
+    val leftModifierCodeSystem = List(KpiConstants.modifierCodeVal)
+    val joinedForLeftModifierDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,leftModifierValList,leftModifierCodeSystem)
+
+    /*members who has both unilateralMastectomy and LeftModifier on same date*/
+    val unilateralAndLeftModDf = unilateralMastectomyDf.as("df1").join(joinedForLeftModifierDf.as("df2"),(unilateralMastectomyDf.col(KpiConstants.memberskColName) === joinedForLeftModifierDf.col(KpiConstants.memberskColName) && unilateralMastectomyDf.col(KpiConstants.startDateColName) === joinedForLeftModifierDf.col(KpiConstants.startDateColName)),KpiConstants.innerJoinType).select("df1.member_sk","df1.start_date")
+
+    /*members who has Left unilateral mastectomy (Unilateral Mastectomy Left Value Set)*/
+    val leftUniMasValList = List(KpiConstants.uniMasLeftVal)
+    val joinedForLeftUniMasDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,leftUniMasValList,icdCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
+    /*Mmebers who has left mastectomy*/
+    val leftMastectomyDf = unilateralAndLeftModDf.union(joinedForLeftUniMasDf)
+
+    /*Members who has both Unilateral Mastectomy and left mastectomy with 14 days service date apart*/
+    val unilatAndLeftMasDf = unilateralMastectomyDf.as("df1").join(leftMastectomyDf.as("df2"),unilateralMastectomyDf.col(KpiConstants.memberskColName) === leftMastectomyDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(unilateralMastectomyDf.col(KpiConstants.startDateColName), leftMastectomyDf.col(KpiConstants.startDateColName)).>=(14)).select("df1.member_sk")
+    /*Dinominator Exclusion7(Unilateral Mastectomy and left mastectomy with 14 days service date apart) ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion8">
+
+    /*Dinominator Exclusion8(unilateral mastectomy and right mastectomy with service dates apart 14 or more) starts*/
+    /*Members who has right modifier*/
+    val rightModifierValList = List(KpiConstants.rightModifierVal)
+    val rightModifierCodeSystem = List(KpiConstants.modifierCodeVal)
+    val joinedForRightModifierDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,rightModifierValList,rightModifierCodeSystem)
+
+    /*members who has both unilateralMastectomy and RightModifier on same date*/
+    val unilateralAndRightModDf = unilateralMastectomyDf.as("df1").join(joinedForRightModifierDf.as("df2"),(unilateralMastectomyDf.col(KpiConstants.memberskColName) === joinedForRightModifierDf.col(KpiConstants.memberskColName) && unilateralMastectomyDf.col(KpiConstants.startDateColName) === joinedForRightModifierDf.col(KpiConstants.startDateColName)),KpiConstants.innerJoinType).select("df1.member_sk","df1.start_date")
+
+    /*members who has right unilateral mastectomy (Unilateral Mastectomy Left Value Set)*/
+    val rightUniMasValList = List(KpiConstants.uniMasRightVal)
+    val joinedForRightUniMasDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,rightUniMasValList,icdCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
+    /*Mmebers who has right mastectomy*/
+    val rightMastectomyDf = unilateralAndRightModDf.union(joinedForRightUniMasDf)
+
+    /*Members who has both Unilateral Mastectomy and right mastectomy with 14 days service date apart*/
+    val unilatAndRightMasDf = unilateralMastectomyDf.as("df1").join(rightMastectomyDf.as("df2"),unilateralMastectomyDf.col(KpiConstants.memberskColName) === rightMastectomyDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).filter(datediff(unilateralMastectomyDf.col(KpiConstants.startDateColName), rightMastectomyDf.col(KpiConstants.startDateColName)).>=(14)).select("df1.member_sk")
+    /*Dinominator Exclusion8(unilateral mastectomy and right mastectomy with service dates apart 14 or more) ends*/
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion9">
+
+    /*Dinominator Exclusion9(mastectomy on both the left and right side on the same or different dates of service) starts*/
+    /*members who has Absence of the left breast*/
+    val absLeftBreastValList = List(KpiConstants.absOfLeftBreastVal)
+    val joinedForAbsLeftBreastDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,absLeftBreastValList,icdCodeSystem).select(KpiConstants.memberskColName)
+
+    /*members who has left mastectomy*/
+    val leftMastectomyUnionDf = leftMastectomyDf.select(KpiConstants.memberskColName).union(joinedForAbsLeftBreastDf)
 
 
+    /*members who has Absence of the right breast*/
+    val absRightBreastValList = List(KpiConstants.absOfRightBreastVal)
+    val joinedForAbsRightBreastDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.bcsMeasureId,absRightBreastValList,icdCodeSystem).select(KpiConstants.memberskColName)
+
+    /*members who has right mastectomy*/
+    val rightMastectomyUnionDf = rightMastectomyDf.select(KpiConstants.memberskColName).union(joinedForAbsRightBreastDf)
+
+    /*members who has mastectomy on both the left and right side on the same or different dates of service*/
+    val leftAndRightMastectomyDf = leftMastectomyUnionDf.intersect(rightMastectomyUnionDf)
+    /*Dinominator Exclusion9(mastectomy on both the left and right side on the same or different dates of service) ends*/
+    //</editor-fold>
+
+    /*Dinominator Exclusion*/
+    val dinominatorExclDf = fralityAndAdvIlDfAndAbove65Df.union(joinedForBilateralMastectomyDf).union(unilatAndBilateDf).union(atLest2UnilateralmasAnd14DaysDf).union(joinedForHisBilMastDf).union(unilatAndLeftMasDf).union(unilatAndRightMasDf).union(leftAndRightMastectomyDf)
+    val dinominatorAfterExclDf = dinoForKpiCalDf.except(dinominatorExclDf)
+    dinominatorExclDf.show()
+    //dinominatorAfterExclDf.show()
     /*Dinominator Exclusion calculation ends*/
 
+    /*Numerator calculation starts*/
+    /*Numerator calculation ends*/
 
+    spark.sparkContext.stop()
 
   }
 }
