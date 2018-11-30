@@ -24,6 +24,7 @@ public class QMSConnection {
 	
 	public static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver"; //org.apache.hadoop.hive.jdbc.HiveDriver
 	public static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.OracleDriver";
+	public static final String PHOENIX_JDBC_DRIVER = "org.apache.phoenix.jdbc.PhoenixDriver";
 	
 	public Connection getOracleConnection() throws Exception {
 		
@@ -58,6 +59,13 @@ public class QMSConnection {
 	public Connection getHiveConnection() throws Exception {
 		Class.forName(HIVE_JDBC_DRIVER);
 		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCUrl(), qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
+		return connection;
+	}
+	
+	public Connection getPhoenixConnection() throws Exception {
+		System.out.println(" get Phoenix Connection ");
+		Class.forName(PHOENIX_JDBC_DRIVER);
+		Connection connection = DriverManager.getConnection(qmsProperty.getPhoenixJDBCUrl());
 		return connection;
 	}	
 	
