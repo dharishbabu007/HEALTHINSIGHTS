@@ -30,6 +30,7 @@ public class QMSProperty {
 	private String hiveJDBCThriftUrl;
 	private String hiveUserName;
 	private String hivePassword;
+	private String phoenixJDBCUrl;
 	
 	private String userStatusList;
 	private String adminEMailId;	

@@ -26,8 +26,8 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
 import com.qms.rest.model.SecurityQuestion;
 
-@Service("userService")
-public class UserServiceImpl implements UserService {
+@Service("userServiceOracle")
+public class UserServiceImpl2 implements UserService {
 	
 	@Autowired
 	private QMSConnection qmsConnection;	
@@ -120,15 +120,15 @@ public class UserServiceImpl implements UserService {
 		Connection connection = null;
 		User user = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			
 //			Class.forName("org.apache.phoenix.jdbc.PhoenixDriver");
 //			connection = DriverManager.getConnection("jdbc:phoenix:192.168.184.66,192.168.184.68,192.168.184.69:2181:/hbase-unsecure");
 			
 			statement = connection.createStatement();
 			if(password != null)
-				//resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
-				resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+				//resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
 			else
 				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"'");
 			Timestamp modifiedDate = null;
