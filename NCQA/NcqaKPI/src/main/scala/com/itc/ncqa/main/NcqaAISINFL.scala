@@ -7,7 +7,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{datediff, lit}
 import org.apache.spark.sql.types.DateType
 
-object NcqaAISINFL1 {
+object NcqaAISINFL {
 
   def main(args: Array[String]): Unit = {
 
@@ -54,7 +54,23 @@ object NcqaAISINFL1 {
     var current_date = year + "-01-01"
     val newDf1 = initialJoinedDf.withColumn("curr_date", lit(current_date))
     val newDf2 = newDf1.withColumn("curr_date", newDf1.col("curr_date").cast(DateType))
-    val ageFilterDf = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(19)).drop("curr_date")     //.withColumn("diff",(datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25)).select(KpiConstants.memberskColName,KpiConstants.dobColName,"diff")
+
+    /*Age filter for dinominator calculation*/
+    val ageFilterDf = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(19)).drop("curr_date")
+
+    /*Age filter for numerator based on the lob_name*/
+    var ageFilterForNumeratorDf = spark.emptyDataFrame
+    var measureId = ""
+    if(KpiConstants.commercialLobName.equalsIgnoreCase(lob_name) || KpiConstants.medicaidLobName.equalsIgnoreCase(lob_name)){
+      ageFilterForNumeratorDf = newDf2.filter(((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(19)) && ((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).<=(65))).drop("curr_date").select(KpiConstants.memberskColName)
+      measureId = KpiConstants.aisf1MeasureId
+    }
+    else{
+      ageFilterForNumeratorDf = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>(65)).drop("curr_date").select(KpiConstants.memberskColName)
+      measureId = KpiConstants.aisf2MeasureId
+    }
+
+
 
 
     //<editor-fold desc="Dinominator Calculation">
@@ -135,9 +151,24 @@ object NcqaAISINFL1 {
     /*Dinominator Calculation starts*/
     //</editor-fold>
 
-    /*Numerator Calculation starts*/
+    //<editor-fold desc="Numerator calculation">
 
-    /*Numerator Calculation ends*/
+    /*Numerator Calculation(members who are in dinominator and have influenza vaccine in between the dates that are given) starts*/
+    val influenzaVaccineValList = List(KpiConstants.influenzaVaccineVal)
+    val influenzaVacCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cvxCodeVal,KpiConstants.hcpsCodeVal)
+    val joinedForInfluenzaVacDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.emptyMesureId,influenzaVaccineValList,influenzaVacCodeSystem)
+    val lowerDate = year.toInt-1 + "-07-01"
+    val upperDate = year + "-06-30"
+    val measureForInfluenzaVaccDf = UtilFunctions.dateBetweenFilter(joinedForInfluenzaVacDf,KpiConstants.startDateColName,lowerDate,upperDate).select(KpiConstants.memberskColName)
+    /*numerator based on the lob name*/
+    val numAgeFilterDf = measureForInfluenzaVaccDf.intersect(ageFilterForNumeratorDf)
+    /*Members who are in dinominator and have a influenza vacccine in between the given dates*/
+    val numeratorDf = numAgeFilterDf.intersect(dinominatorMemSkDf)
+    /*Numerator Calculation(members who are in dinominator and have influenza vaccine in between the dates that are given) ends*/
+    //</editor-fold>
+
+
+
 
 
 

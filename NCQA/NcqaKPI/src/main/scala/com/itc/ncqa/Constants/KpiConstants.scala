@@ -59,6 +59,7 @@ object KpiConstants {
   val age44Val = "44"
   val age45Val = "45"
   val age64Val = "64"
+  val age81Val = "81"
   val age120Val = "120"
 
 
@@ -72,6 +73,7 @@ object KpiConstants {
   val measurementFourYearUpper = 1460
   val measurementNineYearUpper = 3287
   val measurementThreeYearUpper = 1096
+  val measureemtnTenYearUpper = 3650
 
 
 
@@ -114,6 +116,10 @@ object KpiConstants {
   val bcsMeasureTitle = "Breast Cancer Screening (BCS)"
   val ImamenMeasureTitle = "Immunizations for Adolescents (IMA)"
   val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
+  val aapMeasureTitle = "Adult Access to Preventive/Ambulatory Health Services (AAP)"
+  val aisMeasureTitle = "Adult Immunization Status (AIS)"
+  val cbpMeasureTitle = "Controlling High Blood Pressure (CBP)"
+
 
 
 
@@ -157,6 +163,9 @@ object KpiConstants {
   val endstrtDiffColName = "endStrt_Diff"
   val totalStatinDayColName = "totalDays_statinMed"
   val pdcColName = "pdc"
+  val fiftyDobColName = "fifty_dob"
+  val sixtyDobColName = "sixty_dob"
+  val countColName = "count"
 
 
   /*Output column names*/
@@ -303,6 +312,12 @@ object KpiConstants {
   val Imacmb1MeasureId = "IMACMB1"
   val Imacmb2MeasureId = "IMACMB2"
   val aisMeasureId = "AIS"
+  val aisf1MeasureId = "AISINFL1"
+  val aisf2MeasureId = "AISINFL2"
+  val aistd1MeasureId = "AISTD1"
+  val aistd2MeasureId = "AISTD2"
+  val aiszos1MeasureIdVal = "AISZOS1"
+  val aiszos2MeasureIdVal = "AISZOS2"
   val wcc1aMeasureId = "WCC1A"
   val wcc2aMeasureId = "WCC2A"
   val wcc1bMeasureId = "WCC1B"
@@ -312,6 +327,7 @@ object KpiConstants {
   val aap1MeasureId = "AAP1"
   val aap2MeasureId = "AAP2"
   val aap3MeasureId = "AAP3"
+  val cbpMeasureId = "CBP"
 
 
 
@@ -407,6 +423,7 @@ object KpiConstants {
   val uniMasRightVal = "Unilateral Mastectomy Right"
   val ardvVal = "Anaphylactic Reaction Due To Vaccination"
   val encephalopathyVal = "Encephalopathy Due To Vaccination"
+  val tdVaccineVal = "Td Vaccine"
   val tdapVaccineVal = "Tdap Vaccine"
   val boneMarowTransVal = "Bone Marrow Transplant"
   val chemoTherappyVal = "Chemotherapy"
@@ -416,6 +433,11 @@ object KpiConstants {
   val scaHbsdVal = "Sickle Cell Anemia and HB-S Disease"
   val cflVal = "Cerebrospinal Fluid Leak"
   val hospiceVal = "Hospice"
+  val influenzaVaccineVal = "Influenza Vaccine Administered"
+  val herpesZosterLiveVaccineVal = "Herpes Zoster Live Vaccine"
+  val herpesZosterRecomVaccineVal = "Herpes Zoster Recombinant Vaccine"
+  val pneuConjuVaccine13Val = "Pneumococcal Conjugate Vaccine 13"
+  val pneuPolyVaccine23Val = "Pneumococcal Polysaccharide Vaccine 23"
 
 
 
@@ -747,4 +769,23 @@ object KpiConstants {
   val aapValueSet = List("CPT","HCPCS","UBREV","Modifier")
 
   val aapCodeSystem = List("Ambulatory Visits","Telehealth Modifier","Other Ambulatory Visits","Telephone Visits","Online Assessments")
+
+  val cbpDinoExclValueSet = List("Frailty")
+
+  val cbpDinoCodeSystem = List("CPT", "HCPCS")
+
+  val cbpCommonNumeratorValueSet = List("Essential Hypertension")
+
+  val cbpNumerator1ValueSet = List("Outpatient","Telehealth Modifier")
+
+  val cbpNumerator2ValueSet = List("Telephone Visits")
+
+  val cbpNumerator3ValueSet = List("Online Assessments")
+
+  val cbpNumerator1CodeSystem = List("CPT","HCPCS","Modifier")
+
+  val cbpNumerator2CodeSystem = List("CPT")
+
+  val cbpNumerator3CodeSystem = List("CPT")
+
 }

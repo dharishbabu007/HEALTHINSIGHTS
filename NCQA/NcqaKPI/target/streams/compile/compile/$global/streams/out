@@ -1,4 +1,22 @@
-[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaWCC2B.scala:73:130: value age17val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
-[0m[[0m[31merror[0m] [0m[0m    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age12Val, KpiConstants.age17val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                                                                 ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMACMB1.scala:74:114: value age0val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMACMB2.scala:75:114: value age0val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMACMB2.scala:132:113: value age9val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterDfImahpv = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age9val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMAHPV.scala:69:107: value age9val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age9val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMAHPV.scala:76:114: value age0val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMAMEN.scala:74:114: value age0val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mD:\Sangeeth\NCQA\git_workspace\HEALTHINSIGHTS\NCQA\NcqaKPI\src\main\scala\com\itc\ncqa\main\NcqaIMATD.scala:75:114: value age0val is not a member of object com.itc.ncqa.Constants.KpiConstants[0m
+[0m[[0m[31merror[0m] [0m[0m    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0m7 errors found[0m
