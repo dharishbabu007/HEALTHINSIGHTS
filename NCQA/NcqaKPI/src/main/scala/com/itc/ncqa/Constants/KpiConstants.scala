@@ -34,9 +34,11 @@ object KpiConstants {
   val age18Val = "18"
   val age74Val = "74"
   val age1999Val = "19.99"
+  val age1Val = "1"
   val age2Val = "2"
   val age20Val = "20"
   val age12Val = "12"
+  val age19Val = "19"
   val age21Val = "21"
   val age75Val = "75"
   val age65Val = "65"
@@ -48,6 +50,7 @@ object KpiConstants {
   val age40Val = "40"
   val age3Val = "3"
   val age6Val = "6"
+  val age7Val = "7"
   val age51Val = "51"
   val age52Val = "52"
   val age11Val = "11"
@@ -118,6 +121,7 @@ object KpiConstants {
   val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
   val aapMeasureTitle = "Adult Access to Preventive/Ambulatory Health Services (AAP)"
   val aisMeasureTitle = "Adult Immunization Status (AIS)"
+  val capMeasureTitle = "Children and Adolescents Access to Primary Care Practitioners (CAP)"
   val cbpMeasureTitle = "Controlling High Blood Pressure (CBP)"
 
 
@@ -327,6 +331,8 @@ object KpiConstants {
   val aap1MeasureId = "AAP1"
   val aap2MeasureId = "AAP2"
   val aap3MeasureId = "AAP3"
+  val capMeasureId = "CAP"
+  val cap1MeasureId = "CAP1"
   val cbpMeasureId = "CBP"
 
 
@@ -438,6 +444,7 @@ object KpiConstants {
   val herpesZosterRecomVaccineVal = "Herpes Zoster Recombinant Vaccine"
   val pneuConjuVaccine13Val = "Pneumococcal Conjugate Vaccine 13"
   val pneuPolyVaccine23Val = "Pneumococcal Polysaccharide Vaccine 23"
+  val ambulatoryVisitVal = "Ambulatory Visits"
 
 
 
