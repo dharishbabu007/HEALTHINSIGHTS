@@ -185,21 +185,31 @@ public class ImportExportServiceImpl implements ImportExportService {
 		else
 			return RestResult.getFailRestResult(" Input file id is null. ");
 		
-		int processedFileId = 0;
-		if(httpSession.getAttribute("PROCESSED_FILE_ID") != null)
-			processedFileId = (int) httpSession.getAttribute("PROCESSED_FILE_ID");		
-		if(processedFileId == fileId) {
-			return RestResult.getFailRestResult(" Already processed/processing for file id : "+fileId);
-		}
-		httpSession.setAttribute("PROCESSED_FILE_ID", fileId);
+//		int processedFileId = 0;
+//		if(httpSession.getAttribute("PROCESSED_FILE_ID") != null)
+//			processedFileId = (int) httpSession.getAttribute("PROCESSED_FILE_ID");	
+//		System.out.println(fileId + " is the File Id. PROCESSED_FILE_ID : " + processedFileId);
+//		if(processedFileId == fileId) {
+//			return RestResult.getFailRestResult(" Already processed/processing for file id : "+fileId);
+//		}
+//		httpSession.setAttribute("PROCESSED_FILE_ID", fileId);
 		
 		String rApiUrl = qmsHDFSProperty.getRapiURL();
 		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
 		System.out.println("Calling R API Url --> " + rApiUrl);
 		RestTemplate restTemplate = new RestTemplate();		
 		String result = restTemplate.getForObject(rApiUrl, String.class);
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         System.out.println(" R API Rest Result --> " + result);
-        return RestResult.getSucessRestResult(result);
+		if(result != null && result.contains("Completed")) {
+			return RestResult.getSucessRestResult("R Script Execution Success");
+		} else {
+			return RestResult.getFailRestResult(" R Script Execution Failed");
+		}
 	}
 	
     private void putFile(MultipartFile file, int fileId)
@@ -291,8 +301,8 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public Set<CSVOutPut> getCSVOutPut() {
 		
-		RestResult result = runRFile("model1");		
-		System.out.println(" R API Output --> " + result.getMessage());
+//		RestResult result = runRFile("model1");		
+//		System.out.println(" R API Output --> " + result.getMessage());
 		Set<CSVOutPut> setOutput = new HashSet<>();
 //		if(result != null && result.getMessage().contains("Completed!")) {
 //		}
