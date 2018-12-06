@@ -26,7 +26,7 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
 import com.qms.rest.model.SecurityQuestion;
 
-@Service("userServiceOracle")
+@Service("userService")
 public class UserServiceImpl2 implements UserService {
 	
 	@Autowired

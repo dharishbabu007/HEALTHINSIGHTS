@@ -91,7 +91,8 @@ public class PatientServiceImpl implements PatientService {
 		} else {
 			System.out.println(memberId + " Getting member id from HIVE ");
 			try {
-				connection = qmsConnection.getHiveThriftConnection();
+				//connection = qmsConnection.getHiveThriftConnection();
+				connection = qmsConnection.getOracleConnection();
 				statement = connection.createStatement();
 				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
 				cacheMap.put(memberId, dimPatient);
@@ -120,17 +121,18 @@ public class PatientServiceImpl implements PatientService {
 //			connection = qmsConnection.getHiveConnection();
 //			statement = connection.createStatement();			
 			
-//			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
-//			"FIRST_NAME ||' '|| MIDDLE_NAME ||' '|| LAST_NAME AS \"Member_Name\","+
-//			"ADDRESS1 ||', '|| ADDRESS2 ||', '|| CITY ||', '|| STATE ||', '|| ZIP AS \"Address\","+ 
-//			"FLOOR(TRUNC(SYSDATE - (To_date(substr(ENC.DATE_OF_BIRTH_SK, 1, 4) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 5,2) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) as \"Age\" "+ 
-//			"FROM DIM_MEMBER ENC where MEMBER_ID='"+patientId+"'";
-			
 			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
-			"CONCAT(FIRST_NAME,' ',MIDDLE_NAME,' ',LAST_NAME) AS Name,"+
-			"CONCAT(ADDRESS1,',',ADDRESS2,',',CITY,',',STATE,',',ZIP) AS Address,"+ 
-			"cast(floor(datediff (CURRENT_DATE, (to_date(CONCAT(substr(ENC.DATE_OF_BIRTH_SK, 1, 4),'-',substr(ENC.DATE_OF_BIRTH_SK, 5,2),'-',substr(ENC.DATE_OF_BIRTH_SK, 7,2)))))/365.25) as float) Age "+ 
-			"FROM DIM_MEMBER ENC WHERE MEMBER_ID='"+memberId+"'";			
+			"FIRST_NAME ||' '|| MIDDLE_NAME ||' '|| LAST_NAME AS \"Name\","+
+			"ADDRESS1 ||', '|| ADDRESS2 ||', '|| CITY ||', '|| STATE ||', '|| ZIP AS \"Address\","+ 
+			"FLOOR(TRUNC(SYSDATE - (To_date(substr(ENC.DATE_OF_BIRTH_SK, 1, 4) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 5,2) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) as \"Age\" "+ 
+			"FROM DIM_MEMBER ENC where MEMBER_ID='"+memberId+"'";
+			
+//			//HIVE query			
+//			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
+//			"CONCAT(FIRST_NAME,' ',MIDDLE_NAME,' ',LAST_NAME) AS Name,"+
+//			"CONCAT(ADDRESS1,',',ADDRESS2,',',CITY,',',STATE,',',ZIP) AS Address,"+ 
+//			"cast(floor(datediff (CURRENT_DATE, (to_date(CONCAT(substr(ENC.DATE_OF_BIRTH_SK, 1, 4),'-',substr(ENC.DATE_OF_BIRTH_SK, 5,2),'-',substr(ENC.DATE_OF_BIRTH_SK, 7,2)))))/365.25) as float) Age "+ 
+//			"FROM DIM_MEMBER ENC WHERE MEMBER_ID='"+memberId+"'";			
 			
 			resultSet = statement.executeQuery(memberSQL);			
 			
@@ -241,6 +243,22 @@ public class PatientServiceImpl implements PatientService {
 				dimPatient.setProviderAddress2(resultSet.getString("address2"));
 			}		
 			
+			//Appointment details
+			resultSet.close();
+			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW "+ 
+			"FROM FACT_APPOINTMENT FA "+ 
+			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
+			"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
+			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
+			"WHERE DDA.CALENDAR_DATE>SYSDATE AND FA.MEMBER_ID='"+memberId+"'";			
+			resultSet = statement.executeQuery(memberSQL);
+			while (resultSet.next()) {
+				dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
+				dimPatient.setPhysicianName(resultSet.getString("Physician_Name"));
+				dimPatient.setDepartment(resultSet.getString("DEPARTMENT_NAME"));
+				dimPatient.setNoShowLikelihood(resultSet.getString("NOSHOW_LIKELIHOOD"));
+			}			
+			
 			if(true) {
 				return dimPatient;
 			}
@@ -262,19 +280,6 @@ public class PatientServiceImpl implements PatientService {
 				dimPatient.setOpVisitsCount(resultSet.getString("OP_VISIT"));
 				dimPatient.setErVisitsCount(resultSet.getString("ER_VISIT"));
 			}						
-			
-			
-			resultSet.close();
-			memberSQL = "SELECT DP.PAT_ID, FA.APPOINTMENT_DATE, "+ 
-			"FROM FACT_APPOINTMENT FA "+
-			"INNER JOIN DIM_PATIENT ON DP.PATIENT_SK = FA.PATIENT_SK "+
-			"WHERE DP.PAT_ID = '"+memberId+"'";			
-			resultSet = statement.executeQuery(memberSQL);
-			while (resultSet.next()) {
-				dimPatient.setNextAppointmentDate(resultSet.getString("APPOINTMENT_DATE"));
-				//dimPatient.setPhysicianName(resultSet.getString("APPOINTMENT_DATE"));
-				//dimPatient.setDepartment(resultSet.getString("APPOINTMENT_DATE"));
-			}			
 			
 			//clinical world - getting the Procedures
 			resultSet.close();

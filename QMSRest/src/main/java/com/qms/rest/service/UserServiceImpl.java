@@ -1,5 +1,6 @@
 package com.qms.rest.service;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +27,7 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
 import com.qms.rest.model.SecurityQuestion;
 
-@Service("userService")
+@Service("userServicePhoenix")
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
 				//resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
 				resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
 			else
-				resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"'");
+				resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_LOGINID='"+userName+"'");
 			Timestamp modifiedDate = null;
 			while (resultSet.next()) {
 				user = new User();
@@ -192,10 +193,10 @@ public class UserServiceImpl implements UserService {
 		
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		try {
-			connection = qmsConnection.getOracleConnection();	
+			connection = qmsConnection.getPhoenixConnection();	
 			
 			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+"'");
+			resultSet = statementObj.executeQuery("select * from QMS.QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+"'");
 			if (resultSet.next()) {
 				return RestResult.getFailRestResult("Email id already exists. Please enter unique email.");
 			}						
@@ -203,9 +204,9 @@ public class UserServiceImpl implements UserService {
 			
 			//generate temp password and sending mail
 			String tempPassword = PasswordGenerator.generatePassword();
-			emailService.sendEmail(getForgotPasswordMail(user.getEmail(), tempPassword));			
+			//emailService.sendEmail(getForgotPasswordMail(user.getEmail(), tempPassword));			
 
-			resultSet = statementObj.executeQuery("select max(USER_ID) from QMS_USER_MASTER");
+			resultSet = statementObj.executeQuery("select max(USER_ID) from QMS.QMS_USER_MASTER");
 			int userId = 0;
 			while (resultSet.next()) {
 				userId = resultSet.getInt(1)+1;
@@ -213,16 +214,17 @@ public class UserServiceImpl implements UserService {
 			resultSet.close();			
 			System.out.println(" Adding the user with user id --> " + userId);
 			
-			String sqlStatementInsert = "insert into QMS_USER_MASTER(USER_LOGINID,FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
+			String sqlStatementInsert = "UPSERT into QMS.QMS_USER_MASTER(USER_LOGINID,FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
 					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,PASSWORD,USER_ROLE_ID,USER_ID,STATUS,RESET_PASSWORD,"
 					+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,"
-					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) "
+					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_DATE(),CURRENT_DATE(),?,?,CURRENT_DATE(),?,?)";		
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;
 			statement.setString(++i, user.getLoginId());
 			statement.setString(++i, user.getFirstName());	
 			statement.setString(++i, user.getLastName());
-			statement.setString(++i, user.getSecurityQuestion());
+			statement.setInt(++i, Integer.parseInt(user.getSecurityQuestion()));
 			statement.setString(++i, user.getSecurityAnswer());
 			statement.setString(++i, user.getPhoneNumber());
 			statement.setString(++i, user.getEmail());
@@ -230,24 +232,25 @@ public class UserServiceImpl implements UserService {
 			statement.setString(++i, QMSConstants.DEFAULT_USER_ROLE_ID);
 			statement.setInt(++i, userId);
 			statement.setString(++i, QMSConstants.USER_STATUS_NEW);  //status
-			statement.setString(++i, "Y");  
+			statement.setString(++i, "Y");
 			
 			Date date = new Date();				
 			Timestamp timestamp = new Timestamp(date.getTime());				
 			statement.setString(++i, "Y");
-			statement.setTimestamp(++i, timestamp);
-			statement.setTimestamp(++i, timestamp);
+			//statement.setTimestamp(++i, timestamp);
+			//statement.setTimestamp(++i, timestamp);
 			statement.setString(++i, "Y");
 			statement.setString(++i, "A");
-			statement.setTimestamp(++i, timestamp);
+			//statement.setTimestamp(++i, timestamp);
 			statement.setString(++i, QMSConstants.MEASURE_SOURCE_NAME);				
 			
 			if(userData == null || userData.getId() == null)
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
 			else
-				statement.setString(++i, userData.getLoginId());			
-			
-			statement.executeUpdate();
+				statement.setString(++i, userData.getLoginId());
+
+			int rows = statement.executeUpdate();
+			System.out.println(" Rows inserted --> " + rows);
 			restResult = RestResult.getSucessRestResult("User added successfully.");
 		} catch (Exception e) {
 			restResult = RestResult.getFailRestResult(e.getMessage());
@@ -399,9 +402,9 @@ public class UserServiceImpl implements UserService {
 		Connection connection = null;
 		SecurityQuestion securityQuestion = null;
 		try {						
-			connection = qmsConnection.getOracleConnection();
+			connection = qmsConnection.getPhoenixConnection();
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from QMS_SECURITY_QUESTION order by SECURITY_QUESTION");
+			resultSet = statement.executeQuery("select * from QMS.QMS_SECURITY_QUESTION order by SECURITY_QUESTION");
 			while (resultSet.next()) {
 				securityQuestion = new SecurityQuestion();
 				securityQuestion.setId(resultSet.getInt("SECURITY_QUESTION"));
@@ -425,10 +428,10 @@ public class UserServiceImpl implements UserService {
 		Connection connection = null;
 		User user = null;
 		try {						
-			connection = qmsConnection.getOracleConnection();
+			connection = qmsConnection.getPhoenixConnection();
 			
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_ID="+userId);
+			resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_ID="+userId);
 			while (resultSet.next()) {
 				user = new User();
 				user.setEmail(resultSet.getString("USER_EMAIL"));
