@@ -504,6 +504,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 	}
 	
 	private String getRiskBasedOnCareGap(String carGapStr) {
+		if(carGapStr == null) return "LOW"; 
 		int carGap = Integer.parseInt(carGapStr.trim());
 		String risk = "LOW";
 		if(carGap == 2 || carGap ==3) {
