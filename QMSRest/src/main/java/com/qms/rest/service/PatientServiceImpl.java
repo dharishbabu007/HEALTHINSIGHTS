@@ -95,7 +95,7 @@ public class PatientServiceImpl implements PatientService {
 				connection = qmsConnection.getOracleConnection();
 				statement = connection.createStatement();
 				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
-				cacheMap.put(memberId, dimPatient);
+				//cacheMap.put(memberId, dimPatient);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -245,12 +245,13 @@ public class PatientServiceImpl implements PatientService {
 			
 			//Appointment details
 			resultSet.close();
-			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW "+ 
+			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW, DPA.PAT_ID "+ 
 			"FROM FACT_APPOINTMENT FA "+ 
 			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
 			"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
 			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
-			"WHERE DDA.CALENDAR_DATE>SYSDATE AND FA.MEMBER_ID='"+memberId+"'";			
+			"INNER JOIN DIM_PATIENT DPA ON DPA.PATIENT_SK=FA.PATIENT_SK "+
+			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
 				dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
