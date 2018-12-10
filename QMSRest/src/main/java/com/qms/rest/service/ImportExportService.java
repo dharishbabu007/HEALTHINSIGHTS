@@ -27,4 +27,10 @@ public interface ImportExportService {
 	
 	FileUpload saveFileUpload(FileUpload fileUpload);	
 	RestResult callHivePatitioning ();
+	
+	//Compliance
+	Set<CSVOutPut> getComplianceOutPut();
+	Set<ModelSummary> getComplianceModelSummary();
+	Set<ConfusionMatric> getComplianceConfusionMatric();	
+	ModelScore getComplianceModelScore();	
 }

@@ -248,8 +248,8 @@ public class UserServiceImpl implements UserService {
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
 			else
 				statement.setString(++i, userData.getLoginId());
-			System.out.println(" Prepared statement --> " + statement);
 			int rows = statement.executeUpdate();
+			connection.commit();
 			System.out.println(" Rows inserted --> " + rows);
 			restResult = RestResult.getSucessRestResult("User added successfully.");
 		} catch (Exception e) {

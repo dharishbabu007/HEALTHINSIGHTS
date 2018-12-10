@@ -1,6 +1,5 @@
 package com.qms.rest.model;
 
-import java.util.List;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -47,7 +46,8 @@ public class DimPatient {
 	
 	//for other fields - AggregateFactMember
 	private Set<String> comorbidities;	
-	private String comorbiditiesCount;
+	private String comorbiditiesCount;	
+	private Set<CareGapAlert> careGapAlerts;
 	private Set<String> careGaps;
 	private String careGapsCount;
 	private String ipVisitsCount;

@@ -152,5 +152,32 @@ public class ImportExportController {
 		return new ResponseEntity<ModelScore>(cSVOutPut, HttpStatus.OK);
 	}	
 	
+	@RequestMapping(value = "/complience_output", method = RequestMethod.GET)
+	public ResponseEntity<Set<CSVOutPut1>> getComplienceOutput() {
+		System.out.println("Fetching Output.csv data ");
+		Set<CSVOutPut1> setCSVOutPut = importExportService.getCSVOutPut1();
+		return new ResponseEntity<Set<CSVOutPut1>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/complience_modelSummary", method = RequestMethod.GET)
+	public ResponseEntity<Set<ModelSummary>> getComplienceModelSummary() {
+		System.out.println("Fetching ModelSummary.csv data ");
+		Set<ModelSummary> setCSVOutPut = importExportService.getCSVModelSummary();
+		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/complience_confusionMatric", method = RequestMethod.GET)
+	public ResponseEntity<Set<ConfusionMatric>> getComplienceConfusionMatric() {
+		System.out.println("Fetching ConfusionMatric.csv data ");
+		Set<ConfusionMatric> setCSVOutPut = importExportService.getCSVConfusionMatric();
+		return new ResponseEntity<Set<ConfusionMatric>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/complience_modelScore", method = RequestMethod.GET)
+	public ResponseEntity<ModelScore> getComplienceModelScore() {
+		System.out.println("Fetching ModelScore.csv data ");
+		ModelScore cSVOutPut = importExportService.getCSVModelScore();
+		return new ResponseEntity<ModelScore>(cSVOutPut, HttpStatus.OK);
+	}	
 	
 }
