@@ -71,7 +71,11 @@ object NcqaIMACMB1 {
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
     /*Dinominator calculation*/
+<<<<<<< HEAD
     val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+>>>>>>> origin/sangeeth
 
     val dinominatorDf = ageFilterDf
 

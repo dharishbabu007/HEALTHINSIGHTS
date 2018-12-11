@@ -31,7 +31,11 @@ object NcqaAAP3 {
 
     /*define Lob_Name  is commercial three years as mesurement year else one year*/
     if("Commercial".equals(lob_name)) {
+<<<<<<< HEAD
       measurementYearUpper = KpiConstants.measurementThreeyearUpper
+=======
+      measurementYearUpper = KpiConstants.measurementThreeYearUpper
+>>>>>>> origin/sangeeth
     }
     else {
       measurementYearUpper = KpiConstants.measurementOneyearUpper
@@ -77,7 +81,11 @@ object NcqaAAP3 {
 
     /*Age 64 and above (Aap1 Activity)*/
 
+<<<<<<< HEAD
     val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age64val, KpiConstants.age120val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age64Val, KpiConstants.age120Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+>>>>>>> origin/sangeeth
 
 
 
