@@ -72,7 +72,15 @@ object NcqaIMATD {
 
     /*Dinominator calculation*/
 
+<<<<<<< HEAD
     val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+<<<<<<< HEAD
+    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+>>>>>>> origin/sangeeth
+>>>>>>> a8f5a41106c0275f1944059736563fc2bdc80753
     val dinominatorDf = ageFilterForDinoDf
 
     dinominatorDf.show()

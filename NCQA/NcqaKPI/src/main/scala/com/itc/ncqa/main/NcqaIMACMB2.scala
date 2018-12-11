@@ -72,7 +72,15 @@ object NcqaIMACMB2 {
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
 
     /*Dinominator calculation*/
+<<<<<<< HEAD
     val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+<<<<<<< HEAD
+    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+    val ageFilterForDinoDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age0Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+>>>>>>> origin/sangeeth
+>>>>>>> a8f5a41106c0275f1944059736563fc2bdc80753
 
     val dinominatorDf = ageFilterDf
 
@@ -129,7 +137,15 @@ object NcqaIMACMB2 {
 
     val hedisJoinedForImahpvScreeningDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ImahpvMeasureId, KpiConstants.cisImahpvValueSet, KpiConstants.cisImahpvCodeSystem)
     val measurement2 = UtilFunctions.mesurementYearFilter(hedisJoinedForImahpvScreeningDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+<<<<<<< HEAD
     val ageFilterDfImahpv = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age9Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+<<<<<<< HEAD
+    val ageFilterDfImahpv = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age9val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+=======
+    val ageFilterDfImahpv = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age9Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+>>>>>>> origin/sangeeth
+>>>>>>> a8f5a41106c0275f1944059736563fc2bdc80753
 
     val ageFilterJoinNumeratorDf2 = ageFilterDfImahpv.as("df1").join(measurement2.as("df2"),ageFilterDfImahpv.col(KpiConstants.memberskColName) === measurement2.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(measurement2.col(KpiConstants.startDateColName).isNotNull).select(ageFilterDfImahpv.col(KpiConstants.memberskColName),ageFilterDfImahpv.col(KpiConstants.dobColName),measurement2.col(KpiConstants.startDateColName))
 
