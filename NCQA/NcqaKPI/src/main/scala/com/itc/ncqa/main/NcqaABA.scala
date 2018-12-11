@@ -4,7 +4,7 @@ import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SaveMode, SparkSession}
-import org.apache.spark.sql.functions.to_date
+import org.apache.spark.sql.types.DateType
 import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when}
 
 import scala.collection.JavaConversions._
@@ -73,7 +73,12 @@ object NcqaABA {
     }
 
     val commonFilterDf = continuousEnrollDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age74Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+    val current_date = year + "-12-31"
+    val last_Year_date = year.toInt -1 + "-01-01"
+    val newDf1 = commonFilterDf.withColumn("curr_date", lit(current_date)).withColumn("last_Year_date", lit(last_Year_date))
+    val newDf2 = newDf1.withColumn("curr_date", newDf1.col("curr_date").cast(DateType)).withColumn("last_Year_date", newDf1.col("last_Year_date").cast(DateType))
+    val ageFilter = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).<=(KpiConstants.age74Val.toInt) && (datediff(newDf2.col("last_Year_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(KpiConstants.age18Val.toInt))
+    val ageFilterDf = ageFilter.drop("curr_date","last_Year_date")
 
 
     /*loading ref_hedis table*/
