@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,6 +17,8 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.qms.rest.model.CareGapAlert;
 import com.qms.rest.model.DimPatient;
 import com.qms.rest.model.MemberDetail;
 import com.qms.rest.model.User;
@@ -95,7 +100,7 @@ public class PatientServiceImpl implements PatientService {
 				connection = qmsConnection.getOracleConnection();
 				statement = connection.createStatement();
 				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
-				cacheMap.put(memberId, dimPatient);
+				//cacheMap.put(memberId, dimPatient);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -208,7 +213,7 @@ public class PatientServiceImpl implements PatientService {
 					colName = rsmd.getColumnName(i); 
 					colValue = resultSet.getString(i);
 					if(colValue != null && colValue.equalsIgnoreCase("1") && !colName.equalsIgnoreCase("fmc.comorbidity_count"))
-						comorbidities.add(colName.replaceFirst("fmc.", ""));
+						comorbidities.add(colName.replaceFirst("fmc.", "").toLowerCase());
                 }
 				break;
 			}
@@ -217,17 +222,59 @@ public class PatientServiceImpl implements PatientService {
 			
 			//Care Gaps			
 			resultSet.close();
-			memberSQL = "select dqm.measure_title, qgl.status from dim_quality_measure dqm "
+			memberSQL = "select dqm.measure_title, qgl.status,COMPLIANCE_POTENTIAL from dim_quality_measure dqm "
 					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
 					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"'";
-			Set<String> careGaps = new TreeSet<>();
+			Set<String[]> careGaps = new HashSet<>();
 			resultSet = statement.executeQuery(memberSQL);
 			
 			while (resultSet.next()) {
-				careGaps.add(resultSet.getString("measure_title"));
+				//careGaps.add(resultSet.getString("measure_title") + "    " + resultSet.getString("COMPLIANCE_POTENTIAL"));
+				careGaps.add(new String[]{resultSet.getString("measure_title"), resultSet.getString("COMPLIANCE_POTENTIAL")});
 			}
 			dimPatient.setCareGaps(careGaps);
 			dimPatient.setCareGapsCount(careGaps.size()+"");
+
+			//caregap alerts
+			resultSet.close();
+			memberSQL = "SELECT DISTINCT A.MEMBER_ID, A.DEPARTMENT_ID, A.CARE_GAP_NAME,"+
+			"CASE WHEN A.DEPARTMENT_ID=B.DEPARTMENT_ID AND A.MEMBER_ID=B.MEMBER_ID THEN 0 ELSE 1 END AS \"ALERT\" "+ 
+			"FROM "+
+			"(SELECT QGL.MEMBER_ID, RDM.DEPARTMENT_ID, RDM.CARE_GAP_NAME "+ 
+			"FROM QMS_GIC_LIFECYCLE QGL "+
+			"INNER JOIN REF_DEPT_MEASURE RDM ON QGL.QUALITY_MEASURE_ID=RDM.MEASURE_ID "+
+			"WHERE QGL.STATUS LIKE 'Open%') A "+
+			"LEFT OUTER JOIN "+
+			"(SELECT DISTINCT DP.PAT_ID AS \"MEMBER_ID\", DD.DEPARTMENT_ID "+ 
+			"FROM FACT_APPOINTMENT FA "+
+			"INNER JOIN DIM_PATIENT DP ON DP.PATIENT_SK = FA.PATIENT_SK "+ 
+			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
+			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
+			"WHERE DDA.CALENDAR_DATE>SYSDATE) B "+
+			"ON A.MEMBER_ID=B.MEMBER_ID WHERE A.MEMBER_ID = '"+memberId+"'";			
+			Set<CareGapAlert> careGapsAlrts = new TreeSet<>();
+			Map<String, CareGapAlert> careGapsMap = new HashMap<String, CareGapAlert>();
+			resultSet = statement.executeQuery(memberSQL);
+			String careGap = null;
+			CareGapAlert careGapAlert = null;
+			List<Integer> alerts = null;
+			while (resultSet.next()) {
+				careGap = resultSet.getString("CARE_GAP_NAME");
+				careGapAlert = careGapsMap.get(careGap);
+				if(careGapAlert == null) {
+					careGapAlert = new CareGapAlert();
+					alerts = new ArrayList<>();
+					alerts.add(resultSet.getInt("ALERT"));
+					careGapAlert.setAlerts(alerts);
+					careGapAlert.setCareGap(careGap);
+					
+					careGapsMap.put(careGap, careGapAlert);
+				} else {
+					careGapAlert.getAlerts().add(resultSet.getInt("ALERT"));
+				}
+			}
+			careGapsAlrts.addAll(careGapsMap.values());	
+			dimPatient.setCareGapAlerts(careGapsAlrts);
 			
 			//PCP Name, NPI, NPI, Speciality, address 
 			resultSet.close();
@@ -245,12 +292,13 @@ public class PatientServiceImpl implements PatientService {
 			
 			//Appointment details
 			resultSet.close();
-			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW "+ 
+			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW, DPA.PAT_ID "+ 
 			"FROM FACT_APPOINTMENT FA "+ 
 			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
 			"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
 			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
-			"WHERE DDA.CALENDAR_DATE>SYSDATE AND FA.MEMBER_ID='"+memberId+"'";			
+			"INNER JOIN DIM_PATIENT DPA ON DPA.PATIENT_SK=FA.PATIENT_SK "+
+			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
 				dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));

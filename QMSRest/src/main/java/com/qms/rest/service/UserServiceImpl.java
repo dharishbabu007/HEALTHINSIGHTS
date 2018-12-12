@@ -1,8 +1,6 @@
 package com.qms.rest.service;
 
-import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -248,8 +246,8 @@ public class UserServiceImpl implements UserService {
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
 			else
 				statement.setString(++i, userData.getLoginId());
-
 			int rows = statement.executeUpdate();
+			connection.commit();
 			System.out.println(" Rows inserted --> " + rows);
 			restResult = RestResult.getSucessRestResult("User added successfully.");
 		} catch (Exception e) {

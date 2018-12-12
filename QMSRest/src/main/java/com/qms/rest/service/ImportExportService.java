@@ -6,8 +6,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.CSVOutPut1;
+import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
+import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
@@ -27,4 +29,9 @@ public interface ImportExportService {
 	
 	FileUpload saveFileUpload(FileUpload fileUpload);	
 	RestResult callHivePatitioning ();
+	
+	//Compliance
+	Set<ComplianceOutPut> getComplianceOutPut();
+	Set<ModelSummary> getComplianceModelSummary();	
+	ModelMetric getComplianceModelMetric();	
 }

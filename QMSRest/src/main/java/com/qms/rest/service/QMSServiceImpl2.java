@@ -29,8 +29,8 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSDateUtil;
 
 
-@Service("qmsService")
-public class QMSServiceImpl implements QMSService {
+@Service("qmsServiceOracle")
+public class QMSServiceImpl2 implements QMSService {
 	
 	@Autowired
 	private QMSConnection qmsConnection;	
@@ -48,7 +48,7 @@ public class QMSServiceImpl implements QMSService {
 		
 		String whereClause = "where (STATUS_ID=5 or STATUS_ID=8)";
 		if(programName.equalsIgnoreCase("Reimbursement")) {
-			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and QUALITY_PROGRAM_ID in (select QUALITY_PROGRAM_ID from QMS.QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+value+"')";
+			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and QUALITY_PROGRAM_ID in (select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+value+"')";
 		}
 		else if(programName.equalsIgnoreCase("Clinical")) {
 			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and clinical_conditions='"+value+"'";													
@@ -57,7 +57,7 @@ public class QMSServiceImpl implements QMSService {
 			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and domain_id='"+value+"'";
 		}		
 
-		String measureQuery = "select * from QMS.QMS_MEASURE "+whereClause+" order by MEASURE_ID asc, MEASURE_EDIT_ID desc";
+		String measureQuery = "select * from QMS_MEASURE "+whereClause+" order by MEASURE_ID asc, MEASURE_EDIT_ID desc";
 		System.out.println("****measureQuery --> " + measureQuery);
 		
 		Statement statement = null;
@@ -66,7 +66,7 @@ public class QMSServiceImpl implements QMSService {
 		Set<MeasureCreator> treeMeasureList = new TreeSet<>();
 		Set<Integer> measureIdsAdded = new TreeSet<>();
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
 			//resultSet = statement.executeQuery("select * from QMS_MEASURE "+whereClause+" and IS_ACTIVE='Y' order by MEASURE_ID asc"); //0106
 			resultSet = statement.executeQuery(measureQuery); 
@@ -114,9 +114,9 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS.qms_measure qm, QMS.QMS_QUALITY_PROGRAM qqp where qm.measure_id="+id+" and qm.STATUS_ID=5 and qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");			
+			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from qms_measure qm, QMS_QUALITY_PROGRAM qqp where qm.measure_id='"+id+"' and qm.STATUS_ID='5' and qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");			
 			
 			while (resultSet.next()) {
 				measureCreator = new MeasureCreator();
@@ -162,12 +162,12 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();		
 			if(columnName.equalsIgnoreCase("PROGRAM_NAME")) {
-				resultSet = statement.executeQuery("select QQP.PROGRAM_NAME from QMS.QMS_MEASURE QM, QMS.QMS_QUALITY_PROGRAM QQP where QM.STATUS_ID=5 and QM.QUALITY_PROGRAM_ID=QQP.QUALITY_PROGRAM_ID");
+				resultSet = statement.executeQuery("select QQP.PROGRAM_NAME from QMS_MEASURE QM, QMS_QUALITY_PROGRAM QQP where QM.STATUS_ID='5' and QM.QUALITY_PROGRAM_ID=QQP.QUALITY_PROGRAM_ID");
 			} else {
-				resultSet = statement.executeQuery("select "+ columnName + " from QMS."+tableName+" where STATUS_ID=5");
+				resultSet = statement.executeQuery("select "+ columnName + " from "+tableName+" where STATUS_ID='5'");
 			}
 			
 			String data = null;
@@ -194,9 +194,9 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select distinct "+columnValue+","+columnName+" from QMS."+tableName+" order by "+columnValue);
+			resultSet = statement.executeQuery("select distinct "+columnValue+","+columnName+" from "+tableName+" order by "+columnValue);
 			
 			String data = null;
 			NameValue nameValue = null;
@@ -227,9 +227,9 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from QMS."+tableName);
+			resultSet = statement.executeQuery("select * from "+tableName);
 			
 			String data = null;
 			while (resultSet.next()) {
@@ -541,10 +541,10 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
 			
-			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS.qms_measure qm, QMS.QMS_QUALITY_PROGRAM qqp where qm.measure_id="+id+" and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID order by MEASURE_EDIT_ID desc");
+			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from qms_measure qm, QMS_QUALITY_PROGRAM qqp where qm.measure_id="+id+" and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID order by MEASURE_EDIT_ID desc");
 			
 			while (resultSet.next()) {
 				measureCreator = new MeasureCreator();
@@ -594,9 +594,9 @@ public class QMSServiceImpl implements QMSService {
 		Connection connection = null;
 		List<Integer> uniqueMeasureId = new ArrayList<>();  
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from QMS.qms_measure order by REC_UPDATE_DATE desc");
+			resultSet = statement.executeQuery("select * from qms_measure order by REC_UPDATE_DATE desc");
 			int measureId = 0;
 			while (resultSet.next()) {
 				measureId = resultSet.getInt("measure_id");
@@ -636,9 +636,9 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from QMS."+tableName);
+			resultSet = statement.executeQuery("select * from "+tableName);
 			while (resultSet.next()) {
 
 				statusMap.put(resultSet.getString(idColumn), resultSet.getString(nameColumn));
@@ -687,10 +687,10 @@ public class QMSServiceImpl implements QMSService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
 			//resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"' and CATEGORY_NAME='"+categoryName+"'");
-			resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS.QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"'");
+			resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"'");
 			
 			if (resultSet.next()) {
 				qualityProgramId = resultSet.getString("QUALITY_PROGRAM_ID");				

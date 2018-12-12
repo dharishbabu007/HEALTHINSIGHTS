@@ -23,8 +23,8 @@ import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 
-@Service("closeGapsServicePhoenix")
-public class CloseGapsServiceImpl implements CloseGapsService {
+@Service("closeGapsService")
+public class CloseGapsServiceImpl2 implements CloseGapsService {
 	
 	@Autowired
 	private QMSConnection qmsConnection;	
@@ -40,9 +40,9 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select dm.gender, dm.member_id, (dm.FIRST_NAME||' '||dm.MIDDLE_NAME||' '||dm.LAST_NAME) AS NAME, dd.CALENDAR_DATE from QMS.dim_member dm, QMS.dim_date dd "
+			resultSet = statement.executeQuery("select dm.gender, dm.member_id, (dm.FIRST_NAME||' '||dm.MIDDLE_NAME||' '||dm.LAST_NAME) AS NAME, dd.CALENDAR_DATE from dim_member dm, dim_date dd "
 					+ "where dm.date_of_birth_sk=dd.date_sk and member_id='"+memberId+"'");
 			if (resultSet.next()) {
 				closeGaps.setGender(resultSet.getString("gender"));
@@ -53,12 +53,12 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			
 			resultSet.close();	
 			if(measureId == null || measureId.equalsIgnoreCase("0") || measureId.equalsIgnoreCase("all")) {
-				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from QMS.qms_gic_lifecycle qgl, "
-						+ "QMS.dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
+						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
 						+ "member_id='"+memberId+"' order by gap_date desc");
 			} else {
-				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from QMS.qms_gic_lifecycle qgl, "
-						+ "QMS.dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
+						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
 						+ "qgl.quality_measure_id = '"+measureId+"' and  "
 						+ "member_id='"+memberId+"' order by gap_date desc");				
 			}
