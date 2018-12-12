@@ -25,8 +25,8 @@ import com.qms.rest.model.UserRole;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 
-@Service("userRoleServicePhoenix")
-public class UserRoleServiceImpl implements UserRoleService{
+@Service("userRoleService")
+public class UserRoleServiceImpl2 implements UserRoleService{
 	
 	@Autowired
 	private QMSConnection qmsConnection;
@@ -181,7 +181,7 @@ public class UserRoleServiceImpl implements UserRoleService{
 		Connection connection = null;
 
 		try {						
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
 			
 //			resultSet = statement.executeQuery("select USER_ROLE_ID from QMS_USER_MASTER where USER_ID="+userId);
@@ -191,7 +191,7 @@ public class UserRoleServiceImpl implements UserRoleService{
 //			}
 //			resultSet.close();
 			
-			resultSet = statement.executeQuery("select * from QMS.QMS_ROLE_ACCESS where ROLE_ID="+roleId);
+			resultSet = statement.executeQuery("select * from QMS_ROLE_ACCESS where ROLE_ID="+roleId);
 			rolePage.setRoleId(roleId);
 			List<ScreenPermission> PagePermissions = new ArrayList<>();
 			ScreenPermission pagePermission  = null;

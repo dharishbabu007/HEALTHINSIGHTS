@@ -23,8 +23,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.CSVOutPut1;
+import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
+import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.QMSFile;
@@ -152,5 +154,25 @@ public class ImportExportController {
 		return new ResponseEntity<ModelScore>(cSVOutPut, HttpStatus.OK);
 	}	
 	
+	@RequestMapping(value = "/complience_output", method = RequestMethod.GET)
+	public ResponseEntity<Set<ComplianceOutPut>> getComplienceOutput() {
+		System.out.println("Fetching Output.csv data ");
+		Set<ComplianceOutPut> setCSVOutPut = importExportService.getComplianceOutPut();
+		return new ResponseEntity<Set<ComplianceOutPut>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/complience_modelSummary", method = RequestMethod.GET)
+	public ResponseEntity<Set<ModelSummary>> getComplienceModelSummary() {
+		System.out.println("Fetching ModelSummary.csv data ");
+		Set<ModelSummary> setCSVOutPut = importExportService.getComplianceModelSummary();
+		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/complience_modelMatric", method = RequestMethod.GET)
+	public ResponseEntity<ModelMetric> getComplienceConfusionMatric() {
+		System.out.println("Fetching ConfusionMatric.csv data ");
+		ModelMetric setCSVOutPut = importExportService.getComplianceModelMetric();
+		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
+	}	
 	
 }

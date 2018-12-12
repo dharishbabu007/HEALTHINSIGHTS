@@ -1,7 +1,9 @@
 package com.qms.rest.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.derby.tools.sysinfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +38,10 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 import com.qms.rest.model.CSVOutPut;
 import com.qms.rest.model.CSVOutPut1;
+import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
+import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
@@ -317,7 +322,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from ns_file_output where fid='"+fileId+"' limit 500");
+			resultSet = statement.executeQuery("select * from ns_file_output where fid='"+fileId+"'");
 			//resultSet = statement.executeQuery("select * from ns_file_output where fid='45' limit 500");
 			CSVOutPut output = null;
 			while (resultSet.next()) {
@@ -393,7 +398,23 @@ public class ImportExportServiceImpl implements ImportExportService {
 		Connection connection1 = null;
 		Map<String, String[]> memberIdMap = new HashMap<>();
 		Map<String, String> openMemberIdMap = new HashMap<>();
-		String memberCregapListQry = "SELECT * FROM FINDMEMGAPLISTFORALL ORDER BY TIME_PERIOD DESC";
+		//String memberCregapListQry = "SELECT * FROM FINDMEMGAPLISTFORALL ORDER BY TIME_PERIOD DESC";
+		String memberCregapListQry = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER,"
+		+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) AS AGE,"
+		+"(DP.FIRST_NAME||' '||DP.LAST_NAME) AS PCP, DQM.MEASURE_TITLE AS CARE_GAPS, GIC.STATUS,GIC.QUALITY_MEASURE_ID,"
+		+"COUNT(DQM.MEASURE_TITLE) AS COUNT_OF_CARE_GAPS, DPP.PLAN_NAME AS PLAN, GIC.GAP_DATE AS TIME_PERIOD, GIC.COMPLIANCE_POTENTIAL "
+		+"FROM QMS_GIC_LIFECYCLE GIC "
+		+"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_ID = GIC.MEMBER_ID "
+		+"INNER JOIN FACT_MEM_ATTRIBUTION FMA ON FMA.MEMBER_SK = DM.MEMBER_SK "
+		+"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FMA.PROVIDER_SK "
+		+"INNER JOIN DIM_QUALITY_MEASURE DQM ON DQM.QUALITY_MEASURE_ID = GIC.QUALITY_MEASURE_ID "
+		+"INNER JOIN DIM_PRODUCT_PLAN DPP ON DPP.PRODUCT_PLAN_ID = GIC.PRODUCT_PLAN_ID "
+		+"WHERE GIC.GAP_DATE <= SYSDATE "
+		+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER,GIC.COMPLIANCE_POTENTIAL,"
+		+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25),"
+		+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID order by GIC.GAP_DATE DESC";		
+		
+		
 		String memberId = null;
 		try {						
 			connection1 = qmsConnection.getOracleConnection();
@@ -430,12 +451,12 @@ public class ImportExportServiceImpl implements ImportExportService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from ns_file_output where fid='"+fileId+"' and predictednoshow='1' limit 500");
+			resultSet = statement.executeQuery("select * from ns_file_output where fid='"+fileId+"' and predictednoshow='1'");
 			CSVOutPut1 output = null;
 			String patientId = null;
 			while (resultSet.next()) {				
 		    	output = new CSVOutPut1();		    	
-		    	patientId = resultSet.getString("patientname");
+		    	patientId = resultSet.getString("patientid");
 		    	output.setAppointmentId(resultSet.getString("appointmentid"));
 		    	output.setAge(resultSet.getString("age"));
 		    	output.setAppointmentDay(resultSet.getString("appointmentday"));
@@ -600,19 +621,20 @@ public class ImportExportServiceImpl implements ImportExportService {
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
 			resultSet = statement.executeQuery("select * from ns_model_metric where modelid='1'");
-			ConfusionMatric output = null;
 			while (resultSet.next()) {
-		    	output = new ConfusionMatric();
-		    	output.setId(resultSet.getString("modelid"));
-		    	output.setZero(resultSet.getString("tp"));
-		    	output.setOne(resultSet.getString("tn"));
-			    setOutput.add(output);
+				ConfusionMatric output1 = new ConfusionMatric();
+		    	output1.setId(resultSet.getString("modelid"));
+		    	output1.setZero(resultSet.getString("tp"));
+		    	output1.setOne(resultSet.getString("tn"));
+		    	System.out.println(resultSet.getString("tp") + " TP TN" + resultSet.getString("tn"));
+			    setOutput.add(output1);
 			    
-		    	output = new ConfusionMatric();
-		    	output.setId(resultSet.getString("modelid"));
-		    	output.setZero(resultSet.getString("fp"));
-		    	output.setOne(resultSet.getString("fn"));
-			    setOutput.add(output);			    
+			    ConfusionMatric output2 = new ConfusionMatric();
+		    	output2.setId(resultSet.getString("modelid"));
+		    	output2.setZero(resultSet.getString("fp"));
+		    	output2.setOne(resultSet.getString("fn"));
+		    	System.out.println(resultSet.getString("fp") + " FP FN" + resultSet.getString("fn"));
+			    setOutput.add(output2);			    
 			    
 			}
 		} catch (Exception e) {
@@ -784,7 +806,149 @@ public class ImportExportServiceImpl implements ImportExportService {
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}		
-	}    
+	}
+
+	@Override
+	public Set<ComplianceOutPut> getComplianceOutPut() {
+		
+		Set<ComplianceOutPut> setOutput = new HashSet<>();
+		
+	    BufferedReader br = null;
+		try {		
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/compliance/Output_v2.csv"));			
+		    int L = 0;
+		    String line = null;
+		    ComplianceOutPut output = null;
+		    while ((line = br.readLine()) != null) {
+		    	L++;
+		    	if(L == 1) continue;
+		    	String[] values = line.split(",");
+		    	if(values.length > 17) {
+		    		int i = 0;
+			    	output = new ComplianceOutPut();			    
+			    	output.setPatId(values[i++]);
+			    	output.setPatName(values[i++]);
+			    	output.setAge(values[i++]);
+			    	output.setGender(values[i++]);
+			    	output.setRace(values[i++]);
+			    	output.setEthnicity(values[i++]);
+			    	output.setMartialStatus(values[i++]);
+			    	output.setHaveHighSchoolDegreeYarn(values[i++]);
+			    	output.setDisabolityYorn(values[i++]);
+			    	output.setDistenceFormNear(values[i++]);
+			    	output.setState(values[i++]);
+			    	output.setZipCode(values[i++]);
+			    	output.setCountry(values[i++]);
+			    	output.setPcpAssignYorn(values[i++]);
+			    	output.setEmpYorn(values[i++]);
+			    	output.setInsuYorn(values[i++]);
+			    	output.setNoOfdepts(values[i++]);
+			    	output.setNoOfMissApp(values[i++]);
+			    	output.setNoOfComplMeas(values[i++]);
+			    	output.setHistoryOfNonCom(values[i++]);
+			    	output.setHypertension(values[i++]);
+			    	output.setDiabets(values[i++]);
+			    	output.setSmokeYarn(values[i++]);
+			    	output.setAlcoholYarn(values[i++]);
+			    	output.setMentalhealYarn(values[i++]);
+			    	output.setNoOfIpVisit(values[i++]);
+			    	output.setNoOfOpVisit(values[i++]);
+			    	output.setNoOfErVisit(values[i++]);
+			    	output.setDaySpending(values[i++]);
+			    	output.setPlanCoverRatio(values[i++]);
+			    	output.setCompiancePotential(values[i++]);
+			    	output.setPredictPotential(values[i++]);
+				    setOutput.add(output);
+		    	}
+		    	L++;
+		    }		    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(br != null) br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return setOutput;
+	}
+
+	@Override
+	public Set<ModelSummary> getComplianceModelSummary() {
+		
+		Set<ModelSummary> setOutput = new HashSet<>();
+	    BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/compliance/ModelSummary.csv"));
+		    String line = null;
+		    ModelSummary output = null;
+		    int i = 0;
+		    while ((line = br.readLine()) != null) {
+		    	i++;
+		    	if(i == 1) continue;
+		    	String[] values = line.split(",");
+		    	if(values.length > 4) {
+			    	output = new ModelSummary();			    
+			    	output.setAttributes(values[0]);
+			    	output.setEstimate(values[1]);
+			    	output.setStdError(values[2]);
+			    	output.setzValue(values[3]);
+			    	output.setPrz(values[4]);			    	
+				    setOutput.add(output);
+		    	}
+		    }		    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(br != null) br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return setOutput;
+		
+	}
+
+	@Override
+	public ModelMetric getComplianceModelMetric() {
+		ModelMetric modelMetric = new ModelMetric();
+	    BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(windowsCopyPath+"/compliance/ModelMetric.csv"));
+		    String line = null;
+		    int i = 0;
+		    while ((line = br.readLine()) != null) {
+		    	i++;
+		    	if(i == 1) continue;
+		    	String[] values = line.split(",");
+		    	if(values.length > 2) {
+		    		modelMetric.setTp(values[0]);
+		    		modelMetric.setFp(values[1]);
+		    		modelMetric.setTn(values[2]);
+		    		modelMetric.setFn(values[3]);
+		    		modelMetric.setScore(values[4]);
+		    		modelMetric.setImagePath(windowsCopyPath+"/compliance/ROCplot.jpeg");
+		    	}
+		    }		    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(br != null) br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return modelMetric;
+	}
+
 	
 
 }

@@ -3,8 +3,6 @@ package com.qms.rest.controller;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
 import com.qms.rest.model.*;
 import com.qms.rest.service.MemberService;
 import com.qms.rest.service.ProgramService;
@@ -36,9 +34,6 @@ public class QMSController {
 	@Autowired
 	PatientService patientService;	
 	
-	@Autowired 
-	private HttpSession httpSession;
-
 	@Autowired
 	private ProgramService programService;
 

@@ -20,5 +20,6 @@ public class MemberCareGapsList {
 	private String gender;
 	private Integer countOfCareGaps;
 	private String riskGrade;
-    private List<MemberCareGaps> members;    
+    private List<MemberCareGaps> members;
+    private String compliancePotential;
 }
