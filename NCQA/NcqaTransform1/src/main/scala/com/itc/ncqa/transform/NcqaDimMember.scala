@@ -1,8 +1,9 @@
 package com.itc.ncqa.transform
 
-import com.itc.ncqa.utils.UtilFunctions
+import com.itc.ncqa.constants.TransformConstants
+import com.itc.ncqa.utils.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.functions.{concat, current_timestamp, date_format, lit,abs}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_format, lit}
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object NcqaDimMember {
@@ -14,19 +15,26 @@ object NcqaDimMember {
     val spark = SparkSession.builder().config(config).enableHiveSupport().getOrCreate()
 
     val schemaFilePath = args(0)
+    val sourceDbName = args(1)
+    val targetDbName = args(2)
+    val kpiName = args(3)
+    TransformConstants.setSourceDbName(sourceDbName)
+    TransformConstants.setTargetDbName(targetDbName)
 
     import spark.implicits._
     val schemaRdd = spark.sparkContext.textFile(schemaFilePath,1)
 
-    val queryString = "select * from ncqa_intermediate.general_membership"
-    val generalMembershipDf = spark.sql(queryString)
+   /* val queryString = "select * from ncqa_intermediate.general_membership"
+    val generalMembershipDf = spark.sql(queryString)*/
+   val generalMembershipDf = DataLoadFunctions.sourceTableLoadFunction(spark,TransformConstants.generalMembershipTableName,kpiName)
 
     generalMembershipDf.printSchema()
 
     //columnarArray.foreach(println)
 
     /*load data from dim_date table*/
-    val dimDateDf = spark.sql("select * from ncqa_sample.dim_date")
+    //val dimDateDf = spark.sql("select * from ncqa_sample.dim_date")
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
 
     /*for matting the date column in dd-mm-yyyy*/
     val generalMembershipDf1 = generalMembershipDf.withColumn("DOB",date_format(generalMembershipDf.col("DOB"),"dd-MMM-yyyy"))
