@@ -9,27 +9,36 @@
     } 
 }
 .text-value{
-        font-size: 1.5rem;
-        color: black;
+        font-size: 1.4rem;
+        color:#464545;
 }
 .list-values{
 margin-left: 20px;
 font-size: 1rem;
+font-weight: bold;
+color: #464545;
 }
 .qmstable td{
-
+        border-bottom:1px solid #c8ced3;
+        padding-top: 20px;
     padding-bottom: 30px;
         padding-left: 10px;
 }
-.ui-tieredmenu .ui-submenu-list {
-    
-    width: 10.5em;
-}
-.ui-menuitem-text{
-color: black;
-font-size: 1.1em;
+.qmstable tr:last-child td:last-child {
+    border: none;
 }
 :host /deep/ .bs-popover-right{
     margin-left: -11.5rem !important;
     margin-top: -0.5em !important;
+}
+.bg-secondary {
+    background-color: #C9DFFB !important;
+}
+.card {
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.imgclass{
+    height: 36vh;
+
 }

@@ -28,6 +28,7 @@ export class MeasureworklistComponent implements OnInit {
          }
     membergaps: MemberCareGaps[];
     cols: any[];
+    perms: any;
     ngOnInit() {
         this.gapsService.getWorkList().subscribe((data: MemberCareGaps[]) => {
             this.membergaps = data;
@@ -40,19 +41,24 @@ export class MeasureworklistComponent implements OnInit {
             { field: 'reviewComments', header: 'Review Comments' , width: '20%'},
             { field: 'reviewedBy', header: 'Reviewed By' , width: '20%'},
         ];
+        this.permissionsService.permissions$.subscribe((permissions) => {
+            this.perms = permissions;
+          })
     }
     copytoCreator(id, newType) {
-        let perms = this.permissionsService.getPermissions();
- 
-         this.router.navigate(['/measurecreator', id, newType]);
+          if(this.perms['7W']){  
+            if(this.perms['5R']){
+            this.router.navigate(['/measurecreator', id, newType]);  
+            }
+        }
     }
    statusClickImg(status, id) {
        this.gapsService.setMeasureStatus(id, status).subscribe( (res: any) => {
-           console.log(res)
+           //console.log(res)
         if (res.status === 'SUCCESS') {
             this.msgService.success('Measure approved Successfully');
             window.location.reload();
-            console.log("came here")
+           // console.log("came here")
           } else {
             this.msgService.error(res.message);
           }

@@ -46,6 +46,9 @@
                             <span *ngSwitchCase="'timePeriod'">
                                     {{rowData[col.field] | date}}
                                 </span>
+                                <span *ngSwitchCase="'compliancePotential'">
+                                        {{rowData[col.field]}}%
+                                    </span>
                             <span *ngSwitchDefault>{{rowData[col.field]}}</span>
                              
                             

@@ -22,12 +22,14 @@ export interface MemberCareGaps {
     age;
     gender;
     countOfCareGaps;
+    compliancePotential;
     name;
     riskGrade;
     timePeriod: string;
     plan: string;
     pcp: string;
     careGaps: string;
+   
 }
 
 export enum priorityTypes {

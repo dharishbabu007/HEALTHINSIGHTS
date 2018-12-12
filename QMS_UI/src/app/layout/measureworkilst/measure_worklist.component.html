@@ -3,7 +3,7 @@
     <div class="card">
     <div class="row">
         <div class="col col-lg-12">
-            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
+            <button type="button" pButton icon="fa fa-download"  *ngxPermissionsOnly="['7D']" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
             <p-table #dt  class="table table-bordered table-hover"  [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" exportFilename="My_Measures">
                 <ng-template pTemplate="header">
                     <tr>
@@ -35,15 +35,15 @@
                             <div *ngSwitchCase="'Approved'" >
                                 <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp;
                                 <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp;
-                                <a [routerLink]="['/configurator']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" pTooltip="Configure"></i></a>
+                                <a [routerLink]="['/configurator']" *ngxPermissionsOnly="['7W']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" pTooltip="Configure"></i></a>
                             </div>
                             <div *ngSwitchCase="'New'">
-                                <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])" pTooltip="Approve"></i>&nbsp;
-                                <i class="fa fa-2x fa-window-close text-primary" style="cursor:pointer" (click)="statusClickImg('Rejected',rowData['id'])" pTooltip="Reject"></i>&nbsp;
+                                <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])" pTooltip="Approve" *ngxPermissionsOnly="['7W']"></i>&nbsp;
+                                <i class="fa fa-2x fa-window-close text-primary" style="cursor:pointer" (click)="statusClickImg('Rejected',rowData['id'])" pTooltip="Reject" *ngxPermissionsOnly="['7W']"></i>&nbsp;
                                 <i class="fa fa-2x fa-cog text-secondary"></i>
                             </div>
                             <div *ngSwitchDefault>
-                                <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp;
+                                <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp; 
                                 <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp;
                                 <i class="fa fa-2x fa-cog text-secondary"></i>
                             </div>

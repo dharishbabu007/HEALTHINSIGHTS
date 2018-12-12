@@ -68,20 +68,30 @@
                          -->
                      
                           <div class="row">
-                            <span class="col-lg-4">
-                                <p-dropdown  placeholder="Select a Page" [style]="{'width':'250px'}"  [autoDisplayFirst]="false" [options]="pageList" formControlName="parentPage" ></p-dropdown>
+                            <span class="col-lg-4" let i = index>
+                            
+                                <p-dropdown  placeholder="Select a Page" [style]="{'width':'250px'}"  [autoDisplayFirst]="false" [options]="pageList" formControlName="parentPage" (onChange)="pagelistChange($event,i)"></p-dropdown>
                             </span>
                             <span class="col-lg-3">
-                                <div class="ui-g-12" let i =  "index">
-                                <p-checkbox  name="group1"  value="read" formControlName="read" label="Read"  inputId="ny" (onChange)="checkedRead($event,i)"></p-checkbox>
+                                <div class="ui-g-12">
+                                  
+                                    Read <input type="checkbox" name="group1"  value="read" formControlName="read"  class="inputCheckbox">
+                                  
+                                    Write <input type="checkbox" name="group1" value="write" formControlName="write"  (onChange)="check($event)" class="inputCheckbox">
+                                  
+                                    Download <input type="checkbox" name="group1" value="download" formControlName="download" class="inputCheckbox">
+                                    <!--
+                                <p-checkbox  name="group1"  value="read" formControlName="read" label="Read" binary="true" ></p-checkbox>
                                 &nbsp;&nbsp;
-                                <p-checkbox name="group1" value="write" formControlName="write" label="Write" inputId="sf"></p-checkbox>
-                                <p-checkbox name="group1" value="download" formControlName="download" label="Download" inputId="sf"></p-checkbox></div>
+                                <p-checkbox name="group1" value="write" formControlName="write" label="Write" (onChange)="check($event)"></p-checkbox>
+                                <p-checkbox name="group1" value="download" formControlName="download" label="Download" ></p-checkbox>
+                              -->
+                            </div>
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length == i+1">
+                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length == i+1" style="padding: 5px;">
                               <button let i = "index" class="btn btn-secondary" (click)="addCategory(i)">+</button> 
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length != i+1">
+                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length != i+1" style="padding: 5px;">
                               <button  class="btn btn-secondary" (click)="removeCategory(i)">-</button> 
                             </span>                         
                           </div>

@@ -13,7 +13,7 @@ import { MeasureworklistComponent } from './measureworkilst/measure-worklist.com
 import { MeasurelibraryComponent } from './measurelibrary/measure-library.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { MeasurecreatorComponent } from './measurecreator/measure-creator.component';
-import { SpvComponent } from './spv/spv.component';
+import { SpvNewComponent } from './spv-new/spv-new.component';
 import { ConfiguratorComponent } from './configurator/configurator.component';
 import { UserSettingComponent } from './usersettings/userSetting.component';
 import { MemberEngageComponent } from './member-engage/member-engage.component';
@@ -30,6 +30,11 @@ import { LikelihoodToChurnComponent } from './like-hood-churn/like-hood-churn.co
 import { ClusterStatisticsComponent } from './cluster-statistics/cluster-statistics.component';
 import { ViewPersonaComponent } from './view-personas/view-personas.component';
 import { LikelihoodStatisticsComponent } from './likelihood-Statistics/likelihood-statistics.component';
+import { PersonaDataComponent } from './persona-data/persona-data.component';
+import { ClusterMemberListComponent } from './cluster-memberlist/cluster-memberlist.component';
+import { SpvComponent } from './spv/spv.component';
+import { NonComplianceComponent } from './non-compliance/non-compliance.component';
+import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
 
 const routes: Routes = [
     {
@@ -116,7 +121,13 @@ const routes: Routes = [
             { path: 'likelihoodChurn', component: LikelihoodToChurnComponent},
             { path: 'cluster-statistics', component: ClusterStatisticsComponent},
             { path: 'create-persona', component: ViewPersonaComponent},
-            { path: 'likelihood-statistics', component: LikelihoodStatisticsComponent}
+            { path: 'likelihood-statistics', component: LikelihoodStatisticsComponent},
+            { path: 'view-persona', component:PersonaDataComponent},
+            { path: 'cluster-memberlist', component:ClusterMemberListComponent},
+            { path: 'spv1/:memberId', component: SpvNewComponent},
+            { path: 'non-compliance', component: NonComplianceComponent},
+            { path: 'non-compliance/:redirect', component: NonComplianceComponent},
+            { path: 'hernia-repair', component: HerniaRepairComponent}
 
         ]
     }

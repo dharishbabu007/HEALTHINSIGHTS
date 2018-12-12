@@ -32,7 +32,7 @@
                     </div>
                     <div class="row" *ngIf="gaps">
                         <div class="col col-lg-12">
-                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
+                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" *ngxPermissionsOnly="['11D']"></button>
                             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="gaps.qmsGicLifecycle" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Member_Gaps_List">
                                 <ng-template pTemplate="header" >
                                     <tr>

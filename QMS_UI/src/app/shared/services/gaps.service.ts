@@ -65,6 +65,9 @@ export class GapsService {
     getSpv(memberId) {
         return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis/${memberId}`);
     }
+    getSpv1(memberId) {
+        return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis/${memberId}`).toPromise();
+    }
     getMeasureInfo(measureId) {
         return this.http.get(`http://healthinsight:8082/curis/qms/work_list/${measureId}`);
     }
@@ -153,5 +156,19 @@ export class GapsService {
     }
     getClusterStatistics(){
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterAnalysis`)
+    }
+    getClusterData(value){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterData/${value}`);
+    }
+    createPersona(model,clusterId){
+        return this.http.post(`http://healthinsight:8082/curis/member_engagement/update_persona`,{ "clusterId": clusterId,
+        "personaName": model.personaName,
+        "demographics": model.demographics,
+        "motivations": model.motivations,
+        "goals": model.goals,
+        "barriers": model.barriers,
+        "socialMedia": model.socialMedia,
+        "healthStatus": model.socialMedia
+})
     }
 }
