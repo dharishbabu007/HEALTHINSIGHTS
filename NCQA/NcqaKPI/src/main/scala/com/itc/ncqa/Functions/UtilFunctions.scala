@@ -27,7 +27,6 @@ object UtilFunctions {
     returnDf
   }
 
-
   /*Function Name:ageFilter
   * Input Argument: df-Datframe(Input DataFrame)
   * Input Argument: colName-String(date column name )
@@ -96,6 +95,25 @@ object UtilFunctions {
     val newDf = df1.withColumn("dateDiff", datediff(df1.col("curr"), df1.col(colName)))
     val newDf1 = newDf.filter(newDf.col("dateDiff").<=(upper).&&(newDf.col("dateDiff").>=(lower))).drop("curr", "dateDiff")
     newDf1
+  }
+
+
+  /**
+    *
+    * @param df
+    * @param colName
+    * @param year
+    * @param lower
+    * @param upper
+    * @return
+    */
+  def measurementYearFilter(df:DataFrame, colName: String, year: String, lower:Int, upper:Int): DataFrame = {
+
+    var lower_date = year.toInt - lower + "-12-31"
+    var upper_date = year.toInt - upper + "-01-01"
+    //print("dates--------------------------:"+lower_date +","+upper_date)
+    val newDf = df.filter(df.col(colName).>=(lit(upper_date)) && df.col(colName).<=(lit(lower_date)))
+    newDf
   }
 
 
@@ -171,7 +189,7 @@ object UtilFunctions {
     /*join the data with dim_date for getting calender date of dateofbirthsk,member_plan_start_date_sk,member_plan_end_date_sk*/
     val dobDateValAddedDf = facilityJoinedDf.as("df1").join(dimDateDf.as("df2"), joinedDf.col(KpiConstants.dobskColame) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "dob_temp").drop(KpiConstants.dobskColame)
     val memStartDateAddedDf = dobDateValAddedDf.as("df1").join(dimDateDf.as("df2"), dobDateValAddedDf.col(KpiConstants.memPlanStartDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "mem_start_temp").drop(KpiConstants.memPlanStartDateSkColName)
-    val memEndDateAddedDf = memStartDateAddedDf.as("df1").join(dimDateDf.as("df2"), dobDateValAddedDf.col(KpiConstants.memPlanEndDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "mem_end_temp").drop(KpiConstants.memPlanEndDateSkColName)
+    val memEndDateAddedDf = memStartDateAddedDf.as("df1").join(dimDateDf.as("df2"), memStartDateAddedDf.col(KpiConstants.memPlanEndDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType).select($"df1.*", $"df2.calendar_date").withColumnRenamed(KpiConstants.calenderDateColName, "mem_end_temp").drop(KpiConstants.memPlanEndDateSkColName)
 
     /*convert the dob column to date format (dd-MMM-yyyy)*/
     val resultantDf = memEndDateAddedDf.withColumn(KpiConstants.dobColName, to_date($"dob_temp", "dd-MMM-yyyy")).withColumn(KpiConstants.memStartDateColName, to_date($"mem_start_temp", "dd-MMM-yyyy")).withColumn(KpiConstants.memEndDateColName, to_date($"mem_end_temp", "dd-MMM-yyyy")).drop("dob_temp","mem_start_temp","mem_end_temp")

@@ -12,6 +12,7 @@ object KpiConstants {
   val clientDataSource = ""
   val userNameVal = "ETL"
   val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
+  val arrayofColumn1 = List("member_id" , "state" , "city" , "member_plan_start_date_sk" , "member_plan_end_date_sk","lob_id")
   var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
@@ -62,10 +63,7 @@ object KpiConstants {
   val age44Val = "44"
   val age45Val = "45"
   val age64Val = "64"
-<<<<<<< HEAD
-=======
   val age81Val = "81"
->>>>>>> origin/sangeeth
   val age120Val = "120"
 
 
@@ -80,6 +78,13 @@ object KpiConstants {
   val measurementNineYearUpper = 3287
   val measurementThreeYearUpper = 1096
   val measureemtnTenYearUpper = 3650
+  val measurement0Val = 0
+  val measurement1Val = 1
+  val measurement2Val = 2
+  val measurement3Val = 3
+  val measurement4Val = 4
+  val measurement9Val = 9
+  val measurement10Val = 10
 
 
 
@@ -122,21 +127,20 @@ object KpiConstants {
   val bcsMeasureTitle = "Breast Cancer Screening (BCS)"
   val ImamenMeasureTitle = "Immunizations for Adolescents (IMA)"
   val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
-<<<<<<< HEAD
-=======
   val aapMeasureTitle = "Adult Access to Preventive/Ambulatory Health Services (AAP)"
   val aisMeasureTitle = "Adult Immunization Status (AIS)"
   val capMeasureTitle = "Children and Adolescents Access to Primary Care Practitioners (CAP)"
   val cbpMeasureTitle = "Controlling High Blood Pressure (CBP)"
 
->>>>>>> origin/sangeeth
 
 
 
   /*columnname constants*/
   val memberskColName = "member_sk"
+  val memberidColName = "member_id"
   val lobIdColName = "lob_id"
   val lobColName = "lob"
+  val lobNameColName = "lob_name"
   val dobskColame = "date_of_birth_sk"
   val dateSkColName = "date_sk"
   val calenderDateColName = "calendar_date"
@@ -144,6 +148,7 @@ object KpiConstants {
   val memStartDateColName = "mem_start_date"
   val memEndDateColName = "mem_end_date"
   val genderColName = "gender"
+  val stateColName = "state"
   val qualityMsrSkColName = "quality_measure_sk"
   val proceedureCodeColName = "procedure_code"
   val primaryDiagnosisColname = "primary_diagnosis"
@@ -322,15 +327,12 @@ object KpiConstants {
   val Imacmb1MeasureId = "IMACMB1"
   val Imacmb2MeasureId = "IMACMB2"
   val aisMeasureId = "AIS"
-<<<<<<< HEAD
-=======
   val aisf1MeasureId = "AISINFL1"
   val aisf2MeasureId = "AISINFL2"
   val aistd1MeasureId = "AISTD1"
   val aistd2MeasureId = "AISTD2"
   val aiszos1MeasureIdVal = "AISZOS1"
   val aiszos2MeasureIdVal = "AISZOS2"
->>>>>>> origin/sangeeth
   val wcc1aMeasureId = "WCC1A"
   val wcc2aMeasureId = "WCC2A"
   val wcc1bMeasureId = "WCC1B"
@@ -340,12 +342,9 @@ object KpiConstants {
   val aap1MeasureId = "AAP1"
   val aap2MeasureId = "AAP2"
   val aap3MeasureId = "AAP3"
-<<<<<<< HEAD
-=======
   val capMeasureId = "CAP"
   val cap1MeasureId = "CAP1"
   val cbpMeasureId = "CBP"
->>>>>>> origin/sangeeth
 
 
 
@@ -441,10 +440,7 @@ object KpiConstants {
   val uniMasRightVal = "Unilateral Mastectomy Right"
   val ardvVal = "Anaphylactic Reaction Due To Vaccination"
   val encephalopathyVal = "Encephalopathy Due To Vaccination"
-<<<<<<< HEAD
-=======
   val tdVaccineVal = "Td Vaccine"
->>>>>>> origin/sangeeth
   val tdapVaccineVal = "Tdap Vaccine"
   val boneMarowTransVal = "Bone Marrow Transplant"
   val chemoTherappyVal = "Chemotherapy"
@@ -454,15 +450,12 @@ object KpiConstants {
   val scaHbsdVal = "Sickle Cell Anemia and HB-S Disease"
   val cflVal = "Cerebrospinal Fluid Leak"
   val hospiceVal = "Hospice"
-<<<<<<< HEAD
-=======
   val influenzaVaccineVal = "Influenza Vaccine Administered"
   val herpesZosterLiveVaccineVal = "Herpes Zoster Live Vaccine"
   val herpesZosterRecomVaccineVal = "Herpes Zoster Recombinant Vaccine"
   val pneuConjuVaccine13Val = "Pneumococcal Conjugate Vaccine 13"
   val pneuPolyVaccine23Val = "Pneumococcal Polysaccharide Vaccine 23"
   val ambulatoryVisitVal = "Ambulatory Visits"
->>>>>>> origin/sangeeth
 
 
 
@@ -794,8 +787,6 @@ object KpiConstants {
   val aapValueSet = List("CPT","HCPCS","UBREV","Modifier")
 
   val aapCodeSystem = List("Ambulatory Visits","Telehealth Modifier","Other Ambulatory Visits","Telephone Visits","Online Assessments")
-<<<<<<< HEAD
-=======
 
   val cbpDinoExclValueSet = List("Frailty")
 
@@ -815,5 +806,4 @@ object KpiConstants {
 
   val cbpNumerator3CodeSystem = List("CPT")
 
->>>>>>> origin/sangeeth
 }
