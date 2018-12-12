@@ -1,9 +1,10 @@
 package com.itc.ncqa.transform
 
-import com.itc.ncqa.utils.UtilFunctions
+import com.itc.ncqa.constants.TransformConstants
+import com.itc.ncqa.utils.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SaveMode, SparkSession}
-import org.apache.spark.sql.functions.{concat, current_timestamp, lit,abs}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, lit}
 
 object NcqaDimProvider {
 
@@ -11,19 +12,27 @@ object NcqaDimProvider {
     println("started")
 
 
+    val schemaFilePath = args(0)
+    val sourceDbName = args(1)
+    val targetDbName = args(2)
+    val kpiName = args(3)
+    TransformConstants.setSourceDbName(sourceDbName)
+    TransformConstants.setTargetDbName(targetDbName)
+
     val config = new SparkConf().setAppName("Ncqa Transform1").setMaster("local[*]")
     val spark = SparkSession.builder().config(config).enableHiveSupport().getOrCreate()
-    val schemaPath = args(0)
+
+
 
     import spark.implicits._
+    val schemaRdd = spark.sparkContext.textFile(schemaFilePath,1)
 
-    val schemaRdd = spark.sparkContext.textFile(schemaPath,1)
 
-
-    val queryString = "select * from ncqa_intermediate.provider"
+    /*val queryString = "select * from ncqa_intermediate.provider"
     val provider = spark.sql(queryString)
     val remove = provider.first()
-    val providerDf = provider.filter(row=> row != remove)
+    val providerDf = provider.filter(row=> row != remove)*/
+    val providerDf = DataLoadFunctions.sourceTableLoadFunction(spark,TransformConstants.providerTableName,kpiName)
 
 
     /*creating column array that contains the details of newly adding columns*/
@@ -41,6 +50,7 @@ object NcqaDimProvider {
     /*Ordering the Dataframe*/
     val dimProviderFormattedDf = providerSkAddedDimProviderDf.select(schemaArray.head,schemaArray.tail:_*)
     dimProviderFormattedDf.printSchema()
-    dimProviderFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.dim_provider")
+    val tableName = TransformConstants.targetDbName + "."+ TransformConstants.dimProviderTableName
+    dimProviderFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(tableName)
   }
 }
