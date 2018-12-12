@@ -1,14 +1,22 @@
 package com.itc.ncqa.transform
 
-import com.itc.ncqa.utils.UtilFunctions
+import com.itc.ncqa.constants.TransformConstants
+import com.itc.ncqa.utils.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SaveMode, SparkSession}
-import org.apache.spark.sql.functions.{concat, current_timestamp, date_format, lit,abs}
+import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_format, lit}
 
 object NcqaFactClaims {
 
   def main(args: Array[String]): Unit = {
 
+
+    val schemaFilePath = args(0)
+    val sourceDbName = args(1)
+    val targetDbName = args(2)
+    val kpiName = args(3)
+    TransformConstants.setSourceDbName(sourceDbName)
+    TransformConstants.setTargetDbName(targetDbName)
 
     val config = new SparkConf().setAppName("Ncqa FactMembershipCreation").setMaster("local[*]")
     val spark = SparkSession.builder().config(config).enableHiveSupport().getOrCreate()
@@ -20,8 +28,9 @@ object NcqaFactClaims {
 
 
 
-    val queryString = "select * from ncqa_intermediate.Visit"
-    val visitDf = spark.sql(queryString)
+    /*val queryString = "select * from ncqa_intermediate.Visit"
+    val visitDf = spark.sql(queryString)*/
+    val visitDf = DataLoadFunctions.sourceTableLoadFunction(spark,TransformConstants.visitTableName,kpiName)
     //visitDf.printSchema()
 
     /*adding Date_E by giving the column value of Date_Disch*/
@@ -31,14 +40,17 @@ object NcqaFactClaims {
     val dateFormattedFactClaimsDf = endDateColumnaddedFactClaimsDf.withColumn("Date_S",date_format($"Date_S","dd-MMM-yyyy")).withColumn("Date_Adm",date_format($"Date_Adm","dd-MMM-yyyy")).withColumn("Date_Disch",date_format($"Date_Disch","dd-MMM-yyyy")).withColumn("Date_E",date_format($"Date_E","dd-MMM-yyyy"))
 
     /*join Df with different tables to get the sks*/
-    val dimMemberDf = spark.sql("select * from ncqa_sample.dim_member")
+    //val dimMemberDf = spark.sql("select * from ncqa_sample.dim_member")
+    val dimMemberDf = DataLoadFunctions.targetTableLoadFunction(spark,TransformConstants.dimMemberTableName)
     val memberSkAddedFactClaimDf = dateFormattedFactClaimsDf.as("df1").join(dimMemberDf.as("df2"),$"df1.MemID" === $"df2.member_id").select($"df1.*",$"df2.member_sk").withColumnRenamed("member_sk","MEMBER_SK").drop("member_id")
-    val dimDateDf = spark.sql("select * from ncqa_sample.dim_date")
+    //val dimDateDf = spark.sql("select * from ncqa_sample.dim_date")
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
     val startDateSkFactClaimDf = memberSkAddedFactClaimDf.as("df1").join(dimDateDf.as("df2"),$"df1.Date_S" === $"df2.calendar_date").select($"df1.*",$"df2.date_sk").withColumnRenamed("date_sk","START_DATE_SK").drop("Date_S")
     val admitDateSkFactClaimDf = startDateSkFactClaimDf.as("df1").join(dimDateDf.as("df2"),$"df1.Date_Adm" === $"df2.calendar_date").select($"df1.*",$"df2.date_sk").withColumnRenamed("date_sk","ADMIT_DATE_SK").drop("Date_Adm")
     val dischargeDateSkFactClaimDf = admitDateSkFactClaimDf.as("df1").join(dimDateDf.as("df2"),$"df1.Date_Disch" === $"df2.calendar_date").select($"df1.*",$"df2.date_sk").withColumnRenamed("date_sk","DISCHARGE_DATE_SK").drop("Date_Disch")
     val endDateSkAddedDf = dischargeDateSkFactClaimDf.as("df1").join(dimDateDf.as("df2"),$"df1.Date_E" === $"df2.calendar_date").select($"df1.*",$"df2.date_sk").withColumnRenamed("date_sk","END_DATE_SK").drop("Date_E")
-    val dimProviderDf = spark.sql("select * from ncqa_sample.dim_provider")
+    //val dimProviderDf = spark.sql("select * from ncqa_sample.dim_provider")
+    val dimProviderDf = DataLoadFunctions.targetTableLoadFunction(spark,TransformConstants.dimProviderTableName)
     val providerSkAddedFactClaimDf = endDateSkAddedDf.as("df1").join(dimProviderDf.as("df2"),$"df1.ProvID" === $"df2.PROV_ID").select($"df1.*",$"df2.PROVIDER_SK").withColumnRenamed("PROVIDER_SK","PROVIDER_SK").drop("ProvID")
     /* End of join Df with different tables to get the sks*/
 
@@ -60,6 +72,7 @@ object NcqaFactClaims {
     val factClaimFormattedDf = claimSkAddedFactClaimDf.select(schemaArray.head,schemaArray.tail:_*)
     factClaimFormattedDf.printSchema()
     //factClaimFormattedDf.show()
-    factClaimFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.FACT_CLAIMS")
+    val tableName = TransformConstants.targetDbName + "."+ TransformConstants.factClaimsTableName
+    factClaimFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(tableName)
   }
 }

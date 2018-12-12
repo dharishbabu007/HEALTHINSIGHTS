@@ -22,6 +22,18 @@ object DataLoadFunctions {
     df
   }
 
+  /**
+    *
+    * @param spark (spark session object)
+    * @param tableName (table that we have to laod)
+    * @return - dataframe which contains the data from the specified table
+    * @usecase - this function is used to load the data from a target table
+    */
+  def targetTableLoadFunction(spark: SparkSession,tableName: String):DataFrame ={
+
+    val df = spark.sql("select * from "+ TransformConstants.targetDbName + "."+ tableName)
+    df
+  }
 
   /**
     *
@@ -30,7 +42,7 @@ object DataLoadFunctions {
     * @usecase This function is used to load the date_sk and calender_date from the dim_date table.
     */
   def dimDateLoadFunction(spark: SparkSession): DataFrame = {
-    val sqlQuery = "select date_sk, calendar_date from " + TransformConstants.targetDbName + "." + TransformConstants.dimDateTableName
+    val sqlQuery = "select date_sk, calendar_date from ncqa_sample" + "." + TransformConstants.dimDateTableName
     val dimDateDf = spark.sql(sqlQuery)
     dimDateDf
   }

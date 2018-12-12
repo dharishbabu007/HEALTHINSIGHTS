@@ -11,15 +11,17 @@ object NcqaDimMember {
   def main(args: Array[String]): Unit = {
     println("started")
 
-    val config = new SparkConf().setAppName("Ncqa Transform1").setMaster("local[*]")
-    val spark = SparkSession.builder().config(config).enableHiveSupport().getOrCreate()
-
     val schemaFilePath = args(0)
     val sourceDbName = args(1)
     val targetDbName = args(2)
     val kpiName = args(3)
     TransformConstants.setSourceDbName(sourceDbName)
     TransformConstants.setTargetDbName(targetDbName)
+
+    val config = new SparkConf().setAppName("Ncqa Transform1").setMaster("local[*]")
+    val spark = SparkSession.builder().config(config).enableHiveSupport().getOrCreate()
+
+
 
     import spark.implicits._
     val schemaRdd = spark.sparkContext.textFile(schemaFilePath,1)
@@ -28,7 +30,7 @@ object NcqaDimMember {
     val generalMembershipDf = spark.sql(queryString)*/
    val generalMembershipDf = DataLoadFunctions.sourceTableLoadFunction(spark,TransformConstants.generalMembershipTableName,kpiName)
 
-    generalMembershipDf.printSchema()
+    generalMembershipDf.show()
 
     //columnarArray.foreach(println)
 
@@ -58,9 +60,10 @@ object NcqaDimMember {
 
     /*Ordering the Dataframe*/
     val formattedDimMemberDf = memberSkAddedDimMemberDf.select(arrayOfColumns1.head,arrayOfColumns1.tail:_*)
-    formattedDimMemberDf.printSchema()
+    formattedDimMemberDf.show()
     //formattedDf.show()
-    formattedDimMemberDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.dim_member")
+    val tableName = TransformConstants.targetDbName + "."+ TransformConstants.dimMemberTableName
+    formattedDimMemberDf.write.mode(SaveMode.Overwrite).saveAsTable(tableName)
 
   }
 }
