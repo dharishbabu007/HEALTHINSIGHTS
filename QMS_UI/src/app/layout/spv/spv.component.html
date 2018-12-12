@@ -4,82 +4,147 @@
   <div class="row">
  
       <div class="col-lg-2 bg-secondary rounded m-1 sidenav">
-        <div class="text-center"><i class="fa fa-5x fa-user-circle-o "></i></div>
-        <p><span class="font-weight-bold">Address</span> :{{patientProfileForm.address}}<br>
-          <span class="font-weight-bold">Phone</span>: {{patientProfileForm.phone}}<br>
-            <span class="font-weight-bold">Email</span>:{{patientProfileForm.emailAddress}}</p>
+        <div class="text-center" style="margin-top: 20px"><i class="fa fa-5x fa-user-circle-o "></i></div>
+        <p><br><br><span class="font-weight-bold">Address</span> : {{patientProfileForm.address}}<br><br>
+          <span class="font-weight-bold">Phone</span>: {{patientProfileForm.phone}}<br><br>
+            <span class="font-weight-bold">Email</span>: {{patientProfileForm.emailAddress}}</p>
         <br><hr id="left-col"><br>
-        <p>PCP Name:<br><b>
+        <p><b>PCP Name: </b>
 				<span [innerHtml]="patientProfileForm.providerFirstName"></span> 
 				<span [innerHtml]="patientProfileForm.providerLastName"></span>
-				<br>
-				NPI:<span [innerHtml]="patientProfileForm.providerBillingTaxId"></span></b><br><br>
-				Speciality:<span [innerHtml]="patientProfileForm.providerSpeciality"></span><br>
-				Address: <span [innerHtml]="patientProfileForm.providerAddress1"></span>,<br>
+				<br><br><b>
+        NPI: </b><span [innerHtml]="patientProfileForm.providerBillingTaxId"></span><br><br>
+        <b>
+        Speciality:
+      </b><span [innerHtml]="patientProfileForm.providerSpeciality"></span><br><br>
+        <b>
+        Address:  
+      </b><span [innerHtml]="patientProfileForm.providerAddress1"></span>,<br>
 				<span [innerHtml]="patientProfileForm.providerAddress2"></span></p>
       </div>
       <div class="col-lg-9 m-1">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-3">
-              <p>Name: <b><span [innerHtml]="patientProfileForm.name"></span></b><br>
-		            <span class="font-weight-bold">BenID</span>: {{patientProfileForm.patId}}<br>
-			          <span class="font-weight-bold">Primary Payer</span>: {{patientProfileForm.primaryPayer}}</p>
+          <div class="col-lg-12">
+              <div class="container">
+                  <div class="row">
+            <div class="col-lg-5" style="padding-left: 30px;">
+              <p><br><b>Name: </b><span [innerHtml]="patientProfileForm.name"></span><br><br>
+		            <span class="font-weight-bold">Beneficiary ID</span>: {{patientProfileForm.patId}}<br><br>
+                <span class="font-weight-bold">Primary Payer</span>: {{patientProfileForm.primaryPayer}}<br><br>
+                <span class="font-weight-bold">Last date of service</span>: {{patientProfileForm.lastDateService}}</p>
             </div>
-            <div class="col-lg-3">
-              <p><span class="font-weight-bold">Last Date of service</span>: {{patientProfileForm.lastDateService}}<br>
-                <span class="font-weight-bold">Age</span>: {{patientProfileForm.age}}<br>
-                <span class="font-weight-bold">Gender</span>: {{patientProfileForm.gender}}<br>
-                <span class="font-weight-bold">Race/Ethinticity</span>: {{patientProfileForm.ethniCity}}<br></p>
+            <div class="col-lg-6 left-col-margin">
+                <div class="container">
+                    <div class="row">
+              <div class="col-lg-6">
+              <p><br>
+                <span class="font-weight-bold">Age</span>: {{patientProfileForm.age}}<br><br>
+                <span class="font-weight-bold">Gender</span>: {{patientProfileForm.gender}}<br><br>
+                <span class="font-weight-bold">Ethnicity</span>: {{patientProfileForm.ethniCity}}<br><br></p>
+              </div>
+              <div class="col-lg-6" style="margin-top: 40px;">
+                <p class="rounded bg-secondary" style="height: 81px;">
+                  <br>
+                  <span style="margin-left: 25px">
+                     <b>MRA Score: </b><span class="bg-primary rounded p-1 counts">{{patientProfileForm.mraScore}}</span></span>
+                
+                  <br>
+                  <span style="margin-left: 25px">
+                  <b> Risk: </b><span *ngIf="risk == 'low'" style="color: green"> Low </span>
+                  <span *ngIf="risk == 'medium'" style="color: rgb(245, 142, 10);"> Medium </span>
+                  <span *ngIf="risk == 'high'" style="color: red"> High </span>
+                </span>
+                  
+                </p>
+              </div>
+              </div>
+              </div>
             </div>
-            <div class="col-lg-3 MRA p-1">
-              <p class="rounded bg-secondary">MRA Score: <span class="bg-primary rounded p-1">{{patientProfileForm.mraScore}}</span><br>
-			        Risk: <span [innerHtml]="patientProfileForm.risk"></span></p>
-            </div>
-            <!-- <div class="col-lg-3" style="cursor: pointer;">
+             <!--
+           
+            <div class="col-lg-3" style="cursor: pointer;">
                <i class="fa fa-2x fa-envelope"></i>&nbsp;&nbsp;
                <i class="fa fa-2x fa-phone"></i>
             </div> -->
           </div>
         </div>
-        <br><hr><br>
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <table class="leftTable">
-                <tr>
-                  <td>
-                  <div class="div1 Comorbi">
-                    <span class="headings">Comorbidities</span>&nbsp;
-                    <span class="bg-primary rounded p-1 " >{{patientProfileForm.comorbiditiesCount}}
-                    </span>
-                    <div *ngFor="let member of patientProfileForm.comorbidities" >{{member}}</div>
-                  </div>
-                  </td>
-                  <td>
-                  <div class="div1">
-                    <span class="headings" style="cursor: pointer;" [routerLink]="['/member-gap-list',  patientProfileForm.patId]">Care Gaps</span>&nbsp;
-                    <span class="bg-primary rounded p-1">{{patientProfileForm.careGapsCount}}</span>
-                  </div>
-                  <div class="div1 careGaps">
-                    <div *ngFor="let member of patientProfileForm.careGaps">{{member}}</div>
+        <hr class="line-sizes">
 
+            <div class="col-lg-12">
+                <div class="container">
+                    <div class="row">
+                  <div class="col-lg-6"><br>
+                    <span class="font-weight-bold">Comorbidities</span>&nbsp;
+
+                    <span class="bg-primary rounded p-1 counts">{{patientProfileForm.comorbiditiesCount}}</span>
+                    <br><br>
+                    <div class="careGaps">
+                    <div *ngFor="let member of patientProfileForm.comorbidities" >{{member}}</div>
+                    </div>
                   </div>
-                  </td>
-                </tr> 
-                <tr>
-                 <td>
-                  <div class="div1 NextApp">
-                    <span class="headings">Next Appointment Details</span>
-                    <p>Next Appointment Date: 15-Aug-2018 <br>
-                    Physician Name: Test,Physician<br>
-                    Department: Test Department
+                 
+                  <div class=" col-lg-6">
+                      <br>
+                    <span  class="font-weight-bold" style="cursor: pointer;" [routerLink]="['/member-gap-list',  patientProfileForm.patId]">Care Gaps</span>&nbsp;
+                    <span class="bg-primary rounded p-1 counts">{{patientProfileForm.careGapsCount}}</span>
+                    <br><br>
+                    <div class="careGaps">
+                       <!-- <div *ngFor="let member1 of patientProfileForm.careGapAlerts ; let myIndex = index" >
+                             
+                            <span *ngIf="patientProfileForm.careGapAlerts[myIndex].alerts==1" pTooltip="No Appointment Scheduled"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                            <span *ngIf="patientProfileForm.careGapAlerts[myIndex].alerts==0" pTooltip="Appointment Scheduled"> <i class="fa fa-bell" aria-hidden="true"></i></span>
+                            &nbsp; {{member1.careGap}}
+                        </div>
+                      
+                     
+                        <div *ngFor="let member2 of  patientProfileForm.careGaps ; let myIndex = index" >
+                            <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==1" pTooltip="No Appointment Scheduled"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                            <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==0" pTooltip="Appointment Scheduled"> <i class="fa fa-bell" aria-hidden="true"></i></span>
+                            <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==null" style="margin-left: 17px"></span>
+                          {{member2[0]}} &nbsp;
+                          <span pTooltip="Non-compliance percentage "> {{member2[1]}} %  </span>
+                        </div>-->
+                        <table>
+                          <tr *ngFor="let member2 of  patientProfileForm.careGaps ; let myIndex = index" >
+                            <td style="width: 6%;">
+                                <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==1" pTooltip="No Appointment Scheduled"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                                <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==0" pTooltip="Appointment Scheduled"> <i class="fa fa-bell" aria-hidden="true"></i></span>
+                            </td>
+                            <td style="width: 80%;">
+                               {{member2[0]}}
+                            </td>
+                            <td  pTooltip="Non-compliance potential"  style="width: 14%;"> &nbsp; {{member2[1]}} %  </td>
+                          </tr>
+                        </table>
+                     
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                  <br>
+                  <hr>
+              </div>
+              <div class="col-lg-12">
+                  <div class="container">
+                      <div class="row">
+                  
+
+                  <div class="col-lg-6 NextApp">
+                      <br>
+                    <span class="font-weight-bold">Next Appointment Details</span><br><br>
+                    <p><span class="font-weight-bold">Next Appointment Date: </span>{{patientProfileForm.nextAppointmentDate}} <br>
+                    <span class="font-weight-bold">Physician Name: </span>{{patientProfileForm.physicianName}}<br>
+                   <span class="font-weight-bold"> Department: </span>{{patientProfileForm.department}}<br>
+                   <span class="font-weight-bold"> No-Show Likelihood: </span>{{patientProfileForm.noShowLikelihood * 100 | number: '1.0-0' }}%
                     </p>
+                  
                   </div> 
-                 </td> 
-                 <td>
-                  <div class="div1 VisitCount">
-                    <table title="Visit Counts" class="table table-bordered">
+
+                  <div class="col-lg-6 VisitCount">
+                      <br>
+                      <span class="font-weight-bold align-items-center">Visit Counts</span>
+                      <br><br>
+                      <p-chart type="bar" [options]="options" [data]="data" width="267px" height="124px"></p-chart>
+                    <!--<table title="Visit Counts" class="table table-bordered">
                       <tr>
                         <th colspan="3" class="text-center bg-secondary">Visit Counts</th>
                       </tr>
@@ -93,30 +158,36 @@
                         <td>2</td>
                         <td>0</td>                  
                       </tr>
-                    </table>
+                    </table>-->
                   </div> 
-                 </td>
-                </tr>
-					      <tr style="border:none;">
-                  <td>
+                  </div>
+                  </div>
+                  <br>
+                  <hr>
+                  </div>
+
+              <div class="col-lg-12">
+                  <div class="container">
+                     <div class="row">
                   <div class="col-lg-6">
-                    <span class="headings">Procedures</span>
-                    <div>{{patientProfileForm.procedureName1}} - {{patientProfileForm.procedureDateTime1}}</div>
-                    <div>{{patientProfileForm.procedureName2}} - {{patientProfileForm.procedureDateTime2}}</div>
+                      <br>
+                    <span class="font-weight-bold">Procedures</span>
+                    <div>{{patientProfileForm.procedureName1}} {{patientProfileForm.procedureDateTime1}}</div>
+                    <div>{{patientProfileForm.procedureName2}} {{patientProfileForm.procedureDateTime2}}</div>
+               
+              
                   </div>
-                  </td>   
-                  <td >
-                      <div class="col-lg-8">
-                      <span class="headings">Medical Prescription</span>
-                  <div class="bg-secondary text-black rounded">
-                    {{patientProfileForm.prescription}}
-                    
-                    <p>&nbsp;</p>
-                  </div>
-                  </div>
-                  </td>  
-                </tr>
-              </table>
+                
+                      <div class="col-lg-6">
+                          <br>
+                          <span class="font-weight-bold">Medical Prescription</span>
+                          <div class="bg-secondary text-black rounded">
+                              {{patientProfileForm.prescription}}
+                              
+                              <p>&nbsp;</p>
+                            </div>
+                        </div>
+
             </div>
           </div>
         </div>

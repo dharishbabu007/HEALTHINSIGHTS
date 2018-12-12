@@ -1,0 +1,82 @@
+<div >
+        <app-page-header [heading]="'View Persona'" [icon]="'fa-table'"></app-page-header>
+
+<div  class="container-fluid h-100">
+    <!-- <h2 class="text-muted">Dashboard </h2> -->
+  <div class="card">
+    <div class="row col-lg-12">
+
+            <div style="padding: 5px">
+               <span class="col-lg-6">
+                   <p-dropdown placeholder="Select Persona" [autoDisplayFirst]="false"  styleClass="form-control" [options]="personaList"></p-dropdown>
+               </span>
+               <span class="col-lg-6">
+                    <button type="button" pButton label="Member List"   [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+                </span>
+                
+           </div>
+
+            
+            
+    </div>
+    <div class="row col-lg-12">
+    <img src="/assets/images/Lazy Doer.jpg" style="width: 83vw;height: 72vh;">
+    </div>
+    <!--<div class="card">
+    <div class="row col-lg-12" class="bg-heading">
+        <h2>Lazy Doer</h2>
+    </div>
+    <br>
+    <div class="row col-lg-12">
+            <div class="col-lg-3 rounded">
+               <div class="text-center"><i class="fa fa-5x fa-user-circle-o "></i></div><br><br>
+                   <p><span class="font-weight-bold">Age Group</span>: <br><br>
+                       <span class="font-weight-bold">Occupatioon</span>: <br><br>
+                        <span class="font-weight-bold">Family Size</span>: <br><br>
+                        <span class="font-weight-bold">Addictions</span>: <br><br>
+                        <span class="font-weight-bold">Education</span>:
+                    </p>
+            </div>
+            <div class="col-lg-9">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                                <button type="button" pButton label="Excuse Maker"  class="btn-space tab-button"></button> &nbsp;&nbsp;
+                                <button type="button" pButton label="Late"  class="btn-space  tab-button"></button> &nbsp;&nbsp;
+                                <button type="button" pButton label="Procastinator"  class="btn-space tab-button"></button> 
+                                <div class="para-class">
+                                  <h4>Barriers</h4>
+                                </div>
+                                <div class="para-class">
+                                  <h4>Goals</h4>
+                                </div>
+                                <div class="para-class bio-classrounded">
+                                   <h4>Bio</h4>
+                                </div>
+                               <br>
+
+                          </div>
+                          <div class="col-lg-6">
+                                <div class="para-class">
+                                  <h4>Motivation</h4>
+                                </div>
+                                <div class="para-class">
+                                  <h4>Barriers</h4>
+                                </div>
+                                <div class="para-class">
+                                  <h4>Preferred Channels</h4>
+                                </div>
+                            
+                          </div>
+                          
+                      
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    </div> -->
+</div>
+</div>
+</div> 
+

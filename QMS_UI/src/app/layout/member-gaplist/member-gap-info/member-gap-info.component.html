@@ -10,7 +10,7 @@
                                 <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
                             <div class="col col-lg-4 col-xl-4">
-                                <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]">{{closeGaps.name}}</a>
+                                <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps.name}}</a>
                              </div>
                         </div>
                         <div  *ngIf="gaps" class="row card-text">
@@ -105,8 +105,8 @@
         </div>
         <div class="row  text-right">
             <div class="col col-lg-12 ">
-                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2"></button>
-                <button pButton type="button" label="Cancel" class="ui-button-secondary m-2"></button>
+                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
+                <button pButton type="button" label="Cancel" class="ui-button-secondary m-2" *ngxPermissionsOnly="['10W']"></button>
             </div>
         </div>
     </div>

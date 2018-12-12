@@ -189,7 +189,6 @@ export class MeasurecreatorComponent implements OnInit {
     } );
   }
   else{
-    this.msgService.error("throw this")
     this.validateAllFormFields(this.myForm);
   }
 

@@ -1,0 +1,277 @@
+<div >
+        <app-page-header [heading]="'Non-compliance prediction'" [icon]="'fa-table'"></app-page-header>
+        <div class="card">
+        <div class="row">
+            <div class="col col-lg-12">
+    
+                <!-- <button type="button" pButton label="back" [routerLink]="['/file-manager/']" style="float:left" class="btn-space"></button> -->
+    
+    
+                <!--<button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" class="btn-space"></button>  -->
+                <button type="button" pButton label="Statistics" *ngIf="redirect !=1" [routerLink]="['/csv2/']" style="float:left" class="btn-space"></button>
+                <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/MeasureHerniaNon-Compliance/MeasureDetailsHerniarepair?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" style="float:left" class="btn-space"></button> 
+
+               <table class="table table-bordered table-hover" >
+                                       <thead>
+                        <tr>
+                            <th>
+                                    Patient Id 
+                            </th>
+                            <th> 
+                                    Patient Name
+                                </th>
+                                <th>
+                                        Age
+                                    </th>
+                                    <th>
+                                            Gender
+                                        </th>
+                                        <th>
+                                                Race
+                                            </th>
+                                            <th>
+                                                    Ethinicity
+                                                </th>
+                                                <th>
+                                                        Distance
+                                                    </th>
+                                                    <th>
+                                                            Compliance potential
+                                                    </th>
+                                                    <th>Predicted non-Compliance</th>
+                        </tr>
+                        
+                    </thead>
+                   <tbody>
+                        <tr>			
+                                <td>		2018470	</td>
+                                <td	 [routerLink]="['/spv/',2018470]">	Abaza	</td>
+                                <td>		85	</td>
+                                <td>		M	</td>
+                                <td>		Arab	</td>
+                                <td>		Islamic	</td>
+                                <td>		2	</td>
+                                <td>		42%	</td>
+                                <td>		0	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018471	</td>
+                                <td	 [routerLink]="['/spv/',2018471]">	Hamid	</td>
+                                <td>		21	</td>
+                                <td>		M	</td>
+                                <td>		Arab	</td>
+                                <td>		Islamic	</td>
+                                <td>		4	</td>
+                                <td>		69%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018472	</td>
+                                <td	 [routerLink]="['/spv/',2018472]">	Guilbert Mariyushkin	</td>
+                                <td>		45	</td>
+                                <td>		M	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Asian	</td>
+                                <td>		1	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018473	</td>
+                                <td	 [routerLink]="['/spv/',2018473]">	Norrie Lovett	</td>
+                                <td>		45	</td>
+                                <td>		F	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		Native American	</td>
+                                <td>		10	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018474	</td>
+                                <td	 [routerLink]="['/spv/',2018474]">	Alexandre Illesley	</td>
+                                <td>		55	</td>
+                                <td>		M	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Hispanic	</td>
+                                <td>		8	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018475	</td>
+                                <td	 [routerLink]="['/spv/',2018475]">	Andreas Tyer	</td>
+                                <td>		65	</td>
+                                <td>		M	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		White	</td>
+                                <td>		7	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018476	</td>
+                                <td	 [routerLink]="['/spv/',2018476]">	Christoph Tedman	</td>
+                                <td>		45	</td>
+                                <td>		F	</td>
+                                <td>		Caucasian	</td>
+                                <td>		African American	</td>
+                                <td>		9	</td>
+                                <td>		69%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018477	</td>
+                                <td	 [routerLink]="['/spv/',2018477]">	Morrie Nancekivell	</td>
+                                <td>		85	</td>
+                                <td>		M	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Asian	</td>
+                                <td>		6	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018478	</td>
+                                <td	 [routerLink]="['/spv/',2018478]">	Homere Franceschi	</td>
+                                <td>		65	</td>
+                                <td>		M	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Native American	</td>
+                                <td>		2	</td>
+                                <td>		42%	</td>
+                                <td>		0	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018479	</td>
+                                <td	 [routerLink]="['/spv/',2018479]">	Benton Frontczak	</td>
+                                <td>		65	</td>
+                                <td>		F	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		Hispanic	</td>
+                                <td>		5	</td>
+                                <td>		69%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018480	</td>
+                                <td	 [routerLink]="['/spv/',2018480]">	Kerry Olle	</td>
+                                <td>		75	</td>
+                                <td>		M	</td>
+                                <td>		Caucasian	</td>
+                                <td>		White	</td>
+                                <td>		6	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018481	</td>
+                                <td	 [routerLink]="['/spv/',2018481]">	Dorey Ansty	</td>
+                                <td>		25	</td>
+                                <td>		F	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		African American	</td>
+                                <td>		4	</td>
+                                <td>		42%	</td>
+                                <td>		0	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018482	</td>
+                                <td	 [routerLink]="['/spv/',2018482]">	Maurice Scoggin	</td>
+                                <td>		65	</td>
+                                <td>		M	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		Asian	</td>
+                                <td>		6	</td>
+                                <td>		69%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018483	</td>
+                                <td	 [routerLink]="['/spv/',2018483]">	Byron Klauber	</td>
+                                <td>		44	</td>
+                                <td>		M	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		Native American	</td>
+                                <td>		3	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018484	</td>
+                                <td	 [routerLink]="['/spv/',2018484]">	Torrin Benne	</td>
+                                <td>		55	</td>
+                                <td>		F	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Hispanic	</td>
+                                <td>		8	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018485	</td>
+                                <td	 [routerLink]="['/spv/',2018485]">	Richard Gentiry	</td>
+                                <td>		43	</td>
+                                <td>		M	</td>
+                                <td>		AfricanAmerican	</td>
+                                <td>		White	</td>
+                                <td>		3	</td>
+                                <td>		70%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018486	</td>
+                                <td	 [routerLink]="['/spv/',2018486]">	Steven Scamerdine	</td>
+                                <td>		75	</td>
+                                <td>		M	</td>
+                                <td>		Other	</td>
+                                <td>		African American	</td>
+                                <td>		5	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018487	</td>
+                                <td	 [routerLink]="['/spv/',2018487]">	Hinze Jelf	</td>
+                                <td>		65	</td>
+                                <td>		F	</td>
+                                <td>		Caucasian	</td>
+                                <td>		Asian	</td>
+                                <td>		6	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018488	</td>
+                                <td	 [routerLink]="['/spv/',2018488]">	Marve Farrer	</td>
+                                <td>		55	</td>
+                                <td>		F	</td>
+                                <td>		Other	</td>
+                                <td>		Native American	</td>
+                                <td>		5	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                <tr>			
+                                <td>		2018489	</td>
+                                <td	 [routerLink]="['/spv/',2018489]">	Moe Cumberpatch	</td>
+                                <td>		35	</td>
+                                <td>		M	</td>
+                                <td>		Other	</td>
+                                <td>		Hispanic	</td>
+                                <td>		4	</td>
+                                <td>		100%	</td>
+                                <td>		1	</td>
+                                </tr>			
+                                
+                   </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    
+        <!-- <div class="row">
+            <img src="assets/images/Dr Tablet.jpg" >
+        </div>
+    -->
+    </div>

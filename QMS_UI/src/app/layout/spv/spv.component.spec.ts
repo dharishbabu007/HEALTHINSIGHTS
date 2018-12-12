@@ -8,7 +8,7 @@ import { SpvComponent } from './spv.component';
 import { PageHeaderModule } from '../../shared/modules/page-header/page-header.module';
 import { GapsService } from '../../shared/services/gaps.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-describe('MemberGapListComponent', () => {
+describe('SpvComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [  RouterTestingModule, PageHeaderModule, SliderModule,
