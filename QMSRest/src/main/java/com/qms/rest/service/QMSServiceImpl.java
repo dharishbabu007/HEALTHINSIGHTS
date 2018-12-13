@@ -29,7 +29,7 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSDateUtil;
 
 
-@Service("qmsService")
+@Service("qmsService123")
 public class QMSServiceImpl implements QMSService {
 	
 	@Autowired
@@ -557,10 +557,10 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setNumerator(resultSet.getString("numerator"));
 				measureCreator.setNumeratorExclusions(resultSet.getString("num_exclusion"));				
 				measureCreator.setId(resultSet.getInt("measure_id")); 
-				measureCreator.setMeasureCategory(resultSet.getString("CATEGORY_NAME"));
+				measureCreator.setMeasureCategory(resultSet.getString("qqp.CATEGORY_NAME"));
 				measureCreator.setDescription(resultSet.getString("description"));
 				measureCreator.setName(resultSet.getString("measure_name"));
-				measureCreator.setProgramName(resultSet.getString("PROGRAM_NAME"));
+				measureCreator.setProgramName(resultSet.getString("qqp.PROGRAM_NAME"));
 				measureCreator.setSteward(resultSet.getString("steward_id"));			
 				measureCreator.setTargetAge(resultSet.getString("target_population_age"));
 				measureCreator.setType(typeMap.get(resultSet.getString("type_id")));

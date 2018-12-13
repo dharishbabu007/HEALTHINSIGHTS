@@ -25,7 +25,7 @@ import com.qms.rest.model.UserRole;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 
-@Service("userRoleServicePhoenix")
+@Service("userRoleService123")
 public class UserRoleServiceImpl implements UserRoleService{
 	
 	@Autowired
