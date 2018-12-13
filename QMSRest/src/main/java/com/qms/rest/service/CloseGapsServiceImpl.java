@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,7 +21,7 @@ import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 
-@Service("closeGapsServicePhoenix")
+@Service("closeGapsService123")
 public class CloseGapsServiceImpl implements CloseGapsService {
 	
 	@Autowired
@@ -43,11 +41,11 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			connection = qmsConnection.getPhoenixConnection();
 			statement = connection.createStatement();			
 			resultSet = statement.executeQuery("select dm.gender, dm.member_id, (dm.FIRST_NAME||' '||dm.MIDDLE_NAME||' '||dm.LAST_NAME) AS NAME, dd.CALENDAR_DATE from QMS.dim_member dm, QMS.dim_date dd "
-					+ "where dm.date_of_birth_sk=dd.date_sk and member_id='"+memberId+"'");
+					+ "where dm.date_of_birth_sk=dd.date_sk and member_id="+memberId);
 			if (resultSet.next()) {
-				closeGaps.setGender(resultSet.getString("gender"));
-				closeGaps.setDateOfBirth(resultSet.getString("CALENDAR_DATE"));
-				closeGaps.setMemberId(resultSet.getString("member_id"));
+				closeGaps.setGender(resultSet.getString("dm.gender"));
+				closeGaps.setDateOfBirth(resultSet.getString("dd.CALENDAR_DATE"));
+				closeGaps.setMemberId(resultSet.getString("dm.member_id"));
 				closeGaps.setName(resultSet.getString("NAME"));
 			}
 			
@@ -55,25 +53,25 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			if(measureId == null || measureId.equalsIgnoreCase("0") || measureId.equalsIgnoreCase("all")) {
 				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from QMS.qms_gic_lifecycle qgl, "
 						+ "QMS.dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
-						+ "member_id='"+memberId+"' order by gap_date desc");
+						+ "member_id="+memberId+" order by gap_date desc");
 			} else {
 				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from QMS.qms_gic_lifecycle qgl, "
 						+ "QMS.dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
-						+ "qgl.quality_measure_id = '"+measureId+"' and  "
-						+ "member_id='"+memberId+"' order by gap_date desc");				
+						+ "qgl.quality_measure_id = "+measureId+" and  "
+						+ "member_id="+memberId+" order by gap_date desc");				
 			}
 			CloseGap closeGap = null;
 			Set<CloseGap> closeGapSet = new LinkedHashSet<>();
 			while (resultSet.next()) {
 				closeGap = new CloseGap();
-				closeGap.setMeasureTitle(resultSet.getString("measure_title"));
-				closeGap.setQualityMeasureId(resultSet.getString("quality_measure_id"));
-				closeGap.setPayerComments(resultSet.getString("payor_comments"));
-				closeGap.setProviderComments(resultSet.getString("provider_comments"));
-				closeGap.setDateTime(resultSet.getString("gap_date"));
-				closeGap.setIntervention(resultSet.getString("interventions"));
-				closeGap.setPriority(resultSet.getString("priority"));
-				closeGap.setStatus(resultSet.getString("status"));
+				closeGap.setMeasureTitle(resultSet.getString("dqm.measure_title"));
+				closeGap.setQualityMeasureId(resultSet.getString("qgl.quality_measure_id"));
+				closeGap.setPayerComments(resultSet.getString("qgl.payor_comments"));
+				closeGap.setProviderComments(resultSet.getString("qgl.provider_comments"));
+				closeGap.setDateTime(resultSet.getString("qgl.gap_date"));
+				closeGap.setIntervention(resultSet.getString("qgl.interventions"));
+				closeGap.setPriority(resultSet.getString("qgl.priority"));
+				closeGap.setStatus(resultSet.getString("qgl.status"));
 				closeGapSet.add(closeGap);				
 			}
 			closeGaps.setCareGaps(closeGapSet);	

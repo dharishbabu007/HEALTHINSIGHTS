@@ -24,8 +24,8 @@ import com.qms.rest.model.MemberDetail;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 
-@Service("patientService123")
-public class PatientServiceImpl implements PatientService {
+@Service("patientService")
+public class PatientServiceImpl2 implements PatientService {
 	
 	@Autowired
 	private QMSConnection qmsConnection;
@@ -97,8 +97,7 @@ public class PatientServiceImpl implements PatientService {
 			System.out.println(memberId + " Getting member id from HIVE ");
 			try {
 				//connection = qmsConnection.getHiveThriftConnection();
-				//connection = qmsConnection.getOracleConnection();
-				connection = qmsConnection.getPhoenixConnection();
+				connection = qmsConnection.getOracleConnection();
 				statement = connection.createStatement();
 				dimPatient = getMemberByIdFromDB(memberId, connection, statement);
 				//cacheMap.put(memberId, dimPatient);
@@ -130,8 +129,8 @@ public class PatientServiceImpl implements PatientService {
 			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
 			"FIRST_NAME ||' '|| MIDDLE_NAME ||' '|| LAST_NAME AS \"Name\","+
 			"ADDRESS1 ||', '|| ADDRESS2 ||', '|| CITY ||', '|| STATE ||', '|| ZIP AS \"Address\","+ 
-			"FLOOR(TRUNC(CURRENT_DATE() - (To_date(substr(ENC.DATE_OF_BIRTH_SK, 1, 4) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 5,2) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) as \"Age\" "+ 
-			"FROM QMS.DIM_MEMBER ENC where MEMBER_ID="+memberId;
+			"FLOOR(TRUNC(SYSDATE - (To_date(substr(ENC.DATE_OF_BIRTH_SK, 1, 4) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 5,2) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) as \"Age\" "+ 
+			"FROM DIM_MEMBER ENC where MEMBER_ID='"+memberId+"'";
 			
 //			//HIVE query			
 //			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
@@ -169,20 +168,20 @@ public class PatientServiceImpl implements PatientService {
 			////
 			resultSet.close();
 			memberSQL = "SELECT DM.MEMBER_ID, DP.PAYER_NAME "+
-			"FROM QMS.FACT_MEMBERSHIP FM "+
-			"INNER JOIN QMS.DIM_MEMBER DM ON DM.MEMBER_SK = FM.MEMBER_SK "+
-			"INNER JOIN QMS.DIM_PAYER DP ON DP.PAYER_SK = FM.PRIMARY_PAYER_SK "+
-			"WHERE DM.MEMBER_ID="+memberId;			
+			"FROM FACT_MEMBERSHIP FM "+
+			"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_SK = FM.MEMBER_SK "+
+			"INNER JOIN DIM_PAYER DP ON DP.PAYER_SK = FM.PRIMARY_PAYER_SK "+
+			"WHERE DM.MEMBER_ID = '"+memberId+"'";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
-				dimPatient.setPrimaryPayer(resultSet.getString("DP.PAYER_NAME"));
+				dimPatient.setPrimaryPayer(resultSet.getString("PAYER_NAME"));
 			}			
 						
 			resultSet.close();
 			memberSQL = "SELECT DM.MEMBER_ID, cci_score AS MRA_Score "+
-			"FROM QMS.fact_cci_risk_score FHS "+
-			"INNER JOIN QMS.DIM_MEMBER DM ON DM.MEMBER_SK = FHS.MEMBER_SK "+
-			"WHERE DM.MEMBER_ID="+memberId;
+			"FROM fact_cci_risk_score FHS "+
+			"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_SK = FHS.MEMBER_SK "+
+			"WHERE DM.MEMBER_ID = '"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {				
 				dimPatient.setMraScore(resultSet.getString("MRA_Score"));
@@ -202,8 +201,8 @@ public class PatientServiceImpl implements PatientService {
 
 			//Comorbidities
 			resultSet.close();
-			memberSQL = "select fmc.* from QMS.fact_mem_comorbidity fmc, QMS.dim_member dm where "
-					+ "fmc.member_sk = dm.member_sk and dm.member_id="+memberId;
+			memberSQL = "select fmc.* from fact_mem_comorbidity fmc, dim_member dm where "
+					+ "fmc.member_sk = dm.member_sk and dm.member_id = '"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
 			Set<String> comorbidities = new TreeSet<>();
 			ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -223,9 +222,9 @@ public class PatientServiceImpl implements PatientService {
 			
 			//Care Gaps			
 			resultSet.close();
-			memberSQL = "select dqm.measure_title, qgl.status,qgl.COMPLIANCE_POTENTIAL from QMS.dim_quality_measure dqm "
-					+ "inner join QMS.qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
-					+ "where qgl.status <> 'closed' and qgl.member_id="+memberId;
+			memberSQL = "select dqm.measure_title, qgl.status,COMPLIANCE_POTENTIAL from dim_quality_measure dqm "
+					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
+					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"'";
 			Set<String[]> careGaps = new HashSet<>();
 			resultSet = statement.executeQuery(memberSQL);
 			
@@ -260,17 +259,17 @@ public class PatientServiceImpl implements PatientService {
 			"END AS \"ALERT\" "+
 			"FROM "+
 			"(SELECT DISTINCT QGL.MEMBER_ID, RDM.DEPARTMENT_ID, RDM.CARE_GAP_NAME "+ 
-			"FROM QMS.QMS_GIC_LIFECYCLE QGL "+
-			"LEFT OUTER JOIN QMS.REF_DEPT_MEASURE RDM ON QGL.QUALITY_MEASURE_ID=RDM.MEASURE_ID "+
+			"FROM QMS_GIC_LIFECYCLE QGL "+
+			"LEFT OUTER JOIN REF_DEPT_MEASURE RDM ON QGL.QUALITY_MEASURE_ID=RDM.MEASURE_ID "+
 			"WHERE QGL.STATUS LIKE 'Open%') A "+
 			"LEFT OUTER JOIN "+
 			"(SELECT DISTINCT DP.PAT_ID AS \"MEMBER_ID\", DD.DEPARTMENT_ID "+ 
-			"FROM QMS.FACT_APPOINTMENT FA "+ 
-			"INNER JOIN QMS.DIM_PATIENT DP ON DP.PATIENT_SK = FA.PATIENT_SK "+ 
-			"INNER JOIN QMS.DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
-			"INNER JOIN QMS.DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+ 
-			"WHERE DDA.CALENDAR_DATE>CURRENT_DATE()) B "+
-			"ON A.MEMBER_ID=B.MEMBER_ID WHERE A.MEMBER_ID="+memberId;
+			"FROM FACT_APPOINTMENT FA "+ 
+			"INNER JOIN DIM_PATIENT DP ON DP.PATIENT_SK = FA.PATIENT_SK "+ 
+			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
+			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+ 
+			"WHERE DDA.CALENDAR_DATE>SYSDATE) B "+
+			"ON A.MEMBER_ID=B.MEMBER_ID WHERE A.MEMBER_ID = '"+memberId+"'";
 			
 			
 			Set<CareGapAlert> careGapsAlrts = new TreeSet<>();
@@ -299,8 +298,8 @@ public class PatientServiceImpl implements PatientService {
 			
 			//PCP Name, NPI, NPI, Speciality, address 
 			resultSet.close();
-			memberSQL = "select dp.* from QMS.fact_mem_attribution fa, QMS.dim_provider dp, QMS.dim_member dm "
-					+ "where dm.member_sk = fa.member_sk and fa.provider_sk = dp.provider_sk and dm.member_id="+memberId;
+			memberSQL = "select dp.* from fact_mem_attribution fa, dim_provider dp, dim_member dm "
+					+ "where dm.member_sk = fa.member_sk and fa.provider_sk = dp.provider_sk and dm.member_id='"+memberId+"'";
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
 				dimPatient.setProviderFirstName(resultSet.getString("first_name"));
@@ -314,12 +313,12 @@ public class PatientServiceImpl implements PatientService {
 			//Appointment details
 			resultSet.close();
 			memberSQL = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", (DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW, DPA.PAT_ID "+ 
-			"FROM QMS.FACT_APPOINTMENT FA "+ 
-			"INNER JOIN QMS.DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
-			"INNER JOIN QMS.DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
-			"INNER JOIN QMS.DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
-			"INNER JOIN QMS.DIM_PATIENT DPA ON DPA.PATIENT_SK=FA.PATIENT_SK "+
-			"WHERE DDA.CALENDAR_DATE>CURRENT_DATE() AND DPA.PAT_ID="+memberId;			
+			"FROM FACT_APPOINTMENT FA "+ 
+			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
+			"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
+			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
+			"INNER JOIN DIM_PATIENT DPA ON DPA.PATIENT_SK=FA.PATIENT_SK "+
+			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
 				dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
@@ -338,10 +337,10 @@ public class PatientServiceImpl implements PatientService {
 			"COUNT (CASE WHEN BILL_TYPE_DESC BETWEEN 111 AND 128 THEN 'IP' END) AS IP_VISIT, "+
 			"COUNT (case WHEN BILL_TYPE_DESC BETWEEN 131 AND 138 THEN 'OP' END) As OP_VISIT, "+
 			"COUNT (case WHEN BILL_TYPE_DESC BETWEEN 450 AND 459 THEN 'ER' END) AS ER_VISIT "+
-			"FROM QMS.DIM_MEMBER DM "+
-			"INNER JOIN QMS.FACT_CLAIMS FC ON FC.MEMBER_SK = DM.MEMBER_SK "+
-			"INNER JOIN QMS.REF_BILL_TYPE RBY ON RBY.BILL_TYPE_ID = FC.BILL_TYPE_ID "+
-			"WHERE DM.MEMBER_ID="+memberId+" "+
+			"FROM DIM_MEMBER DM "+
+			"INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = DM.MEMBER_SK "+
+			"INNER JOIN REF_BILL_TYPE RBY ON RBY.BILL_TYPE_ID = FC.BILL_TYPE_ID "+
+			"WHERE DM.MEMBER_ID = '"+memberId+"' "+
 			"GROUP BY DM.MEMBER_ID";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
@@ -353,10 +352,10 @@ public class PatientServiceImpl implements PatientService {
 			//clinical world - getting the Procedures
 			resultSet.close();
 			memberSQL = "SELECT MAX(FP.ORDER_DATE), DP.PATIENT_ID "+ 
-			"FROM QMS.DIM_PATIENT DP "+
-			"INNER JOIN QMS.FACT_PROCEDURE FP ON FP.PATIENT_SK = DP.PATIENT_SK "+
-			"INNER JOIN QMS.REF_PROCEDURES RP ON RP.PROCEDURE_ID = FP.PROCEDURE_ID "+
-			"WHERE DM.MEMBER_ID="+memberId+" "+
+			"FROM DIM_PATIENT DP "+
+			"INNER JOIN FACT_PROCEDURE FP ON FP.PATIENT_SK = DP.PATIENT_SK "+
+			"INNER JOIN REF_PROCEDURES RP ON RP.PROCEDURE_ID = FP.PROCEDURE_ID "+
+			"WHERE DM.MEMBER_ID = '"+memberId+"' "+
 			"GROUP BY DP.PATIENT_ID";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
@@ -366,10 +365,10 @@ public class PatientServiceImpl implements PatientService {
 			//clinical world - getting Medical Prescription
 			resultSet.close();
 			memberSQL = "SELECT MAX(FM.ORDERING_DATE), DP.PATIENT_ID, M.MEDICATION_NAME "+ 
-			"FROM QMS.DIM_PATIENT DP "+
-			"INNER JOIN QMS.FACT_MEDICATION FM ON FM.PATIENT_SK = DP.PATIENT_SK "+
-			"INNER JOIN QMS.MEDICATIONS M ON M.NDC_CODE = FM.NDC "+
-			"WHERE DP.PAT_ID="+memberId+" "+
+			"FROM DIM_PATIENT DP "+
+			"INNER JOIN FACT_MEDICATION FM ON FM.PATIENT_SK = DP.PATIENT_SK "+
+			"INNER JOIN MEDICATIONS M ON M.NDC_CODE = FM.NDC "+
+			"WHERE DP.PAT_ID = '"+memberId+"' "+
 			"GROUP BY DP.PATIENT_ID, M.MEDICATION_NAME";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {

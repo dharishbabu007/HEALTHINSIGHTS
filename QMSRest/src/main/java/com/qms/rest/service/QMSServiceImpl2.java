@@ -29,7 +29,7 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSDateUtil;
 
 
-@Service("qmsServiceOracle")
+@Service("qmsService")
 public class QMSServiceImpl2 implements QMSService {
 	
 	@Autowired
