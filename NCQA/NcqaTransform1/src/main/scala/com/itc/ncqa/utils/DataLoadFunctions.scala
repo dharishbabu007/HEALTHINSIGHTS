@@ -42,7 +42,7 @@ object DataLoadFunctions {
     * @usecase This function is used to load the date_sk and calender_date from the dim_date table.
     */
   def dimDateLoadFunction(spark: SparkSession): DataFrame = {
-    val sqlQuery = "select date_sk, calendar_date from ncqa_sample" + "." + TransformConstants.dimDateTableName
+    val sqlQuery = "select date_sk, calendar_date from " + TransformConstants.targetDbName + "." + TransformConstants.dimDateTableName
     val dimDateDf = spark.sql(sqlQuery)
     dimDateDf
   }

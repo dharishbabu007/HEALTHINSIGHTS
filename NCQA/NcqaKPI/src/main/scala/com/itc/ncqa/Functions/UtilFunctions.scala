@@ -254,7 +254,6 @@ object UtilFunctions {
   }
 
 
-
   def factClaimRefHedisJoinFunction(spark: SparkSession, factClaimDf: DataFrame, refhedisDf: DataFrame, col1: String, joinType: String, measureId: String, valueSet: List[String], codeSystem: List[String]): DataFrame = {
 
     import spark.implicits._
@@ -319,6 +318,20 @@ object UtilFunctions {
     * @return Dataframe that contains the memebrs who are in the Hospice condition
     * @usecase function filters the members who are fallen under the hospice condition.
     */
+  def hospiceFunction(spark: SparkSession, factClaimDf: DataFrame, refhedisDf: DataFrame): DataFrame = {
+
+    import spark.implicits._
+
+    val hospiceList = List(KpiConstants.hospiceVal)
+    // val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"), $"df2.PROCEDURE_HCPCS_CODE" === "df3.code", "cross").filter($"df3.code".===("G0155")).select("df1.member_sk", "start_date_sk")
+    val newDf = factClaimDf.join(refhedisDf, factClaimDf.col("procedure_code") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+      factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), "cross").filter(refhedisDf.col("valueset").isin(hospiceList: _*)).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"))
+    val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
+    val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
+    dateTypeDfForDinoExcl.select("member_sk", "start_date")
+  }
+
   def hospiceMemberDfFunction(spark: SparkSession, dimMemberDf: DataFrame, factClaimDf: DataFrame, refhedisDf: DataFrame): DataFrame = {
 
     import spark.implicits._

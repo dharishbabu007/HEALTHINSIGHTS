@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="customVMPath" />
+    <option name="linkedExternalProjectsSettings">
+      <SbtProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/project" />
+          </set>
+        </option>
+        <option name="sbtVersion" value="1.2.7" />
+      </SbtProjectSettings>
+    </option>
+    <option name="vmParameters" value="-Dhttp.proxyHost=10.6.13.208 -Dhttp.proxyPort=80 -Dhttp.nonProxyHosts=localhost|127.0.0.1|10.*|22.*|155.202.*|172.*|180.*|192.168.*|194.60.166.*|194.60.17*|206.13.237.*|206.190.110.*|3.*|*.abbey.net|*.algdom2.net|*.anplc.co.uk|*.bsch|*.corp|*.gcfuk.com|*.gcf-uk.gcf.capital.ge.com|*.dcuk01.corp|*.local|*.autodiscover|isbania.intranet.banesto.es|*extranet.vocalink.com -Dhttp.proxyUser=25865 -Dhttp.proxyPassword=March@2019 -Dhttps.proxyHost=10.6.13.208 -Dhttps.proxyPort=80 -Dhttps.proxyUser=25865 -Dhttps.proxyPassword=March@2019" />
+  </component>
+</project>
