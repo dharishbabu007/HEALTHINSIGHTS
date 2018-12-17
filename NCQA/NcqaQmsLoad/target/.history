@@ -1,0 +1,11 @@
+;set _root_.scala.collection.Seq(shellPrompt := { _ => "" },SettingKey[_root_.scala.Option[_root_.sbt.File]]("sbtStructureOutputFile") in _root_.sbt.Global := _root_.scala.Some(_root_.sbt.file("C:/Users/25865/AppData/Local/Temp/sbt-structure.xml")),SettingKey[_root_.java.lang.String]("sbtStructureOptions") in _root_.sbt.Global := "download, resolveClassifiers");apply -cp "C:/Users/25865/.IdeaIC2018.2/config/plugins/Scala/launcher/sbt-structure-1.0.jar" org.jetbrains.sbt.CreateTasks;*/*:dumpStructure
+exit
+{file:/D:/Sangeeth/Intelj_Workspace/NcqaQmsLoad/}ncqaqmsload/clean
+{file:/D:/Sangeeth/Intelj_Workspace/NcqaQmsLoad/}ncqaqmsload/compile
+{file:/D:/Sangeeth/Intelj_Workspace/NcqaQmsLoad/}ncqaqmsload/clean
+{file:/D:/Sangeeth/Intelj_Workspace/NcqaQmsLoad/}ncqaqmsload/compile
+;set _root_.scala.collection.Seq(shellPrompt := { _ => "" },SettingKey[_root_.scala.Option[_root_.sbt.File]]("sbtStructureOutputFile") in _root_.sbt.Global := _root_.scala.Some(_root_.sbt.file("C:/Users/25865/AppData/Local/Temp/sbt-structure.xml")),SettingKey[_root_.java.lang.String]("sbtStructureOptions") in _root_.sbt.Global := "download, resolveClassifiers");apply -cp "C:/Users/25865/.IdeaIC2018.2/config/plugins/Scala/launcher/sbt-structure-1.0.jar" org.jetbrains.sbt.CreateTasks;*/*:dumpStructure
+exit
+{file:/D:/Sangeeth/NCQA/workspace/NcqaQmsLoad/}ncqaqmsload/clean
+{file:/D:/Sangeeth/NCQA/workspace/NcqaQmsLoad/}ncqaqmsload/compile
+{file:/D:/Sangeeth/NCQA/workspace/NcqaQmsLoad/}ncqaqmsload/package

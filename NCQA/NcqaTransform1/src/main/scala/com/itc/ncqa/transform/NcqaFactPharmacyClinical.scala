@@ -60,7 +60,7 @@ object NcqaFactPharmacyClinical {
     /*Ordering the Dataframe*/
     val formattedFactPharmacyClinicalDf = skkAddedFactPharmacyClinicalDf.select(arrayOfColumns.head,arrayOfColumns.tail:_*)
     formattedFactPharmacyClinicalDf.printSchema()
-    val tableName = TransformConstants.targetDbName + "."+ TransformConstants.factMembershipTablename
+    val tableName = TransformConstants.targetDbName + "."+ TransformConstants.factPharmacyClinTableName
     formattedFactPharmacyClinicalDf.write.mode(SaveMode.Overwrite).saveAsTable(tableName)
 
 

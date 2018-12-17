@@ -16,6 +16,8 @@ object NcqaABA {
   def main(args: Array[String]): Unit = {
 
 
+    //<editor-fold desc="Reading program arguments and spark session Object creation">
+
     /*Reading the program arguments*/
     val year = args(0)
     val lob_name = args(1)
@@ -41,7 +43,9 @@ object NcqaABA {
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
 
     import spark.implicits._
+    //</editor-fold>
 
+    //<editor-fold desc="Loading of Required Tables">
 
     /*Loading dim_member,fact_claims,fact_membership tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
@@ -50,11 +54,12 @@ object NcqaABA {
     val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimLocationTblName, data_source)
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
     val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
-    //print("counts:"+dimMemberDf.count()+","+factClaimDf.count()+","+factMembershipDf.count())
+    //</editor-fold>
+
+    //<editor-fold desc="Initial Join,Continous Enrollment,Allowable Gap filter Calculations">
 
     /*Initial join function call for prepare the data fro common filter*/
     val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.abaMeasureTitle)
-    //initialJoinedDf.show(50)
 
     /*Continuous Enrollment Checking*/
     val contEnrollStartDate = year.toInt -1 + "-01-01"
@@ -72,15 +77,20 @@ object NcqaABA {
 
       lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
     }
-
     val commonFilterDf = continuousEnrollDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
+    //</editor-fold>
+
+    //<editor-fold desc="Age Filter Calculation">
+
     val current_date = year + "-12-31"
     val last_Year_date = year.toInt -1 + "-01-01"
     val newDf1 = commonFilterDf.withColumn("curr_date", lit(current_date)).withColumn("last_Year_date", lit(last_Year_date))
     val newDf2 = newDf1.withColumn("curr_date", newDf1.col("curr_date").cast(DateType)).withColumn("last_Year_date", newDf1.col("last_Year_date").cast(DateType))
     val ageFilter = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).<=(KpiConstants.age74Val.toInt) && (datediff(newDf2.col("last_Year_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(KpiConstants.age18Val.toInt))
     val ageFilterDf = ageFilter.drop("curr_date","last_Year_date")
+    //</editor-fold>
 
+    //<editor-fold desc="Dinominator Calculation">
 
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
@@ -95,22 +105,26 @@ object NcqaABA {
     val dinominatorForOutput = ageFilterDf.as("df1").join(measurement.as("df2"), ageFilterDf.col(KpiConstants.memberskColName) === measurement.col(KpiConstants.memberskColName)).select("df1.member_sk", "df1.product_plan_sk", "df1.quality_measure_sk", "df1.facility_sk")
     val dinominator = ageFilterDf.as("df1").join(measurement.as("df2"), ageFilterDf.col(KpiConstants.memberskColName) === measurement.col(KpiConstants.memberskColName)).select("df1.member_sk").distinct()
     //dinominator.select(KpiConstants.memberskColName).show()
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Exclusion Calculation">
 
     /*Dinominator Exclusion1 (Pregnancy Value Set during year or previous year)*/
     val abaPregnancyValSet = List(KpiConstants.pregnancyVal)
     val abaPregnancyCodeSystem = List(KpiConstants.icdCodeVal)
     val joinForPregnancyDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.abaMeasureId,abaPregnancyValSet,abaPregnancyCodeSystem)
     val measForPregnancyDf = UtilFunctions.measurementYearFilter(joinForPregnancyDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
-
     /*Dinominator Exclusion2 (Hospice)*/
-    val hospiceDinoExclDf = UtilFunctions.hospiceMemberDfFunction(spark, dimMemberDf, factClaimDf, refHedisDf).select(KpiConstants.memberskColName)
-
+    val hospiceDinoExclDf = UtilFunctions.hospiceFunction(spark, factClaimDf, refHedisDf).select(KpiConstants.memberskColName)
     /*Dinominator Exclusion union*/
     val dinominatorExcl = measForPregnancyDf.union(hospiceDinoExclDf)
-
     /*Final Dinominator (Dinominator - Dinominator Exclusion)*/
     val finalDinominatorDf = dinominator.except(dinominatorExcl)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator Calculation">
+
+    //<editor-fold desc="Numerator1 Calculation">
 
     /*Numerator1 Calculation (BMI Value Set for 20 years or older)*/
     val abaBmiValSet = List(KpiConstants.bmiVal)
@@ -119,7 +133,9 @@ object NcqaABA {
     val measForBmiDf = UtilFunctions.measurementYearFilter(joinForBmiDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
     val ageMoreThan20FilterDf = UtilFunctions.ageFilter(ageFilterDf, KpiConstants.dobColName, year, KpiConstants.age20Val, KpiConstants.age74Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
     val numeratorBmiDf = ageMoreThan20FilterDf.as("df1").join(measForBmiDf.as("df2"), ageMoreThan20FilterDf.col(KpiConstants.memberskColName) === measForBmiDf.col(KpiConstants.memberskColName), KpiConstants.innerJoinType).select("df1.member_sk")
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator2 Calculation">
 
     /*Numerator2 Calculation(BMI Percentile Value Set for age between 18 and 20)*/
     val abaBmiPercentileValSet = List(KpiConstants.bmiPercentileVal)
@@ -128,14 +144,15 @@ object NcqaABA {
     val measForBmiPercentileDf = UtilFunctions.measurementYearFilter(joinForBmiPercentileDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
     val ageBetween18And20FilterDf = UtilFunctions.ageFilter(ageFilterDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age20Val, KpiConstants.boolTrueVal, KpiConstants.boolFalseval)
     val numeratorBmiPercentileDf = ageBetween18And20FilterDf.as("df1").join(measForBmiPercentileDf.as("df2"), ageMoreThan20FilterDf.col(KpiConstants.memberskColName) === measForBmiPercentileDf.col(KpiConstants.memberskColName), KpiConstants.innerJoinType).select("df1.member_sk")
+    //</editor-fold>
 
     /*union of 2 numerator condition*/
     val abaNumeratorDf = numeratorBmiDf.union(numeratorBmiPercentileDf)
     /*Final Numerator(Elements who are present in dinominator and numerator)*/
     val abanumeratorFinalDf = abaNumeratorDf.intersect(finalDinominatorDf).select(KpiConstants.memberskColName).distinct()
+    //</editor-fold>
 
-
-
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
     /*Common output format (data to fact_hedis_gaps_in_care)*/
     val numeratorValueSet = abaBmiValSet ::: abaBmiPercentileValSet
@@ -147,15 +164,10 @@ object NcqaABA {
     val sourceAndMsrIdList = List(data_source,measureId)
     val numExclDf = spark.emptyDataFrame
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, abanumeratorFinalDf, numExclDf, listForOutput, sourceAndMsrIdList)
-    outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    //outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
 
-
-
-    /*Data populating to fact_hedis_qms*/
-    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.abaMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
-    val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
     spark.sparkContext.stop()
   }
 }

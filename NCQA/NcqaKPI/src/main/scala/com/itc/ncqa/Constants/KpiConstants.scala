@@ -106,7 +106,7 @@ object KpiConstants {
   val refmedValueSetTblName = "ref_med_value_set"
   val view45Days = "45_days"
   val view60Days = "60_days"
-  val outGapsInHedisTestTblName = "gaps_in_hedis_test"
+  val outGapsInHedisTestTblName = "fact_hedis_gaps_in_care"
   val outFactHedisGapsInTblName = "fact_hedis_gaps_in_care"
   val outFactQmsTblName = "fact_hedis_qms"
 
@@ -220,8 +220,8 @@ object KpiConstants {
   /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
                                 ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
-                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outCurrFlagColName
-                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outUserColName,outDateSkColName,outSourceNameColName,outMeasureIdColName)
+                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outSourceNameColName,outMeasureIdColName,outCurrFlagColName
+                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outUserColName)
 
 
 
