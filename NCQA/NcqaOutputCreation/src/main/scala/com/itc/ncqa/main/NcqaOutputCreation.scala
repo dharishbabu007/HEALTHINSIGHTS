@@ -12,6 +12,9 @@ object NcqaOutputCreation {
 
 
     val qualityMsrString = args(0)
+    val lobName = args(1)
+    val ageLower = args(2)
+    val ageUpper = args(3)
 
 
 
@@ -25,7 +28,7 @@ object NcqaOutputCreation {
 
     /*val qualityMsrTitle = UtilityFunctions.getQualityMeasureTitle(qualityMsrString)
     val qualityMsrSk = UtilityFunctions.getQualityMsrSk(spark,qualityMsrTitle)*/
-    val gapsHedisTableDf = DataLoadFunctions.dataLoadFromGapsHedisTable(spark,qualityMsrString)
+    val gapsHedisTableDf = DataLoadFunctions.dataLoadFromGapsHedisTable(spark,qualityMsrString,lobName,ageLower.toInt,ageUpper.toInt)
     //gapsHedisTableDf.select("member_sk").orderBy("member_sk").show(50)
     val outputDf = UtilityFunctions.outputCreationFunction(spark,gapsHedisTableDf,qualityMsrString)
   }
