@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,20 +15,19 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qms.rest.model.CloseGap;
 import com.qms.rest.model.ClusterAnalysis;
 import com.qms.rest.model.ClusterCateVar;
 import com.qms.rest.model.ClusterContVar;
 import com.qms.rest.model.ClusterData;
 import com.qms.rest.model.ClusterPersona;
 import com.qms.rest.model.ConfusionMatric;
+import com.qms.rest.model.LHEOutput;
+import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
-import com.qms.rest.model.User;
 import com.qms.rest.util.QMSAnalyticsProperty;
 import com.qms.rest.util.QMSConnection;
-import com.qms.rest.util.QMSConstants;
 
 @Service("memberEngagementService")
 public class MemberEngagementServiceImpl implements MemberEngagementService {
@@ -191,6 +188,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		}
 		
 		return setOutput;
+		//return transData;
 	}
 
 	@Override
@@ -297,6 +295,188 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		}			
 		
 		return clusterData;
+	}
+
+	@Override
+	public Set<LHEOutput> getLHEModelOutPut() {
+		Set<LHEOutput> setOutput = new HashSet<>();
+			
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from default.LHE_FILE_OUTPUT LFO "
+					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
+			//resultSet = statement.executeQuery("select * from ns_file_output where fid='45' limit 500");
+			LHEOutput output = null;
+			String name = "";			
+			while (resultSet.next()) {
+		    	output = new LHEOutput();			    
+				output.setMemberId(resultSet.getString("MEMBER_ID"));
+				name = "";
+				if(resultSet.getString("first_name") != null)
+					name = resultSet.getString("first_name");
+				if(resultSet.getString("middle_name") != null)
+					name = name+" "+resultSet.getString("middle_name");
+				if(resultSet.getString("last_name") != null)				
+					name = name+" "+resultSet.getString("last_name");
+				output.setMemberName(name);
+				output.setEnrollGaps(resultSet.getString("ENROLLMENT_GAPS"));
+				output.setOutOfPocketExpenses(resultSet.getString("OUT_OF_POCKET_EXPENSES"));
+				output.setUtilizerCategory(resultSet.getString("UTILIZER_CATEGORY"));
+				output.setAge(resultSet.getString("AGE"));
+				output.setAmountSpend(resultSet.getString("AMOUNT_SPEND"));
+				output.setEr(resultSet.getString("ER"));
+				output.setReasonNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
+				output.setLikeliHoodEnroll(resultSet.getString("likelihood_enrollment"));
+				output.setEnrollmentBin(resultSet.getString("ENROLLMENT_BIN"));
+			    setOutput.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+		return setOutput;
+	}
+
+	@Override
+	public Set<ModelSummary> getLHEModelSummary() {
+		Set<ModelSummary> setOutput = new HashSet<>();
+		
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			//resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY where modelid='1'");			
+			resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY");
+			ModelSummary output = null;
+			while (resultSet.next()) {
+		    	output = new ModelSummary();			    
+		    	output.setAttributes(resultSet.getString("attribute"));
+		    	output.setEstimate(resultSet.getString("estimate"));
+		    	output.setPrz(resultSet.getString("pvalue"));
+		    	output.setStdError(resultSet.getString("stderror"));
+		    	output.setzValue(resultSet.getString("zvalue"));
+			    setOutput.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(" ModelSummary records size --> " + setOutput.size());
+		
+		return setOutput;
+	}
+
+	@Override
+	public ModelMetric getLHEModelMetric() {
+		ModelMetric modelMetric = new ModelMetric();
+		
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from LHE_MODEL_METRIC");			
+			while (resultSet.next()) {
+	    		modelMetric.setTp(resultSet.getString("TP"));
+	    		modelMetric.setFp(resultSet.getString("FP"));
+	    		modelMetric.setTn(resultSet.getString("TN"));
+	    		modelMetric.setFn(resultSet.getString("FN"));
+	    		modelMetric.setScore(resultSet.getString("SCORE"));
+	    		modelMetric.setImagePath(windowsCopyPath+"/ROCplot.PNG");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		
+		return modelMetric;
+	}
+
+	@Override
+	public String[][] getLHEReasonNotEnrollStatics() {
+
+		int columns = 6;
+		int rows = 0;
+		String[][] transData = null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select count(*) from LHE_CLUSTERING_STATISTICS");
+			while (resultSet.next()) {
+				rows = resultSet.getInt(1);
+				System.out.println(" total rows in LHE_CLUSTERING_STATISTICS --> " + rows);
+			}			
+			rows = rows+1;
+			resultSet.close();
+			resultSet = statement.executeQuery("select * from LHE_CLUSTERING_STATISTICS");
+			String[][] data = new String [rows][columns]; 
+			data[0][0] = "agglomeration_stage";
+			data[0][1] = "within_cluster_ss";
+			data[0][2] = "average_within";
+			data[0][3] = "average_between";
+			data[0][4] = "average_silwidth";
+			data[0][5] = "modelid";
+			int i = 1;
+			int j = 0;
+			while (resultSet.next()) {
+				j = 0;
+				data[i][j++] = resultSet.getString("agglomeration_stage");
+				data[i][j++] = resultSet.getString("within_cluster_ss");
+				data[i][j++] = resultSet.getString("average_within");
+				data[i][j++] = resultSet.getString("average_between");
+				data[i][j++] = resultSet.getString("average_silwidth");
+				data[i][j++] = resultSet.getString("modelid");
+				i++;
+			}
+			
+//			for (i = 0; i < rows; i++) {
+//				for (j = 0; j < columns; j++) {
+//					System.out.print(data[i][j] + " ");
+//				}
+//				System.out.println();
+//			}
+			
+			//transpose
+			transData = new String[columns][rows];
+			for (i = 0; i < rows; i++) {
+				for (j = 0; j < columns; j++) {
+					transData[j][i] = data[i][j];
+				}
+			}
+			
+//			System.out.println(" after transpose.... ");
+//			for (i = 0; i < columns; i++) {
+//				for (j = 0; j < rows; j++) {
+//					System.out.print(transData[i][j] + " ");
+//				}
+//				System.out.println();
+//			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+		return transData;
 	}
 
 }
