@@ -48,6 +48,7 @@ export class LikelihoodStatisticsComponent implements OnInit {
             { field: 'zero', header: 'Zero' },
             { field: 'one', header: 'One' },
         ];
+        console.log(this.ConfusionMatrix)
 
         this.gapsService.getlikelihoodmodel().subscribe((data: MemberCareGaps[]) => {
             this.membergaps = data;

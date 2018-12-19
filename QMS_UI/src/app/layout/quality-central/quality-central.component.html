@@ -18,7 +18,7 @@
                             <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target" *ngIf="i==0" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
                             <a [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CurisDashboard_HEDIS_1/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" *ngIf="i==1" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
                             <span *ngIf="i>1"> &nbsp;&nbsp;&nbsp;</span>
-                            &nbsp;<a *ngxPermissionsOnly="['10W']" [routerLink]="['/measurelibrary','reimbursement', program]"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
+                            &nbsp;<a *ngxPermissionsOnly="['1W']" [routerLink]="['/measurelibrary','reimbursement', program]"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
                     </tr>
                 </table>
             </div>
@@ -36,7 +36,7 @@
                 <table class="qmstable">
                     <tr *ngFor="let clinicalCondition of clinicalConditions; let i = index">
                         <td class="text-left">{{clinicalCondition}}</td>
-                        <td><a *ngxPermissionsOnly="['10W']" [routerLink]="['/measurelibrary','clinical', clinicalCondition]" pTooltip="List"><i class="fa fa-th-list"></i></a></td>
+                        <td><a *ngxPermissionsOnly="['1W']" [routerLink]="['/measurelibrary','clinical', clinicalCondition]" pTooltip="List"><i class="fa fa-th-list"></i></a></td>
                     </tr>
                 </table>
             </div>
@@ -54,7 +54,7 @@
                 <table class="qmstable">
                     <tr *ngFor="let measureDomain of measureDomains; let i = index">
                         <td class="text-left">{{measureDomain.name}}</td>
-                        <td><a [routerLink]="['/measurelibrary','nqf', measureDomain.value]"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
+                        <td><a [routerLink]="['/measurelibrary','nqf', measureDomain.value]" *ngxPermissionsOnly="['1W']"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
                     </tr>
                 </table>
             </div>

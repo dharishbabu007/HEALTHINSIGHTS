@@ -26,8 +26,8 @@ export class Csv2Component implements OnInit {
     ngOnInit() {
 
         this.sales = [
-            {brand:'Positive',num:'35330',num2: '8878'},
-            {brand:'Negative',num:'1',num2: '1'}
+            {brand:'Positive',num:'34999',num2: '332'},
+            {brand:'Negative',num:'8753',num2: '126'}
         ];
 
         this.ModelScore = [

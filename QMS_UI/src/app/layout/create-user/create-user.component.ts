@@ -113,6 +113,11 @@ getUserValues(event){
        let roleId = this.roleListRepositry.filter(item => item.value === this.userDataRepository.roleId);
        this.myForm.controls['roleName'].setValue(roleId[0].name);
        this.myForm.controls['status'].setValue(this.userDataRepository.status);
+       console.log(this.userDataRepository.status)
+      // if(this.userDataRepository.status == "Verified"){
+       //  console.log("came")
+       //  this.statusList = this.statusList.filter(item=>item.label !="Verified");
+     ///  }
       
 });
 

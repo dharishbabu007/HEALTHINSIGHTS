@@ -43,7 +43,8 @@ export class NavDropdownToggleDirective {
           <app-sidebar-nav-item [item]='navitem'></app-sidebar-nav-item>
         </ng-template>
       </ng-template>
-    </ul>`
+    </ul>`,
+    styles: ['.nav {width: 210px !important;}']
 })
 export class SidebarNavComponent {
   @Input() navItems: any;
@@ -176,7 +177,7 @@ export class SidebarNavLinkComponent implements OnInit {
       </ng-template>
     </ul>
   `,
-  styles: ['.nav-dropdown-toggle { cursor: pointer; }']
+  styles: ['.nav-dropdown-toggle { cursor: pointer; } .nav-dropdown-items {margin-left: 5px !important;}']
 })
 export class SidebarNavDropdownComponent implements OnInit {
   @Input() link: any;

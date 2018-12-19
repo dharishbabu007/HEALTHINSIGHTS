@@ -1,0 +1,107 @@
+<div >
+        <app-page-header [heading]="'Single Patient View'" [icon]="'fa-table'"></app-page-header>
+        
+   <div class="card">
+       <div class="row">
+        <div class="row col-lg-12 spaces">
+                <div class="col-lg-4 col-sm-4">
+                
+                </div>
+                <div class="col-lg-4  col-sm-4">
+                        <img src="/assets/images/doc.png">
+                        <img src="/assets/images/doc.png" style="float: right;">
+                </div>
+                <div class="col-lg-4  col-sm-4">
+                
+                </div>
+            </div>
+            <div class="row col-lg-12 spaces">
+                    <div class="col-lg-4 col-sm-4">
+                            <img src="/assets/images/doc.png" style="float: right;">
+                        </div>
+                        <div class="col-lg-4  col-sm-4">
+
+                        </div>
+                        <div class="col-lg-4  col-sm-4">
+                                <img src="/assets/images/doc.png" >
+                        </div>
+            </div>
+            <div class="row col-lg-12 spaces">
+                    <div class="col-lg-4 col-sm-4">
+                        <p-overlayPanel #addressBlock [showCloseIcon]="true" [dismissable]="false" [appendTo]="'body'">
+                                <p><span class="font-weight-bold">Address</span> :{{patientProfileForm.address}}<br>
+                                <span class="font-weight-bold">Phone</span>: {{patientProfileForm.phone}}<br>
+                                <span class="font-weight-bold">Email</span>:{{patientProfileForm.emailAddress}}</p>
+                        </p-overlayPanel>
+                        <p-overlayPanel #PCPBlock [showCloseIcon]="true" [dismissable]="false" [appendTo]="'body'">
+                                 <p>PCP Name:<br><b>
+				<span [innerHtml]="patientProfileForm.providerFirstName"></span> 
+				<span [innerHtml]="patientProfileForm.providerLastName"></span>
+				<br>
+				NPI:<span [innerHtml]="patientProfileForm.providerBillingTaxId"></span></b><br><br>
+				Speciality:<span [innerHtml]="patientProfileForm.providerSpeciality"></span><br>
+				Address: <span [innerHtml]="patientProfileForm.providerAddress1"></span>,<br>
+				<span [innerHtml]="patientProfileForm.providerAddress2"></span></p>
+                        </p-overlayPanel>
+                            <img src="/assets/images/Evaluate relationship with customer.JPG" style="float: right;width: 50px; height: 50px;"   (click)="addressBlock.show($event);">
+                           
+                     </div>
+                        <div class="col-lg-4 col-sm-4 p-3 align-items-center">
+                                <img src="/assets/images/itcinfotech-logo.jpg" style="width: 100px; height: 100px; margin-left: 140px" >
+                        </div>
+                        <div class="col-lg-4  col-sm-4">
+                                <img src="/assets/images/Evaluate relationship with customer.JPG" style="width: 50px; height: 50px;"   (click)="PCPBlock.show($event);">
+                        </div>
+            </div>
+            <div class="row col-lg-12 spaces">
+                <p-overlayPanel #Nameblock [showCloseIcon]="true" [dismissable]="false" [appendTo]="'body'">
+                <div class="col-lg-12">
+                     <div class="container">
+                        <div class="row">
+                        <div class="col-lg-3">
+                        <p>Name: <b><span [innerHtml]="patientProfileForm.name"></span></b><br>
+                                        <span class="font-weight-bold">BenID</span>: {{patientProfileForm.patId}}<br>
+                                                <span class="font-weight-bold">Primary Payer</span>: {{patientProfileForm.primaryPayer}}</p>
+                        </div>
+                        <div class="col-lg-3">
+                        <p><span class="font-weight-bold">Last Date of service</span>: {{patientProfileForm.lastDateService}}<br>
+                                <span class="font-weight-bold">Age</span>: {{patientProfileForm.age}}<br>
+                                <span class="font-weight-bold">Gender</span>: {{patientProfileForm.gender}}<br>
+                                <span class="font-weight-bold">Race/Ethinticity</span>: {{patientProfileForm.ethniCity}}<br></p>
+                        </div>
+                        <div class="col-lg-3 MRA p-1">
+                        <p class="rounded bg-secondary">MRA Score: <span class="bg-primary rounded p-1 counts">{{patientProfileForm.mraScore}}</span><br>
+                                                Risk: <span [innerHtml]="patientProfileForm.risk"></span></p>
+                        </div>
+                        <!-- <div class="col-lg-3" style="cursor: pointer;">
+                        <i class="fa fa-2x fa-envelope"></i>&nbsp;&nbsp;
+                        <i class="fa fa-2x fa-phone"></i>
+                        </div> -->
+                        </div>
+                    </div>
+                </div>
+                     </p-overlayPanel>
+                    <div class="col-lg-4 col-sm-4">
+                            <img src="/assets/images/doc.png" style="float: right;" (click)="Nameblock.show($event);">
+                        </div>
+                        <div class="col-lg-4  col-sm-4">
+
+                        </div>
+                        <div class="col-lg-4  col-sm-4">
+                                <img src="/assets/images/doc.png">
+                        </div>
+            </div>
+            <div class="row col-lg-12 spaces">
+                    <div class="col-lg-4 col-sm-4">
+                    
+                    </div>
+                    <div class="col-lg-4  col-sm-4">
+                            <img src="/assets/images/doc.png">
+                            <img src="/assets/images/doc.png" style="float: right;">
+                    </div>
+                    <div class="col-lg-4  col-sm-4">
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

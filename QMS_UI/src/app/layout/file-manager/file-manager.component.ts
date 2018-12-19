@@ -49,8 +49,8 @@ export class FileManagerComponent implements OnInit {
         });
 
         this.cars = [
-          {label: 'No Show Appointment prediction', value: 'noShow'},
-          {label: 'Model 1', value: 'model1'},
+          {label: 'No show appointment prediction', value: 'noShow'},
+          {label: 'Non-compliance Prediction', value: 'nonCompliance'},
           {label: 'Model 2', value: 'model2'}
         
       ];
@@ -103,7 +103,7 @@ onUpload() {
 console.log(this.SelectedFile.name);
 this.FileManagerService.Upload(fd,this.SelectedFile.name).subscribe((res: any) => {
   if (res.status === 'SUCCESS') {
-    this.msgService.success('file Upload Successfully');
+    this.msgService.success('File uploaded successfully');
     this.Uploded = true;
   } else {
     this.msgService.error(res.message);
@@ -125,7 +125,13 @@ onRun(){
 
   if(this.selectedModel!=null && this.Uploded==true){
     console.log(this.selectedModel);
-  this.FileManagerService.Run(this.selectedModel).subscribe( event => console.log(event));
+  this.FileManagerService.Run(this.selectedModel).subscribe( (res: any) => {console.log(res);
+  if(res.status == "SUCCESS"){
+    this.router.navigateByUrl('/csv1');
+
+  }
+}
+);
 }
 else if( this.Uploded==true && this.selectedModel==null){
   this.msgService.error("Please Select a model");
@@ -138,9 +144,15 @@ else{
 
 TestRun(){
 
-  if(this.selectedModel!=null && this.Uploded==true){
-  
-    this.router.navigateByUrl('/csv1');
+  if(this.selectedModel!=null && this.Uploded==true ){
+    if(this.selectedModel == 'noShow' || this.selectedModel == 'model2'){
+      this.router.navigateByUrl('/csv1');
+    }
+    if(this.selectedModel == 'nonCompliance')
+    {
+      this.router.navigateByUrl('/non-compliance');
+    }
+    
 }
 else if( this.Uploded==true && this.selectedModel==null){
   this.msgService.error("Please Select a model");

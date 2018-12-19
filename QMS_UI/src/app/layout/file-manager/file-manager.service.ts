@@ -47,7 +47,7 @@ export class FileManagerService {
   }
 
   Run(selectedModel): Observable<Filemanager>{
-    return this.http.get<Filemanager>(`http://healthinsight:8082/curis/qms_file/run_r/${selectedModel}`)
+    return this.http.get<Filemanager>(`http://healthinsight:8082/curis/qms_file/run_r/noShow`)
         . pipe(
             catchError(this.handleError('run Failed'))
           );

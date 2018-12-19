@@ -39,7 +39,13 @@ import { MemberEngageComponent } from './member-engage/member-engage.component';
 import { CreatePersonasComponent } from './create-personas/create-personas.component';
 import { ClusterStatisticsComponent } from './cluster-statistics/cluster-statistics.component';
 import { ViewPersonaComponent } from './view-personas/view-personas.component';
+import { PersonaDataComponent } from './persona-data/persona-data.component';
 import { LikelihoodStatisticsComponent } from './likelihood-Statistics/likelihood-statistics.component';
+import { ClusterMemberListComponent } from './cluster-memberlist/cluster-memberlist.component';
+import { SpvNewComponent } from './spv-new/spv-new.component';
+import { NonComplianceComponent } from './non-compliance/non-compliance.component';
+import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
+
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
     MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective } from '../shared/modules/layout.directive';
@@ -68,10 +74,12 @@ import {CheckboxModule} from 'primeng/checkbox';
 
 import {TreeModule} from 'primeng/tree';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DialogModule} from 'primeng/dialog';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import {AccordionModule} from 'primeng/accordion';
 import {TieredMenuModule} from 'primeng/tieredmenu';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 @NgModule({
     imports: [
         CommonModule,
@@ -96,8 +104,10 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
         ChartModule,
         TreeModule,
         ConfirmDialogModule,
+        DialogModule,
         AccordionModule,
         TieredMenuModule,
+        OverlayPanelModule,
         NgbModule.forRoot(),
         NgbDropdownModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
@@ -152,7 +162,12 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
         LikelihoodToChurnComponent,
         ClusterStatisticsComponent,
         ViewPersonaComponent,
-        LikelihoodStatisticsComponent],
+        LikelihoodStatisticsComponent,
+        PersonaDataComponent,
+        ClusterMemberListComponent,
+        SpvNewComponent,
+        NonComplianceComponent,
+        HerniaRepairComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

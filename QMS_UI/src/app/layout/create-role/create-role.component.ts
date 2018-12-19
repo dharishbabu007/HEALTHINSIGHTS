@@ -28,6 +28,7 @@ export class CreateRoleComponent implements OnInit {
     writevalue:any;
     downloadvalue: any;
     arr: Array<Object>;
+    selectedPages: any;
     constructor(private _fb: FormBuilder,
       private GapsService: GapsService,
       private router: Router,
@@ -81,7 +82,7 @@ export class CreateRoleComponent implements OnInit {
     //  console.log(j);
      //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['write'].disable();
      //(<FormArray>this.myForm.controls['roleCategorys']).controls[j]['controls']['download'].disable();
-
+     this.pageList 
   }
 
   removeCategory(i: number) {
@@ -110,8 +111,13 @@ export class CreateRoleComponent implements OnInit {
          //  (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['download'].disable();
         }
     }
-
+    pagelistChange(event,i){
+        //console.log(event,'',i);
+        (<FormArray>this.myForm.controls['roleCategorys']).controls[i]['controls']['read'].patchValue(true);
+        //(<FormArray>this.myForm.controls['roleCategorys']).controls[i+1]['controls']['parentPage'].patchValue(true);
+    }
     filterColumnRole(event){
+
       if((<FormArray>this.myForm.controls['roleCategorys']).length >1){
         this.myForm.controls['roleCategorys'].reset();
           let araylenght = (<FormArray>this.myForm.controls['roleCategorys']).length;
@@ -124,7 +130,6 @@ export class CreateRoleComponent implements OnInit {
       }
 
         const roleId1 = this.Repositry.filter(item => item.name === event.value);
-        
         this.pageListRepositry;
         this.GapsService.getRoleData(roleId1[0].value).subscribe((data: any) => {
 
@@ -139,11 +144,11 @@ export class CreateRoleComponent implements OnInit {
                 
                     (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['parentPage'].patchValue(pagename[0].name);
                     if(data.screenPermissions[this.i].write == "Y"){
-                    (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['write'].patchValue("write");}
+                    (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['write'].patchValue(true);}
                     if(data.screenPermissions[this.i].read == "Y"){
-                        (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['read'].patchValue("read");}
+                        (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['read'].patchValue(true);}
                         if(data.screenPermissions[this.i].download == "Y"){
-                            (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['download'].patchValue("download");}
+                            (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['download'].patchValue(true);}
                     this.addCategory(this.i) 
                         }
                         this.removeCategory(this.k) 
@@ -162,47 +167,51 @@ export class CreateRoleComponent implements OnInit {
    let roleId = this.Repositry.filter(item=> item.name === model.RoleName);
 
    for(this.i=0; this.i<model.roleCategorys.length; this.i++){
-     console.log(model.roleCategorys[this.i].parentPage)
+     //console.log(model.roleCategorys[this.i].parentPage)
      if(model.roleCategorys[this.i].parentPage != ""){
-      console.log(model.roleCategorys[this.i].parentPage)
+      //console.log(model.roleCategorys[this.i].parentPage)
        let screenid = this.pageListRepositry.filter(item => item.name === model.roleCategorys[this.i].parentPage);
-console.log(model.roleCategorys[this.i])
-       if(model.roleCategorys[this.i].read[0] == "read")
+
+       if(model.roleCategorys[this.i].read == "read" || model.roleCategorys[this.i].read == true)
        {
+       // console.log("came here")
            this.readvalue = "Y"
-       }
-       else if(model.roleCategorys[this.i].read == "read"){
+       }/*
+       else if(model.roleCategorys[this.i].read[0] == "read"){
+        console.log("came here also")
         this.readvalue = "Y"
-       }
+       }*/
        else{
         this.readvalue = "N"  
        }
 
-       if(model.roleCategorys[this.i].write[0] == "write")
+       if(model.roleCategorys[this.i].write == "write" || model.roleCategorys[this.i].write == true)
+       {
+       // console.log("came here w" )
+           this.writevalue = "Y"
+       }/*
+       else if(model.roleCategorys[this.i].write[0] == "write")
        {
            this.writevalue = "Y"
-       }
-       else if(model.roleCategorys[this.i].write == "write")
-       {
-           this.writevalue = "Y"
-       }
+       }*/
        else{
         this.writevalue = "N" 
        }
 
        
-       if(model.roleCategorys[this.i].download[0] == "download")
+       if(model.roleCategorys[this.i].download == "download" || model.roleCategorys[this.i].download == true)
+       {
+        //console.log("came here d")
+           this.downloadvalue = "Y"
+       }/*
+       else if(model.roleCategorys[this.i].download[0] == "download")
        {
            this.downloadvalue = "Y"
-       }
-       else if(model.roleCategorys[this.i].download == "download")
-       {
-           this.downloadvalue = "Y"
-       }
+       }*/
        else{
         this.downloadvalue = "N" 
        }
-
+        //  console.log(screenid)
        this.arr =[{
          screenid : screenid[0].value,
         read: this.readvalue,
@@ -210,7 +219,7 @@ console.log(model.roleCategorys[this.i])
        download: this.downloadvalue
       }]
     }
-   console.log(this.arr);
+  console.log(this.arr);
     this.GapsService.createRole(roleId[0].value,this.arr).subscribe( (res: any) => {
         if (res.status === 'SUCCESS') {
           this.msgService.success('Role Pages Mapping Successfully');
@@ -222,6 +231,9 @@ console.log(model.roleCategorys[this.i])
    }
 
 
+    }
+    check(event){
+        console.log(event)
     }   
 
 }

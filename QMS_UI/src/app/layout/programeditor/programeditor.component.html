@@ -70,10 +70,10 @@
                               </small> -->
                             </span>
                             <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length == i+1">
-                              <button  class="btn btn-secondary" (click)="addCategory()">+</button> 
+                              <button  class="btn btn-secondary" (click)="addCategory()" *ngxPermissionsOnly="['3W']">+</button> 
                             </span>
                             <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length != i+1">
-                              <button  class="btn btn-secondary" (click)="removeCategory(i)">-</button> 
+                              <button  class="btn btn-secondary" (click)="removeCategory(i)" *ngxPermissionsOnly="['3W']">-</button> 
                             </span>                        
                         </div>
                       </div>
@@ -83,10 +83,10 @@
               </form>
             </div>
             <div class="card-footer text-right">
-            <button type="submit" class="btn btn-primary" (click)="onSubmit()" >
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()" *ngxPermissionsOnly="['3W']">
               <i class="fa fa-dot-circle-o"></i> Submit
             </button>&nbsp;&nbsp;
-            <button type="reset" class="btn btn-primary" (click)="cancelPc()">
+            <button type="reset" class="btn btn-primary" (click)="cancelPc()" *ngxPermissionsOnly="['3W']">
               <i class="fa fa-ban"></i> Reset
             </button>
           </div>

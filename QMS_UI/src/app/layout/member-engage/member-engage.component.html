@@ -10,26 +10,33 @@
                 </div>
                 <div class="brand-card-body text-black pb-2">
                        <div *ngIf="showMainContent">
-                            <img src="assets/images/KYC.JPG" width="100%" height="280px" label="Show" (mouseenter)="ShowHideButton()" style="cursor: pointer;">
+                            <img src="assets/images/Know your customer.jpg" width="100%" label="Show" (mouseenter)="ShowHideButton()" style="cursor: pointer;" class="imgclass">
                        </div>
                        
                        <div  *ngIf="!showMainContent"  (mouseleave)="ShowHideButton()">
                             <ng-template #popContent>
+                                    <span class="text-left list-values" [routerLink]="['/cluster-analysis/']" style="cursor: pointer;">
+                                        Clustering
+                                   </span>
+                                   <hr>
                                 <span class="text-left list-values"  [routerLink]="['/create-persona/']" style="cursor: pointer;">
                                      Create Personas
                                 </span>
-                            <br><br>
-                                <span class="text-left list-values" [routerLink]="['/frame-url','assets/images/Lazy Doer.png']" style="cursor: pointer;">
+                            <hr>
+                                <span class="text-left list-values" [routerLink]="['/view-persona/']" style="cursor: pointer;">
                                      View Personas
                                 </span>
+                                <hr>
+                                <span class="text-left list-values"   [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" style="cursor: pointer;">
+                                    View Memeber List
+                               </span>
+                        
+                               
                             </ng-template>
                            
                              <table class="qmstable" style="width:100%;height:100%">
                                     <tr>
-                                        <td class="text-left list-values" style="cursor: pointer;" [routerLink]="['/cluster-analysis/']">Clustering</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-left list-values" [ngbPopover]="popContent" popoverTitle="Personas" placement="right" style="cursor: pointer;">Personas</td>
+                                        <td class="text-left list-values" [ngbPopover]="popContent" placement="right" style="cursor: pointer;">Personas</td>
                                     </tr>
                                     <tr>
                                         <td class="text-left list-values" >Single Member View</td>
@@ -41,13 +48,13 @@
             </div>
         </div>
         <div class="col-sm-12 col-lg-4 ">
-            <div class="brand-card  card-block">
+            <div class="brand-card  card-block"> 
                 <div class="brand-card-header text-white pb-0 bg-secondary">
                     <div class="text-value">Engage With Customer</div>
                 </div>
                 <div class="brand-card-body text-black pb-2">
                     <div *ngIf="showMainContent1">
-                    <img src="assets/images/EnagageCustomer.JPG" width="100%" height="280px" style="cursor: pointer;" (mouseenter)="ShowHideButton1()" > </div>
+                    <img src="assets/images/Engage with Customer.jpg" width="100%" style="cursor: pointer;" (mouseenter)="ShowHideButton1()" class="imgclass" > </div>
                     <div  *ngIf="!showMainContent1" (mouseleave)="ShowHideButton1()" >
                             <table class="qmstable" style="width:100%;height:100%">
                                     <tr>
@@ -84,7 +91,7 @@
                 <div class="brand-card-body text-black pb-2">
                         <div *ngIf="showMainContent2">
                               
-                    <img src="assets/images/Relation.JPG" width="100%" height="280px" style="cursor: pointer;" (mouseenter)="ShowHideButton2()" >
+                    <img src="assets/images/Evaluate relationship with customer.jpg" width="100%" style="cursor: pointer;" (mouseenter)="ShowHideButton2()"  class="imgclass">
                     </div>
                     <div  *ngIf="!showMainContent2" (mouseleave)="ShowHideButton2()" >
 

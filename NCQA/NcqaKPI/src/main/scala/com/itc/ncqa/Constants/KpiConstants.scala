@@ -104,9 +104,9 @@ object KpiConstants {
   val refHedisTblName = "ref_hedis2019"
   val refLobTblName = "ref_lob"
   val refmedValueSetTblName = "ref_med_value_set"
-  val view45Days = "45_days"
-  val view60Days = "60_days"
-  val outGapsInHedisTestTblName = "gaps_in_hedis_test"
+  val view45Days = "gap_45_days_view"
+  val view60Days = "gap_60_days_view"
+  val outGapsInHedisTestTblName = "fact_hedis_gaps_in_care"
   val outFactHedisGapsInTblName = "fact_hedis_gaps_in_care"
   val outFactQmsTblName = "fact_hedis_qms"
 
@@ -155,6 +155,7 @@ object KpiConstants {
   val memPlanStartDateSkColName = "member_plan_start_date_sk"
   val memPlanEndDateSkColName = "member_plan_end_date_sk"
   val startDateColName = "start_date"
+  val rxStartDateColName = "rx_start_date"
   val admitDateColName = "admit_date"
   val dischargeDateColName = "discharge_date"
   val endDateColName = "end_date"
@@ -220,8 +221,8 @@ object KpiConstants {
   /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName
                                 ,outInNumExclColName,outInNumExcColName,outNu1ReasonColName,outNu2ReasonColName,outNu3ReasonColName,outNu4ReasonColName,outNu5ReasonColName,outDinoExcl1ReasonColName
-                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outCurrFlagColName
-                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outUserColName,outDateSkColName,outSourceNameColName,outMeasureIdColName)
+                                ,outDinoExcl2ReasonColName,outDinoExcl3ReasonColName,outNumExcl1ReasonColName,outNumExcl2ReasonColName,outFacilitySkColName,outDateSkColName,outSourceNameColName,outMeasureIdColName,outCurrFlagColName
+                                ,outRecCreateDateColName,outRecUpdateColName,outLatestFlagColName,outActiveFlagColName,outIngestionDateColName,outUserColName)
 
 
 
@@ -357,6 +358,7 @@ object KpiConstants {
   val diagnosticRadVal = "Diagnostic Radiology"
   val pregnancyTestVal = "Pregnancy Tests"
   val pregnancyExcltestVal = "Pregnancy Test Exclusion"
+  val retinoidMedicationval = "Retinoid Medications"
   val chalamdiaVal = "Chlamydia Tests"
   val leadTestVal = "Lead Tests"
   val diabetesVal = "Diabetes"
@@ -416,6 +418,7 @@ object KpiConstants {
   val muscularPainAndDiseaseval = "Muscular Pain and Disease"
   val fralityVal = "Frailty"
   val advancedIllVal = "Advanced Illness"
+  val contraceptiveMedicationVal = "Contraceptive Medications"
   val diabetesMedicationVal = "Diabetes Medications"
   val dementiaMedicationVal = "Dementia Medications"
   val estrogenAgonistsMediVal = "Estrogen Agonists Medications"

@@ -27,25 +27,6 @@ object UtilFunctions {
     returnDf
   }
 
-  /*Function Name:ageFilter
-  * Input Argument: df-Datframe(Input DataFrame)
-  * Input Argument: colName-String(date column name )
-  * Input Argument: year-String(current year)
-  * Input Argument: lower-String(lower age limit)
-  * Input Argument: upper-String(upper age limit)
-  * Output type: Dataframe
-  * Description: returns a Dataframe that contains the elements which satisfies the age limit*/
-  /*def ageFilter(df: DataFrame, colName:String, year:String,lower:String,upper:String):DataFrame={
-    var current_date = year+"-12-31"
-
-    val newDf1 = df.withColumn("curr_date",lit(current_date))
-    val newDf2 = newDf1.withColumn("curr_date",newDf1.col("curr_date").cast(DateType))
-    //newDf2.withColumn("dateDiff", datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25 ).select("member_sk","dateDiff").distinct().show(200)
-    val newdf3 = newDf2.filter((datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25).<=(upper.toInt))
-    newdf3.drop("curr_date")
-  }*/
-
-
   /**
     *
     * @param df (input Dataframe)
@@ -76,7 +57,6 @@ object UtilFunctions {
     newdf3.drop("curr_date")
   }
 
-
   /**
     *
     * @param df (input datafarme)
@@ -97,7 +77,6 @@ object UtilFunctions {
     newDf1
   }
 
-
   /**
     *
     * @param df
@@ -116,7 +95,6 @@ object UtilFunctions {
     newDf
   }
 
-
   /**
     *
     * @param df (input dataframe where the filter has to do)
@@ -132,7 +110,6 @@ object UtilFunctions {
     val newDf = df.filter(df.col(colName).>=(lit(date1)) && df.col(colName).<=(lit(date2)))
     newDf
   }
-
 
   /**
     *
@@ -150,7 +127,6 @@ object UtilFunctions {
     val newDf1 = newDf.groupBy("member_sk").min("dateDiff")
     newDf1
   }
-
 
   /**
     *
@@ -204,7 +180,6 @@ object UtilFunctions {
     finalResultantDf
   }
 
-
   /**
     *
     * @param spark(SparkSession object)
@@ -253,8 +228,20 @@ object UtilFunctions {
 
   }
 
-
-
+  /**
+    *
+    * @param spark(SparkSession object)
+    * @param factClaimDf (factclaim Dataframe)
+    * @param refhedisDf(refHedis Dataframe)
+    * @param col1(column name with which the factclaim and refHedis jaoin has to do(ex: either "primary_diagnosis" or "procedure_code"))
+    * @param joinType (join type (ex:"inner" ,"left_outer","right_outer"))
+    * @param measureId (MeasureId for filtering in refhedis df(ex:ABA,CHL etc))
+    * @param valueSet (valueset as list for filtering in refhedisdf(ex:List(Pregnancy,BMI) etc))
+    * @param codeSystem (codesystem as list for filtering in refhedisdf(ex:List(HCPS,UBREV) etc))
+    * @return dataframe that contains the columns required for further filter after the join of 3 tables and the filter based on the condition passed as arguments
+    * @usecase Function use to join dimMemberDf,factClaimDf and refhedisDf and filter the data based on the arguments passed as arguments for the initial level of
+    *          dinominator ,dinominator exclusion , numerator and numerator exclusion calculation
+    */
   def factClaimRefHedisJoinFunction(spark: SparkSession, factClaimDf: DataFrame, refhedisDf: DataFrame, col1: String, joinType: String, measureId: String, valueSet: List[String], codeSystem: List[String]): DataFrame = {
 
     import spark.implicits._
@@ -312,6 +299,31 @@ object UtilFunctions {
 
   /**
     *
+    * @param spark spark session object
+    * @param factRxClaimDf - factrx claim dataframe
+    * @param refMedValSetDf - ref medvalueset Dataframe
+    * @param measureId measureid for filter in ref_medvaluset
+    * @param valueSet - valueset value for filterin ref med valueset
+    * @return - Data frame which contains the member sk and start date for the filtering condition
+    * @usecase - This function us used to join factrx claim and refmedvalueset and filter based on the value given in the
+    *            arguments, is called in the dinominator dinominator ecxclusion and numerator calculation.
+    */
+  def factRxClaimRefMedValueSetJoinFunction(spark: SparkSession, factRxClaimDf:DataFrame,refMedValSetDf:DataFrame,measureId:String, valueSet:List[String]):DataFrame ={
+
+    import spark.implicits._
+
+    val factRxAndRefmedValJoinedDf = factRxClaimDf.as("df1").join(refMedValSetDf.as("df2"),factRxClaimDf.col(KpiConstants.ndcNmberColName) === refMedValSetDf.col(KpiConstants.ndcCodeColName), KpiConstants.innerJoinType).filter($"medication_list".isin(valueSet:_*) && $"measure_id".===(measureId)).select("df1.member_sk", "df1.start_date_sk")
+
+    /*Loading the dim_date table*/
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
+
+    val startDateValAddedDfForThirddDino = factRxAndRefmedValJoinedDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val formattedDatecolAddedDf = startDateValAddedDfForThirddDino.withColumn(KpiConstants.rxStartDateColName, to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
+    formattedDatecolAddedDf
+  }
+
+  /**
+    *
     * @param spark (SparkSession Object)
     * @param dimMemberDf (dimmemberDataframe)
     * @param factClaimDf (factclaim Dataframe)
@@ -319,6 +331,20 @@ object UtilFunctions {
     * @return Dataframe that contains the memebrs who are in the Hospice condition
     * @usecase function filters the members who are fallen under the hospice condition.
     */
+  def hospiceFunction(spark: SparkSession, factClaimDf: DataFrame, refhedisDf: DataFrame): DataFrame = {
+
+    import spark.implicits._
+
+    val hospiceList = List(KpiConstants.hospiceVal)
+    // val newDf = dimMemberDf.as("df1").join(factClaimDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(refhedisDf.as("df3"), $"df2.PROCEDURE_HCPCS_CODE" === "df3.code", "cross").filter($"df3.code".===("G0155")).select("df1.member_sk", "start_date_sk")
+    val newDf = factClaimDf.join(refhedisDf, factClaimDf.col("procedure_code") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER1") === refhedisDf.col("code") || factClaimDf.col("PROCEDURE_CODE_MODIFIER2") === refhedisDf.col("code") ||
+      factClaimDf.col("PROCEDURE_HCPCS_CODE") === refhedisDf.col("code") || factClaimDf.col("CPT_II") === refhedisDf.col("code") || factClaimDf.col("CPT_II_MODIFIER") === refhedisDf.col("code"), "cross").filter(refhedisDf.col("valueset").isin(hospiceList: _*)).select(factClaimDf.col("member_sk"), factClaimDf.col("start_date_sk"))
+    val dimDateDf = spark.sql("select date_sk,calendar_date from ncqa_sample.dim_date")
+    val startDateValAddedDfForDinoExcl = newDf.as("df1").join(dimDateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
+    val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
+    dateTypeDfForDinoExcl.select("member_sk", "start_date")
+  }
+
   def hospiceMemberDfFunction(spark: SparkSession, dimMemberDf: DataFrame, factClaimDf: DataFrame, refhedisDf: DataFrame): DataFrame = {
 
     import spark.implicits._
@@ -332,7 +358,6 @@ object UtilFunctions {
     val dateTypeDfForDinoExcl = startDateValAddedDfForDinoExcl.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
     dateTypeDfForDinoExcl.select("member_sk", "start_date")
   }
-
 
   /**
     *
@@ -427,7 +452,6 @@ object UtilFunctions {
     outColFormattedDf
   }
 
-
   /**
     *
     * @param spark (SparkSession Object)
@@ -481,6 +505,5 @@ object UtilFunctions {
     //outFormattedDf.printSchema()
     outFormattedDf
   }
-
 
 }

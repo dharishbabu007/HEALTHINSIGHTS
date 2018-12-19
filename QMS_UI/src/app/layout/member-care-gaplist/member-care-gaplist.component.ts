@@ -46,6 +46,7 @@ export class MemberCareGapListComponent implements OnInit {
                 memgpParentItem.gender = item.gender;
                 memgpParentItem.countOfCareGaps = item.countOfCareGaps;
                 memgpParentItem.riskGrade = item.riskGrade;
+                memgpParentItem.compliancePotential = item.compliancePotential;
                 if (item.members.length > 0) {
                     let memgpItem: any = {};
                     item.members.forEach(element => {
@@ -56,11 +57,13 @@ export class MemberCareGapListComponent implements OnInit {
                         memgpItem.gender = item.gender;
                         memgpItem.countOfCareGaps = item.countOfCareGaps;
                         memgpItem.riskGrade = item.riskGrade;
-                        // console.log(memgpItem);
+                        memgpItem.compliancePotential = item.compliancePotential;
+                       // console.log(memgpItem);
                         this.membergaps.push(memgpItem);
                     });
                 }
             });
+            //console.log()
         });
 
 
@@ -74,6 +77,7 @@ export class MemberCareGapListComponent implements OnInit {
             { field: 'countOfCareGaps', header: 'Count of Care Gaps' },
             { field: 'careGaps', header: 'Care Gaps' },
             { field: 'status', header: 'Status' },
+            { field: 'compliancePotential', header:'Compliance Potential' },
             { field: 'riskGrade', header: 'Risk Grade' },
             { field: 'timePeriod', header: 'Last Action Date' },
 
