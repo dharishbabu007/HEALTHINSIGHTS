@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -154,44 +156,98 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 	}
 
 	@Override
-	public Set<ClusterAnalysis> getCSVClusterAnalysis() {
-		Set<ClusterAnalysis> setOutput = new HashSet<>();
+	public String[][] getCSVClusterAnalysis() {
+		//Set<ClusterAnalysis>
+		String[] columnNames = {"clusters", "size", "withinss", "totwithinss", "betweenss", "totss"};
+		int columns = columnNames.length;
+		int rows = 0;
 		
-	    BufferedReader br = null;
+		String[][] transData = null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
 		try {
-			br = new BufferedReader(new FileReader(windowsCopyPath+"/ClusteringStatistics.csv"));
-		    String line = null;
-		    ClusterAnalysis output = null;
-		    int i = 0;
-		    while ((line = br.readLine()) != null) {
-		    	i++;
-		    	if(i == 1) continue;
-		    	String[] values = line.split(",");
-		    	if(values.length > 6) {
-			    	output = new ClusterAnalysis();
-			    	output.setAggStage(values[0]);
-			    	output.setTest1(values[1]);
-			    	output.setTest2(values[2]);
-			    	output.setTest3(values[3]);
-			    	output.setTest4(values[4]);
-			    	output.setTest5(values[5]);
-			    	output.setTest6(values[6]);			    	
-				    setOutput.add(output);
-		    	}
-		    }		    
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			
+			List<String[]> dataList = new ArrayList<>();
+			resultSet = statement.executeQuery("select * from PERSONA_CLUSTERING_STATISTICS");
+			String[] dataAry = null;
+			while (resultSet.next()) {
+				dataAry = new String[columns];
+				for(int c=0; c < columnNames.length; c++) {
+					dataAry[c] = resultSet.getString(columnNames[c]);
+				}
+				dataList.add(dataAry);					
+			}			
+			rows = dataList.size()+1;
+			
+			String[][] data = new String [rows][columns];
+			for(int c=0; c < columnNames.length; c++)
+				data[0][c] = columnNames[c];
+					
+			int i = 1;
+			int j = 0;
+			for(int l=0; l < dataList.size(); l++) {
+				j = 0;
+				dataAry = dataList.get(l);
+				for(int c=0; c < dataAry.length; c++)
+					data[i][j++] = dataAry[c];				
+				i++;				
+			}
+			
+			//transpose
+			transData = new String[columns][rows];
+			for (i = 0; i < rows; i++) {
+				for (j = 0; j < columns; j++) {
+					transData[j][i] = data[i][j];
+				}
+			}
+						
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();			
 		}
 		finally {
-			try {
-				if(br != null) br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
 		
-		return setOutput;
-		//return transData;
+		return transData;		
+		
+		
+//		Set<ClusterAnalysis> setOutput = new HashSet<>();		
+//	    BufferedReader br = null;
+//		try {
+//			br = new BufferedReader(new FileReader(windowsCopyPath+"/ClusteringStatistics.csv"));
+//		    String line = null;
+//		    ClusterAnalysis output = null;
+//		    int i = 0;
+//		    while ((line = br.readLine()) != null) {
+//		    	i++;
+//		    	if(i == 1) continue;
+//		    	String[] values = line.split(",");
+//		    	if(values.length > 6) {
+//			    	output = new ClusterAnalysis();
+//			    	output.setAggStage(values[0]);
+//			    	output.setTest1(values[1]);
+//			    	output.setTest2(values[2]);
+//			    	output.setTest3(values[3]);
+//			    	output.setTest4(values[4]);
+//			    	output.setTest5(values[5]);
+//			    	output.setTest6(values[6]);			    	
+//				    setOutput.add(output);
+//		    	}
+//		    }		    
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			try {
+//				if(br != null) br.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}		
+//		return setOutput;
 	}
 
 	@Override
@@ -310,9 +366,12 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
+//			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
+//					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
+			resultSet = statement.executeQuery("SELECT LFO.MEMBER_ID,LFO.ENROLLMENT_GAPS,LFO.OUT_OF_POCKET_EXPENSES,"
+					+ "LFO.UTILIZER_CATEGORY,LFO.AGE,LFO.AMOUNT_SPEND,LFO.ER,LFO.REASON_TO_NOT_ENROLL,LFO.likelihood_enrollment,"
+					+ "LFO.ENROLLMENT_BIN, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
 					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
-			//resultSet = statement.executeQuery("select * from ns_file_output where fid='45' limit 500");
 			LHEOutput output = null;
 			String name = "";			
 			while (resultSet.next()) {

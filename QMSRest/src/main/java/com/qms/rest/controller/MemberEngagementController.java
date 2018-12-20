@@ -51,9 +51,10 @@ public class MemberEngagementController {
 	}	
 	
 	@RequestMapping(value = "/clusterAnalysis", method = RequestMethod.GET)
-	public ResponseEntity<Set<ClusterAnalysis>> getClusterAnalysis() {
-		Set<ClusterAnalysis> setCSVOutPut = memberEngagementService.getCSVClusterAnalysis();
-		return new ResponseEntity<Set<ClusterAnalysis>>(setCSVOutPut, HttpStatus.OK);
+	public ResponseEntity<String[][]> getClusterAnalysis() {
+		//Set<ClusterAnalysis>
+		String[][] setCSVOutPut = memberEngagementService.getCSVClusterAnalysis();
+		return new ResponseEntity<String[][]>(setCSVOutPut, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/clusterData/{clusterId}", method = RequestMethod.GET)
