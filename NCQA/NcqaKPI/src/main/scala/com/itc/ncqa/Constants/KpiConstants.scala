@@ -459,27 +459,7 @@ object KpiConstants {
   val pneuConjuVaccine13Val = "Pneumococcal Conjugate Vaccine 13"
   val pneuPolyVaccine23Val = "Pneumococcal Polysaccharide Vaccine 23"
   val ambulatoryVisitVal = "Ambulatory Visits"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  val mammographyVal = "Mammography"
 
 
 
@@ -490,10 +470,16 @@ object KpiConstants {
   val cptCodeVal = "CPT"
   val hcpsCodeVal = "HCPCS"
   val ubrevCodeVal = "UBREV"
+  val ubtobCodeVal = "UBTOB"
   val loincCodeVal = "LOINC"
   val modifierCodeVal = "Modifier"
+  val posCodeVal = "POS"
   val cvxCodeVal = "CVX"
   val snomedctCodeVal = "SNOMED CT US Edition"
+  val bilateralCodeVal = "bilateral (2-view study of each breast)"
+  val g204CodeVal = "including computer-aided detection (cad) when performed; bilateral (G0204)"
+  val g206CodeVal = "including computer-aided detection (cad) when performed; unilateral (G0206)"
+
 
 
 
