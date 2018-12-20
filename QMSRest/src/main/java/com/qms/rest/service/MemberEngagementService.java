@@ -17,7 +17,7 @@ public interface MemberEngagementService {
 	Set<ModelSummary> getCSVModelSummary();
 	Set<ConfusionMatric> getCSVConfusionMatric();	
 	ModelScore getCSVModelScore();
-	Set<ClusterAnalysis> getCSVClusterAnalysis();
+	String[][] getCSVClusterAnalysis();
 	
 	RestResult updateClusteringPersona (ClusterPersona clusteringPersona);
 	ClusterData getClusteringData (int clusterId);
