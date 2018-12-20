@@ -49,10 +49,10 @@ object UtilFunctions {
     //newDf2.withColumn("dateDiff", datediff(newDf2.col("curr_date"),newDf2.col(colName))/365.25 ).select("member_sk","dateDiff").distinct().show(200)
     val newdf3 = inclData match {
 
-      case "truetrue" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<=(upper.toInt))
-      case "truefalse" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<(upper.toInt))
-      case "falsetrue" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<=(upper.toInt))
-      case "falsefalse" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<(upper.toInt))
+      case "truetrue" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<=(upper.toInt+1))
+      case "truefalse" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>=(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<(upper.toInt+1))
+      case "falsetrue" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<=(upper.toInt+1))
+      case "falsefalse" => newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).>(lower.toInt) && (datediff(newDf2.col("curr_date"), newDf2.col(colName)) / 365.25).<(upper.toInt+1))
     }
     newdf3.drop("curr_date")
   }
