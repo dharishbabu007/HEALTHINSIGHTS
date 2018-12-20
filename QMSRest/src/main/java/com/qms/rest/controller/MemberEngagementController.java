@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.qms.rest.model.CloseGaps;
 import com.qms.rest.model.ClusterAnalysis;
 import com.qms.rest.model.ClusterData;
 import com.qms.rest.model.ClusterPersona;
 import com.qms.rest.model.ConfusionMatric;
+import com.qms.rest.model.LHEOutput;
+import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
@@ -73,4 +74,44 @@ public class MemberEngagementController {
 		else	
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}
+	
+	@RequestMapping(value = "/lhe_output", method = RequestMethod.GET)
+	public ResponseEntity<Set<LHEOutput>> getLHEOutput() {
+		System.out.println("Fetching LHE out ");
+		Set<LHEOutput> setCSVOutPut = memberEngagementService.getLHEModelOutPut();
+		return new ResponseEntity<Set<LHEOutput>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/lhe_modelSummary", method = RequestMethod.GET)
+	public ResponseEntity<Set<ModelSummary>> getLHEModelSummary() {
+		System.out.println("Fetching LHE Model summary ");
+		Set<ModelSummary> setCSVOutPut = memberEngagementService.getLHEModelSummary();
+		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/lhe_modelMatric", method = RequestMethod.GET)
+	public ResponseEntity<ModelMetric> getLHEModelMatric() {
+		System.out.println("Fetching LHE Model metric ");
+		ModelMetric setCSVOutPut = memberEngagementService.getLHEModelMetric();
+		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	
+	@RequestMapping(value = "/lhe_reason_not_enroll_statics", method = RequestMethod.GET)
+	public ResponseEntity<String[][]> getLHEReasonNotEnrollStatics() {
+		System.out.println("Fetching LHE Reason Not Enroll Statics ");
+		String[][] setCSVOutPut = memberEngagementService.getLHEReasonNotEnrollStatics();
+		return new ResponseEntity<String[][]>(setCSVOutPut, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/create_lhe_input_file", method = RequestMethod.GET)
+	public ResponseEntity<RestResult> createLHEInputFile() {
+		System.out.println("Create LHE Input File ");
+		RestResult restResult = memberEngagementService.createLHEInputFile();
+		if(RestResult.isSuccessRestResult(restResult))
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
+		else	
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.INTERNAL_SERVER_ERROR);
+	}	
+	
 }
