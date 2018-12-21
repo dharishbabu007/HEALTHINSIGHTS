@@ -125,15 +125,9 @@ object NcqaW156 {
     val sourceAndMsrList = List(data_source, KpiConstants.w156MeasureId)
 
     val numExclDf = spark.emptyDataFrame
-    val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorAfterExclusionDf, w156NumeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
+    val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, hospiceDf, w156NumeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
     //commonOutputFormattedDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
-
-    /*common output creation2 (data to fact_hedis_qms table)*/
-    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.cdcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    val factMembershipDfForoutDf = factMembershipDf.select(KpiConstants.memberskColName, KpiConstants.lobIdColName)
-    val qmsoutFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    //qmsoutFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factHedisQmsTblName)
     spark.sparkContext.stop()
   }
 
