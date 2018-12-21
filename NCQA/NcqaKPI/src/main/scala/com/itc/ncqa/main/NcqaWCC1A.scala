@@ -129,13 +129,6 @@ object NcqaWCC1A {
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorForOutput, dinominatorExcl, wcc1anumeratorFinalDf, numExclDf, listForOutput, sourceAndMsrIdList)
     //outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
-
-
-    /*Data populating to fact_hedis_qms*/
-    //   val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.WCCMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    //   val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
-    //   val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    //  outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
     spark.sparkContext.stop()
   }
 

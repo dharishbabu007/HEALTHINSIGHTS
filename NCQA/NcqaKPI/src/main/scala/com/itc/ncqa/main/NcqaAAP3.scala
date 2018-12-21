@@ -77,7 +77,7 @@ object NcqaAAP3 {
 
     /*Age 64 and above (Aap1 Activity)*/
 
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age64Val, KpiConstants.age120Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age65Val, KpiConstants.age120Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
 
 
 
@@ -135,11 +135,7 @@ object NcqaAAP3 {
 
 
 
-    /*Data populating to fact_hedis_qms*/
-    //   val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.WCCMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    //   val factMembershipDfForoutDf = factMembershipDf.select("member_sk", "lob_id")
-    //   val outFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    //  outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
+
     spark.sparkContext.stop()
   }
 
