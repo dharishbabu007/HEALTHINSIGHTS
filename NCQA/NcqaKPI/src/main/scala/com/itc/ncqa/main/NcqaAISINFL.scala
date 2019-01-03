@@ -12,11 +12,13 @@ object NcqaAISINFL {
   def main(args: Array[String]): Unit = {
 
 
-    /*Reading the program arguments*/
+    //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
+
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
     val dbName = args(3)
+    val measureId = args(4)
     var data_source = ""
 
     /*define data_source based on program type. */
@@ -30,13 +32,14 @@ object NcqaAISINFL {
     /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
-    /*creating spark session object*/
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAABA")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAISFL")
     conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    //</editor-fold>
+
+    //<editor-fold desc="Loading Required Tables to memory">
 
     import spark.implicits._
-
 
     /*Loading dim_member,fact_claims,fact_membership tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
@@ -45,10 +48,13 @@ object NcqaAISINFL {
     val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimLocationTblName, data_source)
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
     val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
-    //print("counts:"+dimMemberDf.count()+","+factClaimDf.count()+","+factMembershipDf.count())
+    val factRxClaimsDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factRxClaimTblName, data_source)
+    //</editor-fold>
+
+    //<editor-fold desc="Initial join, age filter, age filter for numerator">
 
     /*Initial join function call for prepare the data fro common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.abaMeasureTitle)
+    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.aisMeasureTitle)
     //initialJoinedDf.show(50)
 
     var current_date = year + "-01-01"
@@ -60,18 +66,14 @@ object NcqaAISINFL {
 
     /*Age filter for numerator based on the lob_name*/
     var ageFilterForNumeratorDf = spark.emptyDataFrame
-    var measureId = ""
-    if(KpiConstants.commercialLobName.equalsIgnoreCase(lob_name) || KpiConstants.medicaidLobName.equalsIgnoreCase(lob_name)){
-      ageFilterForNumeratorDf = newDf2.filter(((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(19)) && ((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).<=(65))).drop("curr_date").select(KpiConstants.memberskColName)
-      measureId = KpiConstants.aisf1MeasureId
+
+    if(KpiConstants.aisf1MeasureId.equalsIgnoreCase(measureId)){
+      ageFilterForNumeratorDf = newDf2.filter(((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>=(19)) && ((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).<=(66))).drop("curr_date").select(KpiConstants.memberskColName)
     }
     else{
-      ageFilterForNumeratorDf = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>(65)).drop("curr_date").select(KpiConstants.memberskColName)
-      measureId = KpiConstants.aisf2MeasureId
+      ageFilterForNumeratorDf = newDf2.filter((datediff(newDf2.col("curr_date"), newDf2.col(KpiConstants.dobColName)) / 365.25).>(66)).drop("curr_date").select(KpiConstants.memberskColName)
     }
-
-
-
+    //</editor-fold>
 
     //<editor-fold desc="Dinominator Calculation">
 
@@ -167,7 +169,22 @@ object NcqaAISINFL {
     /*Numerator Calculation(members who are in dinominator and have influenza vaccine in between the dates that are given) ends*/
     //</editor-fold>
 
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
+    val numeratorValueSet = influenzaVaccineValList
+    val dinominatorExclValueSet = KpiConstants.emptyList
+    val numExclValueSet = KpiConstants.emptyList
+    val outValueSetForOutput = List(numeratorValueSet, dinominatorExclValueSet, numExclValueSet)
+    val sourceAndMsrList = List(data_source,measureId)
+
+    val numExclDf = spark.emptyDataFrame
+    val dinominatorExclDf = spark.emptyDataFrame
+
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
+
+    spark.sparkContext.stop()
 
 
   }
