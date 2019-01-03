@@ -279,18 +279,17 @@ object NcqaCDC7 {
     val dinominatorAfterExclDf = dinominatorForKpiCalDf.except(dinominatorExclDf)
     //</editor-fold>
 
+    //<editor-fold desc="Numerator Calculation">
 
+    //<editor-fold desc="Numerator1 Calculation (Nephropathy screening or monitoring test)">
 
-
-
-
-
-    /*Numerator1 Calculation (Nephropathy screening or monitoring test)*/
     val urineprotieneValList = List(KpiConstants.urineProteinTestVal)
     val urineprotieneCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.loincCodeVal)
     val joinedForNephrScrnDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, urineprotieneValList, urineprotieneCodeSystem)
     val measurForNephrScrnDf = UtilFunctions.measurementYearFilter(joinedForNephrScrnDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator2 Calculation (Evidence of treatment for nephropathy or ACE/ARB therapy)">
 
     /*Numerator2 Calculation (Evidence of treatment for nephropathy or ACE/ARB therapy) as proceedure code*/
     val nephroTreatValList = List(KpiConstants.nephropathyTreatmentVal)
@@ -300,75 +299,91 @@ object NcqaCDC7 {
 
     /*Numerator2 Calculation (Evidence of treatment for nephropathy or ACE/ARB therapy) as primary diagnosis*/
     val joinedForNephrTreatAsDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, nephroTreatValList, primaryDiagCodeSystem)
-    val measurForNephrTreatAsDiagDf = UtilFunctions.mesurementYearFilter(joinedForNephrTreatAsDiagDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
+    val measurForNephrTreatAsDiagDf = UtilFunctions.measurementYearFilter(joinedForNephrTreatAsDiagDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
 
     /*Numerator2 Calculation (Union of  measurementForNephropathyTreatmentAsPrDf and measurementForNephropathyTreatmentAsDiagDf)*/
-    val NephropathyTreatmentDf = measurForNephroTreatAsPrDf.union(measurForNephrTreatAsDiagDf)
+    val nephropathyTreatmentDf = measurForNephroTreatAsPrDf.union(measurForNephrTreatAsDiagDf)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator3 Calculation (Evidence of stage 4 chronic kidney disease)">
 
-    /*Numerator3 Calculation (Evidence of stage 4 chronic kidney disease)*/
-    val hedisJoinedForCkdStage4Df = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc3CkdStage4ValueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForCkdStage4Df = UtilFunctions.mesurementYearFilter(hedisJoinedForCkdStage4Df, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val ckdStage4ValList = List(KpiConstants.ckdStage4Val)
+    val joinedForCkdStage4Df = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, ckdStage4ValList, primaryDiagCodeSystem)
+    val measurForCkdStage4Df = UtilFunctions.measurementYearFilter(joinedForCkdStage4Df, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator4 Calculation (Evidence of ESRD)">
 
     /*Numerator4 Calculation (Evidence of ESRD) as proceedure code*/
-    val hedisJoinedForEsrdAsProDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc7EsrdValueSet, KpiConstants.cdc3EsrdExclcodeSystem)
-    val measurementForEsrdAsProDf = UtilFunctions.mesurementYearFilter(hedisJoinedForEsrdAsProDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val esrdValList = List(KpiConstants.esrdVal)
+    val esrdCodeVal = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal, KpiConstants.posCodeVal, KpiConstants.ubtobCodeVal)
+    val joinedForEsrdAsProDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId,esrdValList, esrdCodeVal)
+    val measurForEsrdAsProDf = UtilFunctions.measurementYearFilter(joinedForEsrdAsProDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
 
     /*Numerator4 Calculation (Evidence of ESRD) as primary Diagnosis*/
-    val hedisJoinedForEsrdAsDaigDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc7EsrdValueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForEsrdAsDaigDf = UtilFunctions.mesurementYearFilter(hedisJoinedForEsrdAsDaigDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val joinedForEsrdAsDaigDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, esrdValList, primaryDiagCodeSystem)
+    val measurForEsrdAsDaigDf = UtilFunctions.mesurementYearFilter(joinedForEsrdAsDaigDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
 
     /*Numerator4 (union of measurementForEsrdAsProDf and measurementForEsrdAsDaigDf)*/
-    val esrdDf = measurementForEsrdAsProDf.union(measurementForEsrdAsDaigDf)
+    val esrdDf = measurForEsrdAsProDf.union(measurForEsrdAsDaigDf)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator5 ,Evidence of kidney transplant">
 
     /*Numerator5 ,Evidence of kidney transplant as proceedure code */
-    val hedisJoinedForKtAsProDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc7KtValueSet, KpiConstants.cdc7KtCodeSystem)
-    val measurementForKtAsProDf = UtilFunctions.mesurementYearFilter(hedisJoinedForKtAsProDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val kidneyTransValList = List(KpiConstants.kidneyTransplantVal)
+    val kidneyTransCodeVal = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal)
+    val joinedForKtAsProDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, kidneyTransValList, kidneyTransCodeVal)
+    val measurForKtAsProDf = UtilFunctions.measurementYearFilter(joinedForKtAsProDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
 
     /*Numerator5 ,Evidence of kidney transplant as primary Diagnosis */
-    val hedisJoinedForKtAsDaigDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc7KtValueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForKtAsDaigDf = UtilFunctions.mesurementYearFilter(hedisJoinedForEsrdAsDaigDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
-
+    val joinedForKtAsDaigDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, kidneyTransValList, primaryDiagCodeSystem)
+    val measurForKtAsDaigDf = UtilFunctions.measurementYearFilter(joinedForKtAsDaigDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
 
     /*Numerator5 ,Evidence of kidney transplant(Union of measurementForKtAsProDf and measurementForKtAsDaigDf)*/
-    val kidneyTranspalantDf = measurementForKtAsProDf.union(measurementForKtAsDaigDf).distinct()
+    val kidneyTranspalantDf = measurForKtAsProDf.union(measurForKtAsDaigDf)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator6 (visit with a nephrologist)">
 
-    /*Numerator6 (visit with a nephrologist)*/
-    val hedisJoinedForNephrologistDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, KpiConstants.cdc4ValueSetForFirstNumerator, KpiConstants.cdc4CodeSystemForFirstNumerator)
+    val diaRetScrValList = List(KpiConstants.diabeticRetinalScreeningVal)
+    val diaRetScrCodeVal = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal)
+    val joinedForNephrologistDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cdcMeasureId, diaRetScrValList,diaRetScrCodeVal)
     val dimProviderDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimProviderTblName, data_source)
-    val joinedWithDimProviderDf = hedisJoinedForNephrologistDf.as("df1").join(dimProviderDf.as("df2"), hedisJoinedForNephrologistDf.col(KpiConstants.providerSkColName) === dimProviderDf.col(KpiConstants.providerSkColName), KpiConstants.innerJoinType).filter(dimProviderDf.col(KpiConstants.nephrologistColName).===("Y"))
-    val measurementForNephrologistDf = UtilFunctions.mesurementYearFilter(joinedWithDimProviderDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val joinedWithDimProviderDf = joinedForNephrologistDf.as("df1").join(dimProviderDf.as("df2"), joinedForNephrologistDf.col(KpiConstants.providerSkColName) === dimProviderDf.col(KpiConstants.providerSkColName), KpiConstants.innerJoinType).filter(dimProviderDf.col(KpiConstants.nephrologistColName).===("Y")).select("df1.*")
+    val measurForNephrologistDf = UtilFunctions.measurementYearFilter(joinedWithDimProviderDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator 7 (At least one ACE inhibitor or ARB dispensing event)">
 
-    /*Numerator 7 (At least one ACE inhibitor or ARB dispensing event)*/
-    /*val medValuesetForAceInhibitorDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"measure_id".===("CDC") && ($"medication_list".===("ACE Inhibitor/ARB Medications"))).select("df1.member_sk", "df2.start_date_sk")
+    val aceInharbMedVal = List(KpiConstants.aceInhArbMedVal)
+    val joinedForAceInhMedDf = UtilFunctions.factRxClaimRefMedValueSetJoinFunction(spark, factRxClaimsDf, ref_medvaluesetDf, KpiConstants.cdcMeasureId, aceInharbMedVal)
+   /* val medValuesetForAceInhibitorDf = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), $"df1.member_sk" === $"df2.member_sk").join(ref_medvaluesetDf.as("df3"), $"df2.ndc_number" === $"df3.ndc_code", "inner").filter($"measure_id".===("CDC") && ($"medication_list".===("ACE Inhibitor/ARB Medications"))).select("df1.member_sk", "df2.start_date_sk")
     val startDateValAddedForAceInhibitorDf = medValuesetForAceInhibitorDf.as("df1").join(dimdateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-    val dateTypeForAceInhibitorDf = startDateValAddedForAceInhibitorDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
-    val MeasurementForAceInhibitorDf = UtilFunctions.mesurementYearFilter(dateTypeForAceInhibitorDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
-    val aceInhibitorNumeratorDf = MeasurementForAceInhibitorDf.select("member_sk")*/
-
+    val dateTypeForAceInhibitorDf = startDateValAddedForAceInhibitorDf.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")*/
+    val measurForAceInhibitorDf = UtilFunctions.measurementYearFilter(joinedForAceInhMedDf, KpiConstants.rxStartDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
     /*Final Numerator (union of all the sub numerator conditions)*/
-   /* val cdc7Numerator = measurementForNephropathyScreeningDf.union(NephropathyTreatmentDf).union(measurementForCkdStage4Df).union(esrdDf).union(kidneyTranspalantDf).union(measurementForNephrologistDf).union(aceInhibitorNumeratorDf)
-    val cdc7numeratorDf = cdc7Numerator.intersect(cdc7DinominatorForKpiCalDf)
-*/
+    val cdc7Numerator = measurForNephrScrnDf.union(nephropathyTreatmentDf).union(measurForCkdStage4Df).union(esrdDf).union(kidneyTranspalantDf).union(measurForNephrologistDf).union(measurForAceInhibitorDf)
+    val numeratorDf = cdc7Numerator.intersect(dinominatorAfterExclDf)
+    //</editor-fold>
 
-    /*common output creation(data to fact_gaps_in_hedis table)*/
-    val numeratorReasonValueSet = KpiConstants.cdc7uptValueSet ::: KpiConstants.cdc7NtValueSet ::: KpiConstants.cdc3CkdStage4ValueSet ::: KpiConstants.cdc7EsrdValueSet ::: KpiConstants.cdc7KtValueSet
-    val dinoExclReasonValueSet = KpiConstants.cdcDiabetesExclValueSet
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
+
+    val numeratorReasonValueSet = urineprotieneValList ::: nephroTreatValList ::: ckdStage4ValList ::: esrdValList ::: kidneyTransValList
+    val dinoExclReasonValueSet = diabExclValList
     val numExclReasonValueSet = KpiConstants.emptyList
     val outReasonValueSet = List(numeratorReasonValueSet, dinoExclReasonValueSet, numExclReasonValueSet)
-    val sourceAndMsrList = List(data_source,KpiConstants.cdc7MeasureId)
+    val sourceAndMsrList = List(data_source,measureId)
 
     val numExclDf = spark.emptyDataFrame
-   // val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, cdc7numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
     //commonOutputFormattedDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
 
     spark.sparkContext.stop()
-
 
   }
 }
