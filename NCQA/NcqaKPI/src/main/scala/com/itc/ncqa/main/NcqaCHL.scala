@@ -11,8 +11,6 @@ import scala.collection.JavaConversions._
 
 object NcqaCHL {
 
-
-
   def main(args: Array[String]): Unit = {
 
     //<editor-fold desc="Reading Program Arguments and Saprksession Object creation">
@@ -221,8 +219,6 @@ object NcqaCHL {
 
     spark.sparkContext.stop()
   }
-
-
 
 }
 

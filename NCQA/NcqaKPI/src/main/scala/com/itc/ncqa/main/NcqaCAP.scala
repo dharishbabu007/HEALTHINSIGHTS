@@ -31,7 +31,7 @@ object NcqaCAP {
     /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAAWC")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACAP")
     conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     //</editor-fold>
