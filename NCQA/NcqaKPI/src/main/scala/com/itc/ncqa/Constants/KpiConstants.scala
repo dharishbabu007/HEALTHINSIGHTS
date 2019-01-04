@@ -189,6 +189,7 @@ object KpiConstants {
   val fiftyDobColName = "fifty_dob"
   val sixtyDobColName = "sixty_dob"
   val countColName = "count"
+  val mrbpreadingColName = "most_recent_bpreading"
 
 
   /*Output column names*/
@@ -426,6 +427,7 @@ object KpiConstants {
   val telehealthModifierVal = "Telehealth Modifier"
   val telehealthPosVal = "Telehealth POS"
   val nonAcuteInPatientVal = "Nonacute Inpatient"
+  val nonacuteInPatStayVal = "Nonacute Inpatient Stay"
   val telephoneVisitsVal = "Telephone Visits"
   val onlineAssesmentVal = "Online Assessments"
   val inPatientStayVal = "Inpatient Stay"
@@ -480,6 +482,9 @@ object KpiConstants {
   val mammographyVal = "Mammography"
   val aceInhArbMedVal = "ACE Inhibitor/ARB Medications"
   val otherAmbulatoryVal = "Other Ambulatory Visits"
+  val essentialHyptenVal = "Essential Hypertension"
+  val outpatwoUbrevVal = "Outpatient Without UBREV"
+  val remotebpmVal = "Remote Blood Pressure Monitoring"
 
 
 
@@ -497,6 +502,7 @@ object KpiConstants {
   val modifierCodeVal = "Modifier"
   val posCodeVal = "POS"
   val cvxCodeVal = "CVX"
+  val hl7CodeVal = "HL7"
   val snomedctCodeVal = "SNOMED CT US Edition"
   val bilateralCodeVal = "bilateral (2-view study of each breast)"
   val g204CodeVal = "including computer-aided detection (cad) when performed; bilateral (G0204)"

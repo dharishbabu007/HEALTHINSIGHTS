@@ -395,35 +395,30 @@ object NcqaOMW {
     /*dinominator1 starts*/
 
     /*outpatient visit (Outpatient Value Set), an observation visit (Observation Value Set) or an ED visit (ED Value Set)*/
-
     val omwOutPatientValueSet = List(KpiConstants.outPatientVal, KpiConstants.observationVal, KpiConstants.edVal)
     val omwOutPatientCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.hcpsCodeVal,KpiConstants.ubrevCodeVal)
-    //  val hedisJoinedForDinominator1Df = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwOutPatientValueSet,omwOutPatientCodeSystem)
-
     val joinedForOutpatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwOutPatientValueSet,omwOutPatientCodeSystem)
-    val mesurForOutpatDf = UtilFunctions.dateBetweenFilter(joinedForOutpatDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate)
+    val mesurForOutpatDf = UtilFunctions.dateBetweenFilter(joinedForOutpatDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
+
 
 
     /*fracture (Fractures Value Set) AS Primary Diagnosis*/
+    val primaryDiagCodeVal = List(KpiConstants.icdCodeVal)
     val omwFractureValueSet = List(KpiConstants.fracturesVal)
-    //  val hedisJoinedForFractureAsDiagDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwFractureValueSet,KpiConstants.primaryDiagnosisCodeSystem)
-    val joinedForFractureAsDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwFractureValueSet,KpiConstants.primaryDiagnosisCodeSystem)
+    val joinedForFractureAsDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwFractureValueSet,primaryDiagCodeVal)
     val mesurForFractureAsDiagDf = UtilFunctions.dateBetweenFilter(joinedForFractureAsDiagDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
 
 
     /*fracture (Fractures Value Set) AS Procedure Code*/
-
-    //  val hedisJoinedForFractureAsProDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,KpiConstants.omwFractureValueSet,KpiConstants.omwFractureCodeSystem)
-
     val omwFractureCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.hcpsCodeVal)
-    val hedisJoinedForFractureAsProDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwFractureValueSet,omwFractureCodeSystem)
-    val mesurementFilterForFractureAsProDf = UtilFunctions.dateBetweenFilter(hedisJoinedForFractureAsProDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
+    val joinedForFractureAsProDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.omwMeasureId,omwFractureValueSet,omwFractureCodeSystem)
+    val mesurForFractureAsProDf = UtilFunctions.dateBetweenFilter(joinedForFractureAsProDf,KpiConstants.startDateColName,firstIntakeDate,secondIntakeDate).select(KpiConstants.memberskColName)
 
     /*Fracture Dinominator (Union of Fractures Value Set AS Primary Diagnosis and Fractures Value Set AS Procedure Code)*/
-    val fractureUnionDf = mesurForFractureAsDiagDf.union(mesurementFilterForFractureAsProDf)
+    val fractureUnionDf = mesurForFractureAsDiagDf.union(mesurForFractureAsProDf)
 
     /*Mmebers who has fracture and any of the values(Outpatient,Observation,ED)*/
-    val fractureAndOutObsEdDf = mesurForOutpatDf.select("*").as("df1").join(fractureUnionDf.as("df2"),mesurForFractureAsDiagDf.col(KpiConstants.memberskColName) === fractureUnionDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).select("df1.*")
+    val fractureAndOutObsEdDf = mesurForOutpatDf.intersect(fractureUnionDf)
     //fractureAndOutObsEdDf.printSchema()
     val dinominatorOne_SuboneDf = fractureAndOutObsEdDf.select(KpiConstants.memberskColName)
 
