@@ -79,6 +79,7 @@ export class LayoutComponent {
 
   ngOnInit() {
     var user =  JSON.parse(localStorage.getItem('currentUser'));
+   // console.log(user)
     this.username= user.loginId;
     this.screens =[];
     this.GapsService.getRoleData(user.roleId).subscribe((data: any)=>{

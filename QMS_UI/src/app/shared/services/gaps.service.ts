@@ -59,8 +59,14 @@ export class GapsService {
     getCsv2(){
         return this.http.get('http://healthinsight:8082/curis/qms_file/csv_modelSummary');
     }
-    getMeasureDetails() {
-        return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis_member_list`);
+    getLikelihoodMeasureDetails() {
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_output`);
+    }
+    getCommunicationMeasureDetails(){
+        return this.http.get('');
+    }
+    getLikehoodchurnMeasureDetails(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_output`);    
     }
     getSpv(memberId) {
         return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis/${memberId}`);
@@ -157,18 +163,48 @@ export class GapsService {
     getClusterStatistics(){
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterAnalysis`)
     }
+    getLikelihoodClusterStatistics(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_reason_not_enroll_statics`)
+    }
     getClusterData(value){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/persona_cluster_features_data/${value}`);
+    }
+    getClusterFormData(value){
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterData/${value}`);
     }
     createPersona(model,clusterId){
         return this.http.post(`http://healthinsight:8082/curis/member_engagement/update_persona`,{ "clusterId": clusterId,
         "personaName": model.personaName,
-        "demographics": model.demographics,
+        "demographics": null,
         "motivations": model.motivations,
         "goals": model.goals,
         "barriers": model.barriers,
         "socialMedia": model.socialMedia,
-        "healthStatus": model.socialMedia
+        "healthStatus": model.socialMedia,          
+        "demoAgeGroup":model.ageGroup,
+        "demoEducation": model.education,
+        "demoIncome": model.income,
+        "demoOccupation":model.occupation,
+        "demoAddictions":model.addiction,
+        "demoFamilySize":model.familySize,
+        "imageUrl":null,
+        "bio":model.bio
+
 })
+    }
+    getLHEModelSummary(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_modelSummary`)
+    }
+    getLHEModelMatric(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_modelMatric`)
+    }
+    getgraphdata(id,attr){
+        return this.http.post(`http://healthinsight:8082/curis/member_engagement/persona_cluster_features_graph_data`,{
+            "value1": id,
+            "value2": attr
+        });
+    }
+    getclusterlist(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/persona_cluster_names_list`)
     }
 }

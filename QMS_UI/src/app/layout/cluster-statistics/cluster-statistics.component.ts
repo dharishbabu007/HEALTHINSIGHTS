@@ -21,18 +21,15 @@ export class ClusterStatisticsComponent implements OnInit {
     }
     membergaps: MemberCareGaps[];
     cols: any[];
+    cols1: any[];
+    cols2: any[];
+    cols3 : any[];
     ngOnInit() {
-      this.gapsService.getClusterStatistics().subscribe((data: MemberCareGaps[]) => {
+      this.gapsService.getClusterStatistics().subscribe((data: any[]) => {
             this.membergaps = data;
-        }); 
-        this.cols = [
-            { field: 'aggStage', header: 'Agglomeration stage' },
-            { field: 'test1', header: 'Test 1' },
-            { field: 'test2', header: 'Test 2' },
-            { field: 'test3', header: 'Test 3' },
-            { field: 'test4', header: 'Test 4' },
-            { field: 'test5', header: 'Test 5' },
-            { field: 'test6', header: 'Test 6'}
-        ];
+           // console.log(data);
+            this.cols = this.membergaps.filter(item => item);
+           // console.log(this.cols[0])
+     });      
     }
 }
