@@ -77,10 +77,14 @@ onSubmit(model: Login,isValid:boolean) {
           this.msgService.success('Please reset your password');
           this.router.navigateByUrl('/reset-password');  
         } 
-       else if(res.loginId === model.username && res.resetPassword != 'Y'){
+       else if(res.loginId === model.username && res.resetPassword != 'Y' && res.status === 'Active'){
          this.msgService.success('Login Succesfull')
         this.router.navigateByUrl('/dashboard');
           
+        }
+        else if(res.loginId === model.username && res.status != 'Active'){
+          this.loading = false;
+          this.msgService.error("Please get in contact with admin to activate your account");
         }
         else{
           this.loading = false;

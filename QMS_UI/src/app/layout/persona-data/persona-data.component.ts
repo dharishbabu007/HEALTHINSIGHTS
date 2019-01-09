@@ -9,13 +9,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PersonaDataComponent implements OnInit {
     public externalURL: any;
+    value = 50;
+    personaList: any;
     constructor(private route: ActivatedRoute) {
     }
-    personaList = [
-        {
-          label: 'Lazy Doer',
-          value: '1'
-        },
+    
+    ngOnInit() {
+     this.personaList = [
+        // {
+        //   label: 'Lazy Doer',
+        //   value: '1'
+        // },
         {
           label: 'Champions',
           value: '2'
@@ -43,9 +47,6 @@ export class PersonaDataComponent implements OnInit {
         
         ];
 
-      
-    ngOnInit() {
-   
     }
 }
  

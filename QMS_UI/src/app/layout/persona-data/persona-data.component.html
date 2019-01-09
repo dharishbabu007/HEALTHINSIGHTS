@@ -5,78 +5,139 @@
     <!-- <h2 class="text-muted">Dashboard </h2> -->
   <div class="card">
     <div class="row col-lg-12">
-
-            <div style="padding: 5px">
-               <span class="col-lg-6">
-                   <p-dropdown placeholder="Select Persona" [autoDisplayFirst]="false"  styleClass="form-control" [options]="personaList"></p-dropdown>
-               </span>
-               <span class="col-lg-6">
-                    <button type="button" pButton label="Member List"   [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
-                </span>
-                
-           </div>
-
-            
-            
+               <div class="col-lg-6" style="padding-left: 20px;
+               padding-top: 10px;
+               padding-bottom: 10px;"> 
+                 <span>   <p-dropdown placeholder="Lazy Doer" [autoDisplayFirst]="false"  styleClass="form-control" [options]="personaList"></p-dropdown> </span>
+               </div>
+               <div class="col-lg-6" style="padding-top: 10px">
+                    <button [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn btn-primary" style="float: right"> Member List</button> 
+                </div>
+          
     </div>
-    <div class="row col-lg-12">
+    <!-- <div class="row col-lg-12">
     <img src="/assets/images/Lazy Doer.jpg" style="width: 83vw;height: 72vh;">
-    </div>
-    <!--<div class="card">
+    </div> -->
     <div class="row col-lg-12" class="bg-heading">
         <h2>Lazy Doer</h2>
     </div>
     <br>
     <div class="row col-lg-12">
-            <div class="col-lg-3 rounded">
-               <div class="text-center"><i class="fa fa-5x fa-user-circle-o "></i></div><br><br>
-                   <p><span class="font-weight-bold">Age Group</span>: <br><br>
-                       <span class="font-weight-bold">Occupatioon</span>: <br><br>
-                        <span class="font-weight-bold">Family Size</span>: <br><br>
-                        <span class="font-weight-bold">Addictions</span>: <br><br>
-                        <span class="font-weight-bold">Education</span>:
+              <div class="col-lg-3 rounded">
+               <div class="text-center"><img src="/assets/images/lazyPerson.png" height="145px" width="269px"></div><br><br>
+                   <p style="padding-left: 10px;"><span class="font-weight-bold headers-color">Age Group</span>: 30-35<br><br>
+                       <span class="font-weight-bold headers-color">Occupatioon</span>: Desk job, Unemployed<br><br>
+                        <span class="font-weight-bold headers-color">Family Size</span>: 3-6<br><br>
+                        <span class="font-weight-bold headers-color">Addictions</span>: Drinking, Smoking<br><br>
+                        <span class="font-weight-bold headers-color">Education</span>: High school, Graduation
                     </p>
-            </div>
-            <div class="col-lg-9">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6">
-                                <button type="button" pButton label="Excuse Maker"  class="btn-space tab-button"></button> &nbsp;&nbsp;
-                                <button type="button" pButton label="Late"  class="btn-space  tab-button"></button> &nbsp;&nbsp;
-                                <button type="button" pButton label="Procastinator"  class="btn-space tab-button"></button> 
-                                <div class="para-class">
-                                  <h4>Barriers</h4>
-                                </div>
-                                <div class="para-class">
-                                  <h4>Goals</h4>
-                                </div>
-                                <div class="para-class bio-classrounded">
-                                   <h4>Bio</h4>
-                                </div>
-                               <br>
-
-                          </div>
-                          <div class="col-lg-6">
-                                <div class="para-class">
-                                  <h4>Motivation</h4>
-                                </div>
-                                <div class="para-class">
-                                  <h4>Barriers</h4>
-                                </div>
-                                <div class="para-class">
-                                  <h4>Preferred Channels</h4>
-                                </div>
-                            
-                          </div>
-                          
+               </div>
+        <div class="col-lg-9">
+                <div class="para-class col-lg-12">
+                            <button class="btn btn-primary">Excuse Maker</button> &nbsp;&nbsp;
+                            <button class="btn btn-primary">Late</button> &nbsp;&nbsp;
+                            <button class="btn btn-primary">Procrastinator</button> 
+                </div>
+            <div class="row col-lg-12">
+               <div class="col-lg-6" style="padding: 0px">
+                   <div class="container">
                       
+                    <div class="col-lg-12">
+                       
+                           <div class="para-class">
+                                  <h4 class="headers-color">Barriers</h4>
+                                  <ul>
+                                      <li> Fitness level: Low</li>
+                                      <li> The Frequency of excercise: Walking</li>
+                                      <li> Consumption of Healthy food: Never</li>
+                                      <li> Disease & Mental Health: Various ailments with high-stress level</li>
+                                  </ul>
+                           </div>
+                    </div>
+                    <div class="col-lg-12">
+                            <div class="para-class">
+                                  <h4 class="headers-color">Goals</h4>
+                                  <ul>
+                                        <li>To avoid diseases</li>
+                                        <li>To live a longer life</li>
+                                        <li>Less interest in setting health goals</li>
+                                     
+                                    </ul>
+                            </div>
+                    </div>
+                    <div class="col-lg-12">
+                                <div class="para-class bio-class">
+                                    <div style="padding: 6px">
+                                        <h4 class="headers-color">Bio</h4>
+                                        <p>
+                                        
+                                           Lazy doers are not proactive in nature. These are people who are not intrinsically motivated. They need partners to encourage them to get involved in health related activities. They are given to make excuses and like to follow the lives of successful people. They feel stressed and seek comfort and security in life. They look for others' opinions and recommendations. 
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="container">
+                        <div class="col-lg-12">
+                            <div class="para-class">
+                                <span> <h4 class="headers-color">Motivation</h4> </span>
+                                <br>
+                                <span>Incentives 
+                                <p-progressBar [value]="40" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br>
+                                <span>Fear of diseases
+                                <p-progressBar [value]="60" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br>
+                                <span>Need partner
+                                <p-progressBar [value]="70" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br> 
+                                <span>For encouraging loved ones
+                                <p-progressBar [value]="10" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br>
+                                <br>
+                            </div>              
+                             
+                        </div>
+                  
+                    <div class="col-lg-12" style="padding-bottom: 10px; padding-top: 10px">
+                            <div class="para-class">
+                            <span> <h4 class="headers-color">Preferred Channels</h4> </span>
+                            <br>
+                            <span>SMS/Call
+                            <p-progressBar [value]="40" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>Email
+                            <p-progressBar [value]="70" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>Social Media
+                            <p-progressBar [value]="30" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>App notifications
+                            <p-progressBar [value]="40" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            </div>
+                        
+                    
+                    </div>
+                </div>
+                    
+              </div>
             </div>
+        </div>
+    </div>
 
     </div>
-    </div> -->
+    </div>
 </div>
-</div>
-</div> 
+
 

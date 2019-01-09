@@ -8,19 +8,24 @@ background-color: #00BBD6;
 color: white;
 height: 60px;
 }
-
-.tab-button{
-    background-color: #00BBD6;
-    color: black
-}
 .headings{
-  
     font-size: 1.5em;
     font-weight: bold;
 }
-.para-class{
-    height: 150px;
+//.para-class{
+    //height: 150px;
+//}
+// .bio-class{
+//    // background-color:#E5E6E6;
+//    // margin-bottom: 10px;
+// }
+
+.customProgress .ui-progressbar .ui-progressbar-value{
+    background: #00BBD6 !important;
 }
-.bio-class{
-    background-color:#E5E6E6;;
+.headers-color{
+color: #00BBD6;
+}
+.col-lg-12{
+    padding: 0px
 }

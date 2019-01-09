@@ -45,6 +45,8 @@ import { ClusterMemberListComponent } from './cluster-memberlist/cluster-memberl
 import { SpvNewComponent } from './spv-new/spv-new.component';
 import { NonComplianceComponent } from './non-compliance/non-compliance.component';
 import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
+import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
+import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
@@ -71,7 +73,7 @@ import {ChartModule} from 'primeng/chart';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { CreateRoleComponent } from './create-role/create-role.component';
 import {CheckboxModule} from 'primeng/checkbox';
-
+ 
 import {TreeModule} from 'primeng/tree';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DialogModule} from 'primeng/dialog';
@@ -80,6 +82,8 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import {AccordionModule} from 'primeng/accordion';
 import {TieredMenuModule} from 'primeng/tieredmenu';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {TabViewModule} from 'primeng/tabview';
+import {ProgressBarModule} from 'primeng/progressbar';
 @NgModule({
     imports: [
         CommonModule,
@@ -108,6 +112,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
         AccordionModule,
         TieredMenuModule,
         OverlayPanelModule,
+        TabViewModule,
+        ProgressBarModule,
         NgbModule.forRoot(),
         NgbDropdownModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
@@ -167,7 +173,9 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
         ClusterMemberListComponent,
         SpvNewComponent,
         NonComplianceComponent,
-        HerniaRepairComponent],
+        HerniaRepairComponent,
+        CommunicationStatisticsComponent,
+        CommunicationToEnrollComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

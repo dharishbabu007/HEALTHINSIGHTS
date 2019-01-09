@@ -98,7 +98,7 @@ onUpload() {
   
     const fd = new FormData();
     fd.append('file', this.SelectedFile);
-
+   console.log(fd)
     if(this.SelectedFile!= null){
 console.log(this.SelectedFile.name);
 this.FileManagerService.Upload(fd,this.SelectedFile.name).subscribe((res: any) => {

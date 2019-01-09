@@ -27,9 +27,10 @@
                                      View Personas
                                 </span>
                                 <hr>
-                                <span class="text-left list-values"   [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" style="cursor: pointer;">
-                                    View Memeber List
+                                <span class="text-left list-values" [routerLink]="['/member-list/']"  style="cursor: pointer;"> <!--  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" -->
+                                    View Member List
                                </span>
+                                
                         
                                
                             </ng-template>
@@ -58,10 +59,10 @@
                     <div  *ngIf="!showMainContent1" (mouseleave)="ShowHideButton1()" >
                             <table class="qmstable" style="width:100%;height:100%">
                                     <tr>
-                                        <td class="text-left list-values">Likelihood To Enroll</td>
+                                        <td class="text-left list-values" [routerLink]="['/likelihood/',2]" style="cursor: pointer;">Likelihood To Enroll</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-left list-values">Communication to Enroll</td>
+                                        <td class="text-left list-values" [routerLink]="['/communication-enroll/']" style="cursor: pointer;">Communication to Enroll</td>
                                     </tr>
                                     <tr>
                                         <td class="text-left list-values">Track Progress</td>
@@ -97,7 +98,7 @@
 
                             <table class="qmstable" style="width:100%;height:100%">
                                    <tr>
-                                       <td class="text-left list-values" [routerLink]="['/likelihoodChurn/']"  style="cursor: pointer;">Likelihood To Churn</td>
+                                       <td class="text-left list-values" [routerLink]="['/likelihood/',1]"  style="cursor: pointer;">Likelihood To Churn</td>
                                    </tr>
                                    <tr>
                                        <td class="text-left list-values">Customer Lifetime Value</td>

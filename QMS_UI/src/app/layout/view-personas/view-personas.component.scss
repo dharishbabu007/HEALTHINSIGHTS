@@ -29,8 +29,41 @@ body .ui-widget-header {
     font-size: 1rem;
     color: black;
 }
+.table-bordered{
+    border: none;
+  
+   }
+   .margin-table{
+    margin-top: 15px;
+    margin-bottom: 10px;
+   }
+   .demo-div{
+    border: 1px solid #c8ced3;
+    /* padding-left: 20px; */
+    margin-left: 0.4vw;
+    /* margin-top: 3.4vw; */
+    /* margin-right: -22vw; */
+    margin-bottom:15px;
+    width: 39vw;
+    border-radius: 5px;
+   }
+   @media (max-width:990px){
+       .demo-div{
+           width: 100%
+       }
+   }
+   .col-md-3{
+    padding: 0px !important;
+   }
+
+.col-md-9{
+       padding: 0px !important;
+   }
 /*
 .form-group {
   margin-bottom: 1.23rem;
 }
 */
+input[type="file"] {
+   size: 60px
+}
