@@ -70,12 +70,18 @@ object NcqaW34 {
     val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age3Val, KpiConstants.age6Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
     //ageFilterDf.orderBy("member_sk").show(50)
 
+    /*Continous enrollment calculation*/
+    val contEnrollStrtDate = year + "-01-01"
+    val contEnrollEndDate = year + "-12-31"
+    val continiousEnrollDf = ageFilterDf.filter(ageFilterDf.col(KpiConstants.memStartDateColName).<(contEnrollStrtDate) &&(ageFilterDf.col(KpiConstants.memEndDateColName).>(contEnrollEndDate))).select(KpiConstants.memberskColName)
+
+
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
 
 
     /*Dinominator calculation*/
-    val dinominatorDf = ageFilterDf
+    val dinominatorDf = continiousEnrollDf
     val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName).distinct()
     //dinominatorDf.show()
 
@@ -126,12 +132,6 @@ object NcqaW34 {
     val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinoExclDf, W34numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
     //commonOutputFormattedDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
 
-
-    /*common output creation2 (data to fact_hedis_qms table)*/
-    val qualityMeasureSk = DataLoadFunctions.qualityMeasureLoadFunction(spark, KpiConstants.cdcMeasureTitle).select("quality_measure_sk").as[String].collectAsList()(0)
-    val factMembershipDfForoutDf = factMembershipDf.select(KpiConstants.memberskColName, KpiConstants.lobIdColName)
-    val qmsoutFormattedDf = UtilFunctions.outputCreationForHedisQmsTable(spark, factMembershipDfForoutDf, qualityMeasureSk, data_source)
-    //qmsoutFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+KpiConstants.factHedisQmsTblName)
     spark.sparkContext.stop()
 
   }

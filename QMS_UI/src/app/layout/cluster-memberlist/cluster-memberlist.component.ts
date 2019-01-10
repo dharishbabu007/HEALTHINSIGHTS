@@ -20,17 +20,17 @@ export class ClusterMemberListComponent implements OnInit {
         { label: 'Persona2', value: 'persona2' }
     ];
     ngOnInit() {
-        this.gapsService.getMeasureDetails().subscribe((data: MemberCareGaps[]) => {
+        this.gapsService.getLikelihoodMeasureDetails().subscribe((data: MemberCareGaps[]) => {
             data.forEach(element => {
                 element.age = parseInt(element.age, 10);
             });
             this.membergaps = data;
             this.loading = false;
         });
-        this.cols = [
+        this.cols = [ 
             { field: 'id', header: 'Member Id' },
             { field: 'name', header: 'Name' },
-            { field: 'age', header: 'Age' },
+            { field: 'age1', header: 'Age' },
             { field: 'gender', header: 'Gender' },
             
             { field: 'goals', header: 'Goals' },
@@ -38,4 +38,5 @@ export class ClusterMemberListComponent implements OnInit {
             { field: 'channel', header: 'Preffered Communication Channel' },
         ];
     }
-}
+} 
+ 

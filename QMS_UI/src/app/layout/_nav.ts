@@ -206,6 +206,11 @@ export const navItems = [
             url: 'http://192.168.184.70/t/CurisSite/views/Curis_Stroke/D2rTPAexamdash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
             icon: 'fa fa-line-chart',
             },
+            {
+              name: 'OP Visits Summary',
+              url: 'http://192.168.184.70/t/CurisSite/views/OutpatientAnalysis/OutpatientVisit?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+              icon: 'fa fa-line-chart',
+            },
           ]
         },
         {

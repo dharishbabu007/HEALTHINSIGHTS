@@ -42,7 +42,7 @@
                 <span class="font-weight-bold">Ethnicity</span>: {{patientProfileForm.ethniCity}}<br><br></p>
               </div>
               <div class="col-lg-6" style="margin-top: 40px;">
-                <p class="rounded bg-secondary" style="height: 81px;">
+                <p class="rounded bg-secondary mrabox">
                   <br>
                   <span style="margin-left: 25px">
                      <b>MRA Score: </b><span class="bg-primary rounded p-1 counts">{{patientProfileForm.mraScore}}</span></span>
@@ -105,14 +105,14 @@
                         </div>-->
                         <table>
                           <tr *ngFor="let member2 of  patientProfileForm.careGaps ; let myIndex = index" >
-                            <td style="width: 6%;">
+                            <td style="width: 6vw;">
                                 <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==1" pTooltip="No Appointment Scheduled"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
                                 <span *ngIf="patientProfileForm.careGaps[myIndex].alerts==0" pTooltip="Appointment Scheduled"> <i class="fa fa-bell" aria-hidden="true"></i></span>
                             </td>
-                            <td style="width: 80%;">
+                            <td style="width: 55vw;">
                                {{member2[0]}}
                             </td>
-                            <td  pTooltip="Non-compliance potential"  style="width: 14%;"> &nbsp; {{member2[1]}} %  </td>
+                            <td  pTooltip="Non-compliance potential"  style="width: 14vw;"> &nbsp; {{member2[1]}} %  </td>
                           </tr>
                         </table>
                      

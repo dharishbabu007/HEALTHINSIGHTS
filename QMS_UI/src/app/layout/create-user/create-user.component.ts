@@ -45,7 +45,7 @@ statusList:any;
         data.forEach(item => {
           this.UserList.push({label: item.name, value: item.value});
         });
-        console.log("came here")
+        //console.log("came here")
         });
         this.GapsService.getRoleList().subscribe((data: any) => {
           this.roleList =[];
@@ -76,7 +76,7 @@ onSubmit(model,isValid){
   if (this.myForm.valid) {
     
   
- console.log(model);
+ //console.log(model);
            let userId = this.Repositry.filter(item => item.name === model.user);
            let roleId = this.roleListRepositry.filter(item => item.name === model.roleName);
            console.log(userId[0].value,roleId[0].value,model.status)
@@ -113,7 +113,7 @@ getUserValues(event){
        let roleId = this.roleListRepositry.filter(item => item.value === this.userDataRepository.roleId);
        this.myForm.controls['roleName'].setValue(roleId[0].name);
        this.myForm.controls['status'].setValue(this.userDataRepository.status);
-       console.log(this.userDataRepository.status)
+     //  console.log(this.userDataRepository.status)
       // if(this.userDataRepository.status == "Verified"){
        //  console.log("came")
        //  this.statusList = this.statusList.filter(item=>item.label !="Verified");
@@ -126,8 +126,8 @@ onChangeList(event){
 if( event == "Active"){
  this.statusList = this.statusList.filter(item => item.label == "Inactive");
 }
-console.log(this.statusList)
-console.log(this.myForm.controls['status'].value)
+//console.log(this.statusList)
+//console.log(this.myForm.controls['status'].value)
 if(this.myForm.controls['status'].value == "New"){
  this.statusList = this.statusList.filter(item => item.label !="New");
 }    

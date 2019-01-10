@@ -35,6 +35,8 @@ import { ClusterMemberListComponent } from './cluster-memberlist/cluster-memberl
 import { SpvComponent } from './spv/spv.component';
 import { NonComplianceComponent } from './non-compliance/non-compliance.component';
 import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
+import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
+import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 
 const routes: Routes = [
     {
@@ -90,6 +92,7 @@ const routes: Routes = [
               expectedRole: '6'
             } },
             { path: 'member-list', component: MemberListComponent},
+            { path: 'member-list/:type', component: MemberListComponent},
             { path: 'measurecreator', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '4'
@@ -119,16 +122,18 @@ const routes: Routes = [
             { path: 'create-personas', component: CreatePersonasComponent},
             { path: 'cluster-analysis', component: ClusterAnalysisComponent},
             { path: 'likelihoodChurn', component: LikelihoodToChurnComponent},
+            { path: 'likelihood/:type', component: LikelihoodToChurnComponent},
             { path: 'cluster-statistics', component: ClusterStatisticsComponent},
             { path: 'create-persona', component: ViewPersonaComponent},
-            { path: 'likelihood-statistics', component: LikelihoodStatisticsComponent},
+            { path: 'likelihood-statistics/:type', component: LikelihoodStatisticsComponent},
             { path: 'view-persona', component:PersonaDataComponent},
             { path: 'cluster-memberlist', component:ClusterMemberListComponent},
             { path: 'spv1/:memberId', component: SpvNewComponent},
             { path: 'non-compliance', component: NonComplianceComponent},
             { path: 'non-compliance/:redirect', component: NonComplianceComponent},
-            { path: 'hernia-repair', component: HerniaRepairComponent}
-
+            { path: 'hernia-repair', component: HerniaRepairComponent},
+            { path: 'communication-stats', component: CommunicationStatisticsComponent},
+            { path: 'communication-enroll', component:CommunicationToEnrollComponent}
         ]
     }
 ];

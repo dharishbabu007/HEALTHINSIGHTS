@@ -31,40 +31,47 @@ object KpiConstants {
     dbName
   }
 
+
   /*age calculation constants*/
-  val age18Val = "18"
-  val age74Val = "74"
   val age1999Val = "19.99"
+  val age0Val = "0"
   val age1Val = "1"
   val age2Val = "2"
-  val age20Val = "20"
-  val age12Val = "12"
-  val age19Val = "19"
-  val age21Val = "21"
-  val age75Val = "75"
-  val age65Val = "65"
-  val age66Val = "66"
-  val age16Val = "16"
-  val age24Val = "24"
-  val age67Val = "67"
-  val age85Val = "85"
-  val age40Val = "40"
   val age3Val = "3"
+  val age4Val = "4"
+  val age5Val = "5"
   val age6Val = "6"
   val age7Val = "7"
-  val age51Val = "51"
-  val age52Val = "52"
-  val age11Val = "11"
-  val age13Val = "13"
-  val age10val = "10"
   val age9Val = "9"
-  val age0Val = "0"
+  val age10Val = "10"
+  val age11Val = "11"
+  val age12Val = "12"
+  val age13Val = "13"
+  val age14Val = "14"
+  val age15Val = "15"
+  val age16Val = "16"
   val age17Val = "17"
+  val age18Val = "18"
+  val age19Val = "19"
+  val age20Val = "20"
+  val age21Val = "21"
+  val age24Val = "24"
+  val age40Val = "40"
   val age44Val = "44"
   val age45Val = "45"
+  val age51Val = "51"
+  val age52Val = "52"
   val age64Val = "64"
+  val age65Val = "65"
+  val age66Val = "66"
+  val age67Val = "67"
+  val age74Val = "74"
+  val age75Val = "75"
+  val age80Val = "80"
   val age81Val = "81"
+  val age85Val = "85"
   val age120Val = "120"
+
 
 
 
@@ -182,6 +189,7 @@ object KpiConstants {
   val fiftyDobColName = "fifty_dob"
   val sixtyDobColName = "sixty_dob"
   val countColName = "count"
+  val mrbpreadingColName = "most_recent_bpreading"
 
 
   /*Output column names*/
@@ -273,6 +281,12 @@ object KpiConstants {
   val emptyMesureId = ""
   val abaMeasureId = "ABA"
   val advMeasureId = "ADV"
+  val adv1MeasureId = "ADV1"
+  val adv2MeasureId = "ADV2"
+  val adv3MeasureId = "ADV3"
+  val adv4MeasureId = "ADV4"
+  val adv5MeasureId = "ADV5"
+  val adv6MeasureId = "ADV6"
   val awcMeasureId = "AWC"
   val cdcMeasureId = "CDC"
   val cdc1MeasureId = "CDC1"
@@ -340,11 +354,15 @@ object KpiConstants {
   val wcc2bMeasureId = "WCC2B"
   val wcc1cMeasureId = "WCC1C"
   val wcc2cMeasureId = "WCC2C"
+  val aapMeasureId = "AAP"
   val aap1MeasureId = "AAP1"
   val aap2MeasureId = "AAP2"
   val aap3MeasureId = "AAP3"
   val capMeasureId = "CAP"
   val cap1MeasureId = "CAP1"
+  val cap2MeasureId = "CAP2"
+  val cap3MeasureId = "CAP3"
+  val cap4MeasureId = "CAP4"
   val cbpMeasureId = "CBP"
 
 
@@ -386,6 +404,7 @@ object KpiConstants {
   val diabeticReScreeWECProfessionalVal = "Diabetic Retinal Screening with Eye Care Professional"
   val diabeticRenScreNegativeVal = "Diabetic Retinal Screening Negative"
   val unilateralEyeEnucleationVal = "Unilateral Eye Enucleation"
+  val bilateralModVal = "Bilateral Modifier"
   val unilateralEyeEnuLeftVal = "Unilateral Eye Enucleation Left"
   val unilateralEyeEnuRightVal = "Unilateral Eye Enucleation Right"
   val diabetesExclusionVal = "Diabetes Exclusions"
@@ -408,6 +427,7 @@ object KpiConstants {
   val telehealthModifierVal = "Telehealth Modifier"
   val telehealthPosVal = "Telehealth POS"
   val nonAcuteInPatientVal = "Nonacute Inpatient"
+  val nonacuteInPatStayVal = "Nonacute Inpatient Stay"
   val telephoneVisitsVal = "Telephone Visits"
   val onlineAssesmentVal = "Online Assessments"
   val inPatientStayVal = "Inpatient Stay"
@@ -459,26 +479,12 @@ object KpiConstants {
   val pneuConjuVaccine13Val = "Pneumococcal Conjugate Vaccine 13"
   val pneuPolyVaccine23Val = "Pneumococcal Polysaccharide Vaccine 23"
   val ambulatoryVisitVal = "Ambulatory Visits"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  val mammographyVal = "Mammography"
+  val aceInhArbMedVal = "ACE Inhibitor/ARB Medications"
+  val otherAmbulatoryVal = "Other Ambulatory Visits"
+  val essentialHyptenVal = "Essential Hypertension"
+  val outpatwoUbrevVal = "Outpatient Without UBREV"
+  val remotebpmVal = "Remote Blood Pressure Monitoring"
 
 
 
@@ -488,12 +494,25 @@ object KpiConstants {
   /*Codesystem constants*/
   val icdCodeVal = "ICD%"
   val cptCodeVal = "CPT"
+  val cptcat2CodeVal = "CPT-CAT-II"
   val hcpsCodeVal = "HCPCS"
   val ubrevCodeVal = "UBREV"
+  val ubtobCodeVal = "UBTOB"
   val loincCodeVal = "LOINC"
   val modifierCodeVal = "Modifier"
+  val posCodeVal = "POS"
   val cvxCodeVal = "CVX"
+  val hl7CodeVal = "HL7"
   val snomedctCodeVal = "SNOMED CT US Edition"
+  val bilateralCodeVal = "bilateral (2-view study of each breast)"
+  val g204CodeVal = "including computer-aided detection (cad) when performed; bilateral (G0204)"
+  val g206CodeVal = "including computer-aided detection (cad) when performed; unilateral (G0206)"
+  val allInclusiveCodeVal = "all-inclusive (T1015)"
+  val ppsCodeVal = "includes a personalized prevention plan of service (pps)"
+  val initialCodeVal = "initial visit (G0438)"
+  val g0402CodeVal = "services limited to new beneficiary during the first 12 months of medicare enrollment (G0402)"
+  val unspecifiedCodeVal = "unspecified"
+
 
 
 
@@ -793,20 +812,146 @@ object KpiConstants {
 
   val cbpDinoExclValueSet = List("Frailty")
 
-  val cbpDinoCodeSystem = List("CPT", "HCPCS")
+  val cbpDinoExclCodeSystem = List("CPT", "HCPCS")
 
-  val cbpCommonNumeratorValueSet = List("Essential Hypertension")
+  val cbpCommonDinominatorValueSet = List("Essential Hypertension")
 
-  val cbpNumerator1ValueSet = List("Outpatient","Telehealth Modifier")
+  val cbpDinominator1ValueSet = List("Outpatient","Telehealth Modifier")
 
-  val cbpNumerator2ValueSet = List("Telephone Visits")
+  val cbpDinominator2ValueSet = List("Telephone Visits")
 
-  val cbpNumerator3ValueSet = List("Online Assessments")
+  val cbpDinominator3ValueSet = List("Online Assessments")
 
-  val cbpNumerator1CodeSystem = List("CPT","HCPCS","Modifier")
+  val cbpDinominator4ValueSet = List("Online Assessments")
 
-  val cbpNumerator2CodeSystem = List("CPT")
 
-  val cbpNumerator3CodeSystem = List("CPT")
+
+  val cbpDinominator1CodeSystem = List("CPT","HCPCS","Modifier")
+
+  val cbpDinominator2CodeSystem = List("CPT")
+
+  val cbpDinominator3CodeSystem = List("CPT")
+
+  val cbpDinominatorExcl2aCodeSystem = List("CPT","HCPCS","UBREV")
+
+  val cbpDinominatorExcl2aValueSet = List("Outpatient","Observation","ED","Nonacute Inpatient")
+
+  val cbpDinominatorICDExcl2ValueSet = List("Advanced Illness")
+
+  val cbpDinominatorExcl3aCodeSystem = List("CPT","UBREV")
+
+  val cbpDinominatorExcl3aValueSet = List("Acute Inpatient")
+
+  val cbpNumerator1CodeSystem = List("CPT","HCPCS","UBREV")
+
+  val cbpNumerator1ValueSet = List("Outpatient Without UBREV","Nonacute Inpatient","Remote Blood Pressure Monitoring")
+
+  val cbpNumeratorSystolicCodeSystem = List("CPT-CAT-II")
+
+  val cbpNumeratorSystolicValueSet = List("Systolic Less Than 140")
+
+  val cbpNumeratorDiastolicCodeSystem = List("CPT-CAT-II")
+
+  val cbpNumeratorDiastolicValueSet = List("Diastolic Less Than 80","Diastolic 80–89")
+
+  val cbpOptionalExclusion1CodeSystem = List("CPT","HCPCS","POS","UBREV","UBTOB")
+
+  val cbpOptionalExclusion1ValueSet = List("ESRD","ESRD Obsolete","Kidney Transplant")
+
+  val cbpOptionalExclusionICDValueSet = List("ESRD","Kidney Transplant")
+
+  val cbpPregnancyExclValueSet = List("Pregnancy")
+
+  val cbpOptionalExclusion2CodeSystem = List("Inpatient Stay","Nonacute Inpatient Stay")
+
+  val cbpOptionalExclusion2ValueSet = List("UBREV","UBTOB")
+
+
+  val ccsMeasureId = "CCS"
+
+  val ccsNumeratorStep1ValueSet = List("Cervical Cytology")
+
+  val ccsNumeratorStep1CodeSystem = List("CPT","HCPCS","LOINC","UBREV")
+
+  val ccsDinomenatorExclValueSet = List("Absence of Cervix")
+
+  val ccsDinomenatorExclCodeSystem = List("CPT")
+
+  val ccsNumeratorStep2ValueSet = List("HPV Tests","Cervical Cytology")
+
+  val ccsNumeratorStep2CodeSystem = List("CPT","HCPCS","LOINC","UBREV","UBTOB")
+
+
+  val coaMeasureTitle = "Care of Older Adults (COA)"
+
+  val coaMeasureId = "COA"
+
+  val coaAdvanceCareValueSet = List("Advance Care Planning")
+
+  val coaAdvanceCareCodeSystem = List("CPT","CPT-CAT-II","HCPCS")
+
+  val coaMedicationReviewCodeSystem = List("CPT","CPT-CAT-II")
+
+  val coaMedicationReviewValueSet = List("Medication Review")
+
+  val coaMedicationListCodeSystem = List("CPT-CAT-II","HCPCS")
+
+  val coaMedicationListValueSet = List("Medication List")
+
+  val coaTransitionalCareValueSet = List("Transitional Care Management Services")
+
+  val coaTransitionalCareCodeSystem = List("CPT")
+
+  val coaNumeratorExcludeValueSet = List("Acute Inpatient","Acute Inpatient POS")
+
+  val coaNumeratorExcludeCodeSystem = List("CPT","POS","UBREV")
+
+  val coaFunctionalStatusValueSet = List("Functional Status Assessment")
+
+  val coaFunctionalStatusCodeSystem = List("CPT","CPT-CAT-II","HCPCS")
+
+  val coaPainAssessmentValueSet = List("Pain Assessment")
+
+  val coaPainAssessmentCodeSystem = List("CPT-CAT-II")
+
+
+
+
+  val smdMeasureTitle = "Diabetes Monitoring for People with Diabetes and Schizophrenia (SMD)"
+  val smdMeasureId = "SMD"
+
+  val ssdMeasureTitle = "Diabetes Screening for People with Schizophrenia or Bipolar Disorder Who Are Using Antipsychotic Medications (SSD)"
+  val ssdMeasureId = "SSD"
+  val ssdLongActingInjectionsValueSet = List("Long-Acting Injections")
+  val ssdAntipsychoticMedicationListVal = List("Antipsychotic Medications")
+  val glucoseTestsValueSet = "Glucose Tests"
+  val otherBipolarDisorder = "Other Bipolar Disorder"
+  val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
+  val CcsMeasureTitle = "Cervical Cancer Screening"
+
+
+
+
+  val smcMeasureTitle = "Cardiovascular Monitoring for People with Cardiovascular Disease and Schizophrenia (SMC)"
+  val smcMeasureId = "SMC"
+  val bHStandAloneAcuteInpatientVal = "BH Stand Alone Acute Inpatient"
+  val schizophreniaVal = "Schizophrenia"
+  val bipolarDisorderVal = "Bipolar Disorder"
+  //val otherBipolarDisorder = "Other Bipolar Disorder"
+  //val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
+  val acuteInpatientPosVal = "Acute Inpatient POS"
+  val outpatientPosVal = "Outpatient POS"
+  val bhOutpatientVal = "BH Outpatient"
+  val partialHospitalizationPosVal = "Partial Hospitalization POS"
+  val partialHospitalizationIntensiveOutpatientVal = "Partial Hospitalization/Intensive Outpatient"
+  val communityMentalHealthCenterPosVal = "Community Mental Health Center POS"
+  val electroconvulsiveTherapyVal = "Electroconvulsive Therapy"
+  val edPosVal = "ED POS"
+  val bhStandAloneNonacuteInpatientVal = "BH Stand Alone Nonacute Inpatient"
+  val nonacuteInpatientPosVal = "Nonacute Inpatient POS"
+  val amiVal ="AMI"
+  val ldlcTestsVal = "LDL-C Tests"
+  val cptCatIIVal = "CPT-CAT-II"
+
 
 }
