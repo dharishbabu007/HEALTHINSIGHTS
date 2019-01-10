@@ -14,14 +14,14 @@ object NcqaCCS {
 
   def main(args: Array[String]): Unit = {
 
+    //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
-    /*Reading the program arguments*/
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
     val dbName = args(3)
+    val measureId = args(4)
     var data_source = ""
-    var measurementYearUpper = 0
 
     /*define data_source based on program type. */
     if ("ncqatest".equals(programType)) {
@@ -37,28 +37,41 @@ object NcqaCCS {
     val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACCS")
     conf.set("hive.exec.dynamic.partition.mode","nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    //</editor-fold>
 
+    //<editor-fold desc="Loading Required Tables to memory">
 
     import spark.implicits._
 
-
-    var lookupTableDf = spark.emptyDataFrame
-
-
-    /*Loading dim_member,fact_claims,fact_membership , dimLocationDf, refLobDf, dimFacilityDf, factRxClaimsDf tables */
+    /*Loading dim_member,fact_claims,fact_membership tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
     val factClaimDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factClaimTblName, data_source)
     val factMembershipDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factMembershipTblName, data_source)
     val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimLocationTblName, data_source)
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
     val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
-    val factRxClaimsDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factRxClaimTblName,data_source)
+    val factRxClaimsDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factRxClaimTblName, data_source)
+    //</editor-fold>
 
+    //<editor-fold desc="Initila Join, Continuous Enrollment,Allowable gap and Age filter">
 
     /*Initial join function call for prepare the data fro common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.CcsMeasureTitle)
+    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.ccsMeasureTitle)
 
-    /*Loading view table */
+    /*Continuous Enrollment*/
+    var contEnrollStartDate = ""
+    if(KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)){
+      contEnrollStartDate = year.toInt - 2 + "-01-01"
+    }
+    else{
+      contEnrollStartDate = year + "-01-01"
+    }
+
+    val contEnrollEndDate = year + "-12-31"
+    val continuousEnrollDf = initialJoinedDf.filter(initialJoinedDf.col(KpiConstants.memStartDateColName).<=(contEnrollStartDate) && initialJoinedDf.col(KpiConstants.memEndDateColName).>=(contEnrollEndDate))
+
+
+    /*Allowable Gap filter*/
     var lookUpDf = spark.emptyDataFrame
     if ((KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)) || (KpiConstants.medicareLobName.equalsIgnoreCase(lob_name))) {
 
@@ -68,106 +81,90 @@ object NcqaCCS {
 
       lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
     }
-
-    /*define Lob_Name  is commercial three years as mesurement year else one year*/
-    if("Medicaid".equals(lob_name)) {
-      measurementYearUpper = KpiConstants.measurementOneyearUpper
-    }
-    else {
-      measurementYearUpper = KpiConstants.measuremetTwoYearUpper
-    }
-
-    /*Remove the Elements who are present on the view table.*/
-
-    val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
-
-    /*Continous enrollment calculation*/
-    val contEnrollStrtDate =KpiConstants.measurementYearLower + "-01-01"
-    val contEnrollEndDate = measurementYearUpper + "-12-31"
-    val continiousEnrollDf = commonFilterDf.filter(commonFilterDf.col(KpiConstants.memStartDateColName).<(contEnrollStrtDate) &&(commonFilterDf.col(KpiConstants.memEndDateColName).>(contEnrollEndDate)))
+    val commonFilterDf = continuousEnrollDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
 
 
-    /*filter out the members whoose age is between 24 and 64 and female */
-    val ageAndGenderFilter24To64Df = UtilFunctions.ageFilter(continiousEnrollDf, KpiConstants.dobColName, year, KpiConstants.age24Val, KpiConstants.age64Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal).filter($"gender".===("F"))
+    /*Age filter for dinominator*/
+    val ageAndGenderFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age24Val, KpiConstants.age64Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal).filter($"gender".===("F"))
+    //</editor-fold>
 
-    val ageAndGenderFilter30To64Df = UtilFunctions.ageFilter(continiousEnrollDf, KpiConstants.dobColName, year, KpiConstants.age24Val, KpiConstants.age64Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal).filter($"gender".===("F"))
+    //<editor-fold desc="Dinominator Calculation">
 
+    val dinominatorDf = ageAndGenderFilterDf
+    val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName)
+    //</editor-fold>
 
+    //<editor-fold desc="Dinominator Exclusion calculation">
 
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
 
+    //<editor-fold desc="Dinominator Exclusion1(Absence od cervix)">
 
-    /*Dinominator Calculation starts*/
+    /*Mmebers who has 'Absence of Cervix' as proceedure code*/
+    val absOfCervixValList = List(KpiConstants.absOfCervixVal)
+    val absOfCervixCodeSystem = List(KpiConstants.cptCodeVal)
+    val joinedForabsOfCervixProcDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, absOfCervixValList, absOfCervixCodeSystem).select(KpiConstants.memberskColName)
 
+    /*Mmebers who has 'Absence of Cervix' as primary diagnosis*/
+    val primaryDiagCodeSystem = List(KpiConstants.icdCodeVal)
+    val joinedForabsOfCervixDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, absOfCervixValList, primaryDiagCodeSystem).select(KpiConstants.memberskColName)
 
-    val dinominatorDf = continiousEnrollDf  /*d*/
+    val absOfCervixDf = joinedForabsOfCervixProcDf.union(joinedForabsOfCervixDiagDf)
+    //</editor-fold>
 
-    /*Dinominator Exclusion Calculation as proceedure code*/
+    //<editor-fold desc="Dinominator Exclusion2 (Hospice)">
 
-    val hedisJoinedForDinoCcsAsPrDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, KpiConstants.ccsDinomenatorExclValueSet, KpiConstants.ccsDinomenatorExclCodeSystem)
-    val measurementForDinoCcsAsPrDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDinoCcsAsPrDf, "start_date", year, KpiConstants.measurementYearLower, measurementYearUpper).select(KpiConstants.memberskColName).distinct()
+    val hospiceDf = UtilFunctions.hospiceFunction(spark, factClaimDf, refHedisDf).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
-    /*Dinominator Exclusion Calculation as primary diagnosis*/
+    val dinominatorExclusionDf = absOfCervixDf.union(hospiceDf)
+    val dinominatorAfterExclusionDf = dinominatorDf.except(dinominatorExclusionDf)
+    //</editor-fold>
 
+    //<editor-fold desc="Numerator Calculation">
 
+    //<editor-fold desc="Step 1(Cervical Cytology)">
 
-    val hedisJoinedForDinoCcsAsDiagDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, KpiConstants.ccsDinomenatorExclValueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForDinoCcsAsDiagDf = UtilFunctions.mesurementYearFilter(hedisJoinedForDinoCcsAsDiagDf, "start_date", year, KpiConstants.measurementYearLower, measurementYearUpper).select(KpiConstants.memberskColName).distinct()
+    val cervicalCytologyValList = List(KpiConstants.cervicalCytologyVal)
+    val cervicalCytologyCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.ubrevCodeVal, KpiConstants.loincCodeVal)
+    val joinedForcervCytoDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, cervicalCytologyValList, cervicalCytologyCodeSystem)
+    val measurForcervCytoDf = UtilFunctions.mesurementYearFilter(joinedForcervCytoDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurement3Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val numeratorStep1Df = measurForcervCytoDf.select(KpiConstants.memberskColName).intersect(ageAndGenderFilterDf.select(KpiConstants.memberskColName))
+    //</editor-fold>
 
-    val finalDinoExclusion1Df = measurementForDinoCcsAsPrDf.union(measurementForDinoCcsAsDiagDf)
+    //<editor-fold desc="Step 2 (HPV test and Cervic test, not present in step1 and age greater than 30)">
 
-    /*Dinominator Exclusion2 (Hospice)*/
-    val hospiceDinoExclDf = UtilFunctions.hospiceMemberDfFunction(spark, dimMemberDf, factClaimDf, refHedisDf).select(KpiConstants.memberskColName)
-    val measurementExcl = UtilFunctions.mesurementYearFilter(continiousEnrollDf, "start_date", year,  KpiConstants.measurementYearLower, measurementYearUpper).select(KpiConstants.memberskColName)
-    val unionOfDinoExclAndYearDf = measurementExcl.union(hospiceDinoExclDf)
-    val dinominatorExcl2 = ageAndGenderFilter24To64Df.as("df1").join(unionOfDinoExclAndYearDf.as("df2"), $"df1.member_sk" === $"df2.member_sk", KpiConstants.innerJoinType).select("df1.member_sk")
+    val age30to64Df = UtilFunctions.ageFilter(ageAndGenderFilterDf,KpiConstants.dobColName,year,KpiConstants.age30Val, KpiConstants.age64Val,KpiConstants.boolTrueVal,KpiConstants.boolTrueVal).select(KpiConstants.memberskColName)
+    /*Members who are not present in numeratorStep1Df and age is 30-64*/
+    val memberDf = age30to64Df.except(numeratorStep1Df)
 
-    val finalDinoExclusion = finalDinoExclusion1Df.union(dinominatorExcl2) /*dx*/
+    val hpvtestValList = List(KpiConstants.hpvTestVal)
+    val hpvtestCodeSsytem = List(KpiConstants.cptCodeVal, KpiConstants.loincCodeVal)
+    val joinedForhpvtestDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId,hpvtestValList, hpvtestCodeSsytem)
+    val measurForhpvtestDf = UtilFunctions.measurementYearFilter(joinedForhpvtestDf, KpiConstants.startDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement2Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val finalDinominatorDf = dinominatorDf.except(finalDinoExclusion) /*D*/
+    /*Members who has both cervic and HPV test with service date aparts 4 or less days*/
+    val cerAndhpvtestDf = measurForcervCytoDf.as("df1").join(measurForhpvtestDf.as("df2"),$"sdf1.${KpiConstants.memberskColName}" === $"sdf2.${KpiConstants.memberskColName}",KpiConstants.innerJoinType)
+                                                              .filter(abs(datediff($"sdf1.${KpiConstants.startDateColName}", $"sdf2.${KpiConstants.startDateColName}")).<=(4)).select($"sdf1.${KpiConstants.memberskColName}")
+    //</editor-fold>
 
-    /*Dinominator Calculation ends*/
+    val numeratorUnionDf = numeratorStep1Df.union(cerAndhpvtestDf)
+    val numeratorDf = numeratorUnionDf.intersect(dinominatorAfterExclusionDf)
+    //</editor-fold>
 
-    /* Numerator Calculation Starts */
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
-    /*Step 1 "Cervical Cytology" */
-
-    val hedisJoinedForStep1CcsDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, KpiConstants.ccsNumeratorStep1ValueSet, KpiConstants.ccsNumeratorStep1CodeSystem)
-    val measurementForStep1CcsDf = UtilFunctions.mesurementYearFilter(hedisJoinedForStep1CcsDf, "start_date", year, KpiConstants.measurementYearLower, measurementYearUpper).select(KpiConstants.memberskColName,"start_date")
-    val finalStep1NumeratorDf = measurementForStep1CcsDf.intersect(ageAndGenderFilter24To64Df)
-
-    /*Step 2 "HPV test " */
-
-    val hedisJoinedForStep2CcsDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ccsMeasureId, KpiConstants.ccsNumeratorStep2ValueSet, KpiConstants.ccsNumeratorStep2CodeSystem)
-    val measurementForStep2CcsDf = UtilFunctions.mesurementYearFilter(hedisJoinedForStep2CcsDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementFourYearUpper).select(KpiConstants.memberskColName,"start_date")
-
-    /*"Cervical Cytology" with HPV test having date difference as 4 days */
-
-    val numeratorForStep2CcsDf = measurementForStep1CcsDf.as("df1").join(measurementForStep2CcsDf.as("df2"),(measurementForStep1CcsDf.col(KpiConstants.memberskColName) === measurementForStep2CcsDf.col(KpiConstants.memberskColName)) &&  (abs(datediff(measurementForStep1CcsDf.col("start_date"), measurementForStep2CcsDf.col("start_date"))) .<= (4)), KpiConstants.innerJoinType).select(KpiConstants.memberskColName)
-
-    val finalStep2NumeratorDf = numeratorForStep2CcsDf.intersect(ageAndGenderFilter30To64Df)
-
-    /* Step3 Sum the events from steps 1 and 2 to obtain the rate */
-
-    val numeratorDf = finalStep1NumeratorDf.union(finalStep2NumeratorDf).select("df1.member_sk")
-
-    /* Final Numerator after intersection with dinominator */
-
-    val finalNumeratorDf = numeratorDf.intersect(finalDinominatorDf)
-    finalNumeratorDf.show()
-
-    /*common output creation(data to fact_gaps_in_hedis table)*/
-    val numeratorReasonValueSet = KpiConstants.ccsNumeratorStep1ValueSet ::: KpiConstants.ccsNumeratorStep2ValueSet
-    val dinoExclReasonValueSet = KpiConstants.ccsDinomenatorExclCodeSystem
+    val numeratorReasonValueSet = hpvtestValList ::: cervicalCytologyValList
+    val dinoExclReasonValueSet = absOfCervixValList
     val numExclReasonValueSet = KpiConstants.emptyList
     val outReasonValueSet = List(numeratorReasonValueSet, dinoExclReasonValueSet, numExclReasonValueSet)
     val sourceAndMsrList = List(data_source,KpiConstants.cisDtpaMeasureId)
 
     val numExclDf = spark.emptyDataFrame
-    val commonOutputFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, finalDinoExclusion, finalNumeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
-    //commonOutputFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable(KpiConstants.dbName+"."+factGapsInHedisTblName)
-
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclusionDf, numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
 
     spark.sparkContext.stop()
   }

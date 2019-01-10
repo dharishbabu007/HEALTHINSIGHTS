@@ -105,7 +105,7 @@ object NcqaCBP {
     //<editor-fold desc="Outpatient without UBREV  with or without Telehealth Modifier ">
 
     val outPatwoUbrevValList = List(KpiConstants.outpatwoUbrevVal,KpiConstants.telehealthModifierVal)
-    val outPatwoUbrevCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal,KpiConstants.modifierCodeVal)
+    val outPatwoUbrevCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal,KpiConstants.modifierCodeVal)
     val joinForOutpatWoUbrevDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf,KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cbpMeasureId,outPatwoUbrevValList,outPatwoUbrevCodeSystem)
     val measrForOutpatWoUbrevDf = UtilFunctions.measurementYearFilter(joinForOutpatWoUbrevDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
     //</editor-fold>
