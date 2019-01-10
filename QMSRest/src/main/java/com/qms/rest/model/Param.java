@@ -11,11 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ClusterData {
-
-//	Set<ClusterCateVar> clusterCateVars;	
-//	Set<ClusterContVar> clusterContVars;
-	
-	PersonaDefine clusterPersona;	
-	PersonaClusterFeatures personaClusterFeatures;
+public class Param {
+	String value1;
+	String value2;
+	String value3;
 }
