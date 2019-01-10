@@ -65,7 +65,7 @@ object NcqaIMATD {
     /*Remove the Elements who are present on the view table.*/
     val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
     /*filter out the members whoose age is between 10 and 13 */
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age10val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age10Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
 
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)

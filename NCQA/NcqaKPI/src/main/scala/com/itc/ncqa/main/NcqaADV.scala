@@ -80,9 +80,9 @@ object NcqaADV {
       case KpiConstants.adv1MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age2Val, KpiConstants.age3Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
       case KpiConstants.adv2MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age4Val, KpiConstants.age6Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
       case KpiConstants.adv3MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age7Val, KpiConstants.age10Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-      case KpiConstants.adv1MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age11Val, KpiConstants.age14Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-      case KpiConstants.adv1MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age15Val, KpiConstants.age18Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-      case KpiConstants.adv1MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age19Val, KpiConstants.age20Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+      case KpiConstants.adv4MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age11Val, KpiConstants.age14Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+      case KpiConstants.adv5MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age15Val, KpiConstants.age18Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+      case KpiConstants.adv6MeasureId => UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age19Val, KpiConstants.age20Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
     }
     //</editor-fold>
 

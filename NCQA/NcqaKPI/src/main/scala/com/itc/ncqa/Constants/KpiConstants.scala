@@ -56,6 +56,7 @@ object KpiConstants {
   val age20Val = "20"
   val age21Val = "21"
   val age24Val = "24"
+  val age30Val = "30"
   val age40Val = "40"
   val age44Val = "44"
   val age45Val = "45"
@@ -75,7 +76,14 @@ object KpiConstants {
 
 
 
-
+  /*days constant*/
+  val days60 = 60
+  val days730 = 730
+  val days365 = 365
+  val days30 = 30
+  val days3 = 3
+  val days0 = 0
+  val days180 = 180
 
   /*measurement Year Constants*/
   val measurementYearLower = 0
@@ -90,6 +98,7 @@ object KpiConstants {
   val measurement2Val = 2
   val measurement3Val = 3
   val measurement4Val = 4
+  val measurement5Val = 5
   val measurement9Val = 9
   val measurement10Val = 10
 
@@ -138,6 +147,10 @@ object KpiConstants {
   val aisMeasureTitle = "Adult Immunization Status (AIS)"
   val capMeasureTitle = "Children and Adolescents Access to Primary Care Practitioners (CAP)"
   val cbpMeasureTitle = "Controlling High Blood Pressure (CBP)"
+  val ccsMeasureTitle = "Cervical Cancer Screening"
+  val cwpMeasureTitle = "Appropriate Testing for Children with Pharyngitis (CWP)"
+  val uriMeasureTitle = "Appropriate Treatment for Children with Upper Respiratory Infection (URI)"
+  val sprMeasureTitle = "Use of Spirometry Testing in the Assessment and Diagnosis of COPD (SPR)"
 
 
 
@@ -190,6 +203,8 @@ object KpiConstants {
   val sixtyDobColName = "sixty_dob"
   val countColName = "count"
   val mrbpreadingColName = "most_recent_bpreading"
+  val contenrollLowCoName = "continuous_Enroll_LowerDate"
+  val contenrollUppCoName = "continuous_Enroll_UpperDate"
 
 
   /*Output column names*/
@@ -334,7 +349,7 @@ object KpiConstants {
   val cisCmb4MeasureId = "CISCMB4"
   val cisCmb3MeasureId = "CISCMB3"
   val cisCmb2MeasureId = "CISCMB2"
-  val colMesureId = "COL"
+  val colMeasureId = "COL"
   val bcsMeasureId = "BCS"
   val ImamenMeasureId = "IMAMEN"
   val ImatdMeasureId = "IMATD"
@@ -364,6 +379,10 @@ object KpiConstants {
   val cap3MeasureId = "CAP3"
   val cap4MeasureId = "CAP4"
   val cbpMeasureId = "CBP"
+  val ncsMeasureId = "NCS"
+  val cwpMeasureId = "CWP"
+  val uriMeasureId = "URI"
+  val sprMeasureId = "SPR"
 
 
 
@@ -485,6 +504,23 @@ object KpiConstants {
   val essentialHyptenVal = "Essential Hypertension"
   val outpatwoUbrevVal = "Outpatient Without UBREV"
   val remotebpmVal = "Remote Blood Pressure Monitoring"
+  val absOfCervixVal = "Absence of Cervix"
+  val cervicalCytologyVal = "Cervical Cytology"
+  val hpvTestVal = "HPV Tests"
+  val cervicalCancerVal = "Cervical Cancer"
+  val hivVal = "HIV"
+  val hivType2Val = "HIV Type 2"
+  val disordersoftheImmuneSystemVal = "Disorders of the Immune System"
+  val hpvTestsVal = "HPV Tests"
+  val pharyngitisVal = "Pharyngitis"
+  val cwpAntibioticMedicationListsVal = "CWP Antibiotic Medications"
+  val groupAStrepTestsVal = "Group A Strep Tests"
+  val uriVal = "URI"
+  val copdVal = "COPD"
+  val emphysemaVal = "Emphysema"
+  val chronicBronchitisVal = "Chronic Bronchitis"
+  val nonAcuteInPatientStayVal = "Nonacute Inpatient Stay"
+  val competingDiagnosisVal = "Competing Diagnosis"
 
 
 
@@ -877,7 +913,7 @@ object KpiConstants {
 
   val ccsDinomenatorExclCodeSystem = List("CPT")
 
-  val ccsNumeratorStep2ValueSet = List("HPV Tests","Cervical Cytology")
+  val ccsNumeratorStep2ValueSet = List("HPV Tests")
 
   val ccsNumeratorStep2CodeSystem = List("CPT","HCPCS","LOINC","UBREV","UBTOB")
 
@@ -927,7 +963,7 @@ object KpiConstants {
   val glucoseTestsValueSet = "Glucose Tests"
   val otherBipolarDisorder = "Other Bipolar Disorder"
   val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
-  val CcsMeasureTitle = "Cervical Cancer Screening"
+
 
 
 
