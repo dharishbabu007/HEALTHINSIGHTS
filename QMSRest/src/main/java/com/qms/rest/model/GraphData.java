@@ -1,5 +1,7 @@
 package com.qms.rest.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ClusterData {
-
-//	Set<ClusterCateVar> clusterCateVars;	
-//	Set<ClusterContVar> clusterContVars;
-	
-	PersonaDefine clusterPersona;	
-	PersonaClusterFeatures personaClusterFeatures;
+public class GraphData {
+	List<String> x;
+	List<Integer> y;
 }

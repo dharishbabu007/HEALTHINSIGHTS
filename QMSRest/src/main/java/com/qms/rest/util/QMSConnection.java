@@ -27,10 +27,6 @@ public class QMSConnection {
 	public static final String PHOENIX_JDBC_DRIVER = "org.apache.phoenix.jdbc.PhoenixDriver";
 	
 	public Connection getOracleConnection() throws Exception {
-		
-//		System.out.println("Oracle JDBC Url   --> " + qmsProperty.getOracleJDBCUrl());
-//		System.out.println("Oracle User Name  --> " + qmsProperty.getOracleUserName());
-//		System.out.println("Oracle Password() --> " + qmsProperty.getOraclePassword());
 		//ORACLE
 		Class.forName(ORACLE_JDBC_DRIVER);
 		Connection connection = DriverManager.getConnection(qmsProperty.getOracleJDBCUrl(), qmsProperty.getOracleUserName(), qmsProperty.getOraclePassword());				
