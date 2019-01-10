@@ -113,7 +113,7 @@ object NcqaIMACMB2 {
 
     val hedisJoinedForImatdScreeningDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ImatdMeasureId, KpiConstants.cisImatdValueSet, KpiConstants.cisImatdCodeSystem)
     val measurement = UtilFunctions.mesurementYearFilter(hedisJoinedForImatdScreeningDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
-    val ageFilterDfImatd = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age10val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+    val ageFilterDfImatd = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age10Val, KpiConstants.age13Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
     val ageFilterJoinNumeratorDf = ageFilterDfImatd.as("df1").join(measurement.as("df2"),ageFilterDfImatd.col(KpiConstants.memberskColName) === measurement.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(measurement.col(KpiConstants.startDateColName).isNotNull).select(ageFilterDfImatd.col(KpiConstants.memberskColName),ageFilterDfImatd.col(KpiConstants.dobColName),measurement.col(KpiConstants.startDateColName))
 
     /*vaccination administered only after 11 years of days of birth*/
