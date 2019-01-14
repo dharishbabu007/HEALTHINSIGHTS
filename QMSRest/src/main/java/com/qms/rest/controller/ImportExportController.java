@@ -65,7 +65,7 @@ public class ImportExportController {
             return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid file. File type should be CSV. "), headers, 
             		HttpStatus.BAD_REQUEST);			
 		}
-		
+		//storing file meta data 
 		User user = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setFileName(uploadfile.getOriginalFilename());
@@ -79,14 +79,17 @@ public class ImportExportController {
 			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
 		} 
 		System.out.println(" Saving the file metadata sucess. ");
+		
+		//storing file data in linux 
 		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());				
 		if(RestResult.isSuccessRestResult(restResult)) {
 			httpSession.setAttribute(QMSConstants.INPUT_FILE_ID, fileUpload.getFileId());
-			//return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
 		System.out.println(" Saved the file in HDFS. ");
+		
+		//storing file data in hive 
 		restResult = importExportService.callHivePatitioning();
 		System.out.println(" Alter HIVE Partition success. ");
 		if(RestResult.isSuccessRestResult(restResult)) {
@@ -117,7 +120,6 @@ public class ImportExportController {
 
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}	
-	
 	
 	@RequestMapping(value = "/csv_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<CSVOutPut>> getOutputCSVData() {
