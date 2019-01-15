@@ -16,7 +16,7 @@ import com.qms.rest.model.RestResult;
 
 public interface ImportExportService {
 	
-	RestResult importFile(MultipartFile file, int fileId);
+	RestResult importFile(MultipartFile file, int fileId, String model);
 	RestResult exportFile(String fileName);
 	RestResult runRFile(String modelType);
 	
@@ -28,7 +28,7 @@ public interface ImportExportService {
 	ModelScore getCSVModelScore();
 	
 	FileUpload saveFileUpload(FileUpload fileUpload);	
-	RestResult callHivePatitioning ();
+	RestResult callHivePatitioning (String model);
 	
 	//Compliance
 	Set<ComplianceOutPut> getComplianceOutPut();
