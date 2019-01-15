@@ -1,5 +1,7 @@
 package com.qms.rest.controller;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -48,12 +50,19 @@ public class ImportExportController {
 	@Autowired 
 	private HttpSession httpSession;	
 	
-	@RequestMapping(value = "/import", method = RequestMethod.POST)
-	public ResponseEntity<RestResult> importFile(@RequestParam("file") MultipartFile uploadfile) {
+	@RequestMapping(value = "/import/{model}", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> importFile(@RequestParam("file") MultipartFile uploadfile, 
+			@PathVariable("model") String model) {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Access-Control-Allow-Origin", "*");		
-		headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");		
+		headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		
+		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc"});
+		if(!modelList.contains(model)) {
+            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid model. Please select valid model. "), headers, 
+            		HttpStatus.BAD_REQUEST);			
+		}		
 		
 		if (uploadfile.isEmpty()) {            
             return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File is empty. Please select a valid file!"), headers, 
@@ -65,7 +74,7 @@ public class ImportExportController {
             return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid file. File type should be CSV. "), headers, 
             		HttpStatus.BAD_REQUEST);			
 		}
-		
+		//storing file meta data 
 		User user = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setFileName(uploadfile.getOriginalFilename());
@@ -78,16 +87,19 @@ public class ImportExportController {
 		if(fileUpload == null) {
 			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File upload information save failed. "), headers, HttpStatus.INTERNAL_SERVER_ERROR); 
 		} 
-		System.out.println(" Saving the file metadata sucess. ");
-		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId());				
+		System.out.println(model + " Saving the file metadata sucess. ");
+		
+		//storing file data in linux 
+		RestResult restResult = importExportService.importFile(uploadfile, fileUpload.getFileId(), model);				
 		if(RestResult.isSuccessRestResult(restResult)) {
 			httpSession.setAttribute(QMSConstants.INPUT_FILE_ID, fileUpload.getFileId());
-			//return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		System.out.println(" Saved the file in HDFS. ");
-		restResult = importExportService.callHivePatitioning();
+		System.out.println(model + " Saved the file in Linux. ");
+		
+		//storing file data in hive 
+		restResult = importExportService.callHivePatitioning(model);
 		System.out.println(" Alter HIVE Partition success. ");
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
@@ -110,6 +122,12 @@ public class ImportExportController {
 	@RequestMapping(value = "/run_r/{modelType}", method = RequestMethod.GET)
 	public ResponseEntity<RestResult> runRFile(@PathVariable("modelType") String modelType, UriComponentsBuilder ucBuilder) {
 		
+		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc"});
+		if(!modelList.contains(modelType)) {
+            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid model. Please select valid model. "),  
+            		HttpStatus.BAD_REQUEST);			
+		}		
+		
 		RestResult restResult = importExportService.runRFile(modelType);
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
@@ -117,7 +135,6 @@ public class ImportExportController {
 
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}	
-	
 	
 	@RequestMapping(value = "/csv_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<CSVOutPut>> getOutputCSVData() {
