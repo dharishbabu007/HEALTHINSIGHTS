@@ -23,8 +23,10 @@ public class QMSHDFSProperty {
 	private String hdfsURL;
 	private String readFile;
 	private String writePath;
-	private String rapiURL;
+	private String rapiNoShow;
 	private String hdfsUser;
+	private String rapiLHE;
+	private String rapiLHC;
 	
 //	public String getrApiURL() {
 //		return rApiURL;

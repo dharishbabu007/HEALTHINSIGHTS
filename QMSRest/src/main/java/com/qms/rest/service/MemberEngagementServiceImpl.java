@@ -713,7 +713,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			List<Integer> yData = new ArrayList<>();
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select x,y from Persona_Clustering_Features where cluster_id='"+clusterId+"' and featurename='"+attributeName+"'");			
+			resultSet = statement.executeQuery("select x,y from cp_features where cluster_id='"+clusterId+"' and feature_name='"+attributeName+"'");			
 			while (resultSet.next()) {
 				xData.add(resultSet.getString("x"));
 				yData.add(resultSet.getInt("y"));
@@ -872,9 +872,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			connection = qmsConnection.getPhoenixConnection();
 			statement = connection.createStatement();
 			String qryStr = "select PD.*, PFO.* from QMS.Persona_Define PD "+ 
-					"INNER JOIN QMS.Persona_File_Output PFO ON PFO.CLUSTER_ID = PD.CLUSTERID "+  
+					"INNER JOIN QMS.Persona_File_Output PFO ON PFO.CLUSTER_ID = PD.CLUSTER_ID "+  
 					"INNER JOIN QMS.Dim_Member DM ON DM.MEMBER_ID = PFO.MEMBER_ID "+  
-					"where PD.CLUSTERID = '"+clusterId+"'";
+					"where PD.CLUSTER_ID="+clusterId;
 			resultSet = statement.executeQuery(qryStr);
 			PersonaMember output = null;
 			String name = "";			
@@ -900,10 +900,10 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				output.setReasonToNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));	
 				output.setSetAchieveHealthGo(resultSet.getString("SET_AND_ACHIEVE_HEALTH_GOAL"));	
 				output.setFamilySize(resultSet.getString("FAMILY_SIZE"));	
-				output.setClusterID(resultSet.getString("CLUSTERID"));
+				output.setClusterID(resultSet.getString("CLUSTER_ID"));
 				
 				//Persona_Define
-				output.setPersonaName(resultSet.getString("PERSONANAME"));				
+				output.setPersonaName(resultSet.getString("PERSONA_NAME"));				
 				
 				personaMembers.add(output);
 			}
@@ -925,7 +925,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from LHC_File_Input ");
+			resultSet = statement.executeQuery("select * from LHC_File_Input");
 			
 			ResultSetMetaData metaData = resultSet.getMetaData();
 			int columnCount = metaData.getColumnCount();
@@ -993,11 +993,11 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 	@Override
 	public Set<LHCMember> lhcMemberList() {
 		Set<LHCMember> personaMembers = new HashSet<LHCMember>();
-		System.out.println(" Loading personaMemberList data ");
+		System.out.println(" Loading lhcMemberList data ");
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
-		try {						
+		try {		
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();
 			String qryStr = "select DM.*, LFO.* from LHC_File_Output LFO "+ 
@@ -1021,13 +1021,13 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				output.setGender(resultSet.getString("GENDER"));	
 				output.setFrequencyExercise(resultSet.getString("FREQUENCY_OF_EXERCISE"));	
 				output.setMotivations(resultSet.getString("MOTIVATIONS"));	
-				output.setPersona(resultSet.getString("MEMBER_ID"));
-				output.setParticipationQuotient(resultSet.getString("MEMBER_ID"));
-				output.setComorbidityCount(resultSet.getString("MEMBER_ID"));	
-				output.setEnrollmentGaps(resultSet.getString("MEMBER_ID"));	
-				output.setAmountSpend(resultSet.getString("MEMBER_ID"));	
-				output.setLikelihoodChurn(resultSet.getString("MEMBER_ID"));
-				output.setChurn(resultSet.getString("MEMBER_ID"));				
+				output.setPersona(resultSet.getString("Persona"));
+				output.setParticipationQuotient(resultSet.getString("Participation_quotient"));
+				output.setComorbidityCount(resultSet.getString("Comorbidity_Count"));	
+				output.setEnrollmentGaps(resultSet.getString("Enrollment_Gaps"));	
+				output.setAmountSpend(resultSet.getString("Amount_Spend"));	
+				output.setLikelihoodChurn(resultSet.getString("Likelihood_to_churn"));
+				output.setChurn(resultSet.getString("Churn"));				
 				
 				personaMembers.add(output);
 			}

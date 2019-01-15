@@ -82,10 +82,10 @@ public class ImportExportServiceImpl implements ImportExportService {
     }	
 
 	@Override
-	public RestResult importFile(MultipartFile file, int fileId) {
+	public RestResult importFile(MultipartFile file, int fileId, String model) {
 		try {	
 			//In Linux 			
-			putFile(file, fileId);
+			putFile(file, fileId, model);
 			
 			//In Hadoop
 //			hdfsFileUtil.putFile(file, fileId);
@@ -179,28 +179,23 @@ public class ImportExportServiceImpl implements ImportExportService {
 	}
 
 	@Override
-	public RestResult runRFile(String modelType) {
-//		if(true)
-//			return RestResult.getSucessRestResult(" RFile execution success. ");
-		
+	public RestResult runRFile(String model) {
 		int fileId = 0;
 		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
 			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
 		else
 			return RestResult.getFailRestResult(" Input file id is null. ");
 		
-//		int processedFileId = 0;
-//		if(httpSession.getAttribute("PROCESSED_FILE_ID") != null)
-//			processedFileId = (int) httpSession.getAttribute("PROCESSED_FILE_ID");	
-//		System.out.println(fileId + " is the File Id. PROCESSED_FILE_ID : " + processedFileId);
-//		if(processedFileId == fileId) {
-//			return RestResult.getFailRestResult(" Already processed/processing for file id : "+fileId);
-//		}
-//		httpSession.setAttribute("PROCESSED_FILE_ID", fileId);
+		String rApiUrl = null;
+		if(model.equals("noshow")) 
+			rApiUrl = qmsHDFSProperty.getRapiNoShow();
+		else if(model.equals("lhe")) 
+			rApiUrl = qmsHDFSProperty.getRapiLHE();		
+		else if(model.equals("lhc")) 
+			rApiUrl = qmsHDFSProperty.getRapiLHC();		
 		
-		String rApiUrl = qmsHDFSProperty.getRapiURL();
 		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
-		System.out.println("Calling R API Url --> " + rApiUrl);
+		System.out.println(model+" Calling R API Url --> " + rApiUrl);
 		RestTemplate restTemplate = new RestTemplate();		
 		String result = restTemplate.getForObject(rApiUrl, String.class);
 		try {
@@ -208,16 +203,25 @@ public class ImportExportServiceImpl implements ImportExportService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-        System.out.println(" R API Rest Result --> " + result);
-		if(result != null && result.contains("Completed")) {
+        System.out.println(model+" R API Rest Result --> " + result);
+		if(result != null && (result.contains("Completed") || result.contains("completed"))) {
 			return RestResult.getSucessRestResult("R Script Execution Success");
 		} else {
 			return RestResult.getFailRestResult(" R Script Execution Failed");
 		}
 	}
 	
-    private void putFile(MultipartFile file, int fileId)
+    private void putFile(MultipartFile file, int fileId, String model)
             throws JSchException, SftpException {
+    	String linuxDir = null; 
+    	if(model.equals("noshow")) 
+    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNoshow();
+    	else if(model.equals("lhe")) 
+    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHE();
+    	else if(model.equals("lhc")) 
+    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHC();    	
+    	linuxDir = linuxDir + fileId;
+    	
         System.out.println("Initiate sending file to Linux Server...");
         JSch jsch = new JSch();
         Session session = null;
@@ -233,11 +237,11 @@ public class ImportExportServiceImpl implements ImportExportService {
         ChannelSftp sftpChannel = (ChannelSftp) channel;
         System.out.println("Server's home directory: " + sftpChannel.getHome());
         try {
-        	System.out.println(" Creating the directory under --> " + qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId);
+        	System.out.println(" Creating the directory under --> " + linuxDir);
             //sftpChannel.put(copyFrom, copyTo, monitor, ChannelSftp.OVERWRITE);        	
-        	sftpChannel.mkdir(qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId);
+        	sftpChannel.mkdir(linuxDir);
         	String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        	String filePath = qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId+"/"+fileId+"."+extension;
+        	String filePath = linuxDir+"/"+fileId+"."+extension.toLowerCase();
         	System.out.println(" Creating the file under --> " + filePath);
         	sftpChannel.put(file.getInputStream(), filePath, monitor, ChannelSftp.OVERWRITE);
         } catch (SftpException | IOException e) {
@@ -773,7 +777,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 	}
 
 	@Override
-	public RestResult callHivePatitioning() {
+	public RestResult callHivePatitioning(String model) {
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
@@ -791,10 +795,23 @@ public class ImportExportServiceImpl implements ImportExportService {
 //			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
 //			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
 			
-			//String inputFilePath = qmsAnalyticsProperty.getWindowsCopyPath()+"/input/"+fileId+"/"+fileId+".csv";
-			String inputFilePath = qmsAnalyticsProperty.getLinuxUploadPath()+"/"+fileId+"/"+fileId+".csv";
+	    	String inputFilePath = null;
+	    	String loadSQL = null;
+	    	if(model.equals("noshow"))  {
+	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathNoshow()+fileId+"/"+fileId+".csv";
+	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
+	    	}
+	    	else if(model.equals("lhe")) { 
+	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathLHE()+fileId+"/"+fileId+".csv";
+	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+	    	}
+	    	else if(model.equals("lhc")) { 
+	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathLHC()+fileId+"/"+fileId+".csv";
+	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+	    	}	    	
+	    	
 			System.out.println("Loading the file in hive --> " + inputFilePath);
-			statement.executeUpdate("LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")");
+			statement.executeUpdate(loadSQL);
 			
 			System.out.println(" Alter table success for file id --> " + fileId);
 			return RestResult.getSucessRestResult(" File upload success. ");

@@ -22,10 +22,17 @@ public class QMSAnalyticsProperty {
 	private String username;
 	private String password;
 	
-	private String linuxUploadPath;
+	//private String linuxUploadPath;
 	private String linuxOutputPath;
 	private String windowsCopyPath;
 	private String linuxRScriptPath;
+	
+	private String linuxUploadPathLHE;
+	private String linuxUploadPathNoshow;
+	private String linuxUploadPathNC;
+	private String linuxUploadPathLHC;
+	private String linuxUploadPathPersona;	
+	
 	
 //	public String getLinuxUploadPath() {
 //		return linuxUploadPath;
