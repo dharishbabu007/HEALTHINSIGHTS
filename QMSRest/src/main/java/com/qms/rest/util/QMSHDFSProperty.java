@@ -23,8 +23,8 @@ public class QMSHDFSProperty {
 	private String hdfsURL;
 	private String readFile;
 	private String writePath;
-	private String rapiNoShow;
 	private String hdfsUser;
+	private String rapiNoShow;	
 	private String rapiLHE;
 	private String rapiLHC;
 	
