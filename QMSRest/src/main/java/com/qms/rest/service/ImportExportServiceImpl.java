@@ -204,7 +204,8 @@ public class ImportExportServiceImpl implements ImportExportService {
 			e.printStackTrace();
 		}
         System.out.println(model+" R API Rest Result --> " + result);
-		if(result != null && (result.contains("Completed") || result.contains("completed"))) {
+		if(result != null && (result.contains("Completed") || result.contains("completed") || 
+				result.contains("Success") || result.contains("success"))) {
 			return RestResult.getSucessRestResult("R Script Execution Success");
 		} else {
 			return RestResult.getFailRestResult(" R Script Execution Failed");

@@ -1001,7 +1001,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();
 			String qryStr = "select DM.*, LFO.* from LHC_File_Output LFO "+ 
-					"INNER JOIN Dim_Member DM ON DM.MEMBER_ID = LFO.MEMBER_ID ";
+					"INNER JOIN healthin.Dim_Member DM ON DM.MEMBER_ID = LFO.MEMBER_ID";
 			resultSet = statement.executeQuery(qryStr);
 			LHCMember output = null;
 			String name = "";			
@@ -1027,7 +1027,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				output.setEnrollmentGaps(resultSet.getString("Enrollment_Gaps"));	
 				output.setAmountSpend(resultSet.getString("Amount_Spend"));	
 				output.setLikelihoodChurn(resultSet.getString("Likelihood_to_churn"));
-				output.setChurn(resultSet.getString("Churn"));				
+				output.setChurn(resultSet.getString("predicted_churn"));				
 				
 				personaMembers.add(output);
 			}

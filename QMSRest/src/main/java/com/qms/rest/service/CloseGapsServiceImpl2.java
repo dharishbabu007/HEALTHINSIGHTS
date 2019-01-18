@@ -92,8 +92,8 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 		String sqlStatementInsert = "insert into qms_gic_lifecycle (member_id,quality_measure_id,interventions,"
 				+ "priority,payor_comments,provider_comments,status,gap_date,"
 				+ "curr_flag,rec_create_date,rec_update_date,latest_flag,active_flag,ingestion_date,source_name,"
-				+ "user_name,gic_lifecycle_id,PRODUCT_PLAN_ID,HEDIS_GAPS_IN_CARE_SK) "
-				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "user_name,gic_lifecycle_id,PRODUCT_PLAN_ID,HEDIS_GAPS_IN_CARE_SK,PATIENT_ID) "
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		
 		PreparedStatement statement = null;
@@ -158,6 +158,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setInt(++i, lifeCycleId);
 			statement.setString(++i, productId);
 			statement.setString(++i, hedisGapsSK);
+			statement.setString(++i, memberId);
 			statement.executeUpdate();
 			return RestResult.getSucessRestResult(" Close Gaps updation Success. ");
 		} catch (Exception e) {
