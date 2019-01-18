@@ -11,16 +11,15 @@ object NcqaSSD {
 
   def main(args: Array[String]): Unit = {
 
+    //<editor-fold desc="Reading program arguments and Spark session object creation">
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQASSD")
-    conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
-    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    /*Reading the program arguments*/
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
     val dbName = args(3)
-    val measureId = args(4)
     var data_source = ""
+    val measureId = args(4)
 
     /*define data_source based on program type. */
     if ("ncqatest".equals(programType)) {
@@ -30,390 +29,431 @@ object NcqaSSD {
       data_source = KpiConstants.clientDataSource
     }
 
+    /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
+
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQAOMW")
+    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
+    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    //</editor-fold>
+
+    //<editor-fold desc="Loading Required tables to Memory">
 
     import spark.implicits._
 
 
-    var lookupTableDf = spark.emptyDataFrame
-
-    /*Loading dim_member,fact_claims,fact_membership tables */
+    /*Loading dim_member,fact_claims,fact_membership , dimLocationDf, refLobDf, dimFacilityDf, factRxClaimsDf tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
     val factClaimDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factClaimTblName, data_source)
     val factMembershipDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factMembershipTblName, data_source)
     val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimLocationTblName, data_source)
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
     val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
-    val dimProviderDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimProviderTblName, data_source)
     val factRxClaimsDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factRxClaimTblName,data_source)
+    val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refmedValueSetTblName)
+    //</editor-fold>
 
-    /*Initial join function call for prepare the data fro common filter*/
-    //    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.ssdMeasureTitle)
+    //<editor-fold desc="Initial Join, Continuous Enrollment, Allowable Gap and Age filter">
 
+    /*Initial join function*/
     val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.ssdMeasureTitle)
 
-    initialJoinedDf.show()
-
-    var lookUpDf = spark.emptyDataFrame
-
-    if ((KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)) || (KpiConstants.medicareLobName.equalsIgnoreCase(lob_name))) {
-
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view45Days)
-    }
-    else {
-
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
-    }
-
-    val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
-
-
-
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age64Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-
-
-
-    //   val continiousEnrollDf = ageFilterDf
-
-    /*Continous enrollment calculation*/
-    val contEnrollStrtDate = year + "-01-01"
+    /*Continuous Enrollment Checking*/
+    val contEnrollStartDate = year + "-01-01"
     val contEnrollEndDate = year + "-12-31"
-    val continiousEnrollDf = ageFilterDf.filter(ageFilterDf.col(KpiConstants.memStartDateColName).<(contEnrollStrtDate) &&(ageFilterDf.col(KpiConstants.memEndDateColName).>(contEnrollEndDate))).select(KpiConstants.memberskColName)
+    val continuousEnrollDf = initialJoinedDf.filter(initialJoinedDf.col(KpiConstants.memStartDateColName).<=(contEnrollStartDate) && initialJoinedDf.col(KpiConstants.memEndDateColName).>=(contEnrollEndDate))
+
+    /*Allowable Gap filter */
+    val lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
+    val commonFilterDf = continuousEnrollDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
+
+    /*Age filter*/
+    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age64Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+    //</editor-fold>
+
+    //<editor-fold desc="Dinominator Calculation">
 
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
+    val primaryDiagCodeSystem = List(KpiConstants.icdCodeVal)
 
+    //<editor-fold desc="Step1">
 
-    /* Step1 - "BH Stand Alone Acute Inpatient" as procedure code */
+    //<editor-fold desc="Step1Sub1">
 
+    /*"BH Stand Alone Acute Inpatient" as procedure code */
     val ssdBHStandValueSet = List(KpiConstants.bHStandAloneAcuteInpatientVal)
     val ssdBHStandCodeSystem = List(KpiConstants.ubrevCodeVal)
-    val hedisJoinedForBHStandDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBHStandValueSet, ssdBHStandCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForForBHStandDf = UtilFunctions.mesurementYearFilter(hedisJoinedForBHStandDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForBHStandDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBHStandValueSet, ssdBHStandCodeSystem)
+    val measrForForBHStandDf = UtilFunctions.measurementYearFilter(joinedForBHStandDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                            .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    /* Step1 -"Schizophrenia" as primary diagnosis common to all */
-
-    val primaryDiagCodeSystem = List(KpiConstants.icdCodeVal)
+    /*"Schizophrenia" , "Bipolar Disorder", "Other Bipolar Disorder" as primary diagnosis common */
     val ssdSchizophreniaICDValueSet = List(KpiConstants.schizophreniaVal,KpiConstants.bipolarDisorderVal,KpiConstants.otherBipolarDisorder)
-    val hedisJoinedForSchizophreniaIcdDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdSchizophreniaICDValueSet, primaryDiagCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForForSchizophreniaIcdDf = UtilFunctions.mesurementYearFilter(hedisJoinedForSchizophreniaIcdDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1BHStandDf = measrForForBHStandDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForSchizophreniaIcdDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdSchizophreniaICDValueSet, primaryDiagCodeSystem)
+    val measrForSchizophreniaIcdDf = UtilFunctions.measurementYearFilter(joinedForSchizophreniaIcdDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                  .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    /*"BH Stand Alone Acute Inpatient" with "Schizophrenia" or "Bipolar Disorder" or "Other Bipolar Disorder"*/
+    val bhAndschbipdobipdDf = measrForForBHStandDf.select(KpiConstants.memberskColName).intersect(measrForSchizophreniaIcdDf.select(KpiConstants.memberskColName))
 
-    /* Step1 - "Visit Setting Unspecified","Acute Inpatient POS" as procedure code */
 
-    val ssdVisitSettingValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.acuteInpatientPosVal)
+    /*"Visit Setting Unspecified" valueset */
+    val ssdVisitSettingValueSet = List(KpiConstants.visitSettingUnspecifiedVal)
     val ssdVisitSettingCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSettingDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSettingValueSet, ssdVisitSettingCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSettingIcdDf = UtilFunctions.mesurementYearFilter(measrForForBHStandDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSettingDf = measrForVisitSettingIcdDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForVisitSettingDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSettingValueSet, ssdVisitSettingCodeSystem)
+    val measrForVisitSettingIcdDf = UtilFunctions.measurementYearFilter(joinedForVisitSettingDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                 .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
+    /*"Acute Inpatient POS" valueset*/
+    val acuteInPatPosValList = List(KpiConstants.acuteInpatientPosVal)
+    val acuteInPatPosCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.posCodeVal)
+    val joinedForacuteInpatposDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, acuteInPatPosValList, acuteInPatPosCodeSystem)
+    val messrForacuteInpatposDf = UtilFunctions.measurementYearFilter(joinedForVisitSettingDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                               .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
 
     /* At least one acute inpatient encounter with any diagnosis of schizophrenia or schizoaffective disorder */
+    val visitUnspecAndscbpdobpdDf = measrForVisitSettingIcdDf.select(KpiConstants.memberskColName).intersect(messrForacuteInpatposDf.select(KpiConstants.memberskColName)).intersect(measrForSchizophreniaIcdDf.select(KpiConstants.memberskColName))
 
-    val joinForOneAcuteInpatDf = step1BHStandDf.union(step1VisitSettingDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForOneAcuteInpatDf = UtilFunctions.mesurementYearFilter(joinForOneAcuteInpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val OneAcuteInpatDf = measrForOneAcuteInpatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(1)).select(KpiConstants.memberskColName)
+    /*At least one acute inpatient encounter, with any diagnosis of schizophrenia, schizoaffective disorder or bipolar disorder*/
+    val step1Sub1Df = bhAndschbipdobipdDf.union(visitUnspecAndscbpdobpdDf)
+    //</editor-fold>
 
-    /* Step1 2a- "Visit Setting Unspecified","Outpatient POS" procedure code  */
+    //<editor-fold desc="Step1Sub2">
 
-    val ssdVisitSettingOutpatPosValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.outpatientPosVal)
-    val ssdVisitSettingOutpatPosCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSettingOutpatPosDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSettingOutpatPosValueSet, ssdVisitSettingOutpatPosCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSettingOutpatPosDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSettingOutpatPosDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSettingOutpatPosDf = measrForVisitSettingOutpatPosDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    /*Telehealth Modifier*/
+    val telehealthModValList = List(KpiConstants.telehealthModifierVal)
+    val telehealthModCodeSystem = List(KpiConstants.posCodeVal)
+    val joinedForTelehealthDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, telehealthModValList, telehealthModCodeSystem)
+    val measrForTelehealthDf = UtilFunctions.measurementYearFilter(joinedForTelehealthDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                            .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val step1VisitSettingOutpatPosTwoVisitDf = step1VisitSettingOutpatPosDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    //<editor-fold desc="Visit Setting Unspecified with Outpatient POS">
 
+    /* "Visit Setting Unspecified" */
+    val ssdVisitSetUnspecValueSet = List(KpiConstants.visitSettingUnspecifiedVal)
+    val ssdVisitSetUnspecCodeSystem = List(KpiConstants.cptCodeVal)
+    val joinedForssdVisitSetUnspecDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetUnspecValueSet, ssdVisitSetUnspecCodeSystem)
+    val measrForVisitSetUnspecDf = UtilFunctions.measurementYearFilter(joinedForssdVisitSetUnspecDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                 .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
+    /* "Outpatient POS" */
+    val outPatPosValList = List(KpiConstants.outpatientPosVal)
+    val outPatPosCodeSystem = List(KpiConstants.posCodeVal)
+    val joinedForoutPatPosDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, outPatPosValList, outPatPosCodeSystem)
+    val measrForoutPatPosDf = UtilFunctions.measurementYearFilter(joinedForoutPatPosDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                           .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
+    /*"Visit Setting Unspecified" and "Outpatient POS"*/
+    val visSetOutpatPosDf = measrForVisitSetUnspecDf.intersect(measrForoutPatPosDf)
+    val disVisSetOutpatPosDf = visSetOutpatPosDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
+
+    //<editor-fold desc="BH Outpatient">
 
     /* Step1 2b- "BH Outpatient" procedure code  */
-
     val ssdBhOutpatValueSet = List(KpiConstants.bhOutpatientVal)
     val ssdBhOutpatCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.ubrevCodeVal,KpiConstants.hcpsCodeVal)
-    val hedisJoinedForBhOutpatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBhOutpatValueSet, ssdBhOutpatCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForBhOutpatDf = UtilFunctions.mesurementYearFilter(hedisJoinedForBhOutpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1BhOutpatDf = measrForBhOutpatDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForBhOutpatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBhOutpatValueSet, ssdBhOutpatCodeSystem)
+    val measrForBhOutpatDf = UtilFunctions.measurementYearFilter(joinedForBhOutpatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                          .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val step1BhOutpatTwoVisitDf = step1BhOutpatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val disBhOutpatDf = measrForBhOutpatDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
+    //<editor-fold desc="Visit Setting Unspecified with Partial Hospitalization POS">
 
     /* Step1 2c- "Visit Setting Unspecified","Partial Hospitalization POS" procedure code  */
+    val ssdPartialValueSet = List(KpiConstants.partialHospitalizationPosVal)
+    val ssdPartialCodeSystem = List(KpiConstants.posCodeVal)
+    val joinedForPartialDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdPartialValueSet, ssdPartialCodeSystem)
+    val measrForPartialDf = UtilFunctions.measurementYearFilter(joinedForPartialDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                 .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val ssdVisitSetPartialValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.partialHospitalizationPosVal)
-    val ssdVisitSetPartialCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSetPartialDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetPartialValueSet, ssdVisitSetPartialCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSetPartialDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSetPartialDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSetPartialDf = measrForVisitSetPartialDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val vissetunAndPartialDf = measrForVisitSetUnspecDf.intersect(measrForPartialDf)
+    val disvissetunAndPartialDf = vissetunAndPartialDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
-    val step1VisitSetPartialTwoVisitDf = step1VisitSetPartialDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
+    //<editor-fold desc="Partial Hospitalization/Intensive Outpatient">
 
     /* Step1 2d- "Partial Hospitalization/Intensive Outpatient" procedure code  */
-
     val ssdPartialHosOutpatValueSet = List(KpiConstants.partialHospitalizationIntensiveOutpatientVal)
     val ssdPartialHosOutpatCodeSystem = List(KpiConstants.ubrevCodeVal,KpiConstants.hcpsCodeVal)
-    val hedisJoinedForPartialHosOutpatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdPartialHosOutpatValueSet, ssdPartialHosOutpatCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForPartialHosOutpatDf = UtilFunctions.mesurementYearFilter(hedisJoinedForPartialHosOutpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1PartialHosOutpatDf = measrForPartialHosOutpatDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForPartialHosOutpatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdPartialHosOutpatValueSet, ssdPartialHosOutpatCodeSystem)
+    val measrForPartialHosOutpatDf = UtilFunctions.measurementYearFilter(joinedForPartialHosOutpatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                  .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val disPartialHosOutpatDf = measrForPartialHosOutpatDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
-    val step1PartialHosOutpatTwoVisitDf = step1PartialHosOutpatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
+    //<editor-fold desc="Visit Setting Unspecified with Community Mental Health Center POS">
 
     /* Step1 2e- "Visit Setting Unspecified","Community Mental Health Center POS" procedure code  */
+    val ssdCommentalValueSet = List(KpiConstants.communityMentalHealthCenterPosVal)
+    val ssdCommentalCodeSystem = List(KpiConstants.posCodeVal)
+    val joinedForCommentalDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdCommentalValueSet, ssdCommentalCodeSystem)
+    val measrForCommentalDf = UtilFunctions.measurementYearFilter(joinedForCommentalDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                           .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val visitSetCommentalDf = measrForVisitSetUnspecDf.intersect(measrForCommentalDf)
+    val disvisitSetCommentalDf = visitSetCommentalDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
-    val ssdVisitSetCommValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.communityMentalHealthCenterPosVal)
-    val ssdVisitSetCommCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSetCommDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetCommValueSet, ssdVisitSetCommCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSetCommDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSetCommDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSetCommDf = measrForVisitSetCommDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-
-    val step1VisitSetCommTwoVisitDf = step1VisitSetCommDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
+    //<editor-fold desc="Electroconvulsive Therapy">
 
     /* Step1 2f- "Electroconvulsive Therapy" procedure code  */
-
     val ssdElectroTherapyValueSet = List(KpiConstants.electroconvulsiveTherapyVal)
     val ssdElectroTherapyCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.ubrevCodeVal)
-    val hedisJoinedForElectroTherapyDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdElectroTherapyValueSet, ssdElectroTherapyCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForElectroTherapyDf = UtilFunctions.mesurementYearFilter(hedisJoinedForElectroTherapyDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForElectroTherapyDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdElectroTherapyValueSet, ssdElectroTherapyCodeSystem)
+    val measrForElectroTherapyDf = UtilFunctions.measurementYearFilter(joinedForElectroTherapyDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+
 
 
     /* Step1 2f- "Electroconvulsive Therapy" primary diagnosis  */
-
     val ssdElectroTherapyICDValueSet = List(KpiConstants.electroconvulsiveTherapyVal)
-    val hedisJoinedForElectroTherapyIcdDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdElectroTherapyICDValueSet, primaryDiagCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForElectroTherapyIcdDf = UtilFunctions.mesurementYearFilter(hedisJoinedForElectroTherapyIcdDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1ssdElectroTherapyICDDf = measrForElectroTherapyDf.union(measrForElectroTherapyIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForElectroTherapyDiagDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdElectroTherapyICDValueSet, primaryDiagCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val measrForElectroTherapyDiagDf = UtilFunctions.measurementYearFilter(joinedForElectroTherapyDiagDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                                    .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val step1ElectroTherapyDf = step1ssdElectroTherapyICDDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val electroTherapyDf = measrForElectroTherapyDf.union(measrForElectroTherapyDiagDf)
+    val diselectroTherapyDf = electroTherapyDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
 
-    val step1ssdElectroTherapyICDTwoVisitDf = step1ElectroTherapyDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    //</editor-fold>
 
+    //<editor-fold desc="Observation">
 
     /* Step1 2g- "Observation" procedure code  */
-
     val ssdObservValueSet = List(KpiConstants.observationVal)
     val ssdObservCodeSystem = List(KpiConstants.cptCodeVal)
-    val hedisJoinedForObservDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdObservValueSet, ssdObservCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForObservDf = UtilFunctions.mesurementYearFilter(hedisJoinedForObservDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1ObservDf = measrForObservDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForObservDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdObservValueSet, ssdObservCodeSystem)
+    val measrForObservDf = UtilFunctions.measurementYearFilter(joinedForObservDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                        .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val disObservDf = measrForObservDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
-    val step1ObservTwoVisitDf = step1ObservDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    //<editor-fold desc="ED">
 
     /* Step1 2h- "ED" procedure code  */
-
     val ssdEdValueSet = List(KpiConstants.edVal)
     val ssdEdCodeSystem = List(KpiConstants.cptCodeVal)
-    val hedisJoinedForEdDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdEdValueSet, ssdEdCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForEdDf = UtilFunctions.mesurementYearFilter(hedisJoinedForEdDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1EdDf = measrForEdDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForEdDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdEdValueSet, ssdEdCodeSystem)
+    val measrForEdDf = UtilFunctions.measurementYearFilter(joinedForEdDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                    .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val step1EdTwoVisitDf = step1EdDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val disEdDf = measrForEdDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
+    //<editor-fold desc="Visit Setting Unspecified with ED POS">
 
-    /* Step1 2i "Visit Setting Unspecified","ED POS" procedure code  */
-
-    val ssdVisitSetEdPosValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.edPosVal)
+    /* Step1 2i "Visit Setting Unspecified","ED POS" procedure code */
+    val ssdVisitSetEdPosValueSet = List(KpiConstants.edPosVal)
     val ssdVisitSetEdPosCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSetEdPosDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetEdPosValueSet, ssdVisitSetEdPosCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSetEdPosDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSetEdPosDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSetEdPosDf = measrForVisitSetEdPosDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForEdPosDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetEdPosValueSet, ssdVisitSetEdPosCodeSystem)
+    val measrForEdPosDf = UtilFunctions.measurementYearFilter(joinedForEdPosDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                       .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val visitSetEdPosDf = measrForVisitSetUnspecDf.intersect(measrForEdPosDf)
 
-    val step1VisitSetEdPosTwoVisitDf = step1VisitSetEdPosDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val disvisitSetEdPosDf = visitSetEdPosDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
+    //<editor-fold desc="BH Stand Alone Nonacute Inpatient">
 
     /* Step1 2j- "BH Stand Alone Nonacute Inpatient" procedure code  */
-
     val ssdBhInpatEdPosValueSet = List(KpiConstants.bHStandAloneAcuteInpatientVal)
     val ssdBhInpatEdPosCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal,KpiConstants.ubrevCodeVal,KpiConstants.hcpsCodeVal)
-    val hedisJoinedForBhInpatEdPosDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBhInpatEdPosValueSet, ssdBhInpatEdPosCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForBhInpatEdPosDf = UtilFunctions.mesurementYearFilter(hedisJoinedForBhInpatEdPosDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1BhInpatEdPosDf = measrForBhInpatEdPosDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForBhInpatEdPosDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdBhInpatEdPosValueSet, ssdBhInpatEdPosCodeSystem)
+    val measrForBhInpatEdPosDf = UtilFunctions.measurementYearFilter(joinedForBhInpatEdPosDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                              .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val step1BhInpatEdPosTwoVisitDf = step1BhInpatEdPosDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val disBhInpatEdPosDf = measrForBhInpatEdPosDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
+    //<editor-fold desc="Visit Setting Unspecified with Nonacute Inpatient POS">
 
     /* Step1 2k- "Visit Setting Unspecified","Nonacute Inpatient POS" procedure code  */
-
-    val ssdVisitSetNonAcuteInpatValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.nonacuteInpatientPosVal)
+    val ssdVisitSetNonAcuteInpatValueSet = List(KpiConstants.nonacuteInpatientPosVal)
     val ssdVisitSetNonAcuteInpatCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSetNonAcuteInpatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetNonAcuteInpatValueSet, ssdVisitSetNonAcuteInpatCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSetNonAcuteInpatDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSetNonAcuteInpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSetNonAcuteInpatPosDf = measrForVisitSetNonAcuteInpatDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val joinedForNonAcuteInpatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetNonAcuteInpatValueSet, ssdVisitSetNonAcuteInpatCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val measrForNonAcuteInpatDf = UtilFunctions.measurementYearFilter(joinedForNonAcuteInpatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                               .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val visitSetNonAcuteInpatDf = measrForVisitSetUnspecDf.intersect(measrForNonAcuteInpatDf)
 
-    val step1VisitSetNonAcuteInpatPosTwoVisitDf = step1VisitSetNonAcuteInpatPosDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val disvisitSetNonAcuteInpatDf = visitSetNonAcuteInpatDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
+    //<editor-fold desc="Visit Setting Unspecified with Telehealth POS">
 
     /* Step1 2l- "Visit Setting Unspecified","Telehealth POS" procedure code  */
+    val ssdVisitSetTelePosValueSet = List(KpiConstants.telephonePosVal)
+    val ssdVisitSetTelePosCodeSystem = List(KpiConstants.posCodeVal)
+    val joinedForTelePosDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetTelePosValueSet, ssdVisitSetTelePosCodeSystem)
+    val measrForTelePosDf = UtilFunctions.measurementYearFilter(joinedForTelePosDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                         .select(KpiConstants.memberskColName,KpiConstants.startDateColName)
 
-    val ssdVisitSetTelePosValueSet = List(KpiConstants.visitSettingUnspecifiedVal,KpiConstants.nonacuteInpatientPosVal)
-    val ssdVisitSetTelePosCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal)
-    val hedisJoinedForVisitSetTelePosDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdVisitSetTelePosValueSet, ssdVisitSetTelePosCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForVisitSetTelePosDf = UtilFunctions.mesurementYearFilter(hedisJoinedForVisitSetTelePosDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val step1VisitSetTelePosDf = measrForVisitSetTelePosDf.union(measrForForSchizophreniaIcdDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val visitSetTelePosDf = measrForVisitSetUnspecDf.intersect(measrForTelePosDf)
+    val disvisitSetTelePosDf = visitSetTelePosDf.groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.startDateColName}").alias(KpiConstants.startDateColName))
+    //</editor-fold>
 
-    val step1VisitSetTelePosTwoVisitDf = step1VisitSetTelePosDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    /*Union of all sub Dfs with member_sk  and max date if more than one start_date present for one member_sk */
+    val unionOfAllDistDf = disVisSetOutpatPosDf.union(disBhOutpatDf).union(disvissetunAndPartialDf).union(disPartialHosOutpatDf)
+                                               .union(disvisitSetCommentalDf).union(diselectroTherapyDf).union(disObservDf)
+                                               .union(disEdDf).union(disvisitSetEdPosDf).union(disBhInpatEdPosDf)
+                                               .union(disvisitSetNonAcuteInpatDf).union(disvisitSetTelePosDf)
 
+    val atleast2visitDf = unionOfAllDistDf.as("df1").join(unionOfAllDistDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
+                                                           .filter(abs(datediff($"df1.${KpiConstants.startDateColName}", $"df2.${KpiConstants.startDateColName}")).>(0))
+                                                           .select(s"df1.${KpiConstants.memberskColName}")
+    val step1Sub2Df = (atleast2visitDf.intersect(measrForTelehealthDf.select(KpiConstants.memberskColName))).intersect(measrForSchizophreniaIcdDf.select(KpiConstants.memberskColName))
+    //</editor-fold>
 
-    /* Join for At least two visits in an outpatient, intensive outpatient, partial hospitalization, ED or nonacute inpatient setting, on different dates of service, with any diagnosis of schizophrenia or schizoaffective disorder */
+    val step1Df = step1Sub1Df.union(step1Sub2Df)
+    //</editor-fold>
 
-    val joinForTwoVisitsOutpatDf = step1VisitSettingOutpatPosTwoVisitDf .union(step1BhOutpatTwoVisitDf).union(step1VisitSetPartialTwoVisitDf).union(step1PartialHosOutpatTwoVisitDf).union(step1VisitSetCommTwoVisitDf).union(step1ssdElectroTherapyICDTwoVisitDf).union(step1ObservTwoVisitDf).union(step1EdTwoVisitDf).union(step1VisitSetEdPosTwoVisitDf).union(step1BhInpatEdPosTwoVisitDf).union(step1VisitSetNonAcuteInpatPosTwoVisitDf).union(step1VisitSetTelePosTwoVisitDf).select(KpiConstants.memberskColName)
+    //<editor-fold desc="Step2">
 
-
-    // val t = joinForTwoVisitsOutpatDf.limit(1).rdd.isEmpty()
-
-    /*  At least two visits in an outpatient, intensive outpatient, partial hospitalization, ED or nonacute inpatient setting,  on different dates of service, with any diagnosis of schizophrenia or schizoaffective disorder */
-
-    //  val measrForTwoVisitsOutpatDf = UtilFunctions.mesurementYearFilter(joinForTwoVisitsOutpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
-
-    /* Two of any of the following, with or without a telehealth modifier (Telehealth Modifier Value Set) */
-
-    /*  val ssdTeleModifierValueSet = List(KpiConstants.telehealthModifierVal)
-      val ssdTeleModifierCodeSystem = List(KpiConstants.modifierCodeVal)
-      val hedisJoinedForTeleModifierDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdTeleModifierValueSet, ssdTeleModifierCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-      val measrForTeleModifierDf = UtilFunctions.mesurementYearFilter(hedisJoinedForTeleModifierDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
-    */ /* ----not part of the requirement ----------- */
-    /* Join  with telehealth modifier */
-
-    val finalStep1SecondConditionDf = joinForTwoVisitsOutpatDf.select(KpiConstants.memberskColName)
-
-    /* Identify members with schizophrenia or schizoaffective disorder as those who met at least one of the Step1 criteria during the measurement year */
-
-    val finalStep1Df = OneAcuteInpatDf.union(finalStep1SecondConditionDf).select(KpiConstants.memberskColName)
-
-    println("final Step1")
-
-    finalStep1Df.show()
-
-    /* Step1 logic End */
-
-    /* Step2 begin */
-
-    //<editor-fold desc="Event Diagnosis (Step2)">
-
-    /*Event Diagnosis Step2 starts*/
+    //<editor-fold desc="Step2Sub1">
 
     /*Accute Inpatient*/
-    val joinedForAcuteInpatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdaAcuteInpatientValueSet,KpiConstants.spdaAcuteInpatientCodeSystem)
-    val measurementAcuteInpatDf = UtilFunctions.mesurementYearFilter(joinedForAcuteInpatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val acuteInPatValLiat = List(KpiConstants.accuteInpatVal)
+    val acuteInPatCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.ubrevCodeVal)
+    val joinedForAcuteInpatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,acuteInPatValLiat,acuteInPatCodeSystem)
+    val measurementAcuteInpatDf = UtilFunctions.measurementYearFilter(joinedForAcuteInpatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
 
 
     /*Diabetes Valueset*/
-    val joinedForDiabetesDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf,refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.spdMeasureId, KpiConstants.cdcDiabetesvalueSet, KpiConstants.primaryDiagnosisCodeSystem)
-    val measurementForDiab1Df = UtilFunctions.mesurementYearFilter(joinedForDiabetesDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val diabtesValList = List(KpiConstants.diabetesVal)
+    val joinedForDiabetesDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, diabtesValList, primaryDiagCodeSystem)
+    val measurementForDiab1Df = UtilFunctions.measurementYearFilter(joinedForDiabetesDf, "start_date", year, KpiConstants.measurement0Val, KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
+    val diabetesValuesetDf = measurementForDiab1Df
 
 
-
-    val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refmedValueSetTblName)
-    val dimdateDf = DataLoadFunctions.dimDateLoadFunction(spark)
-    val medValuesetForThirdDino = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), dimMemberDf.col(KpiConstants.memberskColName) === factRxClaimsDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).join(ref_medvaluesetDf.as("df3"), factRxClaimsDf.col(KpiConstants.ndcNmberColName) === ref_medvaluesetDf.col(KpiConstants.ndcCodeColName), KpiConstants.innerJoinType).filter($"medication_list".isin(KpiConstants.spdDiabetesMedicationListVal:_*)).select("df1.member_sk", "df2.start_date_sk")
-    val startDateValAddedDfForSeconddDino = medValuesetForThirdDino.as("df1").join(dimdateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-    val dateTypeDfForSecondDino = startDateValAddedDfForSeconddDino.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
-    val MeasurementForSecondDinoDf = UtilFunctions.mesurementYearFilter(dateTypeDfForSecondDino, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
-
-    val diabetesValuesetDf = measurementForDiab1Df.union(MeasurementForSecondDinoDf)
-
-
-    /*Telehealth Modifier valueset*/
-    val joinedForTeleHealthDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdaTeleHealthValueSet,KpiConstants.spdaTeleHealthCodeSystem)
-    val measurementForTeleHealthDf = UtilFunctions.mesurementYearFilter(joinedForTeleHealthDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    /*Telehealth Modifier and Telehealth Modifier valueset*/
+    val teleHealAndModValList = List(KpiConstants.telehealthModifierVal, KpiConstants.telehealthPosVal)
+    val teleHealAndModCodeSsytem = List(KpiConstants.modifierCodeVal, KpiConstants.posCodeVal)
+    val joinedForTeleHealthDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,teleHealAndModValList,teleHealAndModCodeSsytem)
+    val measurementForTeleHealthDf = UtilFunctions.measurementYearFilter(joinedForTeleHealthDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
 
     /*Acute Inpatient Value Set with a Diabetes Value Set and without Telehealth Modifier Value Set; Telehealth POS Value Set*/
-    val dinominator1Df = measurementAcuteInpatDf.intersect(diabetesValuesetDf).except(measurementForTeleHealthDf)
+    val dinominator1Sub1Df = measurementAcuteInpatDf.intersect(diabetesValuesetDf).except(measurementForTeleHealthDf)
+
 
 
     /*at least 2 Outpatient visit*/
-    val joinedForTwoOutPatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdOutPatientValueSet,KpiConstants.spdOutPatientCodeSystem)
-    val measrForTwoOutPatDf = UtilFunctions.mesurementYearFilter(joinedForTwoOutPatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val outPatValList = List(KpiConstants.outPatientVal)
+    val outPatCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal)
+    val joinedForTwoOutPatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,outPatValList,outPatCodeSystem)
+    val measrForTwoOutPatDf = UtilFunctions.measurementYearFilter(joinedForTwoOutPatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
     val twoOutPatDf = measrForTwoOutPatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
 
-    /*at least 2 Observation visit*/
-    val joinedForTwoObservationDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdObservationValueSet,KpiConstants.spdObservationCodeSystem)
-    val measrForTwoObservationDf = UtilFunctions.mesurementYearFilter(joinedForTwoObservationDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val twoObservationDf = measrForTwoObservationDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
-    /*at least ED visits*/
-    val joinedForTwoEdVisistsDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdEdVisitValueSet,KpiConstants.spdEdVisitCodeSystem)
-    val mesrForTwoEdVisitsDf = UtilFunctions.mesurementYearFilter(joinedForTwoEdVisistsDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val twoEdVisitDf = mesrForTwoEdVisitsDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
-    /*at least two non acute inpatient*/
-    val joinedForTwoNonAcutePatDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdNonAcutePatValueSet,KpiConstants.spdNonAcutePatCodeSystem)
-    val mesrForTwoNonAcutePatDf = UtilFunctions.mesurementYearFilter(joinedForTwoNonAcutePatDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val twoNonAcutePatDf = mesrForTwoNonAcutePatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
-
-    val dinominator2UnionDf = twoOutPatDf.union(twoObservationDf).union(twoEdVisitDf).union(twoNonAcutePatDf)
-    /*atleast 2 visit with Outpatient  or Observation  or ED or Nonacute Inpatient  and has Diabetes */
-    val dinominator2Df = dinominator2UnionDf.intersect(diabetesValuesetDf)
-    //dinominator2Df.show()
-
-
-
     /*Telephone visit valueset*/
-    val joinedForTelephoneVisitDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdTelephoneVisitValueSet,KpiConstants.spdTelephoneVisitCodeSystem)
-    val mesrForTelephoneVisitDf = UtilFunctions.mesurementYearFilter(joinedForTelephoneVisitDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val telephoneVisitValList = List(KpiConstants.telephoneVisitsVal)
+    val telephoneVisitCodeSystem = List(KpiConstants.cptCodeVal)
+    val joinedForTelephoneVisitDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,telephoneVisitValList,telephoneVisitCodeSystem)
+    val mesrForTelephoneVisitDf = UtilFunctions.measurementYearFilter(joinedForTelephoneVisitDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
     val telephoneVisitAndDiabetesDf =  mesrForTelephoneVisitDf.intersect(diabetesValuesetDf)
 
     /*Online Assesment valueset*/
-    val joinedForOnlineAssesDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.spdOnlineAssesValueSet,KpiConstants.spdOnlineAssesCodeSystem)
-    val mesrForOnlineAssesDf = UtilFunctions.mesurementYearFilter(joinedForOnlineAssesDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    val onlineVisitValList = List(KpiConstants.onlineAssesmentVal)
+    val onlineVisitCodeSytsem = List(KpiConstants.cptCodeVal)
+    val joinedForOnlineAssesDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,onlineVisitValList,onlineVisitCodeSytsem)
+    val mesrForOnlineAssesDf = UtilFunctions.measurementYearFilter(joinedForOnlineAssesDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
     val onlineAssesAndDiabetesDf = mesrForOnlineAssesDf.intersect(diabetesValuesetDf)
-    /*Dinominator(Step1 Union)*/
-    val dinominatorUnionDf = dinominator1Df.union(dinominator2Df).union(telephoneVisitAndDiabetesDf).union(onlineAssesAndDiabetesDf)
 
-    /* An antipsychotic medication (Long-Acting Injections Value Set) */
+    val twoOutPatAndTeleDf = twoOutPatDf.intersect(telephoneVisitAndDiabetesDf)
+    /*at least 2 Outpatient visit,Telephone visit valueset, Online Assesment valueset*/
+    val outPatTeleOnlineDf = twoOutPatAndTeleDf.intersect(onlineAssesAndDiabetesDf)
 
-    val longActingInjectionsCodeSystem = List(KpiConstants.hcpsCodeVal)
-    val joinedForLongActingInjectionsDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.spdMeasureId,KpiConstants.ssdLongActingInjectionsValueSet,longActingInjectionsCodeSystem)
-    val mesrForLongActingInjectionsDf = UtilFunctions.mesurementYearFilter(joinedForLongActingInjectionsDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
 
-    /* SSD Antipsychotic Medications List */
+    /*at least 2 Observation visit*/
+    val obsVisitValList = List(KpiConstants.observationVal)
+    val obsVisitCodeSystem = List(KpiConstants.cptCodeVal)
+    val joinedForTwoObservationDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,obsVisitValList,obsVisitCodeSystem)
+    val measrForTwoObservationDf = UtilFunctions.measurementYearFilter(joinedForTwoObservationDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val twoObservationDf = measrForTwoObservationDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
 
-    val medValuesetForAntipsychotic = dimMemberDf.as("df1").join(factRxClaimsDf.as("df2"), dimMemberDf.col(KpiConstants.memberskColName) === factRxClaimsDf.col(KpiConstants.memberskColName),KpiConstants.innerJoinType).join(ref_medvaluesetDf.as("df3"), factRxClaimsDf.col(KpiConstants.ndcNmberColName) === ref_medvaluesetDf.col(KpiConstants.ndcCodeColName), KpiConstants.innerJoinType).filter(($"medication_list".isin(KpiConstants.ssdAntipsychoticMedicationListVal:_*))&& ($"measure_id" === KpiConstants.ssdMeasureId)).select("df1.member_sk", "df2.start_date_sk")
-    val startDateValAddedDfForAntipsychotic = medValuesetForThirdDino.as("df1").join(dimdateDf.as("df2"), $"df1.start_date_sk" === $"df2.date_sk").select($"df1.*", $"df2.calendar_date").withColumnRenamed("calendar_date", "start_temp").drop("start_date_sk")
-    val dateTypeDfForAntipsychotic = startDateValAddedDfForAntipsychotic.withColumn("start_date", to_date($"start_temp", "dd-MMM-yyyy")).drop("start_temp")
-    val MeasurementForAntipsychoticDf = UtilFunctions.mesurementYearFilter(dateTypeDfForAntipsychotic, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measuremetTwoYearUpper).select(KpiConstants.memberskColName)
+    /*at least ED visits*/
+    val edVisitValList = List(KpiConstants.edVal)
+    val edVisitCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.ubrevCodeVal)
+    val joinedForTwoEdVisistsDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,edVisitValList,edVisitCodeSystem)
+    val mesrForTwoEdVisitsDf = UtilFunctions.measurementYearFilter(joinedForTwoEdVisistsDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val twoEdVisitDf = mesrForTwoEdVisitsDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
 
-    /* Union Long-Acting Injections Value Set and  SSD Antipsychotic Medications List */
+    /*at least two non acute inpatient without Telehealth*/
+    val nonAcuteInValList = List(KpiConstants.nonAcuteInPatientVal)
+    val nonAcuteInCodeSsytem = List(KpiConstants.cptCodeVal, KpiConstants.ubrevCodeVal)
+    val joinedForTwoNonAcutePatDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.ssdMeasureId,nonAcuteInValList,nonAcuteInCodeSsytem)
+    val mesrForTwoNonAcutePatDf = UtilFunctions.measurementYearFilter(joinedForTwoNonAcutePatDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
+    val twoNonAcutePatDf = mesrForTwoNonAcutePatDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias("countVal")).filter($"countVal".>=(2)).select(KpiConstants.memberskColName)
+    val acuteInPatwoTeleDf = twoNonAcutePatDf.except(measurementForTeleHealthDf)
 
-    val longLastingUnionAntipsychoticDf = mesrForLongActingInjectionsDf.union(MeasurementForAntipsychoticDf)
 
-    val finalStep2Df = dinominatorUnionDf.union(longLastingUnionAntipsychoticDf)
-    /*Dinominator1(Step1) starts*/
+    val dinominator2UnionDf = outPatTeleOnlineDf.union(twoObservationDf).union(twoEdVisitDf).union(acuteInPatwoTeleDf)
+    /*atleast 2 visit with Outpatient  or Observation  or ED or Nonacute Inpatient  and has Diabetes */
+    val dinominator1Sub2Df = dinominator2UnionDf.intersect(diabetesValuesetDf)
+
+
+
+    /*Diabetic Medication checking*/
+    val diabeticMedicationValList = List(KpiConstants.diabetesMedicationVal)
+    val joinedForDiabeticsmedDf = UtilFunctions.factRxClaimRefMedValueSetJoinFunction(spark,factRxClaimsDf,ref_medvaluesetDf,KpiConstants.spdaMeasureId,diabeticMedicationValList)
+    val dinominator1Sub3Df = UtilFunctions.measurementYearFilter(joinedForDiabeticsmedDf,KpiConstants.rxStartDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val).select(KpiConstants.memberskColName)
+
+
+    /*Dinominator(Step2Sub1 Union)*/
+    val step2Sub1Df = dinominator1Sub1Df.union(dinominator1Sub2Df).union(dinominator1Sub3Df)
+    /*Dinominator1(Step1) ends*/
     //</editor-fold>
 
-    /* End of Step2 */
+    //<editor-fold desc="Step2Sub2">
+
+    /*Long-Acting Injections valueset during measurement year*/
+    val longActingInjValList = List(KpiConstants.longActingInjVal)
+    val longActingInjCodeSystem = List(KpiConstants.hcpsCodeVal)
+    val joinedForlongActingInjDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, longActingInjValList, longActingInjCodeSystem)
+    val measrForlongActingInjDf = UtilFunctions.measurementYearFilter(joinedForlongActingInjDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val, KpiConstants.measurement1Val)
+                                               .select(KpiConstants.memberskColName)
+
+
+
+    val antipsychoticMedValList = List(KpiConstants.antipsychoticMedVal)
+    val joinedForantipsyMedDf = UtilFunctions.factRxClaimRefMedValueSetJoinFunction(spark, factRxClaimsDf,ref_medvaluesetDf,KpiConstants.ssdMeasureId, antipsychoticMedValList)
+    val mesrForantipsyMedDf = UtilFunctions.measurementYearFilter(joinedForantipsyMedDf,KpiConstants.rxStartDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val)
+                                           .select(KpiConstants.memberskColName)
+
+    /*antipsychoticMedication */
+    val step2Sub2Df = measrForlongActingInjDf.union(mesrForantipsyMedDf)
+    //</editor-fold>
+
+    val step2Df = step2Sub1Df.union(step1Sub2Df)
+    //</editor-fold>
+
 
     /* Step1 output except step2 giving EligiblePopulation */
+    val dinominatorUnionDf = step1Df.except(step2Df)
+    val dinominatorDf = ageFilterDf.as("df1").join(dinominatorUnionDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}",KpiConstants.innerJoinType)
+                                                    .select("df1.*")
+    val dinominatorForKpiDf = dinominatorDf.select(KpiConstants.memberskColName)
+    //</editor-fold>
 
-    val finalStep1InersectStep2Df = finalStep1Df.except(finalStep2Df).select(KpiConstants.memberskColName)
+    //<editor-fold desc="Dinominator Exclusion Calculation">
 
-    /*dinominator Exclusion 1*/
     val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark, dimMemberDf, factClaimDf, refHedisDf).select(KpiConstants.memberskColName,KpiConstants.startDateColName).distinct()
+    val dinominatorExclDf = hospiceDf.select(KpiConstants.memberskColName)
+    val dinominatorAfterExclDf = dinominatorForKpiDf.except(dinominatorExclDf)
+    //</editor-fold>
 
-
-    val dinominatorExcl = hospiceDf.select(KpiConstants.memberskColName)
-
-    val denominatorWithContErollDf = finalStep1InersectStep2Df.union(continiousEnrollDf).select(KpiConstants.memberskColName)
-
-    val finalDinomenatorDf = denominatorWithContErollDf.except(dinominatorExcl).select(KpiConstants.memberskColName)
-
-    finalDinomenatorDf.show()
-
-    /* Start Numerator */
+    //<editor-fold desc="Numerator Calculation">
 
     /* LDL-C Tests and HbA1c Tests Value Set */
-
     val ssdglucoseTestsHbA1cTestsValueSet = List(KpiConstants.glucoseTestsValueSet,KpiConstants.hba1cTestVal)
     val ssdglucoseTestsHbA1cTestsCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cptcat2CodeVal,KpiConstants.loincCodeVal)
-    val hedisJoinedForglucoseTestsHbA1cTestsDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdglucoseTestsHbA1cTestsValueSet, ssdglucoseTestsHbA1cTestsCodeSystem).select(KpiConstants.memberskColName,KpiConstants.startDateColName)
-    val measrForglucoseTestsHbA1cTestsDf = UtilFunctions.mesurementYearFilter(hedisJoinedForglucoseTestsHbA1cTestsDf,KpiConstants.startDateColName,year,KpiConstants.measurementYearLower,KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
+    val joinedForglucoseHbA1cDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.ssdMeasureId, ssdglucoseTestsHbA1cTestsValueSet, ssdglucoseTestsHbA1cTestsCodeSystem)
+    val measrForglucoseHbA1cDf = UtilFunctions.measurementYearFilter(joinedForglucoseHbA1cDf,KpiConstants.startDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
+                                              .select(KpiConstants.memberskColName)
 
+    val numeratorDf = measrForglucoseHbA1cDf.intersect(dinominatorAfterExclDf)
+    //</editor-fold>
 
-
-    val finalNumeratorDf = measrForglucoseTestsHbA1cTestsDf.intersect(finalDinomenatorDf)
-
-    finalNumeratorDf.show()
-
-    /*Common output format (data to fact_hedis_gaps_in_care)*/
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
     val numeratorValueSet = ssdglucoseTestsHbA1cTestsValueSet
     val dinominatorExclValueSet = KpiConstants.emptyList
@@ -423,13 +463,13 @@ object NcqaSSD {
     /*add sourcename and measure id into a list*/
     val sourceAndMsrIdList = List(data_source,measureId)
     val numExclDf = spark.emptyDataFrame
-    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, denominatorWithContErollDf, dinominatorExcl, finalNumeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
-    //outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
 
     spark.sparkContext.stop()
 
   }
-
 
 }
 
