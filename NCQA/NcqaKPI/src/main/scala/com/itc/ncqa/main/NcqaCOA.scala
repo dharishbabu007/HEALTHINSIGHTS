@@ -2,6 +2,7 @@ package com.itc.ncqa.main
 
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
+import org.apache.directory.shared.kerberos.exceptions.ErrorType
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions.to_date
@@ -11,14 +12,14 @@ object NcqaCOA {
 
   def main(args: Array[String]): Unit = {
 
+    //<editor-fold desc="Reading program arguments and spark session Object creation">
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACOA")
-    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
-    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    /*Reading the program arguments*/
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
     val dbName = args(3)
+    val measureId = args(4)
     var data_source = ""
 
     /*define data_source based on program type. */
@@ -29,12 +30,18 @@ object NcqaCOA {
       data_source = KpiConstants.clientDataSource
     }
 
+    /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
+    /*creating spark session object*/
+    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACOA")
+    conf.set("hive.exec.dynamic.partition.mode", "nonstrict")
+    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+
     import spark.implicits._
+    //</editor-fold>
 
-
-    var lookupTableDf = spark.emptyDataFrame
+    //<editor-fold desc="Loading of Required Tables">
 
     /*Loading dim_member,fact_claims,fact_membership tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
@@ -44,127 +51,181 @@ object NcqaCOA {
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
     val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
     val dimProviderDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimProviderTblName, data_source)
-
-    /*Join dimMember,Factclaim,FactMembership,RefLocation,DimFacilty for initail filter*/
-    val joinedForInitialFilterDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.coaMeasureTitle)
-
-    /*call the view based on the lob_name*/
-    if ((KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)) || (KpiConstants.medicareLobName.equalsIgnoreCase(lob_name))) {
-      lookupTableDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view45Days)
-    }
-    else {
-      lookupTableDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
-    }
-
-    /*Remove the element who is present in the 45 or 60 days view*/
-    val commonFilterDf = joinedForInitialFilterDf.as("df1").join(lookupTableDf.as("df2"), joinedForInitialFilterDf.col(KpiConstants.memberskColName) === lookupTableDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookupTableDf.col("start_date").isNull).select("df1.*")
-
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
+    val primaryDiagnosisCodeSystem = KpiConstants.primaryDiagnosisCodeSystem
 
-    /*Dinominator for output format (age between 66 and older)*/
+    //</editor-fold>
+
+    //<editor-fold desc="Initial Join,Allowable Gap filter Calculations, Age filter and Continous enrollment">
+
+    /*Initial join function call for prepare the data fro common filter*/
+    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.coaMeasureTitle)
+
+    /*Allowable gap filtering*/
+    val lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view45Days)
+    val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"), initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
+
+    /*doing age filter 66 years or more the measurement year */
+
     val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age66Val, KpiConstants.age120Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
 
-    /* dinominator calculation starts */
+    /*Continous enrollment checking*/
+    val contEnrollEndDate = year + "-12-31"
+    val contEnrollStartDate = year + "-01-01"
+    val contEnrollDf = ageFilterDf.filter(ageFilterDf.col(KpiConstants.memStartDateColName).<=(contEnrollStartDate) && ageFilterDf.col(KpiConstants.memEndDateColName).>=(contEnrollEndDate))
 
-    val dinominatorDf = ageFilterDf.select(KpiConstants.memberskColName).distinct()
+    //</editor-fold>
 
-    /*Dinominator Exclusion*/
-    val hospiceDf = UtilFunctions.hospiceMemberDfFunction(spark, dimMemberDf, factClaimDf, refHedisDf)
-    val measurementDinominatorExclDf = UtilFunctions.mesurementYearFilter(hospiceDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    //<editor-fold desc="Dinominator calculation">
 
-    /*COA dinominator for kpi calculation*/
-    val coaDinominatorForKpiCal = dinominatorDf.except(measurementDinominatorExclDf)
+    val dinominatorDf = contEnrollDf
+    val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName).distinct()
+    //dinominatorDf.show()
+    //</editor-fold>
 
-    /* End of dinominator calculation */
+    //<editor-fold desc="Dinominator Exclusion Calculation">
 
-    /* Numerator calculation */
+    /*find out the hospice members*/
+    val hospiceDf = UtilFunctions.hospiceFunction(spark, factClaimDf, refHedisDf).select(KpiConstants.memberskColName).distinct()
+    val dinominatorExclDf = hospiceDf
+    /*Dinominator After Exclusion*/
+    val dinominatorAfterExclusionDf = dinominatorForKpiCalDf.except(hospiceDf)
+    //dinominatorAfterExclusionDf.show()
 
-    /*Numerator1 (Advance Care Planning Value Set during the measurement year) as procedure code*/
-    val hedisJoinedForAdvanceCareDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaAdvanceCareValueSet, KpiConstants.coaAdvanceCareCodeSystem)
+    //</editor-fold>
+
+    //<editor-fold desc="Numerator Calculation">
+
+    //<editor-fold desc="COA1">
+
+    /*COA1 (Advance Care Planning Value Set during the measurement year) as procedure code*/
+    val coa1Val = List(KpiConstants.advanceCarePlanning)
+    val coa1CodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cptCatIIVal,KpiConstants.hcpsCodeVal)
+    val joinForAdvanceCareDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa1Val, coa1CodeSystem)
+    val measrForAdvanceCareDf = UtilFunctions.measurementYearFilter(joinForAdvanceCareDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                             .select(KpiConstants.memberskColName)
 
     /*Numerator1 (Advance Care Planning Value Set during the measurement year) as primary diagnosis*/
-    val hedisJoinedForAdvanceCareIcdDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaAdvanceCareValueSet, KpiConstants.primaryDiagnosisCodeSystem)
+    val joinForAdvanceCareIcdDf =  UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa1Val, primaryDiagnosisCodeSystem)
+    val measrForAdvanceCareIcdDf = UtilFunctions.measurementYearFilter(joinForAdvanceCareIcdDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                                .select(KpiConstants.memberskColName)
 
-    val hedisJoinedForBothNumerator1Df = hedisJoinedForAdvanceCareDf.union(hedisJoinedForAdvanceCareIcdDf)
+    val coa1NumeratorDf = measrForAdvanceCareDf.union(measrForAdvanceCareIcdDf)
 
-    val numerator1Df = UtilFunctions.mesurementYearFilter(hedisJoinedForBothNumerator1Df, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    //</editor-fold>
 
-    /*Numerator2a (Medication Review Value Set during the measurement year) as procedure code*/
-    val hedisJoinedForMedicationReviewDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaMedicationReviewValueSet, KpiConstants.coaMedicationReviewCodeSystem)
-    val measurementFornumerator2aDf = UtilFunctions.mesurementYearFilter(hedisJoinedForMedicationReviewDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+    //<editor-fold desc="COA2">
+    /*COA2 a.(Medication review during the measurement year) as procedure code*/
 
-    /*Numerator2b (Medication List Value Set during the measurement year) as procedure code*/
-    val hedisJoinedForMedicationListDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaMedicationListValueSet, KpiConstants.coaMedicationListCodeSystem)
-    val measurementFornumerator2bDf = UtilFunctions.mesurementYearFilter(hedisJoinedForMedicationListDf, "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+    val coa2MedReviewVal = List(KpiConstants.medicationReviewVal)
+    val coa2MedReviewCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cptCatIIVal)
+    val joinForMediReviewDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType,  KpiConstants.coaMeasureId, coa2MedReviewVal, coa2MedReviewCodeSystem)
+    val measrCoa2aDf = UtilFunctions.measurementYearFilter(joinForMediReviewDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
 
+    /*COA2 b.(Medication List Value Set during the measurement year) as procedure code*/
 
+    val coa2MedListVal = List(KpiConstants.medicationListVal)
+    val coa2MedListCodeSystem = List(KpiConstants.hcpsCodeVal,KpiConstants.cptCatIIVal)
+    val joinForMedListDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa2MedListVal, coa2MedListCodeSystem)
+    val measrCoa2bDf = UtilFunctions.measurementYearFilter(joinForMedListDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
     /*	Both of the following during the same visit */
 
-    val numerator2a2bSameDateDf = hedisJoinedForMedicationReviewDf.as("df1").join(hedisJoinedForMedicationListDf.as("df2"), ($"df1.start_date" === $"df2.start_date"), KpiConstants.innerJoinType).select("df1.member_sk").distinct()
+    val coa2a2bSameDateDf = measrCoa2aDf.as("df1").join(measrCoa2bDf.as("df2"), (($"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}") && ($"df1.${KpiConstants.providerSkColName}" === $"df2.${KpiConstants.providerSkColName}"))
+                                        , KpiConstants.innerJoinType)
+                                        .filter(datediff($"df1.${KpiConstants.startDateColName}", $"df2.${KpiConstants.startDateColName}").===(KpiConstants.days0))
+                                        .select(s"df1.${KpiConstants.memberskColName}",s"df1.${KpiConstants.providerSkColName}")
 
-    /* Join with fact claims to get provider_sk */
 
-    val numerator2a2bWithProviderSkDf = numerator2a2bSameDateDf.as("df1").join(factClaimDf.as("df2"), ($"df1.member_sk" === $"df2.member_sk"), KpiConstants.innerJoinType).select("df2.*")
     /* provider type is a prescribing practitioner or clinical pharmacist */
 
-    val numerator2a2bSameProviderTypeDf = dimProviderDf.as("df1").join(numerator2a2bWithProviderSkDf.as("df2"), ($"df1.provider_sk" === $"df2.provider_sk"), KpiConstants.innerJoinType).filter(($"df1.provider_prescribing_privileges" === KpiConstants.yesVal) || ($"df1.clinical_pharmacist" === KpiConstants.yesVal)).select("df2.member_sk").distinct()
+    val coa2a2bSameProviderDf = dimProviderDf.as("df1").join(coa2a2bSameDateDf.as("df2"), ($"df1.$KpiConstants.providerSkColName" === $"df2.$KpiConstants.providerSkColName"), joinType = KpiConstants.innerJoinType)
+      .filter(($"df1.${KpiConstants.provprespriColName}" === KpiConstants.yesVal) || ($"df1.${KpiConstants.clinphaColName}" === KpiConstants.yesVal))
+      .select(s"df2.${KpiConstants.memberskColName}")
 
-    /* Numerator2c Transitional Care Management Services Value Set */
+    /*	Transitional care management services  */
 
-    val hedisJoinedForTransitionalCareDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaTransitionalCareValueSet, KpiConstants.coaTransitionalCareCodeSystem)
-    val measurementFornumerator2cDf = UtilFunctions.mesurementYearFilter(hedisJoinedForTransitionalCareDf , "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val coa2MedSub2Val = List(KpiConstants.transitionalCareMgtSerVal)
+    val coa2MedSub2CodeSystem = List(KpiConstants.cptCodeVal)
+    val joinForMedSub2Df = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa2MedListVal, coa2MedListCodeSystem)
+    val measrCoa2MedSub2Df = UtilFunctions.measurementYearFilter(joinForMedSub2Df , KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                          .select(KpiConstants.memberskColName)
 
-    /* Join Numerator1 & 2 & 3 */
+    val coa2Df = coa2a2bSameProviderDf.union(measrCoa2MedSub2Df)
 
-    val finalNumerator2BeforeExcludeDf = numerator2a2bSameProviderTypeDf.union(measurementFornumerator2cDf)
+    /* Numerator Exclude services provided in an (Acute Inpatient Value Set; Acute Inpatient POS Value Set) */
+    val coa2MedExclVal = List(KpiConstants.acuteInpatientVal,KpiConstants.acuteInpatientPosVal)
+    val coa2MedExclCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.posCodeVal,KpiConstants.ubrevCodeVal)
+    val joinForMedExclDf = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa2MedExclVal, coa2MedExclCodeSystem)
+    val measrCoaMedExclDf = UtilFunctions.measurementYearFilter(joinForMedExclDf, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                         .select(KpiConstants.memberskColName)
 
+    val coa2NumeratorDf = coa2Df.except(measrCoaMedExclDf)
+    //</editor-fold>
 
-    /* Numerator Exclude services provided in an acute inpatient setting */
+    //<editor-fold desc="COA3">
+    /* COA3 Functional Status Assessment */
 
-    val hedisJoinedForNumeratorExcludeDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaNumeratorExcludeValueSet, KpiConstants.coaNumeratorExcludeCodeSystem)
-    val measurementForNumeratorExcludeDf = UtilFunctions.mesurementYearFilter(hedisJoinedForNumeratorExcludeDf , "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    val coa3Val = List(KpiConstants.functionalStatusVal)
+    val coa3CodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cptCatIIVal,KpiConstants.hcpsCodeVal)
+    val joinCoa3Df = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa3Val, coa3CodeSystem)
+    val measrCoa3Df = UtilFunctions.measurementYearFilter(joinCoa3Df, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                   .select(KpiConstants.memberskColName)
 
-    val finalNumerator2Df = finalNumerator2BeforeExcludeDf.except(measurementForNumeratorExcludeDf)
+    val coa3NumeratorDf = measrCoa3Df.except(measrCoaMedExclDf)
+    //</editor-fold>
 
-    /* Numerator3 for Functional Status Assessment */
+    //<editor-fold desc="COA4">
 
-    val hedisJoinedForFunctionalStatusDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaFunctionalStatusValueSet, KpiConstants.coaFunctionalStatusCodeSystem)
-    val measurementForFunctionalStatusDf = UtilFunctions.mesurementYearFilter(hedisJoinedForFunctionalStatusDf , "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName)
+    val coa4Val = List(KpiConstants.painAssessmentVal)
+    val coa4CodeSystem = List(KpiConstants.cptCatIIVal)
+    val joinCoa4Df = UtilFunctions.factClaimRefHedisJoinFunction(spark, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, coa4Val, coa4CodeSystem)
+    val measrCoa4Df = UtilFunctions.measurementYearFilter(joinCoa4Df, KpiConstants.startDateColName, year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper)
+                                   .select(KpiConstants.memberskColName)
 
-    val finalNumerator3Df = measurementForFunctionalStatusDf.except(measurementForNumeratorExcludeDf).select(KpiConstants.memberskColName).distinct()
+    val coa4NumeratorDf = measrCoa4Df.except(measrCoaMedExclDf)
+    //</editor-fold>
 
-    /* Numerator4 for Pain Assessment  */
+    var numeratorDf = spark.emptyDataFrame
+    var numeratorVal = List.empty[String]
 
-    val hedisJoinedForPainAssessmentDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dimMemberDf, factClaimDf, refHedisDf, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.coaMeasureId, KpiConstants.coaPainAssessmentValueSet, KpiConstants.coaPainAssessmentCodeSystem)
-    val measurementForPainAssessmentDf = UtilFunctions.mesurementYearFilter(hedisJoinedForPainAssessmentDf , "start_date", year, KpiConstants.measurementYearLower, KpiConstants.measurementOneyearUpper).select(KpiConstants.memberskColName).distinct()
+    measureId match {
 
-    val finalNumerator4Df = measurementForPainAssessmentDf.except(measurementForNumeratorExcludeDf)
+      case KpiConstants.coa1MeasureId =>  numeratorDf = coa1NumeratorDf.intersect(dinominatorAfterExclusionDf)
+                                          numeratorVal = coa1Val
 
-    /* Final dinominator union of all Numerators 1, 2, 3 and 4 */
+      case KpiConstants.coa2MeasureId =>  numeratorDf = coa2NumeratorDf.intersect(dinominatorAfterExclusionDf)
+                                          numeratorVal = coa2MedReviewVal:::coa2MedListVal:::coa2MedSub2Val
 
-    val numeratorDf = numerator1Df.union(finalNumerator2Df).union(finalNumerator3Df).union(finalNumerator4Df)
+      case KpiConstants.coa3MeasureId =>  numeratorDf = coa3NumeratorDf.intersect(dinominatorAfterExclusionDf)
+                                          numeratorVal = coa3Val
 
-    /* numerator after dinominator exclusion */
+      case KpiConstants.coa4MeasureId =>  numeratorDf = coa4NumeratorDf.intersect(dinominatorAfterExclusionDf)
+                                          numeratorVal = coa4Val
+    }
 
-    val coaNumeratorDf = numeratorDf.intersect(coaDinominatorForKpiCal)
+    numeratorDf.show()
 
+    //</editor-fold>
 
-    /*Common output creation starts(data to fact_gaps_in_hedis table)*/
+    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
-    /*reason valueset */
-    val numeratorValueSet = KpiConstants.coaAdvanceCareValueSet ::: KpiConstants.coaMedicationReviewValueSet ::: KpiConstants.coaMedicationListValueSet ::: KpiConstants.coaTransitionalCareValueSet ::: KpiConstants.coaFunctionalStatusValueSet ::: KpiConstants.coaPainAssessmentValueSet
+    /*Common output format (data to fact_hedis_gaps_in_care)*/
+
+    val numeratorValueSet = numeratorVal
     val dinominatorExclValueSet = KpiConstants.emptyList
-    val numExclValueSet = KpiConstants.coaNumeratorExcludeValueSet
-    val outValueSetForOutput = List(numeratorValueSet, dinominatorExclValueSet, numExclValueSet)
-    val sourceAndMsrList = List(data_source,KpiConstants.coaMeasureId)
+    val numeratorExclValueSet = KpiConstants.emptyList
+    val outReasonValueSet = List(numeratorValueSet, dinominatorExclValueSet, numeratorExclValueSet)
 
-    /*create empty NumeratorExcldf*/
+    /*add sourcename and measure id into a list*/
+    val sourceAndMsrList = List(data_source,measureId)
     val numExclDf = spark.emptyDataFrame
-    val outFormattedDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, measurementDinominatorExclDf, coaNumeratorDf, measurementForNumeratorExcludeDf, outValueSetForOutput, sourceAndMsrList)
-    //outFormattedDf.write.format("parquet").mode(SaveMode.Append).insertInto(KpiConstants.dbName+"."+KpiConstants.outGapsInHedisTestTblName)
+    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, outReasonValueSet, sourceAndMsrList)
+    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
+    //</editor-fold>
 
     spark.sparkContext.stop()
+
   }
 
 

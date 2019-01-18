@@ -58,6 +58,7 @@ object KpiConstants {
   val age24Val = "24"
   val age30Val = "30"
   val age40Val = "40"
+  val age42Val = "42"
   val age44Val = "44"
   val age45Val = "45"
   val age51Val = "51"
@@ -74,6 +75,11 @@ object KpiConstants {
   val age120Val = "120"
 
 
+  /*count constants*/
+  val count0Val = 0
+  val count2Val = 2
+  val count4Val = 4
+  val count3Val = 3
 
 
   /*days constant*/
@@ -81,9 +87,21 @@ object KpiConstants {
   val days730 = 730
   val days365 = 365
   val days30 = 30
+  val days31 = 31
+  val days42 = 42
   val days3 = 3
   val days0 = 0
   val days180 = 180
+  val days456 = 456
+
+  /*month constants*/
+  val months24 = 24
+  val months12 = 12
+  val months156 = 156
+  val months144 = 144
+  val months132 = 132
+  val months120 = 120
+  val months108 = 108
 
   /*measurement Year Constants*/
   val measurementYearLower = 0
@@ -141,7 +159,7 @@ object KpiConstants {
   val cisMeasureTitle = "Childhood Immuniztions Status (CIS)"
   val colMeasureTitle = "Colorectal Cancer Screening (COL)"
   val bcsMeasureTitle = "Breast Cancer Screening (BCS)"
-  val ImamenMeasureTitle = "Immunizations for Adolescents (IMA)"
+  val imaMeasureTitle = "Immunizations for Adolescents (IMA)"
   val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
   val aapMeasureTitle = "Adult Access to Preventive/Ambulatory Health Services (AAP)"
   val aisMeasureTitle = "Adult Immunization Status (AIS)"
@@ -151,6 +169,10 @@ object KpiConstants {
   val cwpMeasureTitle = "Appropriate Testing for Children with Pharyngitis (CWP)"
   val uriMeasureTitle = "Appropriate Treatment for Children with Upper Respiratory Infection (URI)"
   val sprMeasureTitle = "Use of Spirometry Testing in the Assessment and Diagnosis of COPD (SPR)"
+  val smdMeasureTitle = "Diabetes Monitoring for People with Diabetes and Schizophrenia (SMD)"
+  val ssdMeasureTitle = "Diabetes Screening for People with Schizophrenia or Bipolar Disorder Who Are Using Antipsychotic Medications (SSD)"
+  val ncsMeasureTitle = "NonReended Cervical Cancer Screening in Adolescent Females (NCS)"
+
 
 
 
@@ -205,6 +227,16 @@ object KpiConstants {
   val mrbpreadingColName = "most_recent_bpreading"
   val contenrollLowCoName = "continuous_Enroll_LowerDate"
   val contenrollUppCoName = "continuous_Enroll_UpperDate"
+  val month15ColName = "month_15"
+  val secondDobColName = "second_dob"
+  val firstDobColName = "first_dob"
+  val thirteenDobColName = "thirteen_dob"
+  val twelveDobColName = "twelve_dob"
+  val elevenDobColName = "eleven_dob"
+  val tenDobColName = "ten_dob"
+  val nineDobColName = "nine_dob"
+  val provprespriColName = "provider_prescribing_privileges"
+  val clinphaColName = "clinical_pharmacist"
 
 
   /*Output column names*/
@@ -330,6 +362,7 @@ object KpiConstants {
   val w154MeasureId = "W154"
   val w155MeasureId = "W155"
   val w156MeasureId = "W156"
+  val cisMeasureId = "CIS"
   val cisDtpaMeasureId = "CISDTP"
   val cisIpvMeasureId = "CISIPV"
   val cisHiBMeasureId = "CISHIB"
@@ -351,11 +384,12 @@ object KpiConstants {
   val cisCmb2MeasureId = "CISCMB2"
   val colMeasureId = "COL"
   val bcsMeasureId = "BCS"
-  val ImamenMeasureId = "IMAMEN"
-  val ImatdMeasureId = "IMATD"
-  val ImahpvMeasureId = "IMAHPV"
-  val Imacmb1MeasureId = "IMACMB1"
-  val Imacmb2MeasureId = "IMACMB2"
+  val imaMeasureId = "IMA"
+  val imamenMeasureId = "IMAMEN"
+  val imatdMeasureId = "IMATD"
+  val imahpvMeasureId = "IMAHPV"
+  val imacmb1MeasureId = "IMACMB1"
+  val imacmb2MeasureId = "IMACMB2"
   val aisMeasureId = "AIS"
   val aisf1MeasureId = "AISINFL1"
   val aisf2MeasureId = "AISINFL2"
@@ -383,6 +417,14 @@ object KpiConstants {
   val cwpMeasureId = "CWP"
   val uriMeasureId = "URI"
   val sprMeasureId = "SPR"
+  val smdMeasureId = "SMD"
+  val ssdMeasureId = "SSD"
+  val coaMeasureId = "COA"
+  val coa1MeasureId = "COA1"
+  val coa2MeasureId = "COA2"
+  val coa3MeasureId = "COA3"
+  val coa4MeasureId = "COA4"
+
 
 
 
@@ -521,6 +563,69 @@ object KpiConstants {
   val chronicBronchitisVal = "Chronic Bronchitis"
   val nonAcuteInPatientStayVal = "Nonacute Inpatient Stay"
   val competingDiagnosisVal = "Competing Diagnosis"
+  val glucoseTestsValueSet = "Glucose Tests"
+  val otherBipolarDisorder = "Other Bipolar Disorder"
+  val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
+  val smcMeasureTitle = "Cardiovascular Monitoring for People with Cardiovascular Disease and Schizophrenia (SMC)"
+  val smcMeasureId = "SMC"
+  val bHStandAloneAcuteInpatientVal = "BH Stand Alone Acute Inpatient"
+  val schizophreniaVal = "Schizophrenia"
+  val bipolarDisorderVal = "Bipolar Disorder"
+  val acuteInpatientPosVal = "Acute Inpatient POS"
+  val outpatientPosVal = "Outpatient POS"
+  val bhOutpatientVal = "BH Outpatient"
+  val partialHospitalizationPosVal = "Partial Hospitalization POS"
+  val partialHospitalizationIntensiveOutpatientVal = "Partial Hospitalization/Intensive Outpatient"
+  val communityMentalHealthCenterPosVal = "Community Mental Health Center POS"
+  val electroconvulsiveTherapyVal = "Electroconvulsive Therapy"
+  val edPosVal = "ED POS"
+  val bhStandAloneNonacuteInpatientVal = "BH Stand Alone Nonacute Inpatient"
+  val nonacuteInpatientPosVal = "Nonacute Inpatient POS"
+  val telephonePosVal = "Telehealth POS"
+  val amiVal ="AMI"
+  val ldlcTestsVal = "LDL-C Tests"
+  val spirometryVal = "Spirometry"
+  val cptCatIIVal = "CPT-CAT-II"
+  val longActingInjVal = "Long-Acting Injections"
+  val antipsychoticMedVal = "SSD Antipsychotic Medications"
+  val anaReactVacVal = "Anaphylactic Reaction Due To Vaccination"
+  val vacCauseAdvEffVal = "Vaccine Causing Adverse Effect"
+  val mallNeoLymTisVal = "Malignant Neoplasm of Lymphatic Tissue"
+  val severeCombImmunVal = "Severe Combined Immunodeficiency"
+  val intussusceptionVal = "Intussusception"
+  val dtapVacAdmVal = "DTaP Vaccine Administered"
+  val ipvVaccineVal = "Inactivated Polio Vaccine (IPV) Administered"
+  val mmrVacVal = "Measles, Mumps and Rubella (MMR) Vaccine Administered"
+  val mrVacVal = "Measles/Rubella Vaccine Administered"
+  val mumpsVal = "Mumps"
+  val mumpsVacVal = "Mumps Vaccine Administered"
+  val measlesVacVal = "Measles Vaccine Administered"
+  val measelesVal = "Measles"
+  val rubellaVacVal = "Rubella Vaccine Administered"
+  val rubellaVal = "Rubella"
+  val hibVacVal = "Haemophilus Influenzae Type B (HiB) Vaccine Administered"
+  val pneConjVacVal = "Pneumococcal Conjugate Vaccine Administered"
+  val influenzaVacVal = "Influenza Vaccine Administered"
+  val rotavirusVac2Val = "Rotavirus Vaccine (2 Dose Schedule) Administered"
+  val rotavirusVac3Val = "Rotavirus Vaccine (3 Dose Schedule) Administered"
+  val hepatitisAVacVal = "Hepatitis A Vaccine Administered"
+  val hepatitisAVal= "Hepatitis A"
+  val ardtsVal = "Anaphylactic Reaction Due To Serum"
+  val vaccineAdverseVal = "Vaccine Causing Adverse Effect"
+  val meningococcalVal = "Meningococcal Vaccine Administered"
+  val tdapVacceVal = "Tdap Vaccine Administered"
+  val hpvVal = "HPV Vaccine Administered"
+  val vzvVacVal = "Varicella Zoster (VZV) Vaccine Administered"
+  val vzvVal = "Varicella Zoster"
+  val hepatitisBVacVal = "Hepatitis B Vaccine Administered"
+  val hepatitisBVal = "Hepatitis B"
+  val advanceCarePlanning = "Advance Care Planning"
+  val medicationReviewVal = "Medication Review"
+  val medicationListVal = "Medication List"
+  val transitionalCareMgtSerVal = "Transitional Care Management Services"
+  val functionalStatusVal = "Functional Status Assessment"
+  val painAssessmentVal = "Pain Assessment"
+
 
 
 
@@ -920,7 +1025,7 @@ object KpiConstants {
 
   val coaMeasureTitle = "Care of Older Adults (COA)"
 
-  val coaMeasureId = "COA"
+
 
   val coaAdvanceCareValueSet = List("Advance Care Planning")
 
@@ -953,41 +1058,17 @@ object KpiConstants {
 
 
 
-  val smdMeasureTitle = "Diabetes Monitoring for People with Diabetes and Schizophrenia (SMD)"
-  val smdMeasureId = "SMD"
 
-  val ssdMeasureTitle = "Diabetes Screening for People with Schizophrenia or Bipolar Disorder Who Are Using Antipsychotic Medications (SSD)"
-  val ssdMeasureId = "SSD"
+
   val ssdLongActingInjectionsValueSet = List("Long-Acting Injections")
   val ssdAntipsychoticMedicationListVal = List("Antipsychotic Medications")
-  val glucoseTestsValueSet = "Glucose Tests"
-  val otherBipolarDisorder = "Other Bipolar Disorder"
-  val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
 
 
 
 
 
-  val smcMeasureTitle = "Cardiovascular Monitoring for People with Cardiovascular Disease and Schizophrenia (SMC)"
-  val smcMeasureId = "SMC"
-  val bHStandAloneAcuteInpatientVal = "BH Stand Alone Acute Inpatient"
-  val schizophreniaVal = "Schizophrenia"
-  val bipolarDisorderVal = "Bipolar Disorder"
-  //val otherBipolarDisorder = "Other Bipolar Disorder"
-  //val visitSettingUnspecifiedVal = "Visit Setting Unspecified"
-  val acuteInpatientPosVal = "Acute Inpatient POS"
-  val outpatientPosVal = "Outpatient POS"
-  val bhOutpatientVal = "BH Outpatient"
-  val partialHospitalizationPosVal = "Partial Hospitalization POS"
-  val partialHospitalizationIntensiveOutpatientVal = "Partial Hospitalization/Intensive Outpatient"
-  val communityMentalHealthCenterPosVal = "Community Mental Health Center POS"
-  val electroconvulsiveTherapyVal = "Electroconvulsive Therapy"
-  val edPosVal = "ED POS"
-  val bhStandAloneNonacuteInpatientVal = "BH Stand Alone Nonacute Inpatient"
-  val nonacuteInpatientPosVal = "Nonacute Inpatient POS"
-  val amiVal ="AMI"
-  val ldlcTestsVal = "LDL-C Tests"
-  val cptCatIIVal = "CPT-CAT-II"
+
+
 
 
 }

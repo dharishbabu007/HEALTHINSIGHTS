@@ -209,7 +209,7 @@ object NcqaCWP {
 
     val cwpNumVal = List(KpiConstants.groupAStrepTestsVal)
     val cwpNumCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.loincCodeVal)
-    val joinedForCwpNumDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,dimMemberDf,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.cwpMeasureId,cwpNumVal,cwpNumCodeSystem)
+    val joinedForCwpNumDf = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.cwpMeasureId,cwpNumVal,cwpNumCodeSystem)
 
 
     val numCwpDf = joinedForCwpNumDf.as("df1").join(step6Df.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)

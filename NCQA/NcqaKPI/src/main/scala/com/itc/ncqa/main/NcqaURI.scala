@@ -164,7 +164,7 @@ object NcqaURI {
                                           .filter(datediff(step2Df.col(KpiConstants.startDateColName),cwpAntiListDf.col(KpiConstants.rxStartDateColName)).<=(KpiConstants.days30))
                                           .select(step2Df.col(KpiConstants.memberskColName),step2Df.col(KpiConstants.startDateColName))
 
-    val step3Df = step2Df.except(step3Df)
+    val step3Df = step2Df.except(step3ConditionDf)
     //</editor-fold>
 
     //<editor-fold desc="Step4 ">
