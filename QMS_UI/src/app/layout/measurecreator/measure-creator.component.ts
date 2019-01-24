@@ -28,6 +28,8 @@ export class MeasurecreatorComponent implements OnInit {
   measureCategoriesList: any;
   measureCategories: any;
   measureTypes: any;
+  samplingButton: boolean = false;
+  dataSoucreTypes = [{label:"Hybrid",value:"hybrid"}];
   constructor(private _fb: FormBuilder,
     private gapsService: GapsService,
     private msgService: MessageService,
@@ -57,7 +59,11 @@ export class MeasurecreatorComponent implements OnInit {
           startDate: [],
           endDate: [],
           id: [],
-          Decommisioned: []
+          Decommisioned: [],
+          p50:[],
+          p90:[],
+          dataSource:[],
+          dataCollection:[]
         });
 
     }
@@ -239,9 +245,19 @@ export class MeasurecreatorComponent implements OnInit {
     this.myForm.controls['endDate'].setValue(new Date(res.endDate));
     
   
-    });
-   
-}
+    });   
+  }
+  dataSourceSelected(event)
+  {
+    if(event.value=="hybrid"){
+      this.samplingButton = true;
+    }
+  }
+  dialogBox:boolean = false;
+  showDialogBox()
+  {
+    this.dialogBox = true;
+  }
 }
 
 

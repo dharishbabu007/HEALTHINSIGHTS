@@ -88,10 +88,24 @@ export class GapsService {
     setMeasureStatus(measureId, status) {
         return this.http.put(`http://healthinsight:8082/curis/qms/work_list/status/${measureId}/${status}`, {});
     }
-    updateCloseGaps(closeGapModel, memberId, gapId) {
-        return this.http.post(`http://healthinsight:8082/curis/closeGaps/${memberId}/${gapId}`, { 'careGaps': [closeGapModel]});
+    updateCloseGaps(formModel,targetDate,closeGaps,gapId) {
+        return this.http.post(`http://healthinsight:8082/curis/closeGaps/${closeGaps.memberId}/${gapId}`, { 'careGaps': [ {
+            "measureTitle": closeGaps.careGap,
+            "qualityMeasureId": gapId,
+            "intervention": formModel.intervention,
+            "priority": formModel.priority,
+            "payerComments": formModel.payerComments,
+            "providerComments": null,
+            "status": formModel.status,
+            "targetDate":targetDate,
+            "closeGap": formModel.closeGap,
+            "actionCareGap": formModel.actionOnCareGap,
+            "uploadList": []
+        }]});
     }
-
+    uploadCloseGapFiles(file){
+        return this.http.post(`http://localhost:8082/curis/closeGaps/gic_lifecycle_import/`,file)
+    }
     getTableName(){
      return this.http.get(`http://healthinsight:8082/curis/measure_configurator/config_data`);
     }

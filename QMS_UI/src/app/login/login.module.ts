@@ -11,5 +11,5 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
      FormsModule,
       ReactiveFormsModule],
     declarations: [LoginComponent],
-})
+}) 
 export class LoginModule {}

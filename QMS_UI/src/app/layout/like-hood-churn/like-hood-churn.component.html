@@ -1,4 +1,4 @@
-<div >
+<div  style="margin-top: 10px" >
         <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
 
 
@@ -20,15 +20,15 @@
             </iframe>
         </div> --> 
 
-           <div *ngIf="type==2">
+           <div *ngIf="type==2" style="margin: 20px;">
                <br>
-                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>  &nbsp;&nbsp;&nbsp;
+                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
                 <button type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',2]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
                 <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
                 <br><br>
                     <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Details">
                         <ng-template pTemplate="header">
-                            <tr>
+                            <tr class="header-class">
                                 <th *ngFor="let col of cols" [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -59,9 +59,9 @@
                         </ng-template>
                     </p-table>
                 </div>
-                <div *ngIf="type==1">
+                <div *ngIf="type==1" style="margin: 20px;">
                         <br>
-                        <button  type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>  &nbsp;&nbsp;&nbsp;
+                        <button  type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
                         <button  type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',1]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
                         <button  type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/ChurnModeling/Churn?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
                         <br><br>
@@ -71,7 +71,7 @@
                         </div> -->
                         <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols1" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Details">
                             <ng-template pTemplate="header">
-                                <tr>
+                                <tr class="header-class">
                                     <th *ngFor="let col of cols1" [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>

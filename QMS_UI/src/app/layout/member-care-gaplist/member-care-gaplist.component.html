@@ -1,14 +1,15 @@
-<div >
+<div style="margin-top: 10px">
     <app-page-header [heading]="'Member Care Gaps Registry'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
         <div class="card-body">
     <div class="row">
         <div class="col col-lg-12">
-            <button class="btn btn-sm btn-info float-left" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" ></button>
+            <button class="btn btn-sm btn-info float-right" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()"></button>
+            <br><br>
             <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Care_Gaps_Registry">
                 <ng-template pTemplate="header" >
                     <tr>
-                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
+                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" >
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                          </th>
@@ -22,7 +23,7 @@
                                </div>
                               <div *ngSwitchCase="'timePeriod'">
                                        
-                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"   styleClass="calendarClass"  mode="inline" [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
+                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"  [inputStyle]="{'width':'100%'}"  mode="inline" [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
                                         
                                </div>
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">

@@ -84,6 +84,9 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {TabViewModule} from 'primeng/tabview';
 import {ProgressBarModule} from 'primeng/progressbar';
+import { QueryBuilderModule } from "angular2-query-builder";
+import {InputSwitchModule} from 'primeng/inputswitch';
+import {ToggleButtonModule} from 'primeng/togglebutton';
 @NgModule({
     imports: [
         CommonModule,
@@ -112,12 +115,15 @@ import {ProgressBarModule} from 'primeng/progressbar';
         AccordionModule,
         TieredMenuModule,
         OverlayPanelModule,
-        TabViewModule,
         ProgressBarModule,
+        TabViewModule,
         NgbModule.forRoot(),
         NgbDropdownModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
         NgxPermissionsModule.forRoot(),
+        QueryBuilderModule,
+        InputSwitchModule,
+        ToggleButtonModule
     ],
 
     declarations: [LayoutComponent,

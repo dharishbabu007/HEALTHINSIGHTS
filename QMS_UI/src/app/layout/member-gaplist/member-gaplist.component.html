@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row"  style="margin: 25px;margin-top: 10px">
     <div class="col col-xl-12 col-lg-12">
             <app-page-header [heading]="'Member Gaps List'" [icon]="'fa-table'"></app-page-header>
         <div class="card mb-3">
@@ -32,17 +32,18 @@
                     </div>
                     <div class="row" *ngIf="gaps">
                         <div class="col col-lg-12">
-                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" *ngxPermissionsOnly="['11D']"></button>
+                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" *ngxPermissionsOnly="['11D']"></button>
+                            <br><br>
                             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="gaps.qmsGicLifecycle" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Member_Gaps_List">
                                 <ng-template pTemplate="header" >
                                     <tr>
-                                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle">
+                                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-color">
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                                        <th *ngFor="let col of cols" [ngSwitch]="col.field" >
                                             <!-- <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
                                             <p-dropdown *ngSwitchCase="'status'" [options]="statusTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
                                             <p-dropdown *ngSwitchCase="'priority'" [options]="priorityTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>

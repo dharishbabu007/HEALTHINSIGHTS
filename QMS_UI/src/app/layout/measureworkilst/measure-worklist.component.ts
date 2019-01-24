@@ -38,7 +38,7 @@ export class MeasureworklistComponent implements OnInit {
             { field: 'name', header: 'Measure Name', width: '20%' },
             { field: 'programName', header: 'Program Name', width: '20%' },
             { field: 'status', header: 'Status', width: '10%' },
-            { field: 'reviewComments', header: 'Review Comments' , width: '20%'},
+            { field: 'reviewComments', header: 'Calculation Method' , width: '20%'},
             { field: 'reviewedBy', header: 'Reviewed By' , width: '20%'},
         ];
         this.permissionsService.permissions$.subscribe((permissions) => {

@@ -1,18 +1,18 @@
-<div >
+<div style="margin-top: 10px">
     <app-page-header [heading]="'Quality Measures'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
-    <div class="row">
+    <div class="row" style="margin: 20px">
         <div class="col col-lg-12 ">
-
-            <button type="button" *ngxPermissionsOnly="['6D']" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left"></button>
+            <button type="button" *ngxPermissionsOnly="['6D']" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right;"></button>
+            <br><br>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" exportFilename="Quality_Measures" >
                 <ng-template pTemplate="header">
                     <tr>
-                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
-                            {{col.header}}
+                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" [ngSwitch]="col.header" >
+                                    {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-                        <th rowspan="2" width="3%"></th>
+                        <th width="3%" class="header-class"></th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field">
@@ -41,7 +41,7 @@
                                 </span>     
                         </td>
                         <td >
-                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']" style="cursor: pointer;" pTooltip="Open in Creator"></i>&nbsp;
+                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']" style="cursor: pointer;" pTooltip="Create Copy"></i>&nbsp;
                             <a  [routerLink]="['/hernia-repair/']" *ngIf="rowData['name'] =='Rate of unplanned readmission for planned Hernia Repair'" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
                             <i class="fa fa-pie-chart" pTooltip="Dashboard" *ngIf="rowData['name'] !='Rate of unplanned readmission for planned Hernia Repair'"></i>
                         </td>

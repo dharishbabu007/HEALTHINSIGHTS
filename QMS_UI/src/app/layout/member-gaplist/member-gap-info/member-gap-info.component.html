@@ -1,4 +1,4 @@
-<div >
+<div style="margin: 25px;margin-top: 10px">
     <app-page-header [heading]="'Close Gaps'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
         <div class="row">
@@ -9,80 +9,203 @@
                             <div class="col col-lg-2 col-xl-2 ">
                                 <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
-                            <div class="col col-lg-4 col-xl-4">
+                            <div class="col col-lg-3 col-xl-3">
                                 <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps.name}}</a>
-                             </div>
+                            </div>
+                            <div class="col col-lg-4 col-xl-4">
+                                <span class="font-weight-bold">Care Gap</span> : {{closeGaps.careGap}}
+                            </div>
+                            <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">Assigned To</span> : {{closeGaps.assignedTo}}
+                            </div>
                         </div>
+                        <br>
                         <div  *ngIf="gaps" class="row card-text">
                             <div class="col col-lg-2 col-xl-2">
-                                    <span class="font-weight-bold">Gender</span> : 
+                                <span class="font-weight-bold">Gender</span> : 
                                 {{closeGaps.gender}}
                             </div>
+                            <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">DOB </span> :                         
+                                {{closeGaps.dateOfBirth | date}}
+                            </div>
+                            <div class="col col-lg-4 col-xl-4">
+                                <span class="font-weight-bold">Open Date</span> : {{closeGaps.openDate | date}}
+                            </div>
+                            <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">Status</span> : {{closeGaps.status}}
+                            </div>
+                        </div>
+                        <br>
+                        <div  *ngIf="gaps" class="row card-text">
                             <div class="col col-lg-2 col-xl-2">
-                                    <span class="font-weight-bold">DOB </span> :                         
-                                    {{closeGaps.dateOfBirth | date}}
+                                <span class="font-weight-bold"></span>
+                            </div>
+                            <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">Next Appointment Date</span> :
+                            </div>
+                            <div class="col col-lg-4 col-xl-4"  *ngIf="provider">
+                                <span class="font-weight-bold">Target Closure Date</span> : {{closeGaps.targetDate | date}}
+                            </div>
+                            <div class="col col-lg-4 col-xl-4">
+                                <span class="font-weight-bold">Target Closure Date</span> :
+                                    <p-calendar [(ngModel)]="targetDate" [showIcon]="true" dataType="string" dateFormat="dd-M-yy"></p-calendar>
+                            </div>
+                            <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">Last Action date</span> : {{closeGaps.lastActionDate | date}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col col-lg-12">
-                <form [formGroup]="closeGapForm" class="form-horizontal" novalidate >
-                <table class="table table-bordered table-hover responsive" >
+                <div class="card mb-3" style="  border: none;">
+                <div class="card-body">
+                <form [formGroup]="closeGapForm" class="form-horizontal  p-2" novalidate >
+                    <div class="form-group">
+                        <div class="row">
+                            <span class="col-lg-3 font-weight-bold">Payer Comments </span>
+                            <span class="col-lg-3 font-weight-bold">Provider Comments </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-lg-3">
+                                <textarea formControlName="payerComments" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
+                            </span>
+                            &nbsp;
+                            <span class="col-lg-3">
+                                <textarea formControlName="providerComments" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
+                            </span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <span class="col-lg-3 font-weight-bold">Priority</span>
+                            <span  class="col-lg-3 font-weight-bold" *ngIf="provider">Action on Care Gap</span> 
+                        </div>
+                        <div class="row">
+                            <span class="col-lg-3">
+                            <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'80%'}" ></p-dropdown>
+                            </span>
+                            <span class="col-lg-3" *ngIf="provider">
+                            <p-dropdown formControlName="actionOnCareGap" [options]="actionTypes" [style]="{'width':'80%'}" ></p-dropdown>
+                            </span>
+                        </div>
+                        <br>
+                        <div class="row">
+                                <span class="col-lg-2 font-weight-bold">File Input</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-lg-5">
+                            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"></p-fileUpload>
+                            </span>
+                        </div>
+                        <br>
+                        <div class="row" *ngIf="!provider">
+                                <span class="col-lg-5 font-weight-bold">
+                                    Close Gap &nbsp;&nbsp;
+                                            <p-inputSwitch formControlName="closeGap" onLabel="yes" offLabel="No"></p-inputSwitch>
+                                            <!-- <mat-slide-toggle>Slide me!</mat-slide-toggle> -->
+                                 
+                                    <!-- <p-inputSwitch formControlName="enabled"></p-inputSwitch> -->
+                                </span>
+                        </div>
+                    </div>
+
+                <!-- <table class="table table-bordered table-hover responsive" >
                     <thead>
                         <tr>
-                            <th *ngFor="let col of cols" class="text-center align-middle" >
-                                {{col.header}}
+                            <th>
+                               Payer Comments
+                            </th>
+                            <th>
+                              Priority
+                            </th>
+                            <th *ngIf="provider">
+                              Action on Care Gap
+                            </th>
+                            <th>
+                               Provider Comments
+                            </th>
+                            <th>
+                              Close Gap
+                            </th>
+                            <th>
+                            
                             </th>
                         </tr>
                     </thead>
                     <tbody >
                          <tr>
-                             <td>
-                                    <span > 
-                                            {{measureTitle}}
-                                        </span>
-                             </td>
-                             <td>
-                                     <span>
-                                            <textarea formControlName="intervention"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
-                                     </span>
-                             </td>
-                             <td>
-                                    <p-dropdown formControlName="priority"  [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
-                             </td>
-                             <td>
-                                    <textarea formControlName="providerComments"  [rows]="3" [cols]="30" pInputTextarea autoResize="autoResize"></textarea>
-                             </td>
-                             <td>
-                                    <p-dropdown formControlName="status" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown>
-                             </td>
-                         </tr>
-                        <tr *ngFor="let gapsElement of gaps; let i=index;" >
-                            <td *ngFor="let col of cols" >
-                                 
-                                <span *ngIf="col.field == 'measureTitle'"> 
-                                    {{gapsElement[col.field]}}
-                                </span>
-                                <span *ngIf="col.field == 'dateTime'"> 
-                                    {{gapsElement[col.field] | date}}
-                                </span>
+                            <td>
+                                   <textarea formControlName="intervention" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
 
-                               
-                                <!-- <p-dropdown  *ngIf="col.field == 'status' && i ==0" [options]="statusTypes" [style]="{'width':'100%'}" ></p-dropdown> -->
+                             </td>
+                             <td>
+                                    <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                             </td>
+                             <td *ngIf="provider">
+                                    <p-dropdown formControlName="actionOnCareGap" [options]="actionTypes" [style]="{'width':'100%'}" ></p-dropdown>
+                             </td>
+                             <td>
+                                    <textarea formControlName="providerComments" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
+                             </td>
+                             <td style="align-items: center">
+                                    <p-checkbox [formControl]="closeGapForm.controls['closeGap']"></p-checkbox>
+                             </td>
+                             <td>
+                                    <i class="fa fa-file-image-o" style="cursor: pointer;" (click)="showAllDialog()" aria-hidden="true"></i>
+                             </td>
+                           
+                         </tr>
+                         <tr *ngIf="gaps">
+                            <td>{{gaps[0].intervention}} </td>
+                            <td>{{gaps[0].priority}} </td>
+                            <td>{{gaps[0].providerComments}} </td>
+                            <td>{{gaps[0].closegap}} </td>
+                            <td>{{gaps[0].attachment}} </td>
+                        </tr> 
+                       
+                    </tbody>
+                </table> -->
+                </form>
+                </div>
+                </div>
+               
+            </div>
+        </div>
+                <p-panel header="History" [toggleable]="true" [collapsed]="true">
+                   <ng-container *ngTemplateOutlet="remainingDataPanel"></ng-container>
+                </p-panel>
+        <div class="row  text-right">
+            <div class="col col-lg-12 ">
+                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
+
+            </div>
+        </div>
+        <p-dialog [(visible)]="displayAllData" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+        [baseZIndex]="10000">
+            <div class="col-lg-12">
+                    <!-- <p-fileUpload name="myfile[]" url="#" multiple="multiple" accept="image/*" maxFileSize="1000000"></p-fileUpload> -->
+                    <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"></p-fileUpload>
+            </div>
+        </p-dialog>
+        <ng-template #remainingDataPanel>
+            <table class="table table-bordered table-hover responsive" >
+                <thead>
+                    <tr>
+                      <th *ngFor="let col of cols" >
+                          <span > 
+                                    {{col.header}}
+                          </span>
+                      </th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let gapsElement of remainingrows; let i=index;" >
+                            <td *ngFor="let col of cols" >
                                   <span *ngIf= "col.field == 'priority'" >
                                        
                                         {{gapsElement[col.field]}} 
                                   </span>
-                                
-                                <span *ngIf= "col.field == 'status'" >
-                                      
-                                        {{gapsElement[col.field]}} 
-                                  </span>
-                               
-                                <span *ngIf="col.field == 'payerComments' && i ==0" >
-                                        {{gapsElement[col.field]}}
-                                </span> 
                                 <span *ngIf="col.field == 'providerComments' && i ==0" >
                                         {{gapsElement[col.field]}}
                                 </span> 
@@ -90,24 +213,12 @@
                                    {{gapsElement[col.field]}}
                                 </span>  
                                
-                                <!--  <span *ngIf="i > 0 && (col.field != 'dateTime' && col.field != 'measureTitle')"> 
-                                        {{gapsElement[col.field]}}
-                                    </span>-->
+                               
                             </td>
                           
-                        </tr>
-                       
-                    </tbody>
-                </table>
-                </form>
-                <p-fileUpload name="myfile[]" url="#" multiple="multiple" accept="image/*" maxFileSize="1000000"></p-fileUpload>
-            </div>
-        </div>
-        <div class="row  text-right">
-            <div class="col col-lg-12 ">
-                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
-                <button pButton type="button" label="Cancel" class="ui-button-secondary m-2" *ngxPermissionsOnly="['10W']"></button>
-            </div>
-        </div>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-template>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div>
+<div style="margin: 25px;margin-top: 10px">
   <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
     <div class="card">
       <div class="row p-2">
@@ -11,7 +11,7 @@
               </div>
               <div class="row">
                 <span class="col-lg-5">
-                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="programList" formControlName="programName" (onChange)="filterCategory($event)"></p-dropdown>
+                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="programList" formControlName="programName" (onChange)="filterCategory($event)" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                 </span>
                 &nbsp;
                 <span class="col-lg-5">
@@ -49,10 +49,10 @@
               </div>
               <div class="row">
                 <span class="col-lg-5">
-                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureDomainList" formControlName="measureDomain"></p-dropdown>
+                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureDomainList" formControlName="measureDomain" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                 </span>
                 <span class="col-lg-5">
-                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureCategories" formControlName="measureCategory"></p-dropdown>
+                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureCategories" formControlName="measureCategory" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                 </span>
               </div>
               <div class="row">
@@ -61,7 +61,7 @@
               </div>
               <div class="row">
                 <span class="col-lg-5">
-                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureTypes" formControlName="type"></p-dropdown>
+                  <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureTypes" formControlName="type" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                 </span>
                 <span class="col-lg-5">
                   <input type="text" class="form-control" formControlName="clinocalCondition">
@@ -94,20 +94,40 @@
                <textarea class="form-control" rows="3" type="text" formControlName="numeratorExclusions"></textarea>
             </span>
           </div>
-          
           <div class="row">
-            <span class="col-lg-5 font-weight-bold">Target </span>            
+              <span class="col-lg-2 font-weight-bold">Target </span>
+              <span class="col-lg-1 font-weight-bold">P50</span>
+              <span class="col-lg-1 font-weight-bold">P90</span>  
+              <span class="col-lg-1 font-weight-bold"></span>  
+              <span class="col-lg-2 font-weight-bold">Data Source </span>
+              <span class="col-lg-2 font-weight-bold">Data Collection </span>
           </div>
           <div class="row">
-            <span class="col-lg-5">
-               <input type="number" class="form-control" formControlName="target">
-            </span>
-             
+              <span class="col-lg-2">
+               <input type="number" class="form-control"  formControlName="target">
+             </span>
+             <span class="col-lg-1">
+                <input type="number" class="form-control" formControlName="p50">
+             </span>
+             <span class="col-lg-1">
+                <input type="number" class="form-control"  formControlName="p90">  
+             </span>
+             <span class="col-lg-1">
+               
+             </span>
+             <span class="col-lg-2">
+                <p-dropdown placeholder="Select Source" [autoDisplayFirst]="false"  styleClass="form-control" [options]="dataSoucreTypes" formControlName="dataSource" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}" (onChange)="dataSourceSelected($event)"></p-dropdown>
+              </span>
+              <span class="col-lg-2">
+                <input type="text" class="form-control"  formControlName="dataCollection"> 
+              </span>
+              <span class="col-lg-2" *ngIf="samplingButton">
+                  <button  class="btn btn-primary" (click)="showDialogBox()">&nbsp; Sampling</button>
+              </span>
           </div>
           <div class="row">
             <span class="col-lg-5 font-weight-bold">Start Date</span>
              <span class="col-lg-5 font-weight-bold">End Date</span>
-             
           </div>
           <div class="row">
               <span class="col-lg-5">
@@ -127,13 +147,25 @@
           </div>
           <div class="row p-2">
             <span class="col-lg-12 text-right">
-            <button [disabled]="disableForm" (click)="savePc(myForm.value,myForm.valid)" class="btn btn-primary " *ngxPermissionsOnly="['4W']"> <i class="fa fa-floppy-o"></i>&nbsp; Save</button>&nbsp;&nbsp;
-            <button [disabled]="disableForm" (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" *ngxPermissionsOnly="['4W']"> <i class="fa fa-dot-circle-o"></i>&nbsp; Submit</button>&nbsp;&nbsp;
-            <button [disabled]="disableOnCopy" (click)="inActiveMeasure(myForm.value)" class="btn btn-danger" *ngxPermissionsOnly="['4W']"><i class="fa fa-ban"></i>&nbsp;Decommission</button>
+            <button [disabled]="disableForm" (click)="savePc(myForm.value,myForm.valid)" class="btn btn-primary " *ngxPermissionsOnly="['4W']"> <i class="fa fa-floppy-o"></i>&nbsp; Save for Later</button>&nbsp;&nbsp;
+            <button [disabled]="disableForm" (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" *ngxPermissionsOnly="['4W']"> <i class="fa fa-dot-circle-o"></i>&nbsp; Submit for Review</button>&nbsp;&nbsp;
+            <span *ngIf="type==1"><button [disabled]="disableOnCopy" (click)="inActiveMeasure(myForm.value)" class="btn btn-danger" *ngxPermissionsOnly="['4W']"><i class="fa fa-ban"></i>&nbsp;Decommission</button></span>
             </span>
           </div>
         </div>
       </form>
+      <p-dialog [(visible)]="dialogBox" [modal]="true" [responsive]="true"  [minY]="70"  [baseZIndex]="10000"> 
+          <!-- [style]="{width: '350px', minWidth: '200px'}" -->
+          <p-tabView>
+              <p-tabPanel header="Table1"  leftIcon="pi pi-calendar" >
+              </p-tabPanel>
+              <p-tabPanel header="Table2"  leftIcon="pi pi-calendar" >
+              </p-tabPanel>
+              <p-tabPanel header="Hybrid Specifications"  leftIcon="pi pi-calendar" >
+              </p-tabPanel>
+              
+          </p-tabView>
+      </p-dialog>
     </div>
   </div>
   </div>

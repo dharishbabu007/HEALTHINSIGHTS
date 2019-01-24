@@ -1,4 +1,4 @@
-<div >
+<div  style="margin: 25px;margin-top: 10px">
         <app-page-header [heading]="'Clustering - Member List'" [icon]="'fa-table'"></app-page-header>
         
    <div class="card">
@@ -10,7 +10,7 @@
                 <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="header-class">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
