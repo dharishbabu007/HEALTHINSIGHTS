@@ -54,12 +54,13 @@ export class MemberGapListComponent implements OnInit {
         }
         this.cols = [
             { field: 'measureTitle', header: 'Care Gaps' },
-            { field: 'interventions', header: 'Interventions' },
+            { field: 'interventions', header: 'Payer Comments' },
             { field: 'priority', header: 'Priority' },
             // { field: 'payerComments', header: 'Payer Comments' },
             // { field: 'providerComments', header: 'Provider Comments' },
             { field: 'status', header: 'Status' },
-            { field: 'start_date', header: 'Start Date' },
+            { field: 'start_date', header: 'Open Date' },
+            { field: 'targetDate', header: 'Target Date' },
             { field: 'end_date', header: 'Last Action Date' },
             { field: 'duration', header: 'Aging' },
         ];

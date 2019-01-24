@@ -135,7 +135,8 @@ const routes: Routes = [
             { path: 'communication-stats', component: CommunicationStatisticsComponent},
             { path: 'communication-enroll', component:CommunicationToEnrollComponent}
         ]
-    }
+    },
+    { path: 'health', loadChildren: './health/health.module#HealthModule' },
 ];
 
 @NgModule({

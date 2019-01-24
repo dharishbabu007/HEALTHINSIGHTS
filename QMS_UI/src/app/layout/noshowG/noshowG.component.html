@@ -1,14 +1,15 @@
-<div >
+<div style="margin-top: 10px">
         <app-page-header [heading]="'No Show Gap List'" [icon]="'fa-table'"></app-page-header>
         <div class="card">
-        <div class="row">
+        <div class="row"  style="margin: 20px">
             <div class="col col-lg-12">
-                <button class="btn btn-sm btn-info float-left" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" ></button> &nbsp;
+                <button class="btn btn-sm btn-info float-right" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" ></button> &nbsp;
+                <br>
               <!--  <button type="button" pButton label="back" [routerLink]="['/csv1/']"  class="btn-space"></button>  -->
                 <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" exportFilename="No_Show_GapList">
                     <ng-template pTemplate="header" >
                         <tr>
-                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" >
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                              </th>

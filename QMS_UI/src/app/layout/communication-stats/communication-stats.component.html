@@ -1,4 +1,4 @@
-<div >
+<div  style="margin: 25px;margin-top: 10px">
         <app-page-header [heading]="'Statistics - Communication to Enroll'" [icon]="'fa-table'"></app-page-header>
         <div class="card row p-3 align-items-center">
         <p-tabView>
@@ -19,7 +19,7 @@
                     <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                                <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="header-class">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
@@ -65,7 +65,7 @@
                                     Actual
                                 </ng-template>
                         <ng-template pTemplate="header">
-                            <tr>
+                            <tr  class="header-class">
                                 <th></th>
                                 <th>Positive</th>
                                 <th>Negative</th>
@@ -95,7 +95,7 @@
                         <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="ModelScore" [columns]="cols" exportFilename="Model_Score">
                                 <ng-template pTemplate="header">
                                         <tr>
-                                            <th>ModelScore</th>
+                                            <th class="header-class">ModelScore</th>
                                            
                                         </tr>
                                         </ng-template>

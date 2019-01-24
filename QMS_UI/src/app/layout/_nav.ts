@@ -183,56 +183,56 @@ export const navItems = [
           },
 
         ]
-      },
-      {
-        name: 'Provider',
-        url: '#',
-        icon: 'fa fa-line-chart',
-        children: 
-        [
-          {
-            name: 'Operations',
-            url: '#',
-            icon: 'fa fa-line-chart',
-            children: 
-        [
-          {
-            name: 'OR Utilisation',
-            url: 'http://192.168.184.70/t/CurisSite/views/OR_Utilization_Template_webscreen/Summary?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-line-chart',
-          },
-            {
-            name: 'Stroke',
-            url: 'http://192.168.184.70/t/CurisSite/views/Curis_Stroke/D2rTPAexamdash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-line-chart',
-            },
-            {
-              name: 'OP Visits Summary',
-              url: 'http://192.168.184.70/t/CurisSite/views/OutpatientAnalysis/OutpatientVisit?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-              icon: 'fa fa-line-chart',
-            },
-          ]
-        },
-        {
-          name: 'Specialization',
-          url: '#',
-          icon: 'fa fa-line-chart',
-          children: 
-              [
-            {
-            name: 'Obstetrics',
-            url: 'http://192.168.184.70/t/CurisSite/views/Curis_Obstetrics/Obstetrics_First?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-line-chart',
-            },
-            {
-              name: 'Mammography Quality',
-              url: 'http://192.168.184.70/t/CurisSite/views/MammographyQuality/Mammo-Facility?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
-              icon: 'fa fa-line-chart',
-            }
-        ]
       }
-        ]
-      },
+      // {
+      //   name: 'Provider',
+      //   url: '#',
+      //   icon: 'fa fa-line-chart',
+      //   children: 
+      //   [
+      //     {
+      //       name: 'Operations',
+      //       url: '#',
+      //       icon: 'fa fa-line-chart',
+      //       children: 
+      //   [
+      //     {
+      //       name: 'OR Utilisation',
+      //       url: 'http://192.168.184.70/t/CurisSite/views/OR_Utilization_Template_webscreen/Summary?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-line-chart',
+      //     },
+      //       {
+      //       name: 'Stroke',
+      //       url: 'http://192.168.184.70/t/CurisSite/views/Curis_Stroke/D2rTPAexamdash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-line-chart',
+      //       },
+      //       {
+      //         name: 'OP Visits Summary',
+      //         url: 'http://192.168.184.70/t/CurisSite/views/OutpatientAnalysis/OutpatientVisit?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      //         icon: 'fa fa-line-chart',
+      //       },
+      //     ]
+      //   },
+      //   {
+      //     name: 'Specialization',
+      //     url: '#',
+      //     icon: 'fa fa-line-chart',
+      //     children: 
+      //         [
+      //       {
+      //       name: 'Obstetrics',
+      //       url: 'http://192.168.184.70/t/CurisSite/views/Curis_Obstetrics/Obstetrics_First?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-line-chart',
+      //       },
+      //       {
+      //         name: 'Mammography Quality',
+      //         url: 'http://192.168.184.70/t/CurisSite/views/MammographyQuality/Mammo-Facility?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+      //         icon: 'fa fa-line-chart',
+      //       }
+      //   ]
+      // }
+      //   ]
+      // },
     ]
   },
   {

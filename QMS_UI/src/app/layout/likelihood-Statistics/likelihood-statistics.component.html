@@ -1,6 +1,6 @@
-<div >
+<div  style="margin: 25px;margin-top: 10px">
     <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
-    <div class="card row p-3 align-items-center">
+    <div class="card row p-3">
 
         <div class="row p-3 align-items-center" *ngIf="type==1">
             <div class="col  col-lg-12">
@@ -11,12 +11,12 @@
                <!-- <button type="button" pButton label="back" [routerLink]="['/likelihoodChurn/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
            
 
-                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" class="btn-space"></button>  &nbsp;&nbsp;
+                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
 
                  <br><br>
                 <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
                     <ng-template pTemplate="header">
-                        <tr>
+                        <tr class="header-class">
                             <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -38,8 +38,8 @@
                     </ng-template>
                 </p-table>
            </div>
-       </div>
-       <div class="row p-3 align-items-center"  *ngIf="type==1">
+       
+       <!-- <div class="row p-3 align-items-center"  *ngIf="type==1">
             <div class="col  col-lg-12 ">
                     <span class="col-lg-6">
                             <h4>Confusion Matrix</h4>
@@ -91,11 +91,21 @@
                             </ng-template>
                         </p-table>
                 </div>
+        </div> -->
+        <span class="col-lg-6" style="margin-top: 10px">
+        <h4 >Model Performance</h4>
+        </span>
+        <br>
+        <div class="row col-lg-12">
+
+            <div class="col-lg-6 ">
+              <img src="assets/images/FourFoldPlot.jpeg"></div>
+            <div class="col-lg-6">
+               <img src="assets/images/ROCplot.jpeg">
+            </div>
         </div>
-   
-<!-- <p-chart type="line" [data]="data" width="600px" height="400px" style="margin-right: 0px"></p-chart> -->
-<img src="assets/images/ROCplot.jpeg" width="600px" height="480px" *ngIf="type==1">
-        <p-tabView *ngIf="type==2">
+    </div>
+    <p-tabView *ngIf="type==2">
               
                  <p-tabPanel header="Likelihood to enroll"  leftIcon="pi pi-calendar" >
                   
@@ -109,13 +119,13 @@
                <!-- <button type="button" pButton label="back" [routerLink]="['/likelihoodChurn/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
            
 
-                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:left" class="btn-space"></button>  &nbsp;&nbsp;
+                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
                  <br><br>
 
     
                 <p-table #dt3 class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="LHEModelSummary" [paginator]="true" [rows]="5" exportFilename="LHEModelSummary">
                     <ng-template pTemplate="header">
-                        <tr>
+                        <tr class="header-class">
                             <th *ngFor="let col of LHEModelSummary" [pSortableColumn]="col.field" >
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -137,22 +147,16 @@
                     </ng-template>
                 </p-table>
            </div>
-       </div>
+       
       
-       <div class="row p-3 align-items-center" *ngIf="type==2">
+       <!-- <div class="row p-3 align-items-center" *ngIf="type==2">
             <div class="col  col-lg-12">
                     <span class="col-lg-6">
                             <h4>Model Metric </h4>
                           </span>
-               
-               <!-- <button type="button" pButton label="back" [routerLink]="['/likelihoodChurn/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
-           
-
-                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt4.exportCSV()" style="float:left" class="btn-space"></button>  &nbsp;&nbsp;
+               <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt4.exportCSV()" style="float:left" class="btn-space"></button>  &nbsp;&nbsp;
                  <br><br>
-
-    
-                 <p-table #dt4 class="table table-bordered table-hover" [scrollable]="false" [value]="LHEModelMatric" [columns]="LHEModelMatric" selectionMode="single"  exportFilename="LHEModelMatric" >
+                   <p-table #dt4 class="table table-bordered table-hover" [scrollable]="false" [value]="LHEModelMatric" [columns]="LHEModelMatric" selectionMode="single"  exportFilename="LHEModelMatric" >
                         <ng-template pTemplate="header">
                             <tr>
                                 <th *ngFor="let col of LHEModelMatric">
@@ -167,9 +171,9 @@
                    
                     </p-table>
            </div>
-       </div>
+       </div> -->
    
-
+<!-- 
         <div class="row p-3 align-items-center" *ngIf="type==2">
                 <div class="col  col-lg-12 ">
                 <span class="col-lg-6">
@@ -194,12 +198,20 @@
                             </ng-template>
                         </p-table>
                 </div>
+        </div> -->
+        <span class="col-lg-6" style="margin-top: 10px">
+        <h4 *ngIf="type==2">Model Performance</h4>
+        </span>
+        <br>
+        <div class="row col-lg-12" *ngIf="type==2">
+
+            <div class="col-lg-6 ">
+              <img src="assets/images/FourFoldPlot.jpeg"></div>
+            <div class="col-lg-6">
+               <img src="assets/images/ROCplot.jpeg">
+            </div>
         </div>
-   
-<!-- <p-chart type="line" [data]="data" width="600px" height="400px" style="margin-right: 0px"></p-chart> -->
-<div class="row p-3 align-items-center" *ngIf="type==2">
-<img src="assets/images/ROCplot.jpeg" width="600px" height="480px" >
-</div>
+    </div>
 </p-tabPanel>
     <p-tabPanel header="Reason to not enroll" leftIcon="pi pi-calendar">
             <div class="row p-3 align-items-center" *ngIf="type==2">
@@ -207,12 +219,12 @@
                     <span class="col-lg-6">
                             <h4>Cluster Analysis</h4>
                     </span>        
-                        <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:left"></button>
+                        <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right"></button>
                         <br><br>
                         <p-table #dt3  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="membergaps2" [columns]="cols1" [loading]="loading" exportFilename="Cluster_Analysis">
                                
                                     <ng-template pTemplate="header">
-                                            <tr>
+                                            <tr class="header-class">
                                                 <th  *ngFor="let col of cols1[0] ">
                                                         {{col}}
                                                     </th>
@@ -226,9 +238,16 @@
                             </p-table>
                     </div>
             </div>
+            <div class="row col-lg-12">
+                    <div class="col-lg-6 ">
+                        <img src="assets/images/Clustering Statistics Silhouette Image.jpg" height="500px" width="500px">
+                    </div>
+                    <div class="col-lg-6 ">
+                        <img src="assets/images/Kmean_elbow_validation.jpg" height="500px" width="500px">
+                    </div>
+            </div>
 
-    </p-tabPanel>
-    
+    </p-tabPanel>    
 </p-tabView>
 </div>
 

@@ -9,12 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Filemanager } from './file-manager.component';
 import { FileManagerService } from './file-manager.service';
 
-
 import {SelectItem} from 'primeng/api';
-import { Capabilities } from '../../../../node_modules/protractor';
-
-
-//import { formDirectiveProvider } from '../../../../node_modules/@angular/forms/src/directives/reactive_directives/form_group_directive';
 
 @Component({
   selector: 'app-fileManager',

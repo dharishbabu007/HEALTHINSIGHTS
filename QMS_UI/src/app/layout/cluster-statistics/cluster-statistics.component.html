@@ -1,4 +1,4 @@
-<div >
+<div  style="margin: 25px;margin-top: 10px">
         <app-page-header [heading]="'Clustering Statistics'" [icon]="'fa-table'"></app-page-header>
         <div class="card">
         <div class="row p-3 align-items-center">
@@ -40,7 +40,7 @@
                     </ng-template> -->
                     <ng-template pTemplate="header">
                             <tr>
-                                <th *ngFor="let col of cols[0]">
+                                <th *ngFor="let col of cols[0]" class="header-class">
                                         {{col}}
                                     </th>
                                 </tr>
@@ -77,10 +77,12 @@
         </div>
         <br>
         <br>
-        <div class="row">
-                <div class="col col-lg-12 ">
-                    <img src="assets/images/Clustering Statistics Silhouette Image.jpg" width="auto"
-                    height="auto" >
+        <div class="row col-lg-12">
+                <div class="col col-lg-6 ">
+                    <img src="assets/images/Clustering Statistics Silhouette Image.jpg" height="500px" width="500px">
+                </div>
+                <div class="col col-lg-6 ">
+                    <img src="assets/images/Kmean_elbow_validation.jpg" height="500px" width="500px">
                 </div>
         </div>
     </div>

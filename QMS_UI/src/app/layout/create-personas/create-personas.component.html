@@ -1,4 +1,4 @@
-<div >
+<div  style="margin: 25px;margin-top: 10px">
         <app-page-header [heading]="'Create Persona'" [icon]="'fa-table'"></app-page-header>
         <div class="card">
         <div class="row">
@@ -6,7 +6,7 @@
                   <!--  <button class="btn btn-primary" (click)="save(dt.value)" >Submit</button> -->
                 <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" >
                         <ng-template pTemplate="header">
-                                <tr>
+                                <tr class="header-class">
                                     <th>persona</th>
                                     <th>description</th>
                                     <th>cluster</th>
