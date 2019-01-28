@@ -11,3 +11,6 @@ input {
 .table-bordered{
     border: none;
 }
+.ui-widget-overlay.override  {
+    opacity: 0.05 !important;
+}

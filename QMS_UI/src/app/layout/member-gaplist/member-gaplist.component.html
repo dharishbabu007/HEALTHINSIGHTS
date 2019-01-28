@@ -15,9 +15,13 @@
                             <span class="font-weight-bold">MID</span> :
                             {{gaps.memberId}}
                         </div>
-                        <div class="col col-lg-4 col-xl-4">
+                        <div class="col col-lg-3 col-xl-3">
                             <span class="font-weight-bold">Name</span> : 
                             <a [routerLink]="['/spv', gaps.memberId]">{{gaps.name}} </a>
+                        </div>
+                        <div class="col col-lg-4 col-xl-4">
+                            <span class="font-weight-bold">Next Appointement Date</span> : 
+                           {{gaps.nextAppointmentDate | date}}
                         </div>
                     </div>
                     <div  *ngIf="gaps" class="row card-text">

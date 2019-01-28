@@ -6,6 +6,8 @@ import { GapsService } from '../../../shared/services/gaps.service';
 import { MessageService } from '../../../shared/services/message.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { throwError } from 'rxjs';
 
 @Component({
     selector: 'app-tables',
@@ -14,6 +16,7 @@ import { DatePipe } from '@angular/common';
     animations: [routerTransition()],
     providers: [GapsService]
 })
+
 export class MemberGapInfoComponent implements OnInit {
     closeGaps: CloseGaps;
     gaps: any;
@@ -30,6 +33,14 @@ export class MemberGapInfoComponent implements OnInit {
     targetDate: any;
     fd: any;
     fileUploadStatus:boolean = false;
+    headers={
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          'Authorization': 'my-auth-token',
+          'Access-Control-Allow-Origin': '*',
+        })
+       }
+
     statusTypes =  [
         {label: 'Select Status', value: null},
         { label: 'Open', value: 'Open' },
@@ -43,6 +54,7 @@ export class MemberGapInfoComponent implements OnInit {
         { label: 'Exclusion', value: 'Exclusion' },
         { label: 'Scheduled', value: 'Scheduled' },
         { label: 'Completed', value: 'Completed' },
+        { label: 'MIT', value: 'MIT' },
         { label: 'Other', value: 'Other' }
     ];
     priorityTypes =  [{label: 'Priority', value: null},{ label: 'High', value: 'High' }, { label: 'Low', value: 'Low' }, { label: 'Medium', value: 'Medium' }];
@@ -88,7 +100,7 @@ export class MemberGapInfoComponent implements OnInit {
            // console.log(this.rolename);
             if(this.rolename=="Physician"){
                 this.provider = true;
-                this.closeGapForm.controls['intervention'].disable();
+                this.closeGapForm.controls['payerComments'].disable();
                 this.closeGapForm.controls['priority'].disable();
                 //this.closeGapForm.controls['closeGap'].disable();
             }
@@ -136,7 +148,7 @@ export class MemberGapInfoComponent implements OnInit {
         });
            
         this.cols = [
-            { field: 'intervention', header: 'Interventions' },
+            { field: 'intervention', header: 'Payer Comments' },
             { field: 'priority', header: 'Priority' },
             { field: 'providerComments', header: 'Provider Comments' },
             // { field: 'gapDate', header: 'Date Time' },
@@ -153,30 +165,34 @@ export class MemberGapInfoComponent implements OnInit {
         }
       } 
       myUploader(event){
+        this.SelectedFile= <File>event.target.files[0];
         this.fd = new FormData();
-        this.fd.append('file', event);
+      this.fd.append('file',  this.SelectedFile);
+       // this.fd = event;
+      // console.log(event)
        console.log(this.fd)
     }
     onSubmit(formModel) {
-        console.log(this.closeGaps.memberId);
-        this.gapsService.updateCloseGaps(formModel,this.targetDate,this.closeGaps,this.gapId).subscribe((res: any) => {
+        //console.log(formModel);
+        this.gapsService.updateCloseGaps(formModel,this.targetDate,this.closeGaps,this.gapId,this.headers).subscribe((res: any) => {
                     if (res.status === 'SUCCESS') {
-                        this.gapsService.uploadCloseGapFiles(this.fd).subscribe((res1:any)=>
-                        {
-                             if(res1.status === 'SUCCESS'){
-                                 this.fileUploadStatus = true;
-                             }
-                             else{
-                                this.msgService.error(res.message);
-                             }
-                         })
-                         if(this.fileUploadStatus){
-                            this.msgService.success('Closegap updated Successfully');
-                         }
+                        this.msgService.success('Closegap updated Successfully');
                       } else {
                         this.msgService.error(res.message);
                       }
                 }); 
+                this.gapsService.uploadCloseGapFiles(this.fd).subscribe((res1:any)=>
+                {
+                     if(res1.status === 'SUCCESS'){
+                         this.fileUploadStatus = true;
+                         this.msgService.success('Closegap file upload Successfully');
+                     }
+                     else {
+                        //throwError(res1.message);
+                        this.msgService.error(res1.message);
+                      }
+                 })
+                
         
 
         // for(let num of this.closeGaps.careGaps){
@@ -211,6 +227,16 @@ export class MemberGapInfoComponent implements OnInit {
         displayAllData: boolean = false;
         showAllDialog(){
           this.displayAllData = true;
+        }
+        mitButton: boolean = false;
+        actionCare(event){
+            console.log(event)
+            if(event.value == "MIT"){
+                this.mitButton = true;
+            }
+            else{
+                this.mitButton =false;
+            }
         }
        
 }

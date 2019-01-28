@@ -26,8 +26,41 @@ export class ConfiguratorComponent implements OnInit {
     public denominatorExclusion: FormGroup;
     public numerator: FormGroup;
     public numeratorExclusion: FormGroup;
-    query: any;
-    config: any;
+    query = {
+        condition: 'and',
+        rules: [
+          {field: 'age', operator: '<=', value: 'Bob'},
+          {field: 'gender', operator: '>=', value: 'm'}
+        ]
+      };
+      config: QueryBuilderConfig = {
+        fields: {
+          "age": {name: "Age", type: 'number'},
+          "gender": {
+            name: "Gender",
+            type: 'category',
+            options: [
+              {name: "Male", value: "m"},
+              {name: "Female", value: "f"}
+            ]
+          },
+          "name": {name: "Name", type: 'string'},
+          "educated": {name: "College Degree?", type: 'boolean'},
+          "birthday": {name: "Birthday", type: 'date'},
+          "school": {name: "School", type: 'string', nullable: true},
+          "occupation": {
+            name: "Occupation",
+            type: 'string',
+            options: [
+              {name: "Student", value: "student"},
+              {name: "Teacher", value: "teacher"},
+              {name: "Unemployed", value: "unemployed"},
+              {name: "Scientist", value: "scientist"}
+            ]
+          }
+        }
+      };
+
     constructor(private gapsService: GapsService, private _fb: FormBuilder) {
         this.configForm = this._fb.group({
             expression: [''],
@@ -65,27 +98,6 @@ export class ConfiguratorComponent implements OnInit {
                 this.TableNameList.push({label: element.name, value: element.name});
             });
         });
-        this.query = {
-            condition: 'and',
-            rules: [
-              {field: 'age', operator: '<=', value: 'Bob'},
-              {field: 'gender', operator: '>=', value: 'm'}
-            ]
-          };
-          
-          this.config = {
-            fields: {
-              age: {name: 'Age', type: 'number'},
-              gender: {
-                name: 'Gender',
-                type: 'category',
-                options: [
-                  {name: 'Male', value: 'm'},
-                  {name: 'Female', value: 'f'}
-                ]
-              }
-            }
-          }
       
     }
     conditionParamForm() {

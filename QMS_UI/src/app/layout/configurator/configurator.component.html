@@ -49,14 +49,8 @@
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         <span class="col-lg-3">
                                                     <!--  <input type="text" class="form-control" formControlName="columnName"> -->
-                                                        <!-- <p-dropdown [options]="options"  [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="columnName" placeholder="select ColumnName"></p-dropdown> -->
+                                                        <p-dropdown [options]="ColumnNameList"  [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="columnName" placeholder="select ColumnName"></p-dropdown>
                                                         </span>
-                                                        <span *ngIf="options">
-                                                            <span *ngFor="let data of options[i]">{{data.name}}
-                                                            </span>
-                                                        </span>
-                                                        
-                                                        
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         <span class="col-lg-3">
                                                             <input type="text" class="form-control" formControlName="expression">
@@ -271,7 +265,7 @@
                         </div>
                     </p-tabPanel>
                     <p-tabPanel header="New">
-                            <query-builder [(ngModel)]='query' [config]='config'></query-builder>
+                            <!-- <query-builder [(ngModel)]='query' [config]='config'></query-builder> -->
                     </p-tabPanel>
                 </p-tabView>
                 </div>

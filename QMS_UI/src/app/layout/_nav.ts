@@ -26,7 +26,7 @@ export const navItems = [
               },
               {
                 name: 'HEDIS',
-                url: 'http://192.168.184.70/views/CurisDashboard_HEDIS_1/HEDIS_Plan?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+                url: 'http://192.168.184.70/t/CurisSite/views/HedisDashboard/Hedis?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
                 icon: 'fa fa-line-chart'
               },
               // {

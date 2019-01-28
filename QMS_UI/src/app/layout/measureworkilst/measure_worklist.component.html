@@ -9,10 +9,11 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class">
-                            {{col.header}}
+                            
+                                    {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-                        <th class="header-class" width="10%"></th>
+                        <th class="header-class" width="12%"></th>
                     </tr>
                    <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field" >
@@ -25,6 +26,7 @@
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
                         </th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -34,19 +36,20 @@
                         </td>
                         <td [ngSwitch]="rowData['status']">
                             <div *ngSwitchCase="'Approved'" >
-                                <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp;
-                                <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp;
-                                <a [routerLink]="['/configurator']" *ngxPermissionsOnly="['7W']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" pTooltip="Configure"></i></a>
+                                <button pButton type="button" label="Action" class="btn btn-secondary" style="background-color: #C8CED3;"></button> &nbsp;
+                                <!-- <a [routerLink]="['/configurator']" *ngxPermissionsOnly="['7W']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" pTooltip="Configure"></i></a> -->
                             </div>
                             <div *ngSwitchCase="'New'">
-                                <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])" pTooltip="Approve" *ngxPermissionsOnly="['7W']"></i>&nbsp;
-                                <i class="fa fa-2x fa-window-close text-primary" style="cursor:pointer" (click)="statusClickImg('Rejected',rowData['id'])" pTooltip="Reject" *ngxPermissionsOnly="['7W']"></i>&nbsp;
-                                <i class="fa fa-2x fa-cog text-secondary"></i>
+                                <!-- <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])" pTooltip="Approve" *ngxPermissionsOnly="['7W']"></i>&nbsp;
+                                <i class="fa fa-2x fa-window-close text-primary" style="cursor:pointer" (click)="statusClickImg('Rejected',rowData['id'])" pTooltip="Reject" *ngxPermissionsOnly="['7W']"></i>&nbsp; -->
+                                <button pButton type="button" label="Action" class="btn btn-primary" *ngxPermissionsOnly="['7W']" (click)="showDialog(rowData['id'])" pTooltip="Approve or Reject Measure"></button>&nbsp;
+                                <!-- <i class="fa fa-2x fa-cog text-secondary"></i> -->
                             </div>
                             <div *ngSwitchDefault>
-                                <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp; 
-                                <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp;
-                                <i class="fa fa-2x fa-cog text-secondary"></i>
+                                <!-- <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp; 
+                                <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp; -->
+                                <button pButton type="button" label="Action" class="btn btn-secondary"  style="background-color: #C8CED3;"></button>&nbsp;
+                                <!-- <i class="fa fa-2x fa-cog text-secondary"></i> -->
                             </div>
                             
                             <!-- <i class="fa fa-2x fa-check-square" style="cursor:pointer"></i>&nbsp;
@@ -61,6 +64,30 @@
                     </tr>
                 </ng-template>
             </p-table>
+            <p-dialog [(visible)]="dialogBox" [modal]="true" [responsive]="true" [style]="{width: '500px', minWidth: '500px'}" [minY]="70" 
+            [baseZIndex]="10000">
+            <div class="col-lg-12" style="width: 300px;height: 160px;">
+            <div class="row col-lg-12">
+                <span class="font-weight-bold">
+                    Enter Review Comments
+                </span>
+            </div>
+            <div class="row col-lg-12">
+                <span>
+                    <textarea class="form-control" [(ngModel)]="comments" rows="3" type="text"></textarea>
+                </span>
+            </div>
+            <br>
+            <div class="row col-lg-12">
+                <span>
+                        <button pButton type="button" label="Approve" class="btn btn-primary" (click)="statusClickImg('Approved',rowid)"></button>&nbsp;&nbsp;
+                        <button pButton type="button" label="Reject" class="btn btn-primary" (click)="statusClickImg('Rejected',rowid)"></button>&nbsp;
+                </span>
+            </div>
+            </div>
+           
+            </p-dialog>
+           
         </div>
     </div>
 </div>

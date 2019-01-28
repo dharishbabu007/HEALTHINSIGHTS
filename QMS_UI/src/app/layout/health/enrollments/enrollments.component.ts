@@ -10,6 +10,7 @@ export class EnrollmentsComponent implements OnInit {
   confusionmatrix: any;
   selected: any[];
   cols: any;
+  selectedcar: any;
   constructor(private gaps:GapsService) { 
     this.gaps.getlikelihoodconfusionmatric().subscribe((data: any[]) => {
       this.confusionmatrix = data;

@@ -47,6 +47,7 @@ import { NonComplianceComponent } from './non-compliance/non-compliance.componen
 import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
 import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
+import { PatComponent } from './pat-screen/pat-screen.component';
 
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
@@ -84,7 +85,6 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {TabViewModule} from 'primeng/tabview';
 import {ProgressBarModule} from 'primeng/progressbar';
-import { QueryBuilderModule } from "angular2-query-builder";
 import {InputSwitchModule} from 'primeng/inputswitch';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 @NgModule({
@@ -121,7 +121,6 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         NgbDropdownModule.forRoot(),
         NgIdleKeepaliveModule.forRoot(),
         NgxPermissionsModule.forRoot(),
-        QueryBuilderModule,
         InputSwitchModule,
         ToggleButtonModule
     ],
@@ -181,7 +180,8 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         NonComplianceComponent,
         HerniaRepairComponent,
         CommunicationStatisticsComponent,
-        CommunicationToEnrollComponent],
+        CommunicationToEnrollComponent,
+        PatComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         
