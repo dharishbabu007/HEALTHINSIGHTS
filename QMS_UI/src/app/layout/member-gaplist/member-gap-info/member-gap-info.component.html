@@ -6,52 +6,68 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div *ngIf="gaps" class="card-text row">
-                            <div class="col col-lg-2 col-xl-2 ">
-                                <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
+                            <div class="col col-lg-4 col-xl-4 ">
+                                <span class="font-weight-bold" style="font-size: large">Patient Details</span><br>
+                                <hr class="lineClass">
                             </div>
+                           
+                            <br><br>
                             <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold" style="font-size: large">Gap Details</span><br>
+                                <hr class="lineClass">
+                            </div>
+                           
+                            <br><br>
+                        </div>
+                        <div *ngIf="gaps" class="card-text row">
+                             <div class="col col-lg-4 col-xl-4">
                                 <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps.name}}</a>
                             </div>
+                           
                             <div class="col col-lg-4 col-xl-4">
                                 <span class="font-weight-bold">Care Gap</span> : {{closeGaps.careGap}}
-                            </div>
-                            <div class="col col-lg-3 col-xl-3">
-                                <span class="font-weight-bold">Assigned To</span> : {{closeGaps.assignedTo}}
-                            </div>
-                        </div>
-                        <br>
-                        <div  *ngIf="gaps" class="row card-text">
-                            <div class="col col-lg-2 col-xl-2">
-                                <span class="font-weight-bold">Gender</span> : 
-                                {{closeGaps.gender}}
-                            </div>
-                            <div class="col col-lg-3 col-xl-3">
-                                <span class="font-weight-bold">DOB </span> :                         
-                                {{closeGaps.dateOfBirth | date}}
                             </div>
                             <div class="col col-lg-4 col-xl-4">
                                 <span class="font-weight-bold">Open Date</span> : {{closeGaps.openDate | date}}
                             </div>
-                            <div class="col col-lg-3 col-xl-3">
-                                <span class="font-weight-bold">Status</span> : {{closeGaps.status}}
-                            </div>
+                           
                         </div>
                         <br>
                         <div  *ngIf="gaps" class="row card-text">
-                            <div class="col col-lg-2 col-xl-2">
-                                <span class="font-weight-bold"></span>
+                             <div class="col col-lg-4 col-xl-4 ">
+                                <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
-                            <div class="col col-lg-3 col-xl-3">
-                                <span class="font-weight-bold">Next Appointment Date</span> :
+                            <div class="col col-lg-4 col-xl-4">
+                                    <span class="font-weight-bold">Assigned To</span> : {{closeGaps.assignedTo}}
                             </div>
                             <div class="col col-lg-4 col-xl-4"  *ngIf="provider">
                                 <span class="font-weight-bold">Target Closure Date</span> : {{closeGaps.targetDate | date}}
                             </div>
-                            <div class="col col-lg-4 col-xl-4">
+                            <div class="col col-lg-4 col-xl-4"  *ngIf="!provider">
                                 <span class="font-weight-bold">Target Closure Date</span> :
                                     <p-calendar [(ngModel)]="targetDate" [showIcon]="true" dataType="string" dateFormat="dd-M-yy"></p-calendar>
                             </div>
-                            <div class="col col-lg-3 col-xl-3">
+                            
+                        </div>
+                        <br>
+                        <div  *ngIf="gaps" class="row card-text">
+                            
+                            <div class="col col-lg-2 col-xl-2">
+                                <span class="font-weight-bold">Gender </span>: {{closeGaps.gender}}
+                            </div>
+                            <div class="col col-lg-2 col-xl-2">
+                                <span class="font-weight-bold">DOB </span> :                         
+                                {{closeGaps.dateOfBirth | date}}
+                            </div>
+                           
+                            <div class="col col-lg-4 col-xl-4">
+                                <span class="font-weight-bold">Status</span> : {{closeGaps.status}}
+                            </div>
+                            <!-- <div class="col col-lg-3 col-xl-3">
+                                <span class="font-weight-bold">Next Appointment Date</span> :
+                            </div>
+                             -->
+                            <div class="col col-lg-4 col-xl-4">
                                 <span class="font-weight-bold">Last Action date</span> : {{closeGaps.lastActionDate | date}}
                             </div>
                         </div>
@@ -61,53 +77,69 @@
             <div class="col col-lg-12">
                 <div class="card mb-3" style="  border: none;">
                 <div class="card-body">
+                    
+                        <!-- <hr class="lineClass"> -->
                 <form [formGroup]="closeGapForm" class="form-horizontal  p-2" novalidate >
                     <div class="form-group">
                         <div class="row">
-                            <span class="col-lg-3 font-weight-bold">Payer Comments </span>
-                            <span class="col-lg-3 font-weight-bold">Provider Comments </span>
+                            <span class="col-lg-12 font-weight-bold" style="font-size: large">Update Details</span>
                         </div>
+                        <hr class="lineClass">
+                        <br>
                         <div class="row">
-                            <span class="col-lg-3">
-                                <textarea formControlName="payerComments" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
-                            </span>
-                            &nbsp;
-                            <span class="col-lg-3">
-                                <textarea formControlName="providerComments" [rows]="3" [cols]="35" pInputTextarea autoResize="autoResize"></textarea>
-                            </span>
+                                <span class="col-lg-3 font-weight-bold">Priority</span>
+                                <span  class="col-lg-3 font-weight-bold" *ngIf="provider">Action on Care Gap</span> 
+                                <span class="col-lg-5 font-weight-bold" *ngIf="!provider">
+                                        Close Gap &nbsp;&nbsp;
+                                        <label class="switch">
+                                            <input type="checkbox" formControlName="closeGap">
+                                            <span class="slider round"></span>
+                                        </label>
+                                                <!-- <mat-slide-toggle>Slide me!</mat-slide-toggle> -->
+                                                
+                                                <!-- <p-toggleButton formControlName="closeGap"></p-toggleButton> -->
+                                                
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span class="col-lg-3">
+                                <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'80%'}"></p-dropdown>
+                                </span>
+                                <span class="col-lg-3" *ngIf="provider">
+                                <p-dropdown formControlName="actionOnCareGap" [options]="actionTypes" [style]="{'width':'80%'}" (onChange)="actionCare($event)"></p-dropdown>
+                                </span>
+                                <span class="col-lg-3" *ngIf="mitButton">
+                                        <button pButton type="button" label="MIT" class="ui-button-primary m-2"></button>
+                                </span>
                         </div>
                         <br>
                         <div class="row">
-                            <span class="col-lg-3 font-weight-bold">Priority</span>
-                            <span  class="col-lg-3 font-weight-bold" *ngIf="provider">Action on Care Gap</span> 
+                            <span class="col-lg-6 font-weight-bold">Payer Comments </span>
+                            <span class="col-lg-6 font-weight-bold">Provider Comments </span>
                         </div>
                         <div class="row">
-                            <span class="col-lg-3">
-                            <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'80%'}" ></p-dropdown>
+                            <span class="col-lg-6">
+                                <textarea formControlName="payerComments" rows="3" class="form-control"></textarea>
                             </span>
-                            <span class="col-lg-3" *ngIf="provider">
-                            <p-dropdown formControlName="actionOnCareGap" [options]="actionTypes" [style]="{'width':'80%'}" ></p-dropdown>
+                            <span class="col-lg-6">
+                                <textarea formControlName="providerComments" rows="3" class="form-control"></textarea>
                             </span>
                         </div>
                         <br>
+
                         <div class="row">
                                 <span class="col-lg-2 font-weight-bold">File Input</span>
                         </div>
                         <div class="row">
-                            <span class="col-lg-5">
-                            <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"></p-fileUpload>
+                            <span class="col-lg-6">
+                            <!-- <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"></p-fileUpload> -->
+                                    <input type="file" id="file" (change)="myUploader($event)" #fileInput> 
+                            </span>
+                            <span class="col-lg-6 text-right">
+                                    <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
                             </span>
                         </div>
-                        <br>
-                        <div class="row" *ngIf="!provider">
-                                <span class="col-lg-5 font-weight-bold">
-                                    Close Gap &nbsp;&nbsp;
-                                            <p-inputSwitch formControlName="closeGap" onLabel="yes" offLabel="No"></p-inputSwitch>
-                                            <!-- <mat-slide-toggle>Slide me!</mat-slide-toggle> -->
-                                 
-                                    <!-- <p-inputSwitch formControlName="enabled"></p-inputSwitch> -->
-                                </span>
-                        </div>
+                        
                     </div>
 
                 <!-- <table class="table table-bordered table-hover responsive" >
@@ -175,12 +207,7 @@
                 <p-panel header="History" [toggleable]="true" [collapsed]="true">
                    <ng-container *ngTemplateOutlet="remainingDataPanel"></ng-container>
                 </p-panel>
-        <div class="row  text-right">
-            <div class="col col-lg-12 ">
-                <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
 
-            </div>
-        </div>
         <p-dialog [(visible)]="displayAllData" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
         [baseZIndex]="10000">
             <div class="col-lg-12">

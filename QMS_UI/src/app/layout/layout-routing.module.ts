@@ -37,6 +37,7 @@ import { NonComplianceComponent } from './non-compliance/non-compliance.componen
 import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
 import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
+import { PatComponent } from './pat-screen/pat-screen.component';
 
 const routes: Routes = [
     {
@@ -133,7 +134,8 @@ const routes: Routes = [
             { path: 'non-compliance/:redirect', component: NonComplianceComponent},
             { path: 'hernia-repair', component: HerniaRepairComponent},
             { path: 'communication-stats', component: CommunicationStatisticsComponent},
-            { path: 'communication-enroll', component:CommunicationToEnrollComponent}
+            { path: 'communication-enroll', component:CommunicationToEnrollComponent},
+            { path: 'pat-screen', component:PatComponent}
         ]
     },
     { path: 'health', loadChildren: './health/health.module#HealthModule' },

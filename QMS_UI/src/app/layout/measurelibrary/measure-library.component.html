@@ -12,7 +12,7 @@
                                     {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-                        <th width="3%" class="header-class"></th>
+                        <th width="6%" class="header-class"></th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field">
@@ -26,7 +26,7 @@
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             <p-multiSelect *ngSwitchCase="'status'" [filter]="false" [options]="statusTypes" [style]="{'width':'100%','padding':'0px'}" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
                         </th>
-                        
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">

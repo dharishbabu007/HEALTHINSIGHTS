@@ -36,6 +36,7 @@ export class LayoutComponent {
   private changes: MutationObserver;
   public element: HTMLElement = document.body;
   username: any;
+  roleListRepositry: any;
   constructor(private router: Router,
     private annyang: AnnyangService,
     private idle: Idle,
@@ -82,6 +83,16 @@ export class LayoutComponent {
    // console.log(user)
     this.username= user.loginId;
     this.screens =[];
+    this.GapsService.getRoleList().subscribe((data: any) => {
+      this.roleList =[];
+      this.roleListRepositry = data;
+      data.forEach(item => {
+        this.roleList.push({label: item.name, value: item.name});
+      });
+      let rolename1 = this.roleListRepositry.filter(item => item.value === user.roleId);
+      this.rolename = rolename1[0].name;
+   });
+  
     this.GapsService.getRoleData(user.roleId).subscribe((data: any)=>{
       this.roledata = data;
      // console.log(this.roledata)

@@ -35,3 +35,11 @@
 .card-margin{
     margin: 20px
 }
+.healthyme{
+    margin-left:  24vw;
+}
+@media (max-width: 991px){
+    .healthyme{
+        display: none;
+    } 
+}

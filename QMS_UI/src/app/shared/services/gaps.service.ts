@@ -1,12 +1,16 @@
 import { CachedHttpClient } from './cache-httpclient';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
 
 @Injectable()
 export class GapsService {
-
-    constructor(private http: CachedHttpClient) {}
+    private handleError: HandleError;
+    constructor(private http: CachedHttpClient,  httpErrorHandler: HttpErrorHandler,) {
+        this.handleError =  httpErrorHandler.createHandleError('GapsService');
+    }
 
     getGaps(memberID) {
         return this.http.get(`http://healthinsight:8082/curis/memberGapList/member/${memberID}`);
@@ -39,7 +43,7 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_MEASURE_TYPE/MEASURE_TYPE_ID/MEASURE_TYPE_NAME`);
     }
     getClinicalConditions() {
-        return this.http.get(`http://healthinsight:8082/curis/qms/qmshome_dropdown_list/QMS_MEASURE/CLINICAL_CONDITIONS`);
+        return this.http.get(`http://healthinsight:8082/curis/qms/qmshome_dropdown_list/QMS_QUALITY_MEASURE/CLINICAL_CONDITIONS`);
     }
     getMeasureDomain() {
         return this.http.get(`http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_MEASURE_DOMAIN/MEASURE_DOMAIN_ID/MEASURE_DOMAIN_NAME`);
@@ -85,10 +89,12 @@ export class GapsService {
         }
        // this.http.post('http://<hostname>:<port>/curis/qms/createProgram',model);
     }
-    setMeasureStatus(measureId, status) {
-        return this.http.put(`http://healthinsight:8082/curis/qms/work_list/status/${measureId}/${status}`, {});
+    setMeasureStatus(measureId, status,comments) {
+        return this.http.put(`http://healthinsight:8082/curis/qms/work_list/status/${measureId}/${status}`, {
+            "value1": comments
+        });
     }
-    updateCloseGaps(formModel,targetDate,closeGaps,gapId) {
+    updateCloseGaps(formModel,targetDate,closeGaps,gapId,headers){
         return this.http.post(`http://healthinsight:8082/curis/closeGaps/${closeGaps.memberId}/${gapId}`, { 'careGaps': [ {
             "measureTitle": closeGaps.careGap,
             "qualityMeasureId": gapId,
@@ -101,10 +107,15 @@ export class GapsService {
             "closeGap": formModel.closeGap,
             "actionCareGap": formModel.actionOnCareGap,
             "uploadList": []
-        }]});
+        }]},headers);
     }
     uploadCloseGapFiles(file){
-        return this.http.post(`http://localhost:8082/curis/closeGaps/gic_lifecycle_import/`,file)
+        return this.http.post(`http://healthinsight:8082/curis/closeGaps/gic_lifecycle_import/`,file). pipe(
+            catchError(this.handleError('Upload', file))
+          );
+    }
+    getMeasureCategory(id){
+        return this.http.get(`http://healthinsight:8082/curis/qms/get_category_by_program_id/${id}`)
     }
     getTableName(){
      return this.http.get(`http://healthinsight:8082/curis/measure_configurator/config_data`);
@@ -220,5 +231,11 @@ export class GapsService {
     }
     getclusterlist(){
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/persona_cluster_names_list`)
+    }
+    getMrssList(){
+        return this.http.get(`http://healthinsight:8082/curis/qms/refMrss_list`)
+    }
+    getMrssSampleList(){
+        return this.http.get(`http://healthinsight:8082/curis/qms/refMrss_Sample_list`)
     }
 }

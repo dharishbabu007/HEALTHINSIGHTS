@@ -3,8 +3,10 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { GapsService } from '../../shared/services/gaps.service';
 import { MessageService } from '../../shared/services/message.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder,FormArray} from '@angular/forms';
 import { Router } from '@angular/router';
+import { MemberCareGaps } from '../../shared/services/gaps.data';
+
 
 @Component({
   selector: 'app-measurecreator',
@@ -15,6 +17,11 @@ import { Router } from '@angular/router';
 export class MeasurecreatorComponent implements OnInit {
   value: Date;
   public myForm: FormGroup;
+  public myForm1: FormGroup;
+  public configForm: FormGroup;
+  public denominatorExclusion: FormGroup;
+  public numerator: FormGroup;
+  public numeratorExclusion: FormGroup;
   disableForm = false;
   disableOnCopy = false;
   public submitted: boolean;
@@ -29,7 +36,23 @@ export class MeasurecreatorComponent implements OnInit {
   measureCategories: any;
   measureTypes: any;
   samplingButton: boolean = false;
-  dataSoucreTypes = [{label:"Hybrid",value:"hybrid"}];
+  mrssList: any;
+  mrssSampleList: any;
+  dataSoucreTypes = [{label:"Admin",value:"admin"},{label:"ECDS",value:"ecds"},{label:"Hybrid",value:"hybrid"},{label:"Survey",value:"survey"}];
+
+
+  ConditionList=  [
+        
+    { label: 'AND', value: 'AND' },
+    { label: 'OR', value: 'OR' },
+    {label: 'UNION', value: 'UNION'}
+];
+TableNameList: any; 
+ColumnNameList: any;
+tableRepository: any;
+
+
+
   constructor(private _fb: FormBuilder,
     private gapsService: GapsService,
     private msgService: MessageService,
@@ -62,12 +85,168 @@ export class MeasurecreatorComponent implements OnInit {
           Decommisioned: [],
           p50:[],
           p90:[],
-          dataSource:[],
-          dataCollection:[]
+          collectionSource:[]
         });
+        this.myForm1 = this._fb.group({
+          sampleSize:[''],
+          overSampleRate:['']
+        });
+
+
+
+
+
+
+
+
+
+
+        this.configForm = this._fb.group({
+          expression: [''],
+          remark: ['', [Validators.required]],
+          conditionList: this._fb.array([
+              this.conditionParamForm(),
+          ])
+        });
+        this.denominatorExclusion = this._fb.group({
+          expressionDE: [''],
+          remarkDE: ['', [Validators.required]],
+          DEList: this._fb.array([
+              this.DEForm(),
+          ])
+        });
+        this.numerator = this._fb.group({
+          expressionN: [''],
+          remarkN: ['', [Validators.required]],
+          NList: this._fb.array([
+              this.NForm(),
+          ])
+        });
+        this.numeratorExclusion = this._fb.group({
+          expressionNE: [''],
+          remarkNE: ['', [Validators.required]],
+          NEList: this._fb.array([
+              this.NEForm(),
+          ])
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
+
+
+    conditionParamForm() {
+      return this._fb.group({
+          andOrCondition: [''],
+          tableName: [''],
+          columnName: [''],
+          expression: [''],
+          dropdownvalue1:[''],
+          dropdownvalue2:['']
+        });
+  }
+  DEForm(){
+      return this._fb.group({
+          andOrConditionDE: [''],
+          tableNameDE: [''],
+          columnNameDE: [''],
+          expressionDE: ['']
+        });
+  }
+  NForm(){
+      return this._fb.group({
+          andOrConditionN: [''],
+          tableNameN: [''],
+          columnNameN: [''],
+          expressionN: ['']
+        });
+  }
+  NEForm(){
+      return this._fb.group({
+          andOrConditionNE: [''],
+          tableNameNE: [''],
+          columnNameNE: [''],
+          expressionNE: ['']
+        });
+  }
+  addCondition() {
+      const control = <FormArray>this.configForm.controls['conditionList'];
+      control.push(this.conditionParamForm());
+  }
+
+  removeCondition(i: number) {
+      const control = <FormArray>this.configForm.controls['conditionList'];
+      control.removeAt(i);
+  }
+  addConditionDE() {
+      const control = <FormArray>this.denominatorExclusion.controls['DEList'];
+      control.push(this.DEForm());
+  }
+
+  removeConditionDE(i: number) {
+      const control = <FormArray>this.denominatorExclusion.controls['DEList'];
+      control.removeAt(i);
+  }
+  addConditionN() {
+      const control = <FormArray>this.numerator.controls['NList'];
+      control.push(this.NForm());
+  }
+
+  removeConditionN(i: number) {
+      const control = <FormArray>this.numerator.controls['NList'];
+      control.removeAt(i);
+  }
+  addConditionNE() {
+      const control = <FormArray>this.numeratorExclusion.controls['NEList'];
+      control.push(this.NEForm());
+  }
+
+  removeConditionNE(i: number) {
+      const control = <FormArray>this.numeratorExclusion.controls['NEList'];
+      control.removeAt(i);
+  }
+  get formConditionList() { return <FormArray>this.configForm.get('conditionList'); }
+
+  get formConditionListDE() { return <FormArray>this.denominatorExclusion.get('DEList'); }
+  get formConditionListN() { return <FormArray>this.numerator.get('NList'); }
+
+  get formConditionListNE() { return <FormArray>this.numeratorExclusion.get('NEList'); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    membergaps: MemberCareGaps[];
+    cols: any[];
+    cols2: any[];
  ngOnInit() {
   this.gapsService.getDropDownPrograms().subscribe((data: any) => {
     this.programList = [];
@@ -98,8 +277,28 @@ export class MeasurecreatorComponent implements OnInit {
       this.setMeasureInfo(data);
     });
    }
+   this.gapsService.getMrssSampleList().subscribe((res: any)=>{
+    this.mrssSampleList =[];
+   this.mrssSampleList = res;
+    });
+    this.cols2=[
+      {field:'rate',header:'Rate'},
+      {field:'sampleSize',header:'Sample Size'},
 
-
+    ]
+   this.gapsService.getMrssList().subscribe((data: MemberCareGaps[])=>{
+     this.mrssList = data;
+    });
+   this.cols=[
+     {field:'measureName',header:'Measure Name'},
+     {field:'measureCategary',header:'Measure category'},
+     {field:'medicaid',header:'Medicaid'},
+     {field:'commercial',header:'Commercial'},
+     {field:'medicare',header:'Medicare'},
+     {field:'sample_size',header:'Sample Size'},
+     {field:'rand',header:'Rand'}
+   ]
+   
   }
  
  setMeasureInfo(measureInfo) {
@@ -124,6 +323,11 @@ export class MeasurecreatorComponent implements OnInit {
    this.myForm.controls['numerator'].setValue(measureInfo.numerator);
    this.myForm.controls['numeratorExclusions'].setValue(measureInfo.numeratorExclusions);
    this.myForm.controls['target'].setValue(measureInfo.target);
+   this.myForm.controls['p50'].setValue(measureInfo.p50);
+   this.myForm.controls['p90'].setValue(measureInfo.p90);
+   this.myForm.controls['collectionSource'].setValue(measureInfo.collectionSource);
+   this.myForm1.controls['sampleSize'].setValue(measureInfo.mrss);
+   this.myForm1.controls['overSampleRate'].setValue(measureInfo.overFlowRate);
 
    if (measureInfo.startDate) {
      console.log(measureInfo.startDate)
@@ -160,6 +364,8 @@ export class MeasurecreatorComponent implements OnInit {
      // model.target = parseInt(model.target, 10);
       model.startDate = this.formatDate(model.startDate);
       model.endDate = this.formatDate(model.endDate);
+      model.mrss =  this.myForm1.controls['sampleSize'].value;
+      model.overFlowRate =  this.myForm1.controls['overSampleRate'].value;
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure created Successfully');
@@ -208,6 +414,9 @@ export class MeasurecreatorComponent implements OnInit {
       this.submitPc(this.myForm.value, this.myForm.valid);
     }
   }
+  OnSubmitConfigurator(){
+    
+  }
   inActiveMeasure(model) {
     this.myForm.controls['endDate'].setValidators([Validators.required]);
     this.myForm.controls['endDate'].updateValueAndValidity();
@@ -245,7 +454,16 @@ export class MeasurecreatorComponent implements OnInit {
     this.myForm.controls['endDate'].setValue(new Date(res.endDate));
     
   
-    });   
+    }); 
+    this.gapsService.getMeasureCategory(this.programId[0].value).subscribe((res:any)=> {
+      const data = res;
+     // console.log(data)
+      this.measureCategories =[];
+      data.forEach(element => {
+        this.measureCategories.push({label:element,value: element })
+      })
+      
+    }); 
   }
   dataSourceSelected(event)
   {
@@ -257,6 +475,9 @@ export class MeasurecreatorComponent implements OnInit {
   showDialogBox()
   {
     this.dialogBox = true;
+  }
+  closedialog(){
+    this.dialogBox = false;
   }
 }
 
@@ -274,4 +495,9 @@ export interface Measurecreator {
     status: string;
     id: string;
     target: number;
+    p50:number;
+    p90:number;
+    datacollection:number;
+    mrss:string;
+    overFlowRate: string;
    }
