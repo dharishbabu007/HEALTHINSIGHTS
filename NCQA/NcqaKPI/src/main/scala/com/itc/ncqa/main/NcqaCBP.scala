@@ -1,11 +1,14 @@
 package com.itc.ncqa.main
 
 import com.itc.ncqa.Constants.KpiConstants
+import com.itc.ncqa.Functions.SparkObject.spark
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions.Window
+
+import scala.collection.mutable
 
 
 object NcqaCBP {
@@ -32,51 +35,55 @@ object NcqaCBP {
     /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACBP")
+  /*  val conf = new SparkConf().setMaster("local[*]").setAppName("NCQACBP")
     conf.set("hive.exec.dynamic.partition.mode","nonstrict")
-    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()*/
     //</editor-fold>
 
     //<editor-fold desc="Loading Required Tables to memory">
 
     import spark.implicits._
 
-    /*Loading dim_member,fact_claims,fact_membership tables */
     val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimMemberTblName, data_source)
     val factClaimDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factClaimTblName, data_source)
     val factMembershipDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factMembershipTblName, data_source)
-    val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimLocationTblName, data_source)
+    val factMemAttrDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName, KpiConstants.factMemAttrTblName,data_source)
     val refLobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refLobTblName)
-    val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimFacilityTblName, data_source).select(KpiConstants.facilitySkColName)
-    val factRxClaimsDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.factRxClaimTblName, data_source)
+    val dimProviderDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName, KpiConstants.dimProviderTblName, data_source)
+    val dimDateDf = DataLoadFunctions.dimDateLoadFunction(spark)
+    // val dimQualityMsrDf = DataLoadFunctions.dimqualityMeasureLoadFunction(spark,KpiConstants.imaMeasureTitle)
+    // val dimQualityPgmDf = DataLoadFunctions.dimqualityProgramLoadFunction(spark, KpiConstants.hedisPgmname)
+    val dimProductPlanDf = DataLoadFunctions.dataLoadFromTargetModel(spark, KpiConstants.dbName,KpiConstants.dimProductTblName,data_source)
+    /*loading ref_hedis table*/
+    val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
+    val primaryDiagnosisCodeSystem = KpiConstants.primaryDiagnosisCodeSystem
     //</editor-fold>
 
-    //<editor-fold desc="Initial Join, Continous Enrollment,Allowable Gap and Age filter">
+    //<editor-fold desc="Eligible Population Calculation">
 
     /*Initial join function call to prepare the data for common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.cbpMeasureTitle)
-    //initialJoinedDf.show(50)
+    val argmapForInitJoin = mutable.Map(KpiConstants.dimMemberTblName -> dimMemberDf, KpiConstants.factMembershipTblName -> factMembershipDf,
+                                        KpiConstants.dimProductTblName -> dimProductPlanDf, KpiConstants.refLobTblName -> refLobDf,
+                                        KpiConstants.factMemAttrTblName -> factMemAttrDf, KpiConstants.dimDateTblName -> dimDateDf)
+    val initialJoinedDf = UtilFunctions.initialJoinFunction(spark,argmapForInitJoin)
 
-    /*Continous enrollment calculation*/
+
+    val ageFilterDf = UtilFunctions.ageFilter(initialJoinedDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age85Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+
+    //<editor-fold desc="Continuous Enrollment, Allowable Gap and Benefit">
+
+    val contEnrollStartDate = year + "-01-01"
     val contEnrollEndDate = year + "-12-31"
-    val contEnrollStrtDate = year + "-01-01"
-    val continiousEnrollDf = initialJoinedDf.filter(initialJoinedDf.col(KpiConstants.memStartDateColName).<(contEnrollStrtDate) &&(initialJoinedDf.col(KpiConstants.memEndDateColName).>(contEnrollEndDate)))
+    val inputForContEnrolldf = ageFilterDf.select(KpiConstants.memberskColName, KpiConstants.benefitMedicalColname, KpiConstants.memStartDateColName,KpiConstants.memEndDateColName)
+    val argMap = mutable.Map(KpiConstants.dateStartKeyName -> contEnrollStartDate, KpiConstants.dateEndKeyName -> contEnrollEndDate, KpiConstants.dateAnchorKeyName -> contEnrollEndDate,
+                             KpiConstants.lobNameKeyName -> lob_name, KpiConstants.benefitKeyName -> KpiConstants.benefitMedicalColname)
+    val contEnrollmemDf = UtilFunctions.contEnrollAndAllowableGapFilter(spark,inputForContEnrolldf,KpiConstants.commondateformatName,argMap)
 
-    /*Allowable gap filter* based on the lob name*/
-    var lookUpDf = spark.emptyDataFrame
+    val contEnrollDf = ageFilterDf.as("df1").join(contEnrollmemDf.as("df2"),$"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
+                                  .select("df1.*")
+    //</editor-fold>
+    
 
-    if ((KpiConstants.commercialLobName.equalsIgnoreCase(lob_name)) || (KpiConstants.medicareLobName.equalsIgnoreCase(lob_name))) {
-
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view45Days)
-    }
-    else {
-
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark, KpiConstants.view60Days)
-    }
-    val commonFilterDf = continiousEnrollDf.as("df1").join(lookUpDf.as("df2"), continiousEnrollDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName), KpiConstants.leftOuterJoinType).filter(lookUpDf.col(KpiConstants.startDateColName).isNull).select("df1.*")
-
-    /*Age Filter(18–85) */
-    val ageFilterDf = UtilFunctions.ageFilter(commonFilterDf, KpiConstants.dobColName, year, KpiConstants.age18Val, KpiConstants.age85Val, KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
     //</editor-fold>
 
     //<editor-fold desc="Dinominator calculation">

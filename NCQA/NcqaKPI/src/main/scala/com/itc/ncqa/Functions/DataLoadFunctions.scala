@@ -18,7 +18,7 @@ object DataLoadFunctions {
   def dataLoadFromTargetModel(spark:SparkSession,dbName:String,tblName:String,sourceName:String):DataFrame ={
 
     val source_name = "'"+sourceName+"'"
-    val query = "select * from "+ dbName+"."+ tblName+" where source_name ="+source_name
+    val query = "select * from "+ dbName+"."+ tblName/*+" where source_name ="+source_name*/
     val df_init = spark.sql(query)
     //df_init.select("source_name").show(50)
     val dfColumns = df_init.columns.map(f => f.toUpperCase)
@@ -65,14 +65,27 @@ object DataLoadFunctions {
     * @return Dataframe that contains the quality_measure_sk for the measure title
     * @usecase This functio ius used to find the quality_measure_sk for the measure title that passed as argument
     */
-  def qualityMeasureLoadFunction(spark:SparkSession,measureTitle:String):DataFrame ={
+  def dimqualityMeasureLoadFunction(spark:SparkSession,measureTitle:String):DataFrame ={
 
     val measure_title = "'"+measureTitle+"'"
-    val query = "select quality_measure_sk from "+ KpiConstants.dbName+"."+ KpiConstants.dimQltyMsrTblName+" where measure_title ="+measure_title
+    val query = "select quality_measure_sk,quality_program_sk from "+ KpiConstants.dbName+"."+ KpiConstants.dimQltyMsrTblName+" where measure_title ="+measure_title
     val dimQualityMsrDf = spark.sql(query)
     dimQualityMsrDf
   }
 
+  /**
+    *
+    * @param spark
+    * @param programName
+    * @return
+    */
+  def dimqualityProgramLoadFunction(spark:SparkSession,programName:String):DataFrame ={
+
+    val program_name = "'%"+programName+"%'"
+    val query = "select quality_program_sk from "+ KpiConstants.dbName+"."+ KpiConstants.dimQltyPgmTblName+" where program_name like"+program_name
+    val dimQualityMsrDf = spark.sql(query)
+    dimQualityMsrDf
+  }
 
   /**
     *
