@@ -39,17 +39,26 @@
                         </tr>
                     </ng-template> -->
                     <ng-template pTemplate="header">
-                            <tr>
-                                <th *ngFor="let col of cols[0]" class="header-class">
-                                        {{col}}
-                                    </th>
-                                </tr>
-                            <tr *ngFor="let col of cols;let i=index">
-                                <td  *ngFor="let col of cols[i+1] ">
-                                    {{col}}
-                                </td>
-                            </tr>
+                        <tr>
+                            <th *ngFor="let col of cols1" class="header-class">
+                                {{col}}
+                            </th>
+                        </tr>           
+                        <tr>
+                            <td  *ngFor="let col of cols2 ">
+                                {{col}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  *ngFor="let col of cols3 ">
+                                {{col}}
+                            </td>
+                        </tr> 
+                           
                     </ng-template>
+                    <ng-template pTemplate="body">
+
+                        </ng-template>
                 </p-table>
                 <!-- <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols1" selectionMode="single" dataKey="id" >
                         

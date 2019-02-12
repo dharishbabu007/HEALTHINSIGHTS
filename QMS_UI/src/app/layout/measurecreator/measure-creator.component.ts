@@ -38,7 +38,7 @@ export class MeasurecreatorComponent implements OnInit {
   samplingButton: boolean = false;
   mrssList: any;
   mrssSampleList: any;
-  dataSoucreTypes = [{label:"Admin",value:"admin"},{label:"ECDS",value:"ecds"},{label:"Hybrid",value:"hybrid"},{label:"Survey",value:"survey"}];
+  dataSoucreTypes = [{label:"Admin",value:1},{label:"ECDS",value:2},{label:"Hybrid",value:3},{label:"Survey",value: 4}];
 
 
   ConditionList=  [
@@ -50,6 +50,7 @@ export class MeasurecreatorComponent implements OnInit {
 TableNameList: any; 
 ColumnNameList: any;
 tableRepository: any;
+measureData: any;
 
 
 
@@ -85,6 +86,7 @@ tableRepository: any;
           Decommisioned: [],
           p50:[],
           p90:[],
+          measureSourceId:[],
           collectionSource:[]
         });
         this.myForm1 = this._fb.group({
@@ -274,6 +276,8 @@ tableRepository: any;
   });
    if (this.measureId) {
     this.gapsService.getMeasureInfo(this.measureId).subscribe((data: any) => {
+      this.measureData =[];
+      this.measureData = data;
       this.setMeasureInfo(data);
     });
    }
@@ -366,6 +370,7 @@ tableRepository: any;
       model.endDate = this.formatDate(model.endDate);
       model.mrss =  this.myForm1.controls['sampleSize'].value;
       model.overFlowRate =  this.myForm1.controls['overSampleRate'].value;
+      console.log(model)
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure created Successfully');
@@ -469,6 +474,9 @@ tableRepository: any;
   {
     if(event.value=="hybrid"){
       this.samplingButton = true;
+    }
+    else{
+      this.samplingButton = false;
     }
   }
   dialogBox:boolean = false;

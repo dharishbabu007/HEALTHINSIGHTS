@@ -1,5 +1,5 @@
 <div  style="margin: 25px;margin-top: 10px">
-        <app-page-header [heading]="'PAT'" [icon]="'fa-table'"></app-page-header>
+        <app-page-header [heading]="'MIT'" [icon]="'fa-table'"></app-page-header>
     <div class="card ">
       <div class="row">
         <div class="col-lg-12">
@@ -19,7 +19,7 @@
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="populationList" formControlName="population" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                         </span>
                         <span class="col-lg-3">
-                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="caregapList" formControlName="measure" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureList" formControlName="measure" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterMeasure($event)"></p-dropdown>
                         </span>
                     </div> 
                     </div>
@@ -34,21 +34,21 @@
                                         <span class="col-lg-12 col-form-label font-weight-bold" for="hf-associatedPList">Associated patient list</span>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true" (onSelect)="loadMemberInfo($event)"  [suggestions]="memberList"  (completeMethod)="search($event)" placeholder="Enter Name or MRN"></p-autoComplete>
+                                        <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true"   [suggestions]="memberList" (onSelect)="loadMemberInfo($event)"  (completeMethod)="search($event)" placeholder="Enter Name or MRN"></p-autoComplete>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                        <span class="col-lg-12 row"><b>Name</b></span>
-                                        <span class="col-lg-12 row"><b>MRN</b></span>
+                                <div   class="col-lg-5">
+                                        <span class="col-lg-12 row"><b>Name :</b> {{gaps?.name}}</span>
+                                        <span class="col-lg-12 row"><b>MRN :</b> {{mrn}}</span>
                                         <div class="row">
-                                            <span class="col-lg-4"><b>Gender</b></span>
-                                            <span class="col-lg-3"><b>DoB</b></span>
+                                            <span class="col-lg-3"><b>Gender :</b> {{gaps?.gender}}</span>
+                                            <span class="col-lg-5"><b>DoB :</b> {{gaps?.dateOfBirthSk}}</span>
                                         </div>
                                 </div>
-                                <div class="col-lg-4">
-                                        <span class="col-lg-12 row"><b>PCP Name</b></span>
-                                        <span class="col-lg-12 row"><b>Compliant</b></span>
-                                        <span class="col-lg-12 row"><b>Next Appointement Date</b></span>
+                                <div  class="col-lg-4">
+                                        <span class="col-lg-12 row" ><b>PCP Name :</b> {{gaps?.pcpName}}</span>
+                                        <span class="col-lg-12 row" ><b>Compliant :</b> {{gaps?.compliant}}</span>
+                                        <span class="col-lg-12 row"><b>Next Appointement Date :</b> {{gaps?.nextAppointmentDate}}</span>
                                         
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                         </div> 
                         <div class="row">
                             <span class="col-lg-3">
-                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="patientStatusList" formControlName="patientStatus" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="patientStatusList" formControlName="patientStatus" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterPatientStatus($event)"></p-dropdown>
                             </span>
                             <span class="col-lg-3">
                                 <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="valueList" formControlName="valueSet" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
@@ -79,15 +79,15 @@
                             </span>
                        </div>
                        <div class="row">
-                            <span class="col-lg-5 col-form-label font-weight-bold" for="hf-reason">Reason</span>
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-patientDeathRate">Patient Death Rate</span>
+                            <span class="col-lg-6 col-form-label font-weight-bold" for="hf-reason">Reason</span>
+                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-patientDeathRate" *ngIf="patientDateRate">Patient Death Rate</span>
                        </div>
                        <div class="row">
-                           <span class="col-lg-5">
+                           <span class="col-lg-6">
                                 <textarea class="form-control" rows="3" type="text" formControlName="reason"></textarea>
                             </span>
                             
-                            <span class="col-lg-3">
+                            <span class="col-lg-3" *ngIf="patientDateRate">
                                 <p-calendar formControlName="patientDeathRate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
                             </span>
                       </div> 
@@ -127,14 +127,23 @@
                         <ng-container *ngTemplateOutlet="remainingDataPanel"></ng-container>
                 </p-panel>
                 <ng-template #remainingDataPanel>
-                        <table class="table table-bordered table-hover responsive" >
-                            <thead>
-                                <tr></tr>
-                            </thead>
-                            <tbody>
-                              <tr><td></td></tr>
-                            </tbody>
-                        </table>
+                        <p-table #dt  class="table table-bordered table-hover styletable" [scrollable]="false" [value]="patData" [columns]="cols"  selectionMode="single" dataKey="id">
+                             <ng-template pTemplate="header">
+                                <tr>
+                                    <th *ngFor="let col of cols" class="header-class">
+                                        {{col.header}}
+                                    </th>
+                                </tr>           
+                            </ng-template>
+                             <ng-template pTemplate="body"  let-rowData let-columns="columns">
+                                    <tr>
+                                            <td  *ngFor="let col of columns">
+                                                    {{rowData[col.field]}}
+                                            </td>
+                                        </tr>
+                                
+                            </ng-template>
+                        </p-table>
                 </ng-template>
             </div>
             <div class="text-right" style="margin: 5px">

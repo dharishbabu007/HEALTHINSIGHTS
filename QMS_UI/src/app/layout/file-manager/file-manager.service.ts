@@ -38,7 +38,7 @@ export class FileManagerService {
  Upload(model: Filemanager,name): Observable<Filemanager> {
         console.log(name);
 
-        return this.http.post<Filemanager>('http://healthinsight:8082/curis/qms_file/import',model)
+        return this.http.post<Filemanager>(`http://healthinsight:8082/curis/qms_file/import/${name}`,model)
         . pipe(
             catchError(this.handleError('Upload', model))
           );
@@ -46,8 +46,8 @@ export class FileManagerService {
        // this.http.post('http://<hostname>:<port>/curis/qms/createProgram',model);
   }
 
-  Run(selectedModel): Observable<Filemanager>{
-    return this.http.get<Filemanager>(`http://healthinsight:8082/curis/qms_file/run_r/noShow`)
+  Run(selectedModel): Observable<Filemanager>{ 
+    return this.http.get<Filemanager>(`http://healthinsight:8082/curis/qms_file/run_r/${selectedModel}`)
         . pipe(
             catchError(this.handleError('run Failed'))
           );

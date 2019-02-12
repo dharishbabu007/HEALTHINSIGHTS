@@ -21,3 +21,6 @@
 .nav-item {
     cursor: pointer;
 }
+/deep/ ::-webkit-scrollbar {
+    width: 3px;
+}

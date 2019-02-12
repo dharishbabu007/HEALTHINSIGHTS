@@ -1,0 +1,320 @@
+<div class="col-lg-12" style="padding: 0px">
+ 
+        <h3 [ngStyle]="{ 'background-color': '#FC93A4',
+        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-user-o"></i> Personas</h3>
+</div>
+<div style="margin: 25px">
+        <div class="row p-3 align-items-center">
+            <div class="col-lg-12"  style="padding-bottom: 10px;"><h3>Personas</h3><hr class="lineClass"></div>
+            <!-- <div class="col-lg-3" style="padding: 0px"> -->
+                   
+                <!-- <hr class="lineclass"> -->
+                <div *ngFor="let condRow of clusterLength; let i=index;" class="panel panel-default card"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <i class="fa fa-5x fa-user-circle-o "></i>
+                            </div>
+                            <div class="col-lg-6">
+                                <span class="col-lg-12">
+                                    <label class="font-weight-bold">persona name</label>
+                                </span>
+                                <span class="col-lg-12">
+                                    <label class="font-weight-bold">Gender</label>
+                                </span>
+                                <span class="col-lg-12">
+                                        <label class="font-weight-bold">yrs</label>
+                                </span>
+                            </div>             
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <span class="col-lg-12">
+                                <label class="font-weight-bold">Cluster Associated</label>
+                            </span>
+                            <span class="col-lg-12">
+                                 <label class="font-weight-bold">cluster 1</label>
+                            </span>
+                            <span class="col-lg-12">
+                                <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
+                            </span>
+                        </div>
+                </div>
+
+                <!-- <form [formGroup]="personaData" novalidate method="post">
+                        <div class="form-group row">
+                            <div formArrayName="conditionList" class="col-md-12">
+                                <div *ngFor="let condRow of formConditionList.controls; let i=index;" class="panel panel-default card"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px">
+                                    <div [formGroupName]="i">
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <i class="fa fa-5x fa-user-circle-o "></i>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <span class="col-lg-12">
+                                                    <label class="font-weight-bold">persona name</label>
+                                                </span>
+                                                <span class="col-lg-12">
+                                                    <label class="font-weight-bold">Gender</label>
+                                                </span>
+                                                <span class="col-lg-12">
+                                                        <label class="font-weight-bold">yrs</label>
+                                                </span>
+                                            </div>             
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <span class="col-lg-12">
+                                                <label class="font-weight-bold">Cluster Associated</label>
+                                            </span>
+                                            <span class="col-lg-12">
+                                                 <label class="font-weight-bold">cluster 1</label>
+                                            </span>
+                                            <span class="col-lg-12">
+                                                <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </form> -->
+
+            <!-- </div> -->
+            <div class="col-lg-12" style="padding-bottom: 10px;"><h3>Create Persona</h3><hr class="lineClass"></div>
+          <div class="col-lg-12 card">
+            <div class="row" style="padding: 20px;">
+            <div class="col-lg-6" style="background-color: #F7F8FA;">
+                    <div class="col-sm-12 col-lg-12" style="padding-top: 10px;">
+                        <span class="col-lg-10">
+                           <b>Select a cluster &nbsp;</b> 
+                            <p-dropdown placeholder="Cluster" [autoDisplayFirst]="false"  styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)"></p-dropdown>
+                        </span>
+                    </div>
+                <div class="col-sm-12">
+                   <div class="text-black pb-2  margin-table">
+                        <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols1" [columns]="cols1" selectionMode="single" >
+                                <ng-template pTemplate="header">
+                                    <tr class="header-class">
+                                        <th>Demographics</th>
+                                        <th>Max Frequency</th>
+                                        <th>Histograms</th>
+                                       
+                                    </tr>
+                                    <tr  *ngFor="let col of cols1; let i=index">
+                                            <td>
+                                                    {{cols1[i][0].featureName}}
+                                                   
+                                                </td>
+                                                <td>
+                                                        {{cols1[i][0].maxFrequency}}
+                                                </td>
+                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols1[i][0])"></i></td>
+                                               
+                                               
+                                    </tr>
+                                </ng-template>
+                           
+                        </p-table>
+                      
+                    </div>
+                    <p-dialog [(visible)]="display" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+                     [baseZIndex]="10000">
+                        <span><p-chart type="line" [options]="options" [data]="data"  width="500px" height="400px"></p-chart></span>
+                            
+                    </p-dialog>
+
+                </div>
+            <!-- <div class="brand-card-header pb-0 bg-secondary">
+                <div class="text-value">Attributes 
+                  <br>
+               </div>
+            </div> -->
+            <div class="col-sm-12">
+                <div class="text-black pb-2  margin-table">
+                    <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols" [columns]="cols" exportFilename="Model_Score">
+                            <ng-template pTemplate="header">
+                                    <tr class="header-class">
+                                        <th>Attribute</th>
+                                        <th>Max Frequency</th>
+                                        <th>Histograms</th>
+                                       
+                                    </tr>
+                                    <tr  *ngFor="let col of cols; let i=index">
+                                            <td>
+                                                    {{cols[i][0].featureName}}
+                                                   
+                                                </td>
+                                                <td>
+                                                        {{cols[i][0].maxFrequency}}
+                                                </td>
+                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols[i][0])"></i></td>
+                                               
+                                               
+                                    </tr>
+                                
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div> 
+            </div>
+            <div class="col-lg-6" style="background-color: #D4F6FF;">
+                   <div class="text-black pb-2">
+                            <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+                               
+                                    <label class="font-weight-bold">Demographic Details</label><br>
+                                    <hr class="lineClass">
+                                    <br>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-personaName">Persona Name</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                            <input type="text" class="form-control" formControlName="personaName">
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-ageGroup">Age-Group</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-education">Education</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="ageGroupList" formControlName="ageGroup" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="educationList" formControlName="education" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-occupation">Occupation</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-familySize">Family Size</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="occupationList" formControlName="occupation" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="familySizeList" formControlName="familySize" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-income">Income</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="incomeList" formControlName="income" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <br>
+                                    <label class="font-weight-bold">More Information</label><br>
+                                    <hr class="lineClass">
+                                    <br>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-socialMedia">Social Media</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-addiction">Addiction</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="socialMediaList" formControlName="socialMedia" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="addictionList" formControlName="addiction" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-goals">Goals</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                            <input type="text" class="form-control" formControlName="goals">
+                                        </span>
+                                    </div>
+                                   <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-motivations">Motivations</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                           <input type="text" class="form-control" formControlName="motivations">
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-barriers">Barriers</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
+                                          <input type="text" class="form-control" formControlName="barriers">
+                                        </span>
+                                    </div>
+                                   
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-bio">Bio</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
+                                            <input type="text" class="form-control" formControlName="bio">
+                                        </span>
+                                    </div>
+                                </div>
+                                    <div class="form-group row p-2">
+                                        <span class="col-lg-12 text-right">
+                                            <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onBasicUpload($event)" chooseLabel="Image"> <i class="fa fa-user-o"></i></p-fileUpload>
+                                                <!-- <input type="file" id="file" (change)="handleFileInput($event)" #fileInput>  -->
+                                                <br><br>
+                                           <button (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" >Create Persona</button>
+                                        </span>
+                                   </div>
+                            </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<p-dialog [(visible)]="displayAllData" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+[baseZIndex]="10000">
+<div class="col-lg-12" style="width: 700px;height: 700px;">
+                   
+        <div class="brand-card  ">
+                <div class="brand-card-header pb-0 bg-secondary">
+                    <div class="text-value">Attributes</div>
+                </div>
+        <div class="col-sm-12">
+           <div class="text-black pb-2  margin-table">
+                <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols2" [columns]="cols2" exportFilename="Model_Score">
+                        <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Max Frequency</th>
+                                    <th>Histogram</th>
+                                   
+                                </tr>
+                                </ng-template> 
+                        <ng-template pTemplate="body" let-rowData >
+                            <tr> 
+                               <td>{{rowData.featureName}}</td>
+                               <td>{{rowData.maxFrequency}}</td>
+                               <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialogModal(rowData)"></i></td>
+
+                          
+                                  <!--<td>  <button class="btn btn-primary">Histogram</button></td>-->
+                            </tr>
+                            
+                        </ng-template>
+                    </p-table>
+                    <p-dialog [(visible)]="displayModal" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+                    [baseZIndex]="10000">
+                       <span><p-chart type="line" [options]="options" [data]="data"  width="500px" height="400px"></p-chart></span>
+                           
+                   </p-dialog>
+            </div>
+        </div>
+        </div>
+
+        </div>
+       
+</p-dialog>

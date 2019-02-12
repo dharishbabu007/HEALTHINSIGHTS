@@ -20,11 +20,26 @@ import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
   MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective } from './healLayout.directive';
 import { HomeComponent } from './home/home.component';
 import { EnrollmentsComponent } from './enrollments/enrollments.component';
+import { ModelValidationComponent } from './model-validation/model-validation.component';
+import { CreatePersonaComponent } from './create-persona/create-personas.component';
+import { ViewPersonaComponent } from './view-persona/view-persona.component';
+import { GoalsComponent } from './goals/goals.component';
 import { TableModule } from 'primeng/table';
 import {TabViewModule} from 'primeng/tabview';
 import {DialogModule} from 'primeng/dialog';
 import {TooltipModule} from 'primeng/tooltip';
 import {PickListModule} from 'primeng/picklist';
+import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import {ChartModule} from 'primeng/chart';
+import { FileUploadModule } from 'primeng/fileupload';
+import { CalendarModule } from 'primeng/calendar';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RewardsComponent } from './rewards/rewards.component';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import { FrameUrlComponent } from './frame-url/frame-url.component';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,7 +52,15 @@ import {PickListModule} from 'primeng/picklist';
      TabViewModule,
      DialogModule,
      TooltipModule,
-     PickListModule
+     PickListModule,
+     FormsModule,
+     DropdownModule,
+     ReactiveFormsModule,
+     ChartModule,
+     FileUploadModule,
+     CalendarModule,
+     AutoCompleteModule,
+     RadioButtonModule
     
   ],
   declarations: [HealthComponent,
@@ -47,7 +70,12 @@ import {PickListModule} from 'primeng/picklist';
     NavDropdownDirective, NavDropdownToggleDirective,
         SidebarNavLinkComponent, SidebarNavTitleComponent,
         SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
-        MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective, HomeComponent, EnrollmentsComponent
+        MobileSidebarToggleDirective, SidebarOffCanvasCloseDirective, BrandMinimizeDirective, HomeComponent, EnrollmentsComponent,CreatePersonaComponent,
+        ModelValidationComponent,
+        ViewPersonaComponent,
+        GoalsComponent,
+        RewardsComponent,
+        FrameUrlComponent
   ]
 })
 export class HealthModule { }

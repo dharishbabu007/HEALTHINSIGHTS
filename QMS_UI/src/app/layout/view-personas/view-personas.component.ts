@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder,FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../shared/services/message.service';
@@ -16,6 +16,7 @@ import { NgxPermissionsService, NgxRolesService} from 'ngx-permissions';
 export class ViewPersonaComponent implements OnInit {
   uploadedFiles: any[] = [];
   public myForm: FormGroup;
+  public personaData: FormGroup;
   selectedClusterId: any;
   data: any;
   options: any;
@@ -26,7 +27,14 @@ export class ViewPersonaComponent implements OnInit {
   clusterList: any;
   type: string;
   measureId: string; 
+  ageGroupList: any;
+  educationList: any;
+  occupationList: any;
+  familySizeList: any;
   SelectedFile: File = null;
+  incomeList: any;
+  socialMediaList: any;
+  addictionList: any;
   constructor(private _fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
@@ -58,6 +66,12 @@ private gapsService: GapsService) {
 
 
       });
+
+      this.personaData = this._fb.group({
+        conditionList: this._fb.array([
+          this.conditionParamForm(),
+      ])
+      })
       this.gapsService.getclusterlist().subscribe((res: any) =>{
         this.clusterList =[];
        // console.log(res)
@@ -80,6 +94,24 @@ private gapsService: GapsService) {
 // handleFileInput(event) {
 // this.SelectedFile= <File>event.target.files[0];
 // }
+conditionParamForm(){
+  return this._fb.group({
+    createdClusterName: [''],
+    createdPersonaName:[''],
+    createdAgeGroup:['']
+  });
+}
+
+addCondition() {
+  const control = <FormArray>this.personaData.controls['conditionList'];
+  control.push(this.conditionParamForm());
+}
+
+removeCondition(i: number) {
+  const control = <FormArray>this.personaData.controls['conditionList'];
+  control.removeAt(i);
+}
+get formConditionList() { return <FormArray>this.personaData.get('conditionList'); }
 onBasicUpload(event){
   
 }

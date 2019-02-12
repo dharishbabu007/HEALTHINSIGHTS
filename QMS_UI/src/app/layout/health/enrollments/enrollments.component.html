@@ -4,17 +4,34 @@
 </div>
 <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
         <p-tabView>
-            <p-tabPanel header="Open Members List">
-                <p-table [columns]="cols" [value]="confusionmatrix" [(selection)]="selectedcar" dataKey="id" class="table table-bordered table-hover" [scrollable]="false" [paginator]="true" [rows]="20">
+            <p-tabPanel header="Open Members List ({{listLength}})" >
+                <hr class="lineClass">
+                    <br>
+                <span class=""><i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i> &nbsp; Showing {{listLength}} memberswho didn't enroll yet in to HealthyMe program </span>
+                <br><br>
+                    <p-table #dt  class="table table-bordered table-hover table-style" [scrollable]="false" [value]="confusionmatrix"   [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" [(selection)]="selectedcar" dataKey="memberId">
+                <!-- <p-table #dt1  class="table table-bordered table-hover"  [scrollable]="false" [value]="confusionmatrix"   [columns]="cols"  [paginator]="true" [rows]="20" [(selection)]="selectedcar" dataKey="memberId" > -->
                     <ng-template pTemplate="header" let-columns>
-                        <tr>
+                        <tr class="header-row"> 
                             <th style="width: 3em">
                                 <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
                             </th>
-                            <th *ngFor="let col of columns">
-                                {{col.header}}
+                            <th *ngFor="let col of columns" [ngSwitch]="col.header" class="text-center align-middle header-class">
+                                <span  *ngSwitchCase="'Preferred Channel'" >
+                                        {{col.header}} <i class="fa fa-pie-chart" pTooltip="Dashboard"></i>
+                                </span>
+                                <span  *ngSwitchCase="'Recommended Rewards'" >
+                                        {{col.header}} <i class="fa fa-pie-chart" pTooltip="Dashboard"></i>
+                                </span>
+                                <span  *ngSwitchCase="'Likelihood'" >
+                                        {{col.header}} % <i class="fa fa-pie-chart" pTooltip="Dashboard"></i>
+                                </span>
+                                <span *ngSwitchDefault >
+                                        {{col.header}}
+                                </span>
+                             
                             </th>
-                            <th></th>
+                            <th style="width: 3em"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
@@ -22,8 +39,106 @@
                             <td>
                                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                             </td>
-                            <td *ngFor="let col of columns">
-                                {{rowData[col.field]}}
+                            <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="text-center align-middle">
+                                    <span  *ngSwitchCase="'Member Details'" >
+                                            {{rowData[col.field[0]]}} <span class="vl"></span> &nbsp; &nbsp;
+                                            {{rowData[col.field[1]]}} <span class="vl"></span> &nbsp;&nbsp;
+                                            {{rowData[col.field[2]]}}
+                                    </span>
+                                    <span *ngSwitchCase="'Preferred Channel'">
+                                       
+                                        <span *ngIf="rowData[col.field] == 'Call'">
+                                                <i class="fa fa-volume-control-phone" pTooltip="Call"></i> 
+                                                <!-- <span style=" font-weight: bold;color: #0168C1;"><u>Call</u></span> -->
+                                        </span>
+                                        <span *ngIf="rowData[col.field] == 'Social Media'">
+                                               
+                                                <i class=" fa fa-facebook" pTooltip="Social Media"></i> 
+                                        </span>
+                                        <span *ngIf="rowData[col.field] == 'SMS'">
+                                                <i class=" fa fa-envelope-open-o" pTooltip="SMS"></i> 
+                                        </span>
+                                        <span *ngIf="rowData[col.field] == 'App'">
+                                                <i class=" fa fa-envelope-open-o" pTooltip="App"></i> 
+                                        </span>
+                                        <span *ngIf="rowData[col.field] == 'Email'">
+                                                <i class=" fa fa-envelope-open-o" pTooltip="Email"></i> 
+                                               
+                                        </span>
+                                        
+
+
+                                    </span>
+                                    <span *ngSwitchCase="'Recommended Rewards'" (click)="picklist(rowData)">
+                                        <!-- <span *ngIf="rowData[col.field] | contains:'Shopping vouchers'">
+                                            <i class="fa fa-pie-chart" pTooltip="Dashboard"></i>
+                                        </span> -->
+                                        &nbsp;&nbsp;
+                                        <span *ngIf="rowData[col.field[0]] == 'Shopping vouchers'">
+                                            <i class="fa fa-tag" pTooltip="Shopping vouchers"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[0]] == 'Healthy Foods'">
+                                            <i class="fa fa-cutlery" pTooltip="Healthy Foods"></i>
+                                        </span> 
+                                        <span *ngIf="rowData[col.field[0]] == 'Sports equipment/Access to sports facilities'">
+                                            <i class="fa fa-tag" pTooltip="Sports equipment/Access to sports facilities"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[0]] == 'Movie tickets'">
+                                            <i class="fa fa-film" pTooltip="Movie tickets"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[0]] == 'Visit trips'">
+                                            <i class="fa fa-plane" pTooltip="Visit trips"></i>
+                                        </span>
+                                        &nbsp;&nbsp;
+                                        <span *ngIf="rowData[col.field[1]] == 'Shopping vouchers'">
+                                            <i class="fa fa-tag" pTooltip="Shopping vouchers"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[1]] == 'Healthy Foods'">
+                                            <i class="fa fa-cutlery" pTooltip="Healthy Foods"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[1]] == 'Sports equipment/Access to sports facilities'">
+                                            <i class="fa fa-tag" pTooltip="Sports equipment/Access to sports facilities"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[1]] == 'Movie tickets'">
+                                            <i class="fa fa-film" pTooltip="Movie tickets"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[1]] == 'Visit trips'">
+                                            <i class="fa fa-plane" pTooltip="Visit trips"></i>
+                                        </span>
+                                        &nbsp;&nbsp;
+                                          <span *ngIf="rowData[col.field[2]] == 'Shopping vouchers'">
+                                            <i class="fa fa-tag" pTooltip="Shopping vouchers"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[2]] == 'Healthy Foods'">
+                                            <i class="fa fa-cutlery" pTooltip="Healthy Foods"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[2]] == 'Sports equipment/Access to sports facilities'">
+                                            <i class="fa fa-tag" pTooltip="Sports equipment/Access to sports facilities"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[2]] == 'Movie tickets'">
+                                            <i class="fa fa-film" pTooltip="Movie tickets"></i>
+                                        </span>
+                                        <span *ngIf="rowData[col.field[2]] == 'Visit trips'">
+                                            <i class="fa fa-plane" pTooltip="Visit trips"></i>
+                                        </span>
+                                    </span>
+                                    <span *ngSwitchCase="'Likelihood'">
+                                        {{rowData[col.field]| number: '1.0-0' }}
+                                    </span>
+                                    <span *ngSwitchCase="'Remarks'">
+                                        <span *ngIf="rowData[col.field]">
+                                            <i class=" fa fa-comments-o" style="color: #1876C6;" pTooltip="Remarks"></i>
+                                        </span> 
+                                        <span *ngIf="!rowData[col.field]">
+                                                <i class=" fa fa-comments-o"  pTooltip="Remarks"></i>
+                                        </span> 
+                                       
+                                    </span>
+                                   
+                                    <span *ngSwitchDefault>
+                                            {{rowData[col.field]}}
+                                    </span>
+                                
                             </td>
                             <td>
                                     <a href="#" [pRowToggler]="rowData">
@@ -32,22 +147,31 @@
                                 </td>
                         </tr>
                     </ng-template>
-                    <!-- <ng-template pTemplate="summary">
-                        <ul>
-                            <li *ngFor="let car of selectedcar" style="text-align: left">
-                                {{car.id}}
-                            </li>
-                        </ul>
-                    </ng-template> -->
                     <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-                            <tr>
-                                <td [attr.colspan]="columns.length + 1">
-                                    <div class="ui-g ui-fluid" style="font-size:16px;padding:20px">
-                                        <div class="ui-g-12 ui-md-9">
-                                            <div class="ui-g">
-                                                <div class="ui-g-12">
-                                                    <b>Vin:</b> {{rowData.id}}
+                            <tr style="background-color: rgb(235, 249, 253);">
+                                <td [attr.colspan]="columns.length + 2">
+                                    <div class="ui-g ui-fluid" style="font-size:14px;">
+                                        <div class="ui-g-12 ui-md-12">
+                                            <div class="ui-g" style="padding-left: 25px">
+                                                <div class="ui-g-3">
+                                                    <b>Number of Claims </b> {{rowData.enrollmentGaps}}
                                                 </div>
+                                                <div class="ui-g-9">
+                                                    <b>Reason for not enrolling </b> {{rowData.reasonNotEnroll}}
+                                                </div>
+                                            </div>
+                                            <div class="ui-g" style="padding-left: 25px">
+                                                <div class="ui-g-3">
+                                                    <b>Amount Spent </b> {{rowData.amountSpend}}
+                                                </div>
+                                                <div class="ui-g-9">
+                                                    <span class="font-weight-bold ui-g-2" style="width: 10%;padding: 0px">Remarks </span>
+                                                    <span class="ui-g-6" style="width: 55%">
+                                                    <textarea class="form-control" type="text" ></textarea>
+                                                    </span>
+                                                    <button type="button" pButton label="Verify" style="float: right;margin-left: 34px; margin-top: 30px;width: 100px"></button>
+                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -58,10 +182,25 @@
                 <div class="p-3">
                 <button type="submit" class="btn buttonclass btn-success active">Submit to CRM Team</button>
                 </div>
+                <p-dialog [(visible)]="showDialog" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+                        [baseZIndex]="10000">
+                        <p-pickList [source]="sourceRewards" [target]="targetRewards" sourceHeader="Rewards Catalogue" targetHeader="Suggested Rewards" [responsive]="true"
+                                dragdrop="true"[sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+                            <ng-template let-car pTemplate="item">
+                                <div class="ui-helper-clearfix">
+                                    <div>{{car.label}}</div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
+                        <br>
+                        <button type="button" pButton label="Save Changes" (click)="saveChanges()"></button>
+                </p-dialog>
             </p-tabPanel>
-            <p-tabPanel header="Submitted to CRM">
+            <p-tabPanel header="Submitted to CRM ({{crmLength}})">
+                <hr class="lineClass">
             </p-tabPanel>
-            <p-tabPanel header="Personally Verified">
+            <p-tabPanel header="Personally Verified ({{verifiedLength}})">
+                <hr class="lineClass">
             </p-tabPanel>
         </p-tabView>
 </div>

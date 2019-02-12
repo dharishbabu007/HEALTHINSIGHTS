@@ -19,7 +19,7 @@
     <li class="nav-item dropdown" ngbDropdown placement="bottom right">
       
       <a class="nav-link"  ngbDropdownToggle (click)="false">
-          <span class="topbar-item-name profile-name" style="font-size: 1.2em;font-weight: bold;">Hi {{username}},</span> &nbsp; &nbsp;
+          <span class="topbar-item-name profile-name" style="font-size: 1.2em;font-weight: bold;">Hi {{username | titlecase }},</span> &nbsp; &nbsp;
         <!-- <i class="fa fa-2x fa-user"></i> -->
         <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/ProfileIcon.png"/>
         
@@ -32,9 +32,17 @@
   </ul>
 </app-header>
 <div class="app-body">
-  <app-sidebar [fixed]="true" [display]="'lg'">
+  <app-sidebar [fixed]="true" [display]="'lg'" *ngIf="coordinator">
     <app-sidebar-nav [navItems]="navItems"  disabled="sidebarMinimized"></app-sidebar-nav>
     <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <app-sidebar [fixed]="true" [display]="'lg'" *ngIf="analyst">
+    <app-sidebar-nav [navItems]="navItems1"  disabled="sidebarMinimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <app-sidebar [fixed]="true" [display]="'lg'" *ngIf="qulaity_director">
+      <app-sidebar-nav [navItems]="navItems2"  disabled="sidebarMinimized"></app-sidebar-nav>
+      <app-sidebar-minimizer></app-sidebar-minimizer>
   </app-sidebar>
   <!-- Main content -->
   <main class="main">

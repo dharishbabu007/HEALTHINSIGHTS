@@ -8,6 +8,8 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { throwError } from 'rxjs';
+import { MemberGap } from './member-gap-info.component';
+import { MemberGapService } from './member-gap-info.service';
 
 @Component({
     selector: 'app-tables',
@@ -69,7 +71,8 @@ export class MemberGapInfoComponent implements OnInit {
         private msgService: MessageService,
         private _fb: FormBuilder,
         private router: Router,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+    public MemberGapService :MemberGapService ) {
        
             this.route.params.subscribe(params => {
                 this.gapId = params['gapId'];
@@ -141,19 +144,19 @@ export class MemberGapInfoComponent implements OnInit {
        this.measureTitle = this.gaps[0].measureTitle;
        this.firstrow = this.gaps[0];
        this.remainingrows =[];
-       for(let i=1;i<this.gaps.length;i++){
+       for(let i=0;i<this.gaps.length;i++){
          this.remainingrows.push(this.gaps[i])
        }
 
         });
            
         this.cols = [
-            { field: 'intervention', header: 'Payer Comments' },
+            { field: 'payerComments', header: 'Payer Comments' },
             { field: 'priority', header: 'Priority' },
             { field: 'providerComments', header: 'Provider Comments' },
             // { field: 'gapDate', header: 'Date Time' },
-            { field: 'closeGap', header: 'Close Gap' },
-            { field: 'attachement',header: 'Attachment'}
+            { field: 'gapDate', header: 'Gap Date' },
+            { field: 'uploadList',header: 'Attachment'}
         ];
     }
     formatDate(dateString) {
@@ -173,7 +176,7 @@ export class MemberGapInfoComponent implements OnInit {
        console.log(this.fd)
     }
     onSubmit(formModel) {
-        //console.log(formModel);
+       // console.log(formModel);
         this.gapsService.updateCloseGaps(formModel,this.targetDate,this.closeGaps,this.gapId,this.headers).subscribe((res: any) => {
                     if (res.status === 'SUCCESS') {
                         this.msgService.success('Closegap updated Successfully');
@@ -181,7 +184,7 @@ export class MemberGapInfoComponent implements OnInit {
                         this.msgService.error(res.message);
                       }
                 }); 
-                this.gapsService.uploadCloseGapFiles(this.fd).subscribe((res1:any)=>
+                this.MemberGapService.uploadCloseGapFiles(this.fd).subscribe((res1:any)=>
                 {
                      if(res1.status === 'SUCCESS'){
                          this.fileUploadStatus = true;
@@ -239,6 +242,9 @@ export class MemberGapInfoComponent implements OnInit {
             }
         }
        
+}
+export interface MemberGap{
+
 }
 
 

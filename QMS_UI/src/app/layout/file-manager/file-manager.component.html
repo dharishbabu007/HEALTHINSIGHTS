@@ -5,7 +5,8 @@
         <div class="col-lg-12 ">
 
             
-                    <p-listbox [options]="cars" [(ngModel)]="selectedModel" class="col-lg-12" [style]="{'width':'265px'}" [listStyle]="{'max-height': '250px'}">
+                    <p-listbox [options]="cars" [(ngModel)]="selectedModel" class="col-lg-12" [style]="{'width':'265px'}" >
+                        <!-- [listStyle]="{'max-height': '250px'}" -->
                         <ng-template let-car pTemplate="item">
                           
                            <span>{{car.label}}</span>
@@ -27,7 +28,7 @@
               <div class="row">
                 <span class="col-lg-12 text-right">
                 <button (click)="onUpload()" class="btn btn-primary ">Upload</button>&nbsp;&nbsp;
-                <button (click)="TestRun()" class="btn btn-primary" >Run</button>&nbsp;&nbsp; <!-- for running r scripts use onRun() functions-->
+                <button (click)="onRun()" class="btn btn-primary" >Run</button>&nbsp;&nbsp; <!-- for running r scripts use onRun() functions-->
                 
                 </span>
               </div>

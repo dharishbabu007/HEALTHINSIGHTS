@@ -6,7 +6,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div *ngIf="gaps" class="card-text row">
-                            <div class="col col-lg-4 col-xl-4 ">
+                            <div class="col col-lg-3 col-xl-3 ">
                                 <span class="font-weight-bold" style="font-size: large">Patient Details</span><br>
                                 <hr class="lineClass">
                             </div>
@@ -20,7 +20,7 @@
                             <br><br>
                         </div>
                         <div *ngIf="gaps" class="card-text row">
-                             <div class="col col-lg-4 col-xl-4">
+                             <div class="col col-lg-3 col-xl-3">
                                 <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps.name}}</a>
                             </div>
                            
@@ -34,7 +34,7 @@
                         </div>
                         <br>
                         <div  *ngIf="gaps" class="row card-text">
-                             <div class="col col-lg-4 col-xl-4 ">
+                             <div class="col col-lg-3 col-xl-3 ">
                                 <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
                             </div>
                             <div class="col col-lg-4 col-xl-4">
@@ -52,8 +52,8 @@
                         <br>
                         <div  *ngIf="gaps" class="row card-text">
                             
-                            <div class="col col-lg-2 col-xl-2">
-                                <span class="font-weight-bold">Gender </span>: {{closeGaps.gender}}
+                            <div class="col col-lg-1 col-xl-1" style="padding-right: 0px">
+                                <span class="font-weight-bold">Gender</span>:{{closeGaps.gender}}
                             </div>
                             <div class="col col-lg-2 col-xl-2">
                                 <span class="font-weight-bold">DOB </span> :                         
@@ -233,11 +233,17 @@
                                        
                                         {{gapsElement[col.field]}} 
                                   </span>
-                                <span *ngIf="col.field == 'providerComments' && i ==0" >
+                                <span *ngIf="col.field == 'providerComments'" >
                                         {{gapsElement[col.field]}}
                                 </span> 
-                                <span *ngIf="col.field == 'intervention'" >
+                                <span *ngIf="col.field == 'payerComments'" >
                                    {{gapsElement[col.field]}}
+                                </span>  
+                                <span *ngIf="col.field == 'uploadList'" >
+                                        {{gapsElement[col.field]}}
+                                </span>  
+                                <span *ngIf="col.field == 'gapDate'" >
+                                   {{gapsElement[col.field] | date}}
                                 </span>  
                                
                                

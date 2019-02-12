@@ -1,24 +1,82 @@
 .table-bordered{
     border: none;
 }
-.mytabs{
-
-    background: #E4E5E6;
-     border-bottom:none;
-}
 th{
 background-color: #0168C1;
 color: white;
 border: none;
 border-left: 1px solid white;
 }
-.ui-paginator .ui-paginator-pages .ui-paginator-page{ 
-    min-width: 2.5em !important; 
-    }
+.table-bordered td {
+    border: none;
+    border-bottom: 1px solid #c8ced3;
+    height: 40px;
+}
+.table-bordered thead th{
+    height: 40px;
+}
     .ui-widget-header {
  border: none
     }
     .buttonclass {
         border-radius: 23px;
         margin-left: 32.4vw;
+    }
+    .vl {
+        border-left: 1px solid #EEF2F5;
+        height: 20px;
+      }
+
+      p-tabview {
+        /deep/ {
+        .ui-tabview .ui-tabview-nav li {
+            background-color: rgb(182, 181, 181);
+        }
+        
+      .ui-tabview.ui-tabview-top .ui-tabview-nav{
+        background: #E4E5E6;
+        border-radius: 0;
+        border-bottom: none;
+      }
+      .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active{
+        background-color: white;
+        border-color: white;
+      }
+      .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a{
+          color: black
+      }
+        }
+        }
+
+        .ui-table .ui-table-thead>tr>th, .ui-table .ui-table-tbody>tr>td, .ui-table .ui-table-tfoot>tr>td {
+             padding: 0em;
+        }
+        .table-style{
+        font-size: 1rem;
+        }
+
+        /deep/ .ui-paginator .ui-paginator-pages{
+            display: initial
+        }
+.header-row{
+        font-size: 1.06vw;
+        height: 33px;
+    }
+    .ui-picklist-source-controls {
+        display: none !important;
+      }
+      
+      .ui-picklist-target-controls {
+        display: none !important;
+      }
+      
+      .ui-picklist-listwrapper {
+        width: 45% !important;
+      }
+
+      .lineClass{
+        margin: 0px;
+        border-top: 2px solid #0275d8;
+        width: 35px;
+        float: left;
     }

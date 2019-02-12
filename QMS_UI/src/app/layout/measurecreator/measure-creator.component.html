@@ -118,7 +118,7 @@
                          
                        </span>
                        <span class="col-lg-2">
-                          <p-dropdown placeholder="Select Source" [autoDisplayFirst]="false"  styleClass="form-control" [options]="dataSoucreTypes" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}" (onChange)="dataSourceSelected($event)"></p-dropdown>
+                          <p-dropdown placeholder="Select Source" [autoDisplayFirst]="false"  formControlName="measureSourceId" styleClass="form-control" [options]="dataSoucreTypes" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}" (onChange)="dataSourceSelected($event)"></p-dropdown>
                         </span>
                         <span class="col-lg-2">
                           <input type="text" class="form-control"  formControlName="collectionSource"> 
@@ -184,25 +184,23 @@
 
 <div  style="margin: 25px;margin-top: 10px">
 <app-page-header [heading]="'Configurator'" [icon]="'fa-table'"></app-page-header>
-    <div class="card ">
         <div class="row p-3 ">
             <div class="col-sm-12 col-lg-12 ">
-                    <div class="card mb-3">
+                    <div class="card mb-3"  *ngIf="measureData">
                             <div class="card-body">
                                     <div class="card-text row">
-                                        <div class="col col-lg-2 col-xl-2 ">
-                                            <span class="font-weight-bold">Measure Name</span> : 
-                                        </div>
-                                        <div class="col col-lg-4 col-xl-4">
-                                            <span class="font-weight-bold">Measure Category</span> :
+                                        <div class="col col-lg-12 col-xl-12 ">
+                                            <span class="font-weight-bold">Measure Name</span> : {{measureData.name}}
                                         </div>
                                     </div>
                                     <div class="row card-text">
-                                        <div class="col col-lg-2 col-xl-2">
-                                        <span class="font-weight-bold">Program Name</span> : 
+                                        <div class="col col-lg-12 col-xl-12">
+                                            <span class="font-weight-bold">Measure Category</span> : {{measureData.measureCategory}}
                                         </div>
-                                        <div class="col col-lg-2 col-xl-2">
-                                           <span class="font-weight-bold">Effectiveness </span> :                         
+                                    </div>
+                                    <div class="row card-text">
+                                        <div class="col col-lg-12 col-xl-12">
+                                        <span class="font-weight-bold">Program Name</span> :  {{measureData.programName}}
                                         </div>
                                     </div>
                             </div>
@@ -241,12 +239,64 @@
                                                             <br>
                                                         </span>
                                                         <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length == i+1">
-                                                        <button  class="btn bg-primary" (click)="addCondition()">+</button> 
-                                                        </span>
-                                                        <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length != i+1">
                                                         <button  class="btn bg-secondary" (click)="removeCondition(i)">-</button> 
                                                         </span>                        
                                                     </div>
+                                                </div>
+                                                 <div [formGroupName]="i">
+                                                    <div class="row">
+                                                        <span class="col-lg-1">
+                                                        <!-- <input type="text" class="form-control" formControlName="andOrCondition"> -->
+                                                        <p-dropdown  [options]="ConditionList" formControlName="andOrCondition" ></p-dropdown>
+                                                        </span>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                       <span class="col-lg-3">
+                                                        <!-- <input type="text" class="form-control" formControlName="tableName"> -->
+                                                        <p-dropdown  [options]="TableNameList" [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="tableName" (onChange)="filterColumn($event, i)" placeholder="select TableName"></p-dropdown>
+                                                        </span>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <span class="col-lg-3">
+                                                    <!--  <input type="text" class="form-control" formControlName="columnName"> -->
+                                                        <p-dropdown [options]="ColumnNameList"  [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="columnName" placeholder="select ColumnName"></p-dropdown>
+                                                        </span>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <span class="col-lg-3">
+                                                            <input type="text" class="form-control" formControlName="expression">
+                                                            <br>
+                                                        </span>
+                                                        <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length == i+1">
+                                                        <button  class="btn bg-secondary" (click)="removeCondition(i)">-</button> 
+                                                        </span>                        
+                                                    </div>
+                                                </div>
+                                                <div [formGroupName]="i">
+                                                        <div class="row">
+                                                            <span class="col-lg-1">
+                                                            <!-- <input type="text" class="form-control" formControlName="andOrCondition"> -->
+                                                            <p-dropdown  [options]="ConditionList" formControlName="andOrCondition" ></p-dropdown>
+                                                            </span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                           <span class="col-lg-3">
+                                                            <!-- <input type="text" class="form-control" formControlName="tableName"> -->
+                                                            <p-dropdown  [options]="TableNameList" [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="tableName" (onChange)="filterColumn($event, i)" placeholder="select TableName"></p-dropdown>
+                                                            </span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span class="col-lg-3">
+                                                        <!--  <input type="text" class="form-control" formControlName="columnName"> -->
+                                                            <p-dropdown [options]="ColumnNameList"  [style]="{'width':'250px'}"  [autoDisplayFirst]="false" formControlName="columnName" placeholder="select ColumnName"></p-dropdown>
+                                                            </span>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <span class="col-lg-3">
+                                                                <input type="text" class="form-control" formControlName="expression">
+                                                                <br>
+                                                            </span>
+                                                            <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length == i+1">
+                                                            <button  class="btn bg-primary" (click)="addCondition()">+</button> 
+                                                            </span>
+                                                            <span class="col-lg-1 " *ngIf="configForm.controls.conditionList.controls.length != i+1">
+                                                            <button  class="btn bg-secondary" (click)="removeCondition(i)">-</button> 
+                                                            </span>                        
+                                                        </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -461,7 +511,6 @@
             </div>
             
         </div>
-    </div>
 
 </div>
         

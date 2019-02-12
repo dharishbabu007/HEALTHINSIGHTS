@@ -48,6 +48,7 @@ import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
 import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 import { PatComponent } from './pat-screen/pat-screen.component';
+import { RStudioComponent } from './r-studio/frame-url.component';
 
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
@@ -181,7 +182,8 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         HerniaRepairComponent,
         CommunicationStatisticsComponent,
         CommunicationToEnrollComponent,
-        PatComponent],
+        PatComponent,
+        RStudioComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

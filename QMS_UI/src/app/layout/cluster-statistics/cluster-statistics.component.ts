@@ -29,7 +29,21 @@ export class ClusterStatisticsComponent implements OnInit {
             this.membergaps = data;
            // console.log(data);
             this.cols = this.membergaps.filter(item => item);
-           // console.log(this.cols[0])
+            this.cols1 =[]
+            this.cols2 =[]
+            this.cols3 = []
+            console.log(this.cols)
+           this.cols.forEach(ele =>
+           {
+            this.cols1.push(ele[0]);
+           })
+           this.cols.forEach(ele =>
+            {
+             this.cols2.push(ele[1]);
+             this.cols3.push(ele[2])
+           })
+           
+       // console.log(this.cols2)
      });      
     }
 }
