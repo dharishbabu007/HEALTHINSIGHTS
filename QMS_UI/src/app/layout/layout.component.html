@@ -9,24 +9,27 @@
     </span>
   
   <ul class="nav navbar-nav ml-auto">
-    <li class="nav-item ">
-      <a class="nav-link" style="cursor: pointer;" (click)="toggleMic()" ><i [ngClass]="micEnabled ? 'fa fa-2x fa-microphone' : 'fa fa-2x fa-microphone-slash'" ></i></a>
-    </li>
-    <li class="nav-item dropdown" ngbDropdown placement="bottom right">
-     
-      <a class="nav-link"  ngbDropdownToggle (click)="false">
-          <span class="topbar-item-name profile-name">Hi&nbsp;{{username | titlecase}},</span> 
-          <!-- {{rolename}} -->
-        <i class="fa fa-2x fa-user"></i>
-        
-      </a>
-      <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu >
-        <a class="dropdown-item" [routerLink]="['/login']"><i class="fa fa-lock"></i> Logout</a>
-         <a class="dropdown-item" [routerLink]="['/usersettings']"><i class="fa fa-lock"></i> User Settings</a>
+
+      <!-- <li class="nav-item ">
+          <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/notification.png"/>
+        </li> -->
+        <li class="nav-item " [routerLink]="['/usersettings']">
+          <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/settings.png"  style="cursor: pointer;" /> &nbsp;
+        </li>
+        <li class="nav-item dropdown" ngbDropdown placement="bottom right">
+          
+          <a class="nav-link"  ngbDropdownToggle (click)="false">
+              <span class="topbar-item-name profile-name" style="font-size: 1.2em;font-weight: bold;">Hi {{username | titlecase }}</span> &nbsp;
+            <!-- <i class="fa fa-2x fa-user"></i> -->
+            <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/ProfileIcon.png" style="cursor: pointer;" />
+            
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu >
+            <a class="dropdown-item" [routerLink]="['/login']"><i class="fa fa-lock"></i> Logout</a>
       </div>
     </li>
   </ul>
-</app-header>
+</app-header> 
 <div class="app-body">
   <app-sidebar [fixed]="true" [display]="'lg'">
     <app-sidebar-nav [navItems]="navItems"  disabled="sidebarMinimized"></app-sidebar-nav>

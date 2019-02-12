@@ -44,11 +44,16 @@ export class FileManagerComponent implements OnInit {
         });
 
         this.cars = [
-          {label: 'No show appointment prediction', value: 'noShow'},
-          {label: 'Non-compliance Prediction', value: 'nonCompliance'},
-          {label: 'Model 2', value: 'model2'}
-        
-      ];
+          {label: 'Clustering', value: 'persona'},
+         // {label: 'Preferred Channel of Communication', value: 'preferredChannelofCommunication'},
+         // {label: 'Preferred Rewards', value: 'preferredRewards'},
+          {label: 'Likelihood to Enroll', value: 'lhe'},
+          {label: 'Likelihood to Churn', value: 'lhc'},
+         // {label: 'Likelihood to Recommend', value: 'likelihoodtoRecommend'},
+          {label: 'No show appointment prediction', value: 'noshow'},
+          {label: 'Non-compliance Prediction', value: 'nc'},
+         // {label: 'Model 2', value: 'model2'},
+        ];
 
      
 
@@ -94,9 +99,9 @@ onUpload() {
     const fd = new FormData();
     fd.append('file', this.SelectedFile);
    console.log(fd)
-    if(this.SelectedFile!= null){
-console.log(this.SelectedFile.name);
-this.FileManagerService.Upload(fd,this.SelectedFile.name).subscribe((res: any) => {
+    if(this.SelectedFile!= null && this.selectedModel !=null){
+      console.log(this.selectedModel)
+  this.FileManagerService.Upload(fd,this.selectedModel).subscribe((res: any) => {
   if (res.status === 'SUCCESS') {
     this.msgService.success('File uploaded successfully');
     this.Uploded = true;
@@ -107,6 +112,10 @@ this.FileManagerService.Upload(fd,this.SelectedFile.name).subscribe((res: any) =
 
 
 console.log(this.Uploded)
+    }
+    else if(this.selectedModel == null){
+      this.msgService.error("Please Select a model");
+     
     }
     else{
       this.Uploded = false;

@@ -79,7 +79,7 @@ onSubmit(model,isValid){
  //console.log(model);
            let userId = this.Repositry.filter(item => item.name === model.user);
            let roleId = this.roleListRepositry.filter(item => item.name === model.roleName);
-           console.log(userId[0].value,roleId[0].value,model.status)
+          // console.log(userId[0].value,roleId[0].value,model.status)
            this.GapsService.UserMappingSubmit(userId[0].value,roleId[0].value,model.status).subscribe( (res: any) => {
             if (res.status === 'SUCCESS') {
               this.msgService.success('details saved Successfully');

@@ -13,9 +13,9 @@ export class FrameUrlComponent implements OnInit {
     constructor(private route: ActivatedRoute, private safe: SafePipe) {
         // console.log(this.route);
         this.route.params.subscribe(params => {
-            console.log(params['url']);
+           // console.log(params['url']);
             this.externalURL = this.safe.transform(params['url']);
-            console.log(this.externalURL);
+           // console.log(this.externalURL);
         });
     }
 

@@ -4,6 +4,7 @@ import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tables',
@@ -13,7 +14,7 @@ import { DatePipe } from '@angular/common';
     providers: [GapsService]
 })
 export class MemberCareGapListComponent implements OnInit {
-    constructor(private gapsService: GapsService) {}
+    constructor(private gapsService: GapsService,    private router: Router) {}
     membergaps = [];
     cols: any[];
     loading = true;
@@ -42,6 +43,7 @@ export class MemberCareGapListComponent implements OnInit {
                 const memgpParentItem: any = {};
                 memgpParentItem.name = item.name;
                 memgpParentItem.member_id = item.member_id;
+                memgpParentItem.measureSK = item.measureSK;
                 memgpParentItem.age = item.age;
                 memgpParentItem.gender = item.gender;
                 memgpParentItem.countOfCareGaps = item.countOfCareGaps;
@@ -53,6 +55,8 @@ export class MemberCareGapListComponent implements OnInit {
                         memgpItem = element;
                         memgpItem.name = item.name;
                         memgpItem.member_id = item.member_id;
+                        memgpItem.member_id = item.member_id;
+                        memgpItem.measureSK = item.measureSK;
                         memgpItem.age = item.age;
                         memgpItem.gender = item.gender;
                         memgpItem.countOfCareGaps = item.countOfCareGaps;
@@ -99,5 +103,11 @@ export class MemberCareGapListComponent implements OnInit {
         } else {
           return null;
         }
+      }
+
+      mitscreen(rowData){
+        // console.log(rowData);
+            this.router.navigate(['/pat-screen', rowData.member_id, rowData.measureSK]);  
+     //
       }
 }

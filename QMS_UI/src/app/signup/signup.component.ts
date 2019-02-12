@@ -35,18 +35,18 @@ export class SignupComponent implements OnInit {
         data.forEach(element => {
           this.QuestionList.push({label:element.question, value: element.question});
         });
-      console.log(this.QuestionList)
+    //  console.log(this.QuestionList)
       
       });
 
     }
     filterColumn(event){
 
-      console.log(event.value)
+    //  console.log(event.value)
 
      this.idList = this.tableRepository.filter(item => item.question === event.value);
 
-      console.log(this.idList[0].id)
+     // console.log(this.idList[0].id)
   }
     ngOnInit() {
         this.myForm = this._fb.group({
@@ -56,15 +56,11 @@ export class SignupComponent implements OnInit {
           lastName: [''],
           email: ['', [Validators.required]],
 
-            securityQuestion: ['', [Validators.required]],
+            securityQuestion: [''],
 
-            securityAnswer: ['',  [Validators.required]],
+            securityAnswer: [''],
 
             phNumber: ['', [Validators.required,  Validators.minLength(10)]],
-         
-            password: ['', [Validators.required, Validators.minLength(5)]],
-
-            repeatPassword: ['', [Validators.required,  Validators.minLength(5)]]
              
            });
 
@@ -84,14 +80,16 @@ export class SignupComponent implements OnInit {
 
       this.submitted = true;
       
-      console.log(isValid);
+    //  console.log(isValid);
       if(isValid){
-        if(model.password == model.repeatPassword){
-          console.log(model.securityQuestion)
+         // console.log(model.securityQuestion)
+         if(this.idList){
           model.securityQuestion = this.idList[0].id;
+         }
+          
       this.authenticService.Register(model)
           .subscribe((res: any) => {
-            console.log(res)
+           // console.log(res)
             if (res.status === 'SUCCESS') {
     
               this.msgService.success('Registration Successful');
@@ -105,10 +103,6 @@ export class SignupComponent implements OnInit {
     
           } );
 
-        }
-        else{
-          this.msgService.error("Please enter same password and confirm password");
-        }
       }
         else{
           this.validateAllFormFields(this.myForm);

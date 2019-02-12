@@ -2,6 +2,24 @@
         <app-page-header [heading]="'Create Personas'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
         <div class="row p-3 align-items-center">
+            <div class="col-lg-12">
+                <span class="col-lg-12">Personas</span>
+                <!-- <hr class="lineclass"> -->
+                <form [formGroup]="personaData" novalidate method="post" class="form-horizontal">
+                        <div class="form-group row">
+                            <div formArrayName="conditionList" class="col-md-12">
+                                <div *ngFor="let condRow of formConditionList.controls; let i=index;" class="panel panel-default">
+                                    <div [formGroupName]="i">
+                                        <div class="row">
+                                                                 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+
+            </div>
             <div class="col-sm-12 col-lg-12">
 
                  <div class="row" style="padding: 5px">
@@ -18,7 +36,7 @@
             </div>
           <div class="col-lg-12">
             <div class="row">
-            <div class="col-lg-6" style="height: 751px;;overflow: scroll;">
+            <div class="col-lg-6">
                    
                 <div class="brand-card  ">
                        <span> <button class="btn btn-primary"  style="float: right; margin: 5px" (click)="showAllDialog()">&nbsp; View All</button> </span>
@@ -235,111 +253,107 @@
                  </div>   
             </div>
             <div class="col-lg-6">
-                <div class="brand-card  ">
                    
-                    <div class="brand-card-body text-black pb-2  margin-table">
-                            <form [formGroup]="myForm" novalidate method="post" class="form-horizontal" style="overflow-y: scroll; overflow-x: hidden">
-                                    <div class="form-group row">
-                                          <label class="col-md-3 col-form-label font-weight-bold" for="hf-personaName">Persona Name</label>
-                                        <div class="col-md-9">
+                    <div class="text-black pb-2  margin-table">
+                            <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-personaName">Persona Name</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
                                             <input type="text" class="form-control" formControlName="personaName">
-                                        </div>
+                                        </span>
                                     </div>
-                                    <div class="form-group row">
-                                            <label class="col-md-3 col-form-label font-weight-bold" for="hf-bio">Bio</label>
-                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" formControlName="bio">
-                                             </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-ageGroup">Age-Group</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-education">Education</span>
                                     </div>
-                                 
-                                    <label class="text-center align-items-center font-weight-bold">Demographics</label>
-
-                                    <div class="col-lg-12 row demo-div">
-                                        <div class="col-lg-6" style="padding-left: 5px;padding-right: 0px; margin-top: 10px;">
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-ageGroup" style="padding-right: 0px">Age-Group</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="ageGroup">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-occupation" style="padding-right: 0px">Occupation</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="occupation">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-addiction" style="padding-right: 0px">Addiction</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="addiction">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6" style="padding-left: 5px;padding-right: 0px;margin-top: 10px;">
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-education" style="padding-right: 0px">Education</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="education">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-income" style="padding-right: 0px">Income</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="income">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-md-4 font-weight-bold" for="hf-familySize" style="padding-right: 0px">Family Size</label>
-                                                <div class="col-md-8" style="padding-right: 0px;">
-                                                   <input type="text" class="form-control" formControlName="familySize">
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="ageGroupList" formControlName="ageGroup" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="educationList" formControlName="education" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
                                     </div>
-                                    <div class="form-group row">
-                                            <label class="col-md-3 col-form-label font-weight-bold" for="hf-goals">Goals</label>
-                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" formControlName="goals">
-                                             </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-occupation">Occupation</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-familySize">Family Size</span>
                                     </div>
-                                   <div class="form-group row">
-                                       <label class="col-md-3 col-form-label font-weight-bold" for="hf-motivations">Motivations</label>
-                                        <div class="col-md-9">
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="occupationList" formControlName="occupation" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="familySizeList" formControlName="familySize" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-income">Income</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="incomeList" formControlName="income" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-socialMedia">Social Media</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-addiction">Addiction</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="socialMediaList" formControlName="socialMedia" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="addictionList" formControlName="addiction" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-goals">Goals</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                            <input type="text" class="form-control" formControlName="goals">
+                                        </span>
+                                    </div>
+                                   <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-motivations">Motivations</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
                                            <input type="text" class="form-control" formControlName="motivations">
-                                       </div>
+                                        </span>
                                     </div>
                                     
-                                    <div class="form-group row">
-                                       <label class="col-md-3 col-form-label font-weight-bold" for="hf-barriers">Barriers</label>
-                                        <div class="col-md-9">
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-barriers">Barriers</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
                                           <input type="text" class="form-control" formControlName="barriers">
-                                        </div>
+                                        </span>
                                     </div>
-                                    <div class="form-group row">
-                                       <label class="col-md-3 col-form-label font-weight-bold" for="hf-socialMedia">Social Media</label>
-                                        <div class="col-md-9">
-                                           <input type="text" class="form-control" formControlName="socialMedia">
-                                        </div>
+                                   
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-bio">Bio</span>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 col-form-label font-weight-bold" for="hf-healthStatus">Health Status</label>
-                                        <div class="col-md-9">
-                                           <input type="text" class="form-control" formControlName="healthStatus">
-                                        </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
+                                            <input type="text" class="form-control" formControlName="bio">
+                                        </span>
                                     </div>
+                                </div>
                                     <div class="form-group row p-2">
-                                            <span class="col-lg-12 text-right">
-                                                    <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onBasicUpload($event)" chooseLabel="Image"></p-fileUpload>
-                                                    <!-- <input type="file" id="file" (change)="handleFileInput($event)" #fileInput>  -->
-                                                    <br><br>
+                                        <span class="col-lg-12 text-right">
+                                            <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onBasicUpload($event)" chooseLabel="Image"></p-fileUpload>
+                                                <!-- <input type="file" id="file" (change)="handleFileInput($event)" #fileInput>  -->
+                                                <br><br>
                                            <button (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" > <i class="fa fa-dot-circle-o"></i>&nbsp; Submit</button>
-                                        
-                                           
-                                            </span>
+                                        </span>
                                    </div>
-                                </form>
+                            </form>
                     </div>
-                </div>
             </div>
         </div>
     </div>

@@ -1,3 +1,23 @@
-.col-lg-4{
+.images-heightClass{
     height: 242px;
+}
+.btn-style{
+    position: absolute;
+    right: 23px;
+    bottom: 22px;
+}
+.round-borders{
+border-radius: 10px;
+}
+.lineClass{
+        margin: 0px;
+        border-top: 2px solid #0275d8;
+        width: 35px;
+        float: left;
+}
+.no-padding-class{
+padding: 0px;
+}
+/deep/ ::-webkit-scrollbar {
+    width: 3px;
 }

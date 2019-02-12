@@ -1,0 +1,79 @@
+<div class="col-lg-12" style="padding: 0px">
+        <h3 [ngStyle]="{ 'background-color': '#FC93A4','height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-flag-checkered"></i> Rewards</h3>
+</div>
+<div class="row p-3 align-items-center">
+        <div class="row col-lg-12"   style=" margin-left: 13px;">
+                <div class="col-lg-12" style="margin-bottom: 12px">
+                        <h2>Rewards Recommendations</h2>
+                        <hr class="lineClass">
+                </div>
+                <div class="card">
+                        <div class="row col-lg-12 card-body" style=" padding: 40px;">
+                        <div class="row col-lg-12">
+                                <span class="col-lg-12 no-padding-class">
+                                        <b>Select MID &nbsp;</b> 
+                                        <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true"   [suggestions]="memberList" (onSelect)="loadMemberInfo($event)"  (completeMethod)="search($event)" placeholder="Enter MID"></p-autoComplete>
+                                </span>
+                        </div>
+                        <br><br>
+                        <div class="row col-lg-12">
+
+                                <span class="col-lg-2 no-padding-class">
+                                        <b>Name : </b>{{gaps?.name}}
+                                </span>
+                                <span class="col-lg-2 no-padding-class">
+                                        <b>Age : </b>
+                                </span>
+                                <span class="col-lg-3 no-padding-class">
+                                        <b>Gender : </b>{{gaps?.gender}}
+                                </span>
+                                <span class="col-lg-2 no-padding-class">
+                                        <b>Weight : </b>
+                                </span>
+                        </div>
+                        <br><br>
+                        <div class="row col-lg-12">
+                                <span class="col-lg-2 no-padding-class">
+                                <b>Persona : </b>{{personaData?.personaName}}
+                                </span>
+                                <span class="col-lg-2 no-padding-class">
+                                        <b>Preferred Reward : </b>{{personaData?.goals}}
+                                </span>
+                                <span class="col-lg-3 no-padding-class">
+                                        <b>Motivations : </b>{{personaData?.motivations}}
+                                </span>
+                        </div>
+                        <br><br>
+                        <div class="col-lg-12">
+                                <p-table class="table table-bordered table-hover table-style" [value]="rewardsData" [columns]="cols"  [scrollable]="false" selectionMode="single" dataKey="memberId">
+                                        <ng-template pTemplate="header" >
+                                                <tr class="headings">
+                                                        <th>Goal</th>
+                                                        <th>Frequency</th>
+                                                        <th>Date</th>
+                                                        <th>Reward1</th>
+                                                        <th>Reward2</th>
+                                                        <th>Reward3</th>
+                                                        <th>Others</th>
+                                                </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body">
+                                                <tr>
+                                                        <td>heyyy</td><td></td><td></td>
+                                                        <td><p-radioButton name="groupname" value="val1" [(ngModel)]="rewards1"></p-radioButton></td>
+                                                        <td><p-radioButton name="groupname" value="val1" [(ngModel)]="rewards2"></p-radioButton></td>
+                                                        <td><p-radioButton name="groupname" value="val1" [(ngModel)]="rewards3"></p-radioButton></td>
+                                                        <td><p-dropdown [options]="othersList"  placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control"   [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown></td>
+                                                </tr>
+                                        </ng-template>
+                                </p-table>
+                        </div>
+                        </div>
+                        <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-primary" (click)="onSubmit(myForm.value)" ><i class="fa fa-dot-circle-o"></i> Submit</button>
+                        </div>
+
+                </div>
+
+        </div>     
+</div>

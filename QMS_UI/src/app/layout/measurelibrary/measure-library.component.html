@@ -42,8 +42,13 @@
                         </td>
                         <td >
                             <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']" style="cursor: pointer;" pTooltip="Create Copy"></i>&nbsp;
-                            <a  [routerLink]="['/hernia-repair/']" *ngIf="rowData['name'] =='Rate of unplanned readmission for planned Hernia Repair'" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
-                            <i class="fa fa-pie-chart" pTooltip="Dashboard" *ngIf="rowData['name'] !='Rate of unplanned readmission for planned Hernia Repair'"></i>
+                            <span [ngSwitch]="rowData['name']">
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/IMAPerformanceDashboard/MeasureDetails_IMA?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Immunizations for Adolescents'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CDCPerformanceDashboard/MeasureDetails_CDC?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Comprehensive Diabetes Care'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CBPPerformanceDashboard/MeasureDetails_CBP?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Controlling High Blood Pressure'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <i class="fa fa-pie-chart" *ngSwitchDefault pTooltip="Dashboard"></i>
+                            </span>
+                          
                         </td>
                     </tr>
                 </ng-template>

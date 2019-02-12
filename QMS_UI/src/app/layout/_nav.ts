@@ -111,6 +111,11 @@ export const navItems = [
             url: '/member-gap-list',
             icon: 'fa fa-handshake-o'
           },
+          {
+            name: 'MIT',
+            url: '/pat-screen',
+            icon: 'fa fa-handshake-o'
+          }
         ]
       },
       {
@@ -166,7 +171,7 @@ export const navItems = [
         ]
       },
       {
-        name: 'Healthy Me',
+        name: 'Member Engagement',
         url: '#',
         icon: 'fa fa-line-chart',
         children: 
@@ -177,8 +182,8 @@ export const navItems = [
         icon: 'fa fa-line-chart',
           },
           {
-            name: 'Member Engagement',
-            url: '/memberEngagement',
+            name: 'Healthy Me ',
+            url: '/health/home',
             icon: 'fa fa-user-o',
           },
 
@@ -264,7 +269,7 @@ export const navItems = [
             children: [
             {
             name: 'R Studio',
-            url: 'http://192.168.184.71:8787/auth-sign-in',
+            url: '/r-studio',
             icon: 'fa fa-line-chart',
             },
             {

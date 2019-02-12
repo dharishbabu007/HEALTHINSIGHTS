@@ -2,13 +2,21 @@ import { CachedHttpClient } from './cache-httpclient';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {  filter, map, catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
+import { PatScreen } from '../../layout/pat-screen/pat-screen.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type':  'application/json'
+    })
+  };
 @Injectable()
 export class GapsService {
     private handleError: HandleError;
-    constructor(private http: CachedHttpClient,  httpErrorHandler: HttpErrorHandler,) {
+    constructor(private http: CachedHttpClient,  httpErrorHandler: HttpErrorHandler, private http1: HttpClient) {
         this.handleError =  httpErrorHandler.createHandleError('GapsService');
     }
 
@@ -110,9 +118,7 @@ export class GapsService {
         }]},headers);
     }
     uploadCloseGapFiles(file){
-        return this.http.post(`http://healthinsight:8082/curis/closeGaps/gic_lifecycle_import/`,file). pipe(
-            catchError(this.handleError('Upload', file))
-          );
+        return this.http.post(`http://healthinsight:8082/curis/closeGaps/gic_lifecycle_import/`,file);
     }
     getMeasureCategory(id){
         return this.http.get(`http://healthinsight:8082/curis/qms/get_category_by_program_id/${id}`)
@@ -237,5 +243,96 @@ export class GapsService {
     }
     getMrssSampleList(){
         return this.http.get(`http://healthinsight:8082/curis/qms/refMrss_Sample_list`)
+    }
+    getPopulation(){
+        return this.http.get(`http://healthinsight:8082/curis/pat/get_population_list`).toPromise();
+    }
+    getPatMeasure(){
+        return this.http.get(`http://healthinsight:8082/curis/pat/get_care_gap_list`).toPromise();
+    }
+    getPatCodeSet(measureSK){
+        return this.http.get(`http://healthinsight:8082/curis/pat/action_on_caregap_list/${measureSK}`).toPromise();
+    }
+    getAssociatedPatientList(measureSK,mrnIdOrName){
+        return this.http.get(`http://healthinsight:8082/curis/pat/search_associated_patient_list/${measureSK}/${mrnIdOrName}`).toPromise();
+    }
+    createPat(model,gaps,mrn){
+        return this.http.post(`http://healthinsight:8082/curis//pat//pat_create/`,{
+        "measureSk":model.measure,
+        "patientId":gaps.memberId,
+        "compliantFlag":gaps.compliant,
+        "lobId":model.population,
+        "mrn":mrn,
+        "appointmentDate":gaps.nextAppointmentDate,
+        "providerId":1,
+        "gender":gaps.gender,
+        "dob":gaps.dateOfBirthSk,
+        "memberStatus":model.patientStatus,
+        "valueSet":model.valueSet,
+        "codeType":model.codeType,
+        "codes":model.codes,
+        "reason":model.reason         
+        });
+    }
+    getmrnList(measuresk,query){
+        return this.http.get(`http://healthinsight:8082/curis/pat/search_associated_patient_list/${measuresk}/${query}`).toPromise();
+    }
+    getGaps2(memberId){
+        return this.http.get(`http://healthinsight:8082/curis/pat/member/${memberId}`)
+    }
+    uploadPatFile(model: PatScreen): Observable<PatScreen> {
+        return this.http1.post(`http://healthinsight:8082/curis//pat//pat_file_import/`,model).pipe(
+            catchError(this.handleError('Upload', model))
+          );
+    }
+    getHealthyLandingData(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/role_landing_page`)
+    }
+    getPatHistory(memberId,measureSK){
+        return this.http.get(`http://healthinsight:8082/curis/pat/get_pat/${memberId}/${measureSK}`)
+    }
+    getEnrollmentData(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_enrollment_file_output/home`);
+    }
+
+    getObjectiveEnrollment(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Enrollments`);
+    }
+    getObjectiveClaims(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Claims`);
+    }
+    getObjectiveMemberHealth(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Member Health`);
+    }
+    getObjectiveBrandLoyalty(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Brand Loyalty`);
+    }
+    getGoalsMemberDetails(id){
+        return this.http.get(`http://healthinsight:8082/curis/pat/member/111`);
+    }
+    getPhysicalActivityGoal(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/GOAL`)
+    }
+    getPhysicalActivityFrequency(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/FREQUENCY`)
+    }
+    getCalorieIntakeGoal(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_CALORIE_INTAKE/GOAL`)
+    }
+    getCalorieIntakeFrequency(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_CALORIE_INTAKE/FREQUENCY`)
+    }
+    getGoalsCareGap(id){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getCearGapList/${id}`)
+    }
+    getGoalsPersonaData(id){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_Persona_Member_list/${id}`)
+    }
+    createGoals(model){
+        return this.http.post(`http://healthinsight:8082/curis/enrollment//Fact_Goal_Recommendations_create`,model);
+    }
+    
+    getModelValidationData(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_MODEL/MODEL_NAME`);
     }
 }

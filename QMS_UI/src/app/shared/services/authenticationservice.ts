@@ -40,7 +40,7 @@ export class AuthenticationService {
                 catchError((error, caught) => {
                     //intercept the respons error and displace it to the console
                     this.messageSevice.error(error.error.errorMessage);
-                    this.handleAuthError(error);
+                    //this.handleAuthError(error);
                     return of(error);
                   }),
                 map(user => {
@@ -79,7 +79,13 @@ export class AuthenticationService {
             "phoneNumber": model.phNumber,
             "password": model.password
         }
-        );
+        ) .pipe(
+            catchError((error, caught) => {
+                //intercept the respons error and displace it to the console
+                this.messageSevice.error(error.error.message);
+                //this.handleAuthError(error);
+                return of(error);
+              }));
       }
     logout() {
         // remove user from local storage to log user out

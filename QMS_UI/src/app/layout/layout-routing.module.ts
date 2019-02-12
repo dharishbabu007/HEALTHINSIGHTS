@@ -38,6 +38,7 @@ import { HerniaRepairComponent } from './hernia-repair/hernia-repair.component';
 import { CommunicationStatisticsComponent } from  './communication-stats/communication-stats.component';
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 import { PatComponent } from './pat-screen/pat-screen.component';
+import { RStudioComponent } from './r-studio/frame-url.component';
 
 const routes: Routes = [
     {
@@ -135,7 +136,9 @@ const routes: Routes = [
             { path: 'hernia-repair', component: HerniaRepairComponent},
             { path: 'communication-stats', component: CommunicationStatisticsComponent},
             { path: 'communication-enroll', component:CommunicationToEnrollComponent},
-            { path: 'pat-screen', component:PatComponent}
+            { path: 'pat-screen', component:PatComponent},
+            { path: 'pat-screen/:memberId/:measureSK', component:PatComponent},
+            { path: 'r-studio', component:RStudioComponent}
         ]
     },
     { path: 'health', loadChildren: './health/health.module#HealthModule' },
