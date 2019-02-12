@@ -7,17 +7,22 @@ object KpiConstants {
 
 
   /*Common Constants*/
-
-  val ncqaDataSource = "SELF"
+  //val competingDiagnosisVal = "Competing Diagnosis"
+  val nutritionCounselVal = "Nutrition Counseling"
+  val physicalActCounselVal = "Physical Activity Counseling"
+  val ncqaDataSource = "null"
   val clientDataSource = ""
   val userNameVal = "ETL"
-  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
+  val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob",/*"location_sk",*/"product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   val arrayofColumn1 = List("member_id" , "state" , "city" , "member_plan_start_date_sk" , "member_plan_end_date_sk","lob_id")
+  val arrayOfColumn2 = List("member_id", "patient_sk", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk")
   var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
   val actFlgVal = "A"
   val emptyStrVal = ""
+  val maleVal = "M"
+  val femaleVal = "F"
   val emptyList = List.empty[String]
   val boolTrueVal = true
   val boolFalseval = false
@@ -31,6 +36,26 @@ object KpiConstants {
     dbName
   }
 
+  /*claim status constants*/
+  val paidVal = "paid"
+  val suspendedVal = "suspended"
+  val pendingVal = "pending"
+  val deniedVal = "denied"
+
+  /*Continuous Enrollment Check format Constants*/
+  val commondateformatName = "common_date_format"
+  val ageformatName = "age_format"
+
+
+  /*map key constants*/
+  val ageStartKeyName = "ageStart"
+  val ageEndKeyName = "ageEnd"
+  val ageAnchorKeyName = "ageAnchor"
+  val dateStartKeyName = "dateStart"
+  val dateEndKeyName = "dateEnd"
+  val dateAnchorKeyName = "dateAnchor"
+  val lobNameKeyName = "lobName"
+  val benefitKeyName = "benefit"
 
   /*age calculation constants*/
   val age1999Val = "19.99"
@@ -55,6 +80,7 @@ object KpiConstants {
   val age19Val = "19"
   val age20Val = "20"
   val age21Val = "21"
+  val age22Val = "22"
   val age24Val = "24"
   val age30Val = "30"
   val age40Val = "40"
@@ -72,6 +98,7 @@ object KpiConstants {
   val age80Val = "80"
   val age81Val = "81"
   val age85Val = "85"
+  val age86Val = "86"
   val age120Val = "120"
 
 
@@ -91,8 +118,11 @@ object KpiConstants {
   val days42 = 42
   val days3 = 3
   val days0 = 0
+  val days146 = 146
   val days180 = 180
   val days456 = 456
+  val days45 = 45
+
 
   /*month constants*/
   val months24 = 24
@@ -102,6 +132,9 @@ object KpiConstants {
   val months132 = 132
   val months120 = 120
   val months108 = 108
+  val months216 = 216
+  val months240 = 240
+  val months888 = 888
 
   /*measurement Year Constants*/
   val measurementYearLower = 0
@@ -125,14 +158,22 @@ object KpiConstants {
 
   /*Table Names*/
   val dimMemberTblName = "dim_member"
+  val dimPatientTblName = "dim_patient"
   val dimDateTblName = "dim_date"
   val dimProviderTblName = "dim_provider"
   val dimLocationTblName = "dim_location"
+  val dimProductTblName = "dim_product_plan"
   val dimQltyMsrTblName = "dim_quality_measure"
+  val dimQltyPgmTblName = "dim_quality_program"
   val dimFacilityTblName = "dim_facility"
   val factClaimTblName = "fact_claims"
+  val factencTblName = "fact_enc"
+  val factencdxTblName = "fact_enc_dx"
+  val factImmunTblName = "fact_immunization"
+  val factpatmemTblName = "fact_pat_mem"
   val factMembershipTblName = "fact_membership"
   val factRxClaimTblName = "fact_rx_claims"
+  val factMemAttrTblName = "fact_mem_attribution"
   val factGapsInHedisTblName = "fact_hedis_gaps_in_care"
   val factHedisQmsTblName = "fact_hedis_qms"
   val refHedisTblName = "ref_hedis2019"
@@ -143,6 +184,8 @@ object KpiConstants {
   val outGapsInHedisTestTblName = "fact_hedis_gaps_in_care"
   val outFactHedisGapsInTblName = "fact_hedis_gaps_in_care"
   val outFactQmsTblName = "fact_hedis_qms"
+
+  val eligibleDfName = "eligible_df"
 
   /*Measure Title constants*/
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
@@ -159,8 +202,8 @@ object KpiConstants {
   val cisMeasureTitle = "Childhood Immuniztions Status (CIS)"
   val colMeasureTitle = "Colorectal Cancer Screening (COL)"
   val bcsMeasureTitle = "Breast Cancer Screening (BCS)"
-  val imaMeasureTitle = "Immunizations for Adolescents (IMA)"
-  val WCCMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
+  val imaMeasureTitle = "Immunizations for Adolescents"
+  val wccMeasureTitle = "Weight Assessment and Counseling for Nutrition and Physical Activity for Children/Adolescent"
   val aapMeasureTitle = "Adult Access to Preventive/Ambulatory Health Services (AAP)"
   val aisMeasureTitle = "Adult Immunization Status (AIS)"
   val capMeasureTitle = "Children and Adolescents Access to Primary Care Practitioners (CAP)"
@@ -173,6 +216,8 @@ object KpiConstants {
   val ssdMeasureTitle = "Diabetes Screening for People with Schizophrenia or Bipolar Disorder Who Are Using Antipsychotic Medications (SSD)"
   val ncsMeasureTitle = "NonReended Cervical Cancer Screening in Adolescent Females (NCS)"
 
+  /*program name constants*/
+  val hedisPgmname = "HEDIS"
 
 
 
@@ -196,7 +241,16 @@ object KpiConstants {
   val primaryDiagnosisColname = "primary_diagnosis"
   val memPlanStartDateSkColName = "member_plan_start_date_sk"
   val memPlanEndDateSkColName = "member_plan_end_date_sk"
+  val productplanSkColName = "product_plan_sk"
   val startDateColName = "start_date"
+  val serviceDateColName = "service_date"
+  val immStartDateSkColname = "immune_date_sk"
+  val immuneDateColName = "immune_date"
+  val immuneDate2ColName = "immune_date2"
+  val expDateSkColName = "exp_date_sk"
+  val expDateColName = "exp_date"
+  val patientSkColname = "patient_sk"
+  val patientidColname = "pat_id"
   val rxStartDateColName = "rx_start_date"
   val admitDateColName = "admit_date"
   val dischargeDateColName = "discharge_date"
@@ -212,6 +266,9 @@ object KpiConstants {
   val ndcCodeColName = "ndc_code"
   val measureIdColName = "measure_id"
   val startDateSkColName = "start_date_sk"
+  val serviceDateSkColName = "service_date_sk"
+  val admitDateSkColName = "admit_date_sk"
+  val dischargeDateSkColName = "discharge_date_sk"
   val startTempColName = "start_temp"
   val rxStartTempColName = "rx_start_date"
   val diagStartColName = "dig_start_date"
@@ -227,6 +284,7 @@ object KpiConstants {
   val mrbpreadingColName = "most_recent_bpreading"
   val contenrollLowCoName = "continuous_Enroll_LowerDate"
   val contenrollUppCoName = "continuous_Enroll_UpperDate"
+  val anchorDateColName = "anchor_date"
   val month15ColName = "month_15"
   val secondDobColName = "second_dob"
   val firstDobColName = "first_dob"
@@ -237,6 +295,23 @@ object KpiConstants {
   val nineDobColName = "nine_dob"
   val provprespriColName = "provider_prescribing_privileges"
   val clinphaColName = "clinical_pharmacist"
+  val rankColName = "rank"
+  val minMemStDateColName = "min_mem_start_date"
+  val maxMemEndDateColName = "max_mem_end_date"
+  val datediffColName = "date_diff"
+  val maxDateDiffColName = "max_date_diff"
+  val leadColName = "lead_col"
+  val anchorflagColName = "anchor_flag"
+  val secondContFlag = "second_cont_flag"
+  val benefitMedicalColname = "benefit_medical"
+  val claimstatusColName = "claim_status"
+  val ltiFlagColName = "lti_flag"
+  val considerationsColName = "considerations"
+  val lobProductColName = "lob_product"
+  val serviceTempColName = "service_temp"
+  val admitTempColName = "admit_temp"
+  val dischargeTempColName = "discharge_temp"
+
 
 
   /*Output column names*/
@@ -272,6 +347,7 @@ object KpiConstants {
   val outNumExcl2ReasonColName = "nu_ex_reason_2"
   val outHedisGapsSkColName = "hedis_gaps_in_care_sk"
   val outMeasureIdColName = "ncqa_measureid"
+
 
   /*order of the column in fact_gaps_in_hedis*/
   val outFormattedArray = Array(outHedisGapsSkColName,outMemberSkColName,outProductPlanSkColName,outQualityMeasureSkColName,outInDinoColName,outInDinoExclColName,outInDinoExcColName,outInNumColName

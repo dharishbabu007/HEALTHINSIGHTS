@@ -53,7 +53,7 @@ object NcqaWCC1A {
     //print("counts:"+dimMemberDf.count()+","+factClaimDf.count()+","+factMembershipDf.count())
 
     /*Initial join function call for prepare the data fro common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.WCCMeasureTitle)
+    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, factClaimDf, factMembershipDf, dimLocationDf, refLobDf, dimFacilityDf, lob_name, KpiConstants.wccMeasureTitle)
     //initialJoinedDf.show(50)
 
     var lookUpDf = spark.emptyDataFrame
