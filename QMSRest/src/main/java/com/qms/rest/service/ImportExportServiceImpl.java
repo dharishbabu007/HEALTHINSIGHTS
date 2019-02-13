@@ -40,13 +40,17 @@ import com.qms.rest.model.CSVOutPut1;
 import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
+import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.repository.FileUpoadRepository;
+import com.qms.rest.util.AzureBlob;
+import com.qms.rest.util.AzureBlobStorage;
 import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
+import com.qms.rest.util.QMSAzureProperty;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSHDFSProperty;
@@ -61,6 +65,9 @@ public class ImportExportServiceImpl implements ImportExportService {
 	
 	@Autowired
 	private FileUpoadRepository fileUpoadRepository;	
+	
+	@Autowired
+	private QMSAzureProperty qmsAzureProperty;	
 	
 	String windowsCopyPath;
 	
@@ -84,15 +91,29 @@ public class ImportExportServiceImpl implements ImportExportService {
 	@Override
 	public RestResult importFile(MultipartFile file, int fileId, String model) {
 		try {	
-			//In Linux 			
-			putFile(file, fileId, model);
-			
-			//In Hadoop
-//			hdfsFileUtil.putFile(file, fileId);
-			
-			//In windows
-//			createUploadFileInWindows(file, fileId);
-			
+			String deployEnv = qmsAnalyticsProperty.getDeploymentEnvironment();
+			System.out.println(" Deploy Environment --> " + deployEnv);
+			if(deployEnv != null && deployEnv.equalsIgnoreCase("DC")) {
+				//In Linux 			
+				putFile(file, fileId, model);
+				
+				//In Hadoop
+				//hdfsFileUtil.putFile(file, fileId);
+				
+				//In windows
+				//createUploadFileInWindows(file, fileId);
+			} else if(deployEnv != null && deployEnv.equalsIgnoreCase("AZURE")) {
+				String baseDir = getUploadPath(model);
+				System.out.println(" baseDir In AZURE before blob--> " + baseDir);
+				RestResult restResult = AzureBlobStorage.azureUploadFile(qmsAzureProperty.getConnectString(), 
+						qmsAzureProperty.getContainerName(), 
+						fileId+"", baseDir, file);
+				
+				//String restResult = AzureBlob.upload();
+				//System.out.println("restResult is:"+restResult);
+				//RestResult r1 = RestResult.getSucessRestResult(restResult);
+				System.out.println(" baseDir In AZURE after blob--> " + restResult.getMessage());
+			}
 			return RestResult.getSucessRestResult(" File upload success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -113,71 +134,6 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}
 	}
 	
-	private RestResult executeRInLinux (String modelType) {
-		
-//		String rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
-//		if(modelType.equalsIgnoreCase("model1")) {
-//			rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
-//		} else if(modelType.equalsIgnoreCase("model1")) {
-//			rFile = "Script_ITC_healthcare_6_9_2018_v0.R";
-//		}		
-		
-		String command1="Rscript "+qmsAnalyticsProperty.getLinuxRScriptPath();
-		//String command1="ls -ltr";
-		try {
-			int channelExitStatus = -1;
-			//Runtime.getRuntime().exec("Rscript "+modelType);
-			java.util.Properties config = new java.util.Properties(); 
-	    	config.put("StrictHostKeyChecking", "no");
-	    	JSch jsch = new JSch();
-	    	Session session=jsch.getSession(qmsAnalyticsProperty.getUsername(), qmsAnalyticsProperty.getHostname(), 22);
-	    	session.setPassword(qmsAnalyticsProperty.getPassword());
-	    	session.setConfig(config);
-	    	session.connect();
-	    	System.out.println("Connected");
-	    	
-	    	Channel channel=session.openChannel("exec");
-	        ((ChannelExec)channel).setCommand(command1);
-	        channel.setInputStream(null);
-	        ((ChannelExec)channel).setErrStream(System.err);
-	        
-	        InputStream in=channel.getInputStream();
-	        channel.connect();
-	        byte[] tmp=new byte[1024];
-	        System.out.println("*************RFILE Console begin******************");
-	        while(true){
-	          while(in.available()>0){
-	            int i=in.read(tmp, 0, 1024);
-	            if(i<0)break;
-	            System.out.print(new String(tmp, 0, i));
-	          }
-	          if(channel.isClosed()){
-	        	channelExitStatus = channel.getExitStatus();
-	            System.out.println("exit-status: "+channel.getExitStatus());
-	            break;
-	          }
-	          try{Thread.sleep(1000);}catch(Exception ee){}
-	        }
-	        System.out.println("*************RFILE Console end******************");
-	        channel.disconnect();
-	        session.disconnect();
-			System.out.println("DONE R File execution. ");
-			
-			if(channelExitStatus == 0) {
-				System.out.println("R File execution SUCCESS. ");
-				getFile(qmsAnalyticsProperty.getLinuxOutputPath());
-				System.out.println("Exported output files. ");
-				return RestResult.getSucessRestResult(" RFile execution success. ");
-			} else {
-				System.out.println("R File execution FAILED. ");
-				return RestResult.getFailRestResult(" RFile execution not success. ");
-			}
-		} catch (IOException | JSchException e) {
-			e.printStackTrace();
-			return RestResult.getFailRestResult(e.getMessage());
-		} 		
-	}
-
 	@Override
 	public RestResult runRFile(String model) {
 		int fileId = 0;
@@ -193,6 +149,10 @@ public class ImportExportServiceImpl implements ImportExportService {
 			rApiUrl = qmsHDFSProperty.getRapiLHE();		
 		else if(model.equals("lhc")) 
 			rApiUrl = qmsHDFSProperty.getRapiLHC();		
+		else if(model.equals("persona")) 
+			rApiUrl = qmsHDFSProperty.getRapiPersona();
+		else if(model.equals("nc")) 
+			rApiUrl = qmsHDFSProperty.getRapiNC();		
 		
 		rApiUrl = rApiUrl.replaceAll("FILE_ID", fileId+"");
 		System.out.println(model+" Calling R API Url --> " + rApiUrl);
@@ -212,16 +172,51 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}
 	}
 	
+	private String getUploadPath(String model) {
+		String linuxDir = null;
+		String deployEnv = qmsAnalyticsProperty.getDeploymentEnvironment(); 
+		if(deployEnv != null && deployEnv.equalsIgnoreCase("DC")) {
+	    	if(model.equals("noshow")) 
+	    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNoshow();
+	    	else if(model.equals("lhe")) 
+	    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHE();
+	    	else if(model.equals("lhc")) 
+	    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHC();    	
+	    	else if(model.equals("persona")) 
+	    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathPersona();
+	    	else if(model.equals("nc")) 
+	    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNC(); 	    	
+		} 
+		else if(deployEnv != null && deployEnv.equalsIgnoreCase("AZURE")) {
+	    	if(model.equals("noshow")) 
+	    		linuxDir = qmsAzureProperty.getUploadPathNoshow();
+	    	else if(model.equals("lhe")) 
+	    		linuxDir = qmsAzureProperty.getUploadPathLHE();
+	    	else if(model.equals("lhc")) 
+	    		linuxDir = qmsAzureProperty.getUploadPathLHC();    	
+	    	else if(model.equals("persona")) 
+	    		linuxDir = qmsAzureProperty.getUploadPathPersona();
+	    	else if(model.equals("nc")) 
+	    		linuxDir = qmsAzureProperty.getUploadPathNC();			
+		}
+    	return linuxDir;
+	}
+	
     private void putFile(MultipartFile file, int fileId, String model)
             throws JSchException, SftpException {
     	String linuxDir = null; 
-    	if(model.equals("noshow")) 
-    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNoshow();
-    	else if(model.equals("lhe")) 
-    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHE();
-    	else if(model.equals("lhc")) 
-    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHC();    	
-    	linuxDir = linuxDir + fileId;
+//    	if(model.equals("noshow")) 
+//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNoshow();
+//    	else if(model.equals("lhe")) 
+//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHE();
+//    	else if(model.equals("lhc")) 
+//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHC();    	
+//    	else if(model.equals("persona")) 
+//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathPersona();
+//    	else if(model.equals("nc")) 
+//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNC();    	
+//    	linuxDir = linuxDir + fileId;
+    	linuxDir = getUploadPath(model) + fileId;
     	
         System.out.println("Initiate sending file to Linux Server...");
         JSch jsch = new JSch();
@@ -332,12 +327,12 @@ public class ImportExportServiceImpl implements ImportExportService {
 			while (resultSet.next()) {
 		    	output = new CSVOutPut();			    
 			    output.setAppointmentDay(resultSet.getString("appointmentday"));
-			    output.setAppointmentID(resultSet.getString("appointmentid"));
+			    output.setAppointmentID(resultSet.getString("appointment_id"));
 			    output.setLikelihood(resultSet.getString("logodds"));
 			    output.setNeighbourhood(resultSet.getString("neighbourhood"));
 			    output.setNoShow(resultSet.getString("predictednoshow"));
-			    output.setPatientId(resultSet.getString("patientid"));
-			    output.setPatientName(resultSet.getString("patientname"));
+			    output.setPatientId(resultSet.getString("patient_id"));
+			    output.setPatientName(resultSet.getString("patient_name"));
 			    setOutput.add(output);
 			}
 		} catch (Exception e) {
@@ -787,32 +782,36 @@ public class ImportExportServiceImpl implements ImportExportService {
 		if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null)
 			fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
 		else
-			return RestResult.getFailRestResult(" Input file id is null. ");		
+			return RestResult.getFailRestResult(" Input file id is null. ");	
 		
-		try {						
-//			connection = qmsConnection.getHiveThriftConnection();
-			connection = qmsConnection.getHiveConnection();
-			statement = connection.createStatement();	
-//			String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
-//			statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
-			
-	    	String inputFilePath = null;
-	    	String loadSQL = null;
-	    	if(model.equals("noshow"))  {
-	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathNoshow()+fileId+"/"+fileId+".csv";
-	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
-	    	}
-	    	else if(model.equals("lhe")) { 
-	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathLHE()+fileId+"/"+fileId+".csv";
-	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
-	    	}
-	    	else if(model.equals("lhc")) { 
-	    		inputFilePath = qmsAnalyticsProperty.getLinuxUploadPathLHC()+fileId+"/"+fileId+".csv";
-	    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
-	    	}	    	
-	    	
-			System.out.println("Loading the file in hive --> " + inputFilePath);
-			statement.executeUpdate(loadSQL);
+		String deployEnv = qmsAnalyticsProperty.getDeploymentEnvironment();
+		try {	
+			if(deployEnv != null && deployEnv.equalsIgnoreCase("AZURE")) {			
+				String hdfsInputLocation = getUploadPath(model)+fileId;
+				System.out.println(" callHivePatitioning hdfsInputLocation " + hdfsInputLocation);
+				connection = qmsConnection.getHiveThriftConnection();
+				statement = connection.createStatement();			
+				//String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
+				statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+				System.out.println(" callHivePatitioning after " + hdfsInputLocation);
+			} else if(deployEnv != null && deployEnv.equalsIgnoreCase("DC")) {
+				connection = qmsConnection.getHiveConnection();
+				statement = connection.createStatement();	
+		    	String inputFilePath = getUploadPath(model)+fileId+"/"+fileId+".csv";
+		    	String loadSQL = null;
+		    	if(model.equals("noshow"))  
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
+		    	 else if(model.equals("lhe"))  
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    	 else if(model.equals("lhc"))  
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    	 else if(model.equals("persona"))  
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE CP_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+		    	 else if(model.equals("nc")) 
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NC_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+				System.out.println("Loading the file in hive --> " + inputFilePath);
+				statement.executeUpdate(loadSQL);
+			}
 			
 			System.out.println(" Alter table success for file id --> " + fileId);
 			return RestResult.getSucessRestResult(" File upload success. ");
@@ -962,6 +961,117 @@ public class ImportExportServiceImpl implements ImportExportService {
 				e.printStackTrace();
 			}
 		}
+		
+		return modelMetric;
+	}
+
+	@Override
+	public Set<LHEOutput> getNCOutPut() {
+		Set<LHEOutput> lheModelOutPut = new HashSet<>();
+		System.out.println(" Loading LHE Output data ");
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+//			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
+//					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
+			resultSet = statement.executeQuery("SELECT LFO.MEMBER_ID,LFO.ENROLLMENT_GAPS,LFO.OUT_OF_POCKET_EXPENSES,"
+					+ "LFO.UTILIZER_CATEGORY,LFO.AGE,LFO.AMOUNT_SPEND,LFO.ER,LFO.REASON_TO_NOT_ENROLL,LFO.likelihood_enrollment,"
+					+ "LFO.ENROLLMENT_BIN, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
+					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
+			LHEOutput output = null;
+			String name = "";			
+			while (resultSet.next()) {
+		    	output = new LHEOutput();			    
+				output.setMemberId(resultSet.getString("MEMBER_ID"));
+				name = "";
+				if(resultSet.getString("first_name") != null)
+					name = resultSet.getString("first_name");
+				if(resultSet.getString("middle_name") != null)
+					name = name+" "+resultSet.getString("middle_name");
+				if(resultSet.getString("last_name") != null)				
+					name = name+" "+resultSet.getString("last_name");
+				output.setMemberName(name);
+				output.setEnrollGaps(resultSet.getString("ENROLLMENT_GAPS"));
+				output.setOutOfPocketExpenses(resultSet.getString("OUT_OF_POCKET_EXPENSES"));
+				output.setUtilizerCategory(resultSet.getString("UTILIZER_CATEGORY"));
+				output.setAge(resultSet.getString("AGE"));
+				output.setAmountSpend(resultSet.getString("AMOUNT_SPEND"));
+				output.setEr(resultSet.getString("ER"));
+				output.setReasonNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
+				output.setLikeliHoodEnroll(resultSet.getString("likelihood_enrollment"));
+				output.setEnrollmentBin(resultSet.getString("ENROLLMENT_BIN"));
+				lheModelOutPut.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		return lheModelOutPut;
+	}
+
+	@Override
+	public Set<ModelSummary> getNCModelSummary() {
+		Set<ModelSummary> setOutput = new HashSet<>();
+		
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			//resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY where modelid='1'");			
+			resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY");
+			ModelSummary output = null;
+			while (resultSet.next()) {
+		    	output = new ModelSummary();			    
+		    	output.setAttributes(resultSet.getString("attribute"));
+		    	output.setEstimate(resultSet.getString("estimate"));
+		    	output.setPrz(resultSet.getString("pvalue"));
+		    	output.setStdError(resultSet.getString("stderror"));
+		    	output.setzValue(resultSet.getString("zvalue"));
+			    setOutput.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(" ModelSummary records size --> " + setOutput.size());
+		
+		return setOutput;
+	}
+
+	@Override
+	public ModelMetric getNCModelMetric() {
+		ModelMetric modelMetric = new ModelMetric();
+		
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from LHE_MODEL_METRIC");			
+			while (resultSet.next()) {
+	    		modelMetric.setTp(resultSet.getString("TP"));
+	    		modelMetric.setFp(resultSet.getString("FP"));
+	    		modelMetric.setTn(resultSet.getString("TN"));
+	    		modelMetric.setFn(resultSet.getString("FN"));
+	    		modelMetric.setScore(resultSet.getString("SCORE"));
+	    		modelMetric.setImagePath(windowsCopyPath+"/ROCplot.PNG");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
 		
 		return modelMetric;
 	}

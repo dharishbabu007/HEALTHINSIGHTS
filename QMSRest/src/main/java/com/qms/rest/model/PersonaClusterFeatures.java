@@ -26,7 +26,7 @@ public class PersonaClusterFeatures {
 	public int hashCode() {
 		return clusterId.hashCode()+featureName.hashCode()+featureType.hashCode()+
 				featureSignificanceValue.hashCode()+
-				maxFrequency.hashCode()+modelId.hashCode();
+				maxFrequency.hashCode(); //+modelId.hashCode();
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class PersonaClusterFeatures {
 			PersonaClusterFeatures pp = (PersonaClusterFeatures) obj;
             return (pp.clusterId.equals(this.clusterId) && pp.featureName.equals(this.featureName) && 
             		pp.featureType.equals(this.featureType) && pp.featureSignificanceValue.equals(this.featureSignificanceValue) && 
-            		pp.maxFrequency.equals(this.maxFrequency) && pp.modelId.equals(this.modelId));
+            		pp.maxFrequency.equals(this.maxFrequency)); // && pp.modelId.equals(this.modelId)
         } else {
             return false;
         }

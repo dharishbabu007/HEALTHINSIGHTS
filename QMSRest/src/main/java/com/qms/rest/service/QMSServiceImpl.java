@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.MeasureCreator;
 import com.qms.rest.model.NameValue;
+import com.qms.rest.model.Param;
+import com.qms.rest.model.RefMrss;
+import com.qms.rest.model.RefMrssSample;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
@@ -310,8 +313,10 @@ public class QMSServiceImpl implements QMSService {
 				"insert into qms_measure (clinical_conditions,data_sources_id,denominator,target,domain_id,deno_exclusions,"
 				+ "numerator,num_exclusion,measure_id,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
 				+ "type_id,measure_edit_id,REC_UPDATE_DATE,STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
-				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name) "
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name,"
+				+ "P50,P90,MEASURE_SOURCE_ID,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE) "
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement statement = null;
 		Statement sqlStatement = null;
@@ -657,7 +662,7 @@ public class QMSServiceImpl implements QMSService {
 	
 
 	@Override
-	public RestResult updateMeasureWorkListStatus(int id, String status) {
+	public RestResult updateMeasureWorkListStatus(int id, String status, Param param) {
 		System.out.println("SERVICE Update Measure WorkList Status for id : " + id + " with status : " + status);		
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
 		
@@ -703,6 +708,28 @@ public class QMSServiceImpl implements QMSService {
 		}			
 		System.out.println(" getQualityProgramId " + programId + " categoryName " + categoryName + " qualityProgramId " + qualityProgramId);
 		return qualityProgramId;
-	}	
+	}
+
+
+	@Override
+	public Set<String> getCategoryByProgramId(String programId) {
+		return null;
+	}
+
+
+	@Override
+	public Set<RefMrss> getRefMrssList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Set<RefMrssSample> getRefMrssSaimpleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }

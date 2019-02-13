@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.ColumnData;
 import com.qms.rest.model.MeasureConfig;
+import com.qms.rest.model.Param;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.TableData;
 import com.qms.rest.model.User;
@@ -136,7 +137,9 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 			System.out.println(" measureId and configuration Status --> " + measureId + " :: " + configStatus);
 			User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 			if(configStatus != null && configStatus.equalsIgnoreCase("submit")) {
-				qmsService.updateMeasureWorkListStatus(Integer.parseInt(measureId), "Under Development");
+				Param param = new Param ();
+				param.setValue1("Under Development");
+				qmsService.updateMeasureWorkListStatus(Integer.parseInt(measureId), "Under Development", param);
 			}
 
 			int version = 0;

@@ -23,6 +23,7 @@ import com.qms.rest.model.DimPatient;
 import com.qms.rest.model.MemberDetail;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSDateUtil;
 
 @Service("patientService")
 public class PatientServiceImpl2 implements PatientService {
@@ -222,15 +223,24 @@ public class PatientServiceImpl2 implements PatientService {
 			
 			//Care Gaps			
 			resultSet.close();
-			memberSQL = "select dqm.measure_title, qgl.status,COMPLIANCE_POTENTIAL from dim_quality_measure dqm "
-					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
-					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"'";
+//			memberSQL = "select dqm.measure_title, qgl.status,COMPLIANCE_POTENTIAL from dim_quality_measure dqm "
+//					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
+//					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' order by qgl.gap_date desc";
+			memberSQL = "select dqm.measure_title, qgl.status, qgl.COMPLIANCE_POTENTIAL, qgl.gap_date "+
+			"from dim_quality_measure dqm "+
+			"inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "+
+			"where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' and rownum < 2 order by qgl.gap_date desc";			
+			
 			Set<String[]> careGaps = new HashSet<>();
 			resultSet = statement.executeQuery(memberSQL);
-			
+			Set<String> careGapNameSet = new HashSet<>();
+			String gapName = null;
 			while (resultSet.next()) {
-				//careGaps.add(resultSet.getString("measure_title") + "    " + resultSet.getString("COMPLIANCE_POTENTIAL"));
-				careGaps.add(new String[]{resultSet.getString("measure_title"), resultSet.getString("COMPLIANCE_POTENTIAL")});
+				gapName = resultSet.getString("measure_title");
+				if(!careGapNameSet.contains(gapName)) {					
+					careGapNameSet.add(gapName);
+					careGaps.add(new String[]{gapName, resultSet.getString("COMPLIANCE_POTENTIAL")});
+				}
 			}
 			dimPatient.setCareGaps(careGaps);
 			dimPatient.setCareGapsCount(careGaps.size()+"");
@@ -321,7 +331,8 @@ public class PatientServiceImpl2 implements PatientService {
 			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
 			resultSet = statement.executeQuery(memberSQL);
 			while (resultSet.next()) {
-				dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
+				dimPatient.setNextAppointmentDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Next_Appointment_Date")));
+				//dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
 				dimPatient.setPhysicianName(resultSet.getString("Physician_Name"));
 				dimPatient.setDepartment(resultSet.getString("DEPARTMENT_NAME"));
 				dimPatient.setNoShowLikelihood(resultSet.getString("NOSHOW_LIKELIHOOD"));

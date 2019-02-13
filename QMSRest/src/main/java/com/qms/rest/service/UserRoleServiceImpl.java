@@ -214,6 +214,11 @@ public class UserRoleServiceImpl implements UserRoleService{
 		
 		return rolePage;
 	}
+
+	@Override
+	public String getRole(String roleId) {
+		return null;
+	}
 	
 	//api to return all the pages
 	//api to return all the users

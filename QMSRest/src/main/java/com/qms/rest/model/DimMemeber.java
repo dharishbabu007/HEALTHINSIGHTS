@@ -14,11 +14,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DimMemeberList {
+public class DimMemeber {
 
-//	private  List<FactHedisGapsInCare> factHedisGapsInCare;
-	private  List<QmsGicLifecycle> qmsGicLifecycle;
-	
 	private String memberId;
 
 	private String memberSk;
@@ -74,5 +71,8 @@ public class DimMemeberList {
 	private String user;
 	
 	private String nextAppointmentDate;
-		
+	
+	private String pcpName;
+	
+	private String compliant="No";
 }

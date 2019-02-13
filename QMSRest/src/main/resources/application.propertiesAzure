@@ -7,21 +7,21 @@ spring.http.multipart.max-file-size=100MB
 spring.http.multipart.max-request-size=100MB
 
 #LOCAL
-qms.oracleJDBCUrl = jdbc:oracle:thin:@192.168.184.71:1521:healthin
+qms.oracleJDBCUrl = jdbc:oracle:thin:@HealthInsight:1521:healthin
 qms.oracleUserName=admin
 qms.oraclePassword=admin123
 
 #MeasureConfig DB details
-qms.oracleMeasureConfigJDBCUrl = jdbc:oracle:thin:@192.168.184.71:1521:healthin
+qms.oracleMeasureConfigJDBCUrl = jdbc:oracle:thin:@HealthInsight:1521:healthin
 qms.oracleMeasureConfigUserName=admin
 qms.oracleMeasureConfigPassword=admin123
 
 #HIVE
-qms.hiveJDBCBaseUrl=jdbc:hive2://192.168.184.64:10000/
-qms.hiveJDBCUrl=jdbc:hive2://192.168.184.64:10000/analytics
-qms.hiveJDBCThriftUrl=jdbc:hive2://192.168.184.75:10016/analytics
-qms.hiveUserName=hdp-hadoop
-qms.hivePassword=Welcome$321
+qms.hiveJDBCBaseUrl=jdbc:hive2://healthinsight-hdi.azurehdinsight.net:443/
+qms.hiveJDBCUrl=jdbc:hive2://healthinsight-hdi.azurehdinsight.net:443/analytics;transportMode=http;ssl=true;httpPath=/hive2
+qms.hiveJDBCThriftUrl=jdbc:hive2://healthinsight-hdi.azurehdinsight.net:443/analytics;transportMode=http;ssl=true;httpPath=/hive2
+qms.hiveUserName=admin
+qms.hivePassword=Passw0rd$123
 qms.phoenixJDBCUrl=jdbc:phoenix:192.168.184.66,192.168.184.68,192.168.184.69:2181:/hbase-unsecure:AutoCommit=true
 
 qms.userStatusList=New,Verified,Active,Inactive
@@ -30,22 +30,22 @@ qms.adminEMailId=raghunadha.konda@itcinfotech.com
 qms.passwordExpiryTime=240
 
 #oracle connection pooling
-data.oracleDataSource.url=jdbc:oracle:thin:@192.168.184.71:1521:healthin
+data.oracleDataSource.url=jdbc:oracle:thin:@HealthInsight:1521:healthin
 data.oracleDataSource.username=admin
 data.oracleDataSource.password=admin123
 data.oracleDataSource.driver-class-name=oracle.jdbc.OracleDriver
 data.oracleDataSource.database-platform=org.hibernate.dialect.Oracle10gDialect
 
 #hive collection pooling
-spring.datasource.url=jdbc:hive2://192.168.184.64:10000/healthin?hive.execution.engine=tez
-spring.datasource.username=hdp-hadoop
-spring.datasource.password=Welcome$321
+spring.datasource.url=jdbc:hive2://Healthinsight-HDI-ssh.azurehdinsight.net:443/healthin?hive.execution.engine=tez
+spring.datasource.username=admin
+spring.datasource.password=Passw0rd$123
 spring.datasource.driver-class-name=org.apache.hive.jdbc.HiveDriver
 
 #Analytics upload data
-qmsAnalytics.hostname=192.168.184.64
-qmsAnalytics.username=hdp-hadoop
-qmsAnalytics.password=Welcome$321
+qmsAnalytics.hostname=Healthinsight-HDI-ssh.azurehdinsight.net
+qmsAnalytics.username=sshuser
+qmsAnalytics.password=Passw0rd$123
 #qmsAnalytics.linuxUploadPath=/home/hdp-hadoop/curis/input/
 qmsAnalytics.linuxUploadPathNoshow=/home/hdp-hadoop/models/noshow/input/
 qmsAnalytics.linuxUploadPathLHE=/home/hdp-hadoop/models/me/lhe/input/
@@ -55,7 +55,7 @@ qmsAnalytics.linuxUploadPathNC=/home/hdp-hadoop/models/nc/input/
 qmsAnalytics.linuxOutputPath=/home/hdp-hadoop/output/
 qmsAnalytics.windowsCopyPath=D:/import_export
 qmsAnalytics.linuxRScriptPath=/home/Ashwinth/script/Script_ITC_healthcare_6_9_2018_v0.R
-qmsAnalytics.deploymentEnvironment=DC
+qmsAnalytics.deploymentEnvironment=AZURE
 
 #AZURE
 qmsAzure.containerName=hipgcontainer
@@ -69,22 +69,22 @@ qmsAzure.uploadPathNC=/home/hdp-hadoop/models/nc/input/
 #Analytics HDFS upload data
 qmsHDFS.coreSite=/etc/hadoop/conf/core-site.xml
 qmsHDFS.hdfsSite=/etc/hadoop/conf/hdfs-site.xml
-qmsHDFS.hdfsURL=hdfs://hdp-master1.datalab.com:8020/
+qmsHDFS.hdfsURL=hdfs://10.0.0.16/
 qmsHDFS.readFile=user/hdp-hadoop/Test.txt
-qmsHDFS.writePath=user/hdp-hadoop/input/
+qmsHDFS.writePath=curis/input/
 #R APIs
 qmsHDFS.rapiNoShow=http://localhost:8080/file?fid=FILE_ID
 qmsHDFS.rapiLHE=http://localhost:8079/file?fid=FILE_ID
 qmsHDFS.rapiLHC=http://localhost:8083/file?fid=FILE_ID
 qmsHDFS.rapiPersona=http://localhost:8086/file?fid=FILE_ID
 qmsHDFS.rapiNC=http://localhost:8085/file?fid=FILE_ID
-qmsHDFS.hdfsUser=hdp-hadoop
+qmsHDFS.hdfsUser=root
 
 #EMAIL
 spring.mail.host=10.6.12.154
 spring.mail.port=25
 spring.mail.username=raghunadha.konda@itcinfotech.com
-spring.mail.password=jan@1234
+spring.mail.password=aug@1234
 #spring.mail.properties.mail.smtp.starttls.enable=true
 #spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.auth=true
