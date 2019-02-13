@@ -13,9 +13,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.qms.rest.model.CloseGap;
+import com.qms.rest.model.GicLifeCycleFileUpload;
 import com.qms.rest.model.CloseGaps;
+import com.qms.rest.model.FileUpload;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
@@ -68,7 +71,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 				closeGap.setQualityMeasureId(resultSet.getString("qgl.quality_measure_id"));
 				closeGap.setPayerComments(resultSet.getString("qgl.payor_comments"));
 				closeGap.setProviderComments(resultSet.getString("qgl.provider_comments"));
-				closeGap.setDateTime(resultSet.getString("qgl.gap_date"));
+				closeGap.setGapDate(resultSet.getString("qgl.gap_date"));
 				closeGap.setIntervention(resultSet.getString("qgl.interventions"));
 				closeGap.setPriority(resultSet.getString("qgl.priority"));
 				closeGap.setStatus(resultSet.getString("qgl.status"));
@@ -167,6 +170,16 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			qmsConnection.closeJDBCResources(null, statement, connection);
 		}			
 		
+	}
+
+	@Override
+	public RestResult importFile(MultipartFile file) {
+		return null;
+	}
+
+	@Override
+	public RestResult saveFileUpload(GicLifeCycleFileUpload fileUpload) {
+		return null;
 	}
 
 }

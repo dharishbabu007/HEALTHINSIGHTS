@@ -214,13 +214,29 @@ public class UserRoleServiceImpl2 implements UserRoleService{
 		
 		return rolePage;
 	}
-	
-	//api to return all the pages
-	//api to return all the users
-	//api to return all the roles
-	
-	//api to return role & pages for user
-	
-	
 
+	@Override
+	public String getRole(String roleId) {
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		String roleName = null;
+		
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery("select ROLE_NAME from QMS_ROLE where ROLE_ID="+roleId);
+			while (resultSet.next()) {
+				roleName = resultSet.getString("ROLE_NAME"); 
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+		return roleName;
+	}
 }

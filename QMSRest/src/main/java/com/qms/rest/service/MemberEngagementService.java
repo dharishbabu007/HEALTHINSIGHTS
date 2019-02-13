@@ -15,6 +15,7 @@ import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.PersonaClusterFeatures;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.RoleLandingPage;
 
 public interface MemberEngagementService {
 	
@@ -28,6 +29,7 @@ public interface MemberEngagementService {
 	GraphData getPersonaClusterFeaturesGraphData(String clusterId, String attributeName);
 	Set<PersonaClusterFeatures> getPersonaClusterFeatures(String clusterId);
 	Set<String> getPersonaClusterNames();
+	Set<RoleLandingPage> getRoleLandingPage();
 	
 	///////////LHE////////////////////
 	Set<LHEOutput> getLHEModelOutPut();

@@ -28,6 +28,7 @@ import com.qms.rest.model.CSVOutPut1;
 import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
+import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
@@ -58,7 +59,7 @@ public class ImportExportController {
 		headers.add("Access-Control-Allow-Origin", "*");		
 		headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
 		
-		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc"});
+		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc", "persona", "nc"});
 		if(!modelList.contains(model)) {
             return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid model. Please select valid model. "), headers, 
             		HttpStatus.BAD_REQUEST);			
@@ -96,7 +97,7 @@ public class ImportExportController {
 		} else {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		System.out.println(model + " Saved the file in Linux. ");
+		//System.out.println(model + " Saved the file in Linux. ");
 		
 		//storing file data in hive 
 		restResult = importExportService.callHivePatitioning(model);
@@ -115,14 +116,13 @@ public class ImportExportController {
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
 		}
-
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}	
 	
 	@RequestMapping(value = "/run_r/{modelType}", method = RequestMethod.GET)
 	public ResponseEntity<RestResult> runRFile(@PathVariable("modelType") String modelType, UriComponentsBuilder ucBuilder) {
 		
-		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc"});
+		List<String> modelList = Arrays.asList(new String[]{"noshow", "lhe", "lhc", "persona", "nc"});
 		if(!modelList.contains(modelType)) {
             return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Invalid model. Please select valid model. "),  
             		HttpStatus.BAD_REQUEST);			
@@ -169,8 +169,28 @@ public class ImportExportController {
 		System.out.println("Fetching ModelScore.csv data ");
 		ModelScore cSVOutPut = importExportService.getCSVModelScore();
 		return new ResponseEntity<ModelScore>(cSVOutPut, HttpStatus.OK);
+	}
+	
+	//////////////////////////NON Complience//////////////////////////////
+	@RequestMapping(value = "/nc_output", method = RequestMethod.GET)
+	public ResponseEntity<Set<LHEOutput>> getNCOutput() {
+		Set<LHEOutput> setCSVOutPut = importExportService.getNCOutPut();
+		return new ResponseEntity<Set<LHEOutput>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
+	@RequestMapping(value = "/nc_modelSummary", method = RequestMethod.GET)
+	public ResponseEntity<Set<ModelSummary>> getNCModelSummary() {
+		Set<ModelSummary> setCSVOutPut = importExportService.getNCModelSummary();
+		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/nc_modelMatric", method = RequestMethod.GET)
+	public ResponseEntity<ModelMetric> getNCConfusionMatric() {
+		ModelMetric setCSVOutPut = importExportService.getNCModelMetric();
+		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
+	}
+	
+	//////////////////////////Complience//////////////////////////////	
 	@RequestMapping(value = "/complience_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<ComplianceOutPut>> getComplienceOutput() {
 		System.out.println("Fetching Output.csv data ");
@@ -191,5 +211,4 @@ public class ImportExportController {
 		ModelMetric setCSVOutPut = importExportService.getComplianceModelMetric();
 		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
 	}	
-	
 }

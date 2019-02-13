@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.qms.rest.service.PatientService;
 import com.qms.rest.service.QMSService;
 import com.qms.rest.util.CustomErrorType;
-import com.qms.rest.util.QMSConstants;
 
 @RestController
 @RequestMapping("/qms")
@@ -148,7 +146,8 @@ public class QMSController {
 	
 	@RequestMapping(value = "/work_list/status/{id}/{status}", method = RequestMethod.PUT)
 	public ResponseEntity<RestResult> updateMeasureCreatorStatus(@PathVariable("id") int id, 
-			@PathVariable("status") String status) {
+			@PathVariable("status") String status,
+			@RequestBody Param param) {
 		System.out.println("REST Update Measure WorkList Status for id : " + id + " with status : " + status);
 		MeasureCreator currentMeasureCreator = qmsService.findMeasureCreatorById(id);
 		if (currentMeasureCreator == null) {
@@ -157,9 +156,18 @@ public class QMSController {
 					+ " not found"), HttpStatus.NOT_FOUND);
 		}
 		
-		RestResult restResult = qmsService.updateMeasureWorkListStatus(id, status);
+		RestResult restResult = qmsService.updateMeasureWorkListStatus(id, status, param);
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
-	}	
+	}
+	
+	@RequestMapping(value = "/get_category_by_program_id/{programId}", method = RequestMethod.GET)
+	public ResponseEntity<Set<String>> getCategoryByProgramId(@PathVariable("programId") String programId) {
+		Set<String> workList = qmsService.getCategoryByProgramId(programId);
+		if (workList.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+	}		
 	
 	@RequestMapping(value = "/spv/{programType}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getSPVDetails(@PathVariable("programType") String programType, @PathVariable("id") String id) {
@@ -220,6 +228,25 @@ public class QMSController {
 			return new ResponseEntity(new CustomErrorType("Program not found."), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<QualityProgramUI>(qualityProgram, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/refMrss_list", method = RequestMethod.GET)
+	public ResponseEntity<Set<RefMrss>> refMrssList(){
+		Set<RefMrss> workList = qmsService.getRefMrssList();
+		if (workList.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<RefMrss>>(workList, HttpStatus.OK);
 	}	
+	
+	
+	@RequestMapping(value = "/refMrss_Sample_list", method = RequestMethod.GET)
+	public ResponseEntity<Set<RefMrssSample>> refMrssSampleList() {
+		Set<RefMrssSample> workList = qmsService.getRefMrssSaimpleList();
+		if (workList.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<RefMrssSample>>(workList, HttpStatus.OK);
+	}			
 
 }

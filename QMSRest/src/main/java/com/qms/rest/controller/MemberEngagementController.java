@@ -26,6 +26,7 @@ import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.Param;
 import com.qms.rest.model.PersonaClusterFeatures;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.RoleLandingPage;
 import com.qms.rest.service.MemberEngagementService;
 
 @RestController
@@ -196,5 +197,12 @@ public class MemberEngagementController {
 		System.out.println("Fetching LHC Model metric ");
 		ModelMetric setCSVOutPut = memberEngagementService.getLHCModelMetric();
 		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
-	}	
+	}
+	
+	@RequestMapping(value = "/role_landing_page", method = RequestMethod.GET)
+	public ResponseEntity<Set<RoleLandingPage>> roleLandingPage() {
+		System.out.println("Fetching LHC Model metric ");
+		Set<RoleLandingPage> setCSVOutPut = memberEngagementService.getRoleLandingPage();
+		return new ResponseEntity<Set<RoleLandingPage>>(setCSVOutPut, HttpStatus.OK);
+	}
 }

@@ -27,6 +27,7 @@ public class QMSProperty {
 	private String oracleMeasureConfigPassword;	
 	
 	private String hiveJDBCUrl;
+	private String hiveJDBCBaseUrl;
 	private String hiveJDBCThriftUrl;
 	private String hiveUserName;
 	private String hivePassword;

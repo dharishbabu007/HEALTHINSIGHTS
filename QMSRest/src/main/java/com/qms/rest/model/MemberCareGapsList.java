@@ -22,4 +22,5 @@ public class MemberCareGapsList {
 	private String riskGrade;
     private List<MemberCareGaps> members;
     private String compliancePotential;
+    private String measureSK;
 }

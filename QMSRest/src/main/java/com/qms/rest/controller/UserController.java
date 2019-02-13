@@ -71,7 +71,7 @@ public class UserController {
 			user = userService.getUserInfo(loginId, password);
 			if(user != null) {
 				httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
-				System.out.println("Returned user name for loginId " + loginId + " : " + user.getName());
+				System.out.println("Returned user name for loginId " + loginId + " : " + user.getFirstName());
 				return new ResponseEntity<User>(user, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(new CustomErrorType("User details not found. "), HttpStatus.NOT_FOUND);	

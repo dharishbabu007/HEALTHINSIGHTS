@@ -12,5 +12,7 @@ public interface UserRoleService {
 	
 	RestResult addRolescreens(RoleScreen rolePage);
 	
-	RoleScreen getRoleScreens(int roleId);	
+	RoleScreen getRoleScreens(int roleId);
+	
+	String getRole(String roleId);
 }

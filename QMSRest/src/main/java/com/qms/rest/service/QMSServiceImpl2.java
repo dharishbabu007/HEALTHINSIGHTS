@@ -16,12 +16,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.MeasureCreator;
 import com.qms.rest.model.NameValue;
+import com.qms.rest.model.Param;
+import com.qms.rest.model.RefMrss;
+import com.qms.rest.model.RefMrssSample;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
@@ -43,21 +45,21 @@ public class QMSServiceImpl2 implements QMSService {
 		Set<MeasureCreator> measureList = new LinkedHashSet<>();
 		HashMap<String, String> programMap = getIdNameMap("QMS_QUALITY_PROGRAM", "QUALITY_PROGRAM_ID", "PROGRAM_NAME");
 		HashMap<String, String> typeMap = getIdNameMap("QMS_MEASURE_TYPE", "MEASURE_TYPE_ID", "MEASURE_TYPE_NAME");
-		HashMap<String, String> stewardMap = getIdNameMap("QMS_MEASURE_STEWARD", "STEWARD_TYPE_ID", "STEWARD_NAME");
+		HashMap<String, String> stewardMap = getIdNameMap("QMS_MEASURE_STEWARD", "MEASURE_STEWARD_ID", "MEASURE_STEWARD_NAME");
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
 		
-		String whereClause = "where (STATUS_ID=5 or STATUS_ID=8)";
+		String whereClause = "where (MEASURE_STATUS_ID=5 or MEASURE_STATUS_ID=8)";
 		if(programName.equalsIgnoreCase("Reimbursement")) {
-			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and QUALITY_PROGRAM_ID in (select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+value+"')";
+			whereClause = " where (MEASURE_STATUS_ID=5 or MEASURE_STATUS_ID=8) and QUALITY_PROGRAM_ID in (select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+value+"')";
 		}
 		else if(programName.equalsIgnoreCase("Clinical")) {
-			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and clinical_conditions='"+value+"'";													
+			whereClause = " where (MEASURE_STATUS_ID=5 or MEASURE_STATUS_ID=8) and clinical_conditions='"+value+"'";													
 		}
 		else if(programName.equalsIgnoreCase("NQF")) {
-			whereClause = " where (STATUS_ID=5 or STATUS_ID=8) and domain_id='"+value+"'";
+			whereClause = " where (MEASURE_STATUS_ID=5 or MEASURE_STATUS_ID=8) and measure_domain_id='"+value+"'";
 		}		
 
-		String measureQuery = "select * from QMS_MEASURE "+whereClause+" order by MEASURE_ID asc, MEASURE_EDIT_ID desc";
+		String measureQuery = "select * from QMS_QUALITY_MEASURE "+whereClause+" order by QUALITY_MEASURE_ID asc, MEASURE_EDIT_ID desc";
 		System.out.println("****measureQuery --> " + measureQuery);
 		
 		Statement statement = null;
@@ -68,12 +70,12 @@ public class QMSServiceImpl2 implements QMSService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			//resultSet = statement.executeQuery("select * from QMS_MEASURE "+whereClause+" and IS_ACTIVE='Y' order by MEASURE_ID asc"); //0106
+			//resultSet = statement.executeQuery("select * from QMS_QUALITY_MEASURE "+whereClause+" and IS_ACTIVE='Y' order by QUALITY_MEASURE_ID asc"); //0106
 			resultSet = statement.executeQuery(measureQuery); 
 			MeasureCreator measureCreator = null;
 			int measureId = 0;
 			while (resultSet.next()) {
-				measureId = resultSet.getInt("measure_id");				
+				measureId = resultSet.getInt("QUALITY_MEASURE_ID");				
 				if(measureIdsAdded.contains(measureId)) {
 					continue;
 				}
@@ -83,12 +85,12 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setClinocalCondition(resultSet.getString("clinical_conditions"));
 				measureCreator.setId(measureId);
 				measureCreator.setProgramName(programMap.get(resultSet.getString("QUALITY_PROGRAM_ID")));
-				measureCreator.setSteward(stewardMap.get(resultSet.getString("STEWARD_ID")));
-				measureCreator.setType(typeMap.get(resultSet.getString("TYPE_ID")));
+				measureCreator.setSteward(stewardMap.get(resultSet.getString("measure_steward_id")));
+				measureCreator.setType(typeMap.get(resultSet.getString("measure_type_id")));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
-				measureCreator.setStatus(statusMap.get(resultSet.getString("status_id")));
+				measureCreator.setStatus(statusMap.get(resultSet.getString("MEASURE_STATUS_ID")));
 				measureList.add(measureCreator);
 			}			
 			
@@ -116,31 +118,38 @@ public class QMSServiceImpl2 implements QMSService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from qms_measure qm, QMS_QUALITY_PROGRAM qqp where qm.measure_id='"+id+"' and qm.STATUS_ID='5' and qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");			
+			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS_QUALITY_MEASURE qm, QMS_QUALITY_PROGRAM qqp where qm.QUALITY_MEASURE_ID='"+id+"' and qm.MEASURE_STATUS_ID='5' and qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");			
 			
 			while (resultSet.next()) {
 				measureCreator = new MeasureCreator();
 				measureCreator.setClinocalCondition(resultSet.getString("clinical_conditions"));
-				measureCreator.setDataSource(resultSet.getString("data_sources_id"));
+				measureCreator.setDataSource(resultSet.getString("measure_source_id"));
 				measureCreator.setDenominator(resultSet.getString("denominator"));
 				measureCreator.setTarget(resultSet.getString("target")); 
-				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("domain_id")));
+				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("measure_domain_id")));
 				measureCreator.setDenomExclusions(resultSet.getString("DENO_EXCLUSIONS"));
 				measureCreator.setNumerator(resultSet.getString("numerator"));
 				measureCreator.setNumeratorExclusions(resultSet.getString("num_exclusion"));				
-				measureCreator.setId(resultSet.getInt("measure_id")); 
+				measureCreator.setId(resultSet.getInt("QUALITY_MEASURE_ID")); 
 				measureCreator.setMeasureCategory(resultSet.getString("CATEGORY_NAME"));
 				measureCreator.setDescription(resultSet.getString("description"));
 				measureCreator.setName(resultSet.getString("measure_name"));
 				measureCreator.setProgramName(resultSet.getString("PROGRAM_NAME"));
-				measureCreator.setSteward(resultSet.getString("steward_id"));			
+				measureCreator.setSteward(resultSet.getString("measure_steward_id"));			
 				measureCreator.setTargetAge(resultSet.getString("target_population_age"));
-				measureCreator.setType(typeMap.get(resultSet.getString("type_id")));
+				measureCreator.setType(typeMap.get(resultSet.getString("measure_type_id")));
 				measureCreator.setMeasureEditId(resultSet.getInt("MEASURE_EDIT_ID"));
-				measureCreator.setStatus(resultSet.getString("STATUS_ID"));
+				measureCreator.setStatus(resultSet.getString("MEASURE_STATUS_ID"));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+				
+				measureCreator.setP50(resultSet.getInt("P50"));
+				measureCreator.setP90(resultSet.getInt("P90"));
+				measureCreator.setCollectionSource(resultSet.getString("COLLECTION_SOURCE"));
+				measureCreator.setMrss(resultSet.getInt("MRSS"));
+				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));				
+				//measureCreator.setCollectionMethod(resultSet.getString("OVERFLOW_RATE"));
 				break;
 			}
 		} catch (Exception e) {
@@ -165,9 +174,9 @@ public class QMSServiceImpl2 implements QMSService {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();		
 			if(columnName.equalsIgnoreCase("PROGRAM_NAME")) {
-				resultSet = statement.executeQuery("select QQP.PROGRAM_NAME from QMS_MEASURE QM, QMS_QUALITY_PROGRAM QQP where QM.STATUS_ID='5' and QM.QUALITY_PROGRAM_ID=QQP.QUALITY_PROGRAM_ID");
+				resultSet = statement.executeQuery("select QQP.PROGRAM_NAME from QMS_QUALITY_MEASURE QM, QMS_QUALITY_PROGRAM QQP where QM.MEASURE_STATUS_ID='5' and QM.QUALITY_PROGRAM_ID=QQP.QUALITY_PROGRAM_ID");
 			} else {
-				resultSet = statement.executeQuery("select "+ columnName + " from "+tableName+" where STATUS_ID='5'");
+				resultSet = statement.executeQuery("select "+ columnName + " from "+tableName+" where MEASURE_STATUS_ID='5'");
 			}
 			
 			String data = null;
@@ -307,11 +316,13 @@ public class QMSServiceImpl2 implements QMSService {
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 
 		String sqlStatementInsert = 
-				"insert into qms_measure (clinical_conditions,data_sources_id,denominator,target,domain_id,deno_exclusions,"
-				+ "numerator,num_exclusion,measure_id,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
-				+ "type_id,measure_edit_id,REC_UPDATE_DATE,STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
-				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name) "
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"insert into QMS_QUALITY_MEASURE (clinical_conditions,measure_source_id,denominator,target,measure_domain_id,deno_exclusions,"
+				+ "numerator,num_exclusion,QUALITY_MEASURE_ID,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
+				+ "measure_type_id,measure_edit_id,REC_UPDATE_DATE,MEASURE_STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
+				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name,"
+				+ "P50,P90,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE,review_comments) "
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement statement = null;
 		Statement sqlStatement = null;
@@ -327,7 +338,7 @@ public class QMSServiceImpl2 implements QMSService {
 			int measureId = 0;
 			//to get the last created measure id			
 			if(measureCreator.getMeasureEditId() == 0) {
-				resultSet = sqlStatement.executeQuery("select max(measure_id) from qms_measure");
+				resultSet = sqlStatement.executeQuery("select max(QUALITY_MEASURE_ID) from QMS_QUALITY_MEASURE");
 				while (resultSet.next()) {
 					measureId = resultSet.getInt(1)+1;
 				}
@@ -336,7 +347,7 @@ public class QMSServiceImpl2 implements QMSService {
 			String isActive = "N";
 			if(measureCreator.getStatus() != null && measureCreator.getStatus().equalsIgnoreCase("Approved")) {
 				String sqlStatementUpdate = 
-						"update qms_measure set IS_ACTIVE='N' where measure_id="+measureCreator.getId()+" and measure_edit_id<>"+measureCreator.getMeasureEditId();
+						"update QMS_QUALITY_MEASURE set IS_ACTIVE='N' where QUALITY_MEASURE_ID="+measureCreator.getId()+" and measure_edit_id<>"+measureCreator.getMeasureEditId();
 				sqlStatement.executeUpdate(sqlStatementUpdate);
 				isActive = "Y";
 			}			
@@ -348,6 +359,7 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setString(++i, measureCreator.getDenominator());
 			statement.setString(++i, measureCreator.getTarget());
 			statement.setString(++i, domainMap.get(measureCreator.getMeasureDomain()));
+			
 			statement.setString(++i, measureCreator.getDenomExclusions());
 			
 			statement.setString(++i, measureCreator.getNumerator());
@@ -400,6 +412,13 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setTimestamp(++i, timestamp);	
 			statement.setString(++i, QMSConstants.MEASURE_SOURCE_NAME);
 			
+			statement.setInt(++i, measureCreator.getP50());
+			statement.setInt(++i, measureCreator.getP90());
+			statement.setString(++i, measureCreator.getCollectionSource());
+			statement.setInt(++i, measureCreator.getMrss());
+			statement.setString(++i, measureCreator.getOverFlowRate());			
+			statement.setString(++i, measureCreator.getReviewComments());
+			
 			statement.executeUpdate();
 			connection.commit();
 			System.out.println("Added the measure worklist with id --> " + measureCreator.getId() + " status --> " + 
@@ -416,10 +435,10 @@ public class QMSServiceImpl2 implements QMSService {
 			restResult.setStatus(RestResult.FAIL_STATUS);
 			if(e.getMessage().contains("QUALITY_PROGRAM_ID"))
 				restResult.setMessage("Invalid Program Name and Measure Category mapping. ");
-			else if(e.getMessage().contains("invalid number"))
-				restResult.setMessage("Target should be a number. ");
+//			else if(e.getMessage().contains("invalid number"))
+//				restResult.setMessage("Target should be a number. ");
 			else
-				restResult.setMessage(e.getMessage());			
+				restResult.setMessage(e.getMessage());
 		}
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, sqlStatement, null);
@@ -431,7 +450,6 @@ public class QMSServiceImpl2 implements QMSService {
 	@Override
 	public RestResult updateMeasureCreator(MeasureCreator measureCreator) {		
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
-		
 		
 		//new version create		
 		MeasureCreator lastCreatedCreator = null;
@@ -455,11 +473,12 @@ public class QMSServiceImpl2 implements QMSService {
 		}		
 		
 		String sqlStatementUpdate = 
-				"update qms_measure set clinical_conditions=?, data_sources_id=?, denominator=?, target=?, "
-				+ "domain_id=?, deno_exclusions=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
-				+ "QUALITY_PROGRAM_ID=?, STEWARD_ID=?, target_population_age=?, type_id=?, rec_update_date=?,  "
-				+ "STATUS_ID=?,  USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=? "
-				+ "where measure_id=? and MEASURE_EDIT_ID=?";
+				"update QMS_QUALITY_MEASURE set clinical_conditions=?, measure_source_id=?, denominator=?, target=?, "
+				+ "measure_domain_id=?, deno_exclusions=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
+				+ "QUALITY_PROGRAM_ID=?, measure_steward_id=?, target_population_age=?, measure_type_id=?, rec_update_date=?, "
+				+ "MEASURE_STATUS_ID=?, USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=?, "
+				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=? "
+				+ "where QUALITY_MEASURE_ID=? and MEASURE_EDIT_ID=?";
 		
 		String qualityProgramId = this.getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
 		HashMap<String, String> typeMap = getIdNameMap("QMS_MEASURE_TYPE", "MEASURE_TYPE_ID", "MEASURE_TYPE_NAME");
@@ -504,8 +523,15 @@ public class QMSServiceImpl2 implements QMSService {
 				statement.setString(++i, "Y");	
 			
 			statement.setString(++i, measureCreator.getStartDate());
-			statement.setString(++i, measureCreator.getEndDate());			
+			statement.setString(++i, measureCreator.getEndDate());
 			
+			statement.setInt(++i, measureCreator.getP50());
+			statement.setInt(++i, measureCreator.getP90());
+			statement.setString(++i, measureCreator.getCollectionSource());
+			statement.setInt(++i, measureCreator.getMrss());
+			statement.setString(++i, measureCreator.getOverFlowRate());			
+			
+			//where clause parameters
 			statement.setInt(++i, measureCreator.getId());
 			statement.setInt(++i, lastCreatedCreator.getMeasureEditId());
 			
@@ -521,8 +547,8 @@ public class QMSServiceImpl2 implements QMSService {
 				//restResult.setMessage("Invalid Program Name and Measure Category mapping. ");
 				restResult.setMessage("Invalid Measure Category for selected Program Name. ");
 				//restResult.setMessage("Select correct Measure Category for Program Name. ");
-			else if(e.getMessage().contains("invalid number"))
-				restResult.setMessage("Target should be a number. ");
+//			else if(e.getMessage().contains("invalid number"))
+//				restResult.setMessage("Target should be a number. ");
 			else
 				restResult.setMessage(e.getMessage());			
 		}
@@ -544,31 +570,38 @@ public class QMSServiceImpl2 implements QMSService {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
 			
-			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from qms_measure qm, QMS_QUALITY_PROGRAM qqp where qm.measure_id="+id+" and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID order by MEASURE_EDIT_ID desc");
+			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS_QUALITY_MEASURE qm, QMS_QUALITY_PROGRAM qqp where qm.QUALITY_MEASURE_ID="+id+" and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID order by MEASURE_EDIT_ID desc");
 			
 			while (resultSet.next()) {
 				measureCreator = new MeasureCreator();
 				measureCreator.setClinocalCondition(resultSet.getString("clinical_conditions"));
-				measureCreator.setDataSource(resultSet.getString("data_sources_id"));
+				measureCreator.setDataSource(resultSet.getString("measure_source_id"));
 				measureCreator.setDenominator(resultSet.getString("denominator"));
 				measureCreator.setTarget(resultSet.getString("target")); 
-				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("domain_id")));
+				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("measure_domain_id")));
 				measureCreator.setDenomExclusions(resultSet.getString("DENO_EXCLUSIONS"));
 				measureCreator.setNumerator(resultSet.getString("numerator"));
 				measureCreator.setNumeratorExclusions(resultSet.getString("num_exclusion"));				
-				measureCreator.setId(resultSet.getInt("measure_id")); 
+				measureCreator.setId(resultSet.getInt("QUALITY_MEASURE_ID")); 
 				measureCreator.setMeasureCategory(resultSet.getString("CATEGORY_NAME"));
 				measureCreator.setDescription(resultSet.getString("description"));
 				measureCreator.setName(resultSet.getString("measure_name"));
 				measureCreator.setProgramName(resultSet.getString("PROGRAM_NAME"));
-				measureCreator.setSteward(resultSet.getString("steward_id"));			
+				measureCreator.setSteward(resultSet.getString("measure_steward_id"));			
 				measureCreator.setTargetAge(resultSet.getString("target_population_age"));
-				measureCreator.setType(typeMap.get(resultSet.getString("type_id")));
+				measureCreator.setType(typeMap.get(resultSet.getString("measure_type_id")));
 				measureCreator.setMeasureEditId(resultSet.getInt("MEASURE_EDIT_ID"));
-				measureCreator.setStatus(resultSet.getString("STATUS_ID"));
+				measureCreator.setStatus(resultSet.getString("MEASURE_STATUS_ID"));
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
-				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
+				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+
+				measureCreator.setP50(resultSet.getInt("P50"));
+				measureCreator.setP90(resultSet.getInt("P90"));
+				measureCreator.setCollectionSource(resultSet.getString("COLLECTION_SOURCE"));
+				measureCreator.setMrss(resultSet.getInt("MRSS"));
+				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));
+				//measureCreator.setCollectionMethod(resultSet.getString("OVERFLOW_RATE"));
 				break;
 			}
 		} catch (Exception e) {
@@ -596,10 +629,10 @@ public class QMSServiceImpl2 implements QMSService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from qms_measure order by REC_UPDATE_DATE desc");
+			resultSet = statement.executeQuery("select * from QMS_QUALITY_MEASURE order by REC_UPDATE_DATE desc");
 			int measureId = 0;
 			while (resultSet.next()) {
-				measureId = resultSet.getInt("measure_id");
+				measureId = resultSet.getInt("QUALITY_MEASURE_ID");
 				
 				if(uniqueMeasureId.contains(measureId)) {
 					continue;
@@ -609,7 +642,7 @@ public class QMSServiceImpl2 implements QMSService {
 					measureCreator.setId(measureId);
 					measureCreator.setName(resultSet.getString("measure_name"));
 					measureCreator.setProgramName(programMap.get(resultSet.getString("QUALITY_PROGRAM_ID")));
-					measureCreator.setStatus(statusMap.get(resultSet.getString("status_id")));
+					measureCreator.setStatus(statusMap.get(resultSet.getString("MEASURE_STATUS_ID")));
 					measureCreator.setReviewComments(resultSet.getString("review_comments"));
 					measureCreator.setReviewedBy(userMap.get(resultSet.getString("REVIEWER_ID")));
 					measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
@@ -657,7 +690,7 @@ public class QMSServiceImpl2 implements QMSService {
 	
 
 	@Override
-	public RestResult updateMeasureWorkListStatus(int id, String status) {
+	public RestResult updateMeasureWorkListStatus(int id, String status, Param param) {
 		System.out.println("SERVICE Update Measure WorkList Status for id : " + id + " with status : " + status);		
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
 		
@@ -670,14 +703,12 @@ public class QMSServiceImpl2 implements QMSService {
 			int currentVersion = lastCreatedCreator.getMeasureEditId()+1;
 			lastCreatedCreator.setMeasureEditId(currentVersion);
 			lastCreatedCreator.setStatus(status);
+			lastCreatedCreator.setReviewComments(param.getValue1());
 			System.out.println(" Creating the MeasureCreator with version --> " + currentVersion + " for id --> " + lastCreatedCreator.getId());
 			return insertMeasureCreator(lastCreatedCreator);			
 		} else {
 			System.out.println(" No need to update the status as current status and selected status are same for id --> " + id);
-			RestResult restResult = new RestResult();
-			restResult.setStatus(RestResult.FAIL_STATUS);
-			restResult.setMessage("Current status and selected status is same. ");			
-			return restResult;
+			return RestResult.getFailRestResult("Current status and selected status is same. ");
 		}
 	}
 	
@@ -688,12 +719,19 @@ public class QMSServiceImpl2 implements QMSService {
 		Connection connection = null;
 		try {						
 			connection = qmsConnection.getOracleConnection();
-			statement = connection.createStatement();			
-			//resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"' and CATEGORY_NAME='"+categoryName+"'");
-			resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"'");
-			
-			if (resultSet.next()) {
-				qualityProgramId = resultSet.getString("QUALITY_PROGRAM_ID");				
+			statement = connection.createStatement();	
+			if(categoryName != null) {
+				resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"' and CATEGORY_NAME='"+categoryName+"'");
+				if (resultSet.next()) {
+					qualityProgramId = resultSet.getString("QUALITY_PROGRAM_ID");				
+				}
+			}
+			if(qualityProgramId == null) {
+				if(resultSet != null) resultSet.close();
+				resultSet = statement.executeQuery("select QUALITY_PROGRAM_ID from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programId+"'");
+				if (resultSet.next()) {
+					qualityProgramId = resultSet.getString("QUALITY_PROGRAM_ID");				
+				}				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -703,6 +741,97 @@ public class QMSServiceImpl2 implements QMSService {
 		}			
 		System.out.println(" getQualityProgramId " + programId + " categoryName " + categoryName + " qualityProgramId " + qualityProgramId);
 		return qualityProgramId;
+	}
+
+
+	@Override
+	public Set<String> getCategoryByProgramId(String programId) {
+		Set<String> categorySet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select CATEGORY_NAME from QMS_QUALITY_PROGRAM where PROGRAM_ID="+programId);
+			
+			while (resultSet.next()) {
+				categorySet.add(resultSet.getString("CATEGORY_NAME"));				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return categorySet;
+	}
+	
+    @Override
+	public Set<RefMrss> getRefMrssList() {
+		
+		Set<RefMrss> dataSet1 = new HashSet<>();
+		
+		RefMrss refMrss = null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from QMS_REF_MRSS");			
+			
+			while (resultSet.next()) {
+				 refMrss = new RefMrss();
+				 refMrss.setMrssId(resultSet.getString("MRSS_ID"));
+					refMrss.setMeasureName(resultSet.getString("MEASURE_NAME"));
+					refMrss.setMeasureCategary(resultSet.getString("MEASURE_CATEGORY"));
+					refMrss.setMedicaid(resultSet.getString("MEDICAID"));
+					refMrss.setCommercial(resultSet.getString("COMMERCIAL"));
+					refMrss.setMedicare(resultSet.getString("MEDICARE"));
+					refMrss.setSample_size(resultSet.getString("SAMPLE_SIZE"));
+					refMrss.setRand(resultSet.getString("RAND"));	
+					dataSet1.add(refMrss);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet1;		
+	}	
+	
+
+	
+	@Override
+	public Set<RefMrssSample> getRefMrssSaimpleList() {
+		
+		Set<RefMrssSample> dataSet2 = new HashSet<>();
+	
+		RefMrssSample refMrssSample = null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from QMS_REF_MRSS_SAMPLE");			
+
+			while (resultSet.next()) {
+				refMrssSample = new RefMrssSample();
+				refMrssSample.setMrssSampleId(resultSet.getString("MRSS_SAMPLE_ID"));
+				refMrssSample.setRate(resultSet.getString("RATE"));
+				refMrssSample.setSampleSize(resultSet.getString("SAMPLE_SIZE"));
+				dataSet2.add(refMrssSample);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet2;		
 	}	
 
 }

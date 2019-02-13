@@ -1,6 +1,21 @@
 package com.qms.rest.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class CloseGap {
+	private int lifeCycleId;
 	private String measureTitle;
 	private String qualityMeasureId;
 	private String intervention;
@@ -8,54 +23,9 @@ public class CloseGap {
 	private String payerComments;
 	private String providerComments;
 	private String status;
-	private String dateTime;
-	
-	public String getPayerComments() {
-		return payerComments;
-	}
-	public void setPayerComments(String payerComments) {
-		this.payerComments = payerComments;
-	}
-	public String getProviderComments() {
-		return providerComments;
-	}
-	public void setProviderComments(String providerComments) {
-		this.providerComments = providerComments;
-	}
-	public String getMeasureTitle() {
-		return measureTitle;
-	}
-	public void setMeasureTitle(String measureTitle) {
-		this.measureTitle = measureTitle;
-	}
-	public String getQualityMeasureId() {
-		return qualityMeasureId;
-	}
-	public void setQualityMeasureId(String qualityMeasureId) {
-		this.qualityMeasureId = qualityMeasureId;
-	}
-	public String getIntervention() {
-		return intervention;
-	}
-	public void setIntervention(String intervention) {
-		this.intervention = intervention;
-	}
-	public String getPriority() {
-		return priority;
-	}
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getDateTime() {
-		return dateTime;
-	}
-	public void setDateTime(String dateTime) {
-		this.dateTime = dateTime;
-	}		
+	private String gapDate;
+	private String targetDate;
+	private String closeGap;
+	private String actionCareGap;
+	private List<String> uploadList = new ArrayList<>();
 }

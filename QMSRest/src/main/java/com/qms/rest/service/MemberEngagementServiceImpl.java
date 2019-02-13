@@ -10,13 +10,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +41,11 @@ import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.PersonaClusterFeatures;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.RoleLandingPage;
+import com.qms.rest.model.User;
 import com.qms.rest.util.QMSAnalyticsProperty;
 import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSConstants;
 
 @Service("memberEngagementService")
 public class MemberEngagementServiceImpl implements MemberEngagementService {
@@ -48,6 +55,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 	
 	String windowsCopyPath;
 	
+	@Autowired 
+	private HttpSession httpSession;	
+	
 	@Autowired
 	private QMSConnection qmsConnection;	
 	
@@ -56,7 +66,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 	@PostConstruct
     public void init() {
 		windowsCopyPath = qmsAnalyticsProperty.getWindowsCopyPath();
-		getLHEModelOutPut();
+		//getLHEModelOutPut();
     }	
 
 	@Override
@@ -266,25 +276,34 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 //		String sqlStatementInsert = "insert into ME_CLUS_PERSONA (CLUSTER_ID,BARRIERS,DEMOGRAPHICS,GOALS,"
 //				+ "HEALTH_STATUS,MOTIVATIONS,PERSONA_NAME,SOCIAL_MEDIA) "
 //				+ "values (?,?,?,?,?,?,?,?)";
-		String sqlStatementInsert = "UPSERT into QMS.Persona_Define (CLUSTER_ID,PERSONA_NAME,PERSONA_CREATE_DATE,"
+		String sqlStatementInsert = "insert into QMS_CP_Define (CLUSTER_ID,PERSONA_NAME,PERSONA_CREATE_DATE,"
 				+ "DEMO_AGEGROUP,DEMO_EDUCATION,DEMO_INCOME,DEMO_OCCUPATION,DEMO_ADDICTIONS,"
 				+ "DEMO_FAMILYSIZE,MOTIVATIONS,GOALS,BARRIERS,PERSON_SOCIAL_MEDIA,HEALTH_STATUS,"
-				+ "IMAGE_URL,BIO) "
-				+ "values (?,?,CURRENT_DATE(),?,?,?,?,?,?,?,?,?,?,?,?,?)";		
-		
+				+ "IMAGE_URL,BIO,"
+				+ "curr_flag,rec_create_date,rec_update_date,latest_flag,active_flag,ingestion_date,source_name,user_name"
+				+ ") "
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				//+ "values (?,?,CURRENT_DATE(),?,?,?,?,?,?,?,?,?,?,?,?,?)";		
+				//+ "curr_flag,rec_create_date,rec_update_date,latest_flag,active_flag,ingestion_date,source_name,"
 		PreparedStatement statement = null;
 		Connection connection = null;
 		Statement statementObj = null;
+		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		try {	
-			connection = qmsConnection.getPhoenixConnection();
+			connection = qmsConnection.getOracleConnection();
 			
 			statementObj = connection.createStatement();				
-			statementObj.executeUpdate("delete from QMS.Persona_Define where CLUSTER_ID="+clusteringPersona.getClusterId());
+			statementObj.executeUpdate("delete from QMS_CP_Define where CLUSTER_ID="+clusteringPersona.getClusterId());
 			
 			statement = connection.prepareStatement(sqlStatementInsert);			
 			int i=0;							
 			statement.setInt(++i, clusteringPersona.getClusterId());			
-			statement.setString(++i, clusteringPersona.getPersonaName());			
+			statement.setString(++i, clusteringPersona.getPersonaName());	
+			
+			Date date = new Date();				
+			Timestamp timestamp = new Timestamp(date.getTime());	
+			statement.setTimestamp(++i, timestamp);			
+			
 			statement.setString(++i, clusteringPersona.getDemoAgeGroup());
 			statement.setString(++i, clusteringPersona.getDemoEducation());
 			statement.setString(++i, clusteringPersona.getDemoIncome());
@@ -299,6 +318,20 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			statement.setString(++i, clusteringPersona.getImageUrl());
 			statement.setString(++i, clusteringPersona.getBio());
 			
+			statement.setString(++i, "Y");
+			statement.setTimestamp(++i, timestamp);
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "Y");
+			statement.setString(++i, "A");
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "UI");				
+			
+			if(userData != null && userData.getName() != null)
+				statement.setString(++i, userData.getName());
+			else 
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);			
+			
+			
 //			statement.setInt(++i, clusteringPersona.getClusterId());
 //			statement.setString(++i, clusteringPersona.getBarriers());
 //			statement.setString(++i, clusteringPersona.getDemographics());
@@ -308,7 +341,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 //			statement.setString(++i, clusteringPersona.getPersonaName());
 //			statement.setString(++i, clusteringPersona.getSocialMedia());
 			statement.executeUpdate();
-			connection.commit();
+			//connection.commit();
 			return RestResult.getSucessRestResult(" Cluster Persona update Success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,9 +367,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		Statement phoenixStatement = null;
 		Connection phoenixConnection = null;		
 		try {						
-			phoenixConnection = qmsConnection.getPhoenixConnection();
+			phoenixConnection = qmsConnection.getOracleConnection();
 			phoenixStatement = phoenixConnection.createStatement();
-			resultSet = phoenixStatement.executeQuery("select * from QMS.Persona_Define where CLUSTER_ID="+clusterId);
+			resultSet = phoenixStatement.executeQuery("select * from QMS_CP_Define where CLUSTER_ID="+clusterId);
 			String personaName = null;
 			while (resultSet.next()) {
 				clusterPersona.setBarriers(resultSet.getString("BARRIERS"));
@@ -359,7 +392,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			}
 			
 			resultSet.close();
-			resultSet = phoenixStatement.executeQuery("select * from QMS.Persona_Clustering_Features where cluster_id='"+clusterId+"'");
+			resultSet = phoenixStatement.executeQuery("select * from QMS_CP_Features where cluster_id='"+clusterId+"'");
 			while (resultSet.next()) {
 				personaClusterFeatures.setPersonaName(personaName);
 				personaClusterFeatures.setClusterId(resultSet.getString("cluster_id"));
@@ -750,7 +783,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				personaClusterFeatures.setFeatureType(resultSet.getString("feature_type"));
 				personaClusterFeatures.setFeatureSignificanceValue(resultSet.getString("feature_significance_value"));
 				personaClusterFeatures.setMaxFrequency(resultSet.getString("max_frequency"));
-				personaClusterFeatures.setModelId(resultSet.getString("modelid"));				
+				//personaClusterFeatures.setModelId(resultSet.getString("modelid"));				
 				personaClusterFeaturesList.add(personaClusterFeatures);
 			}
 			
@@ -770,9 +803,11 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
+			//connection = qmsConnection.getPhoenixConnection();
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select distinct CLUSTER_ID from ME_CLUS_PERSONA");			
+			//resultSet = statement.executeQuery("select distinct CLUSTER_ID from QMS.qms_cp_file_output");			
+			resultSet = statement.executeQuery("select distinct CLUSTER_ID from qms_cp_file_output");
 			while (resultSet.next()) {
 				namesSet.add(resultSet.getString("CLUSTER_ID"));
 			}
@@ -871,9 +906,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		try {						
 			connection = qmsConnection.getPhoenixConnection();
 			statement = connection.createStatement();
-			String qryStr = "select PD.*, PFO.* from QMS.Persona_Define PD "+ 
-					"INNER JOIN QMS.Persona_File_Output PFO ON PFO.CLUSTER_ID = PD.CLUSTER_ID "+  
-					"INNER JOIN QMS.Dim_Member DM ON DM.MEMBER_ID = PFO.MEMBER_ID "+  
+			String qryStr = "select PD.*, PFO.* from QMS_CP_Define PD "+ 
+					"INNER JOIN qms_cp_file_output PFO ON PFO.CLUSTER_ID = PD.CLUSTER_ID "+  
+					"INNER JOIN Dim_Member DM ON DM.MEMBER_ID = PFO.MEMBER_ID "+  
 					"where PD.CLUSTER_ID="+clusterId;
 			resultSet = statement.executeQuery(qryStr);
 			PersonaMember output = null;
@@ -889,7 +924,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 					name = name+" "+resultSet.getString("last_name");
 				output.setMemberName(name);
 				
-				//Persona_File_Output
+				//qms_cp_file_output
 				output.setMemberID(resultSet.getString("MEMBER_ID"));
 				output.setAge(resultSet.getString("AGE"));	
 				output.setGender(resultSet.getString("GENDER"));	
@@ -1100,6 +1135,52 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		}			
 		
 		return modelMetric;
+	}
+
+	@Override
+	public Set<RoleLandingPage> getRoleLandingPage() {
+		Set<RoleLandingPage> setOutput = new HashSet<>();
+		User userData = qmsConnection.getLoggedInUser();
+		if(userData == null) {
+			System.out.println(" Role id is null.. ");
+			return setOutput;
+		}
+		List<String> rolesList = Arrays.asList(new String[]{"9", "10", "11"});
+		String roleId = userData.getRoleId();
+		if(!rolesList.contains(roleId) && !userData.getLoginId().equalsIgnoreCase("demo_user")) {
+			System.out.println(" Unauthorized role.. " +roleId);
+			return setOutput;
+		}
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {			
+			//connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getHiveConnectionBySchemaName(QMSConnection.HIVE_HEALTHIN_SCHEMA);
+			statement = connection.createStatement();
+			if(userData.getLoginId().equalsIgnoreCase("demo_user"))
+				resultSet = statement.executeQuery("select * from role_landing_page");
+			else
+				resultSet = statement.executeQuery("select * from role_landing_page where role_id="+roleId);
+			RoleLandingPage output = null;
+			while (resultSet.next()) {
+		    	output = new RoleLandingPage();			    
+		    	output.setDescription(resultSet.getString("description"));
+		    	output.setTitle(resultSet.getString("titles"));
+		    	output.setType(resultSet.getString("type"));
+		    	output.setValue(resultSet.getString("value"));
+		    	output.setRoleId(resultSet.getString("role_id"));
+			    setOutput.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		System.out.println(roleId + " RoleLandingPage records size --> " + setOutput.size());
+		
+		return setOutput;
 	}	
 	
 }

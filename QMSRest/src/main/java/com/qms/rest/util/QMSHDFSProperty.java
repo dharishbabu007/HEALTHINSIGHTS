@@ -24,52 +24,24 @@ public class QMSHDFSProperty {
 	private String readFile;
 	private String writePath;
 	private String hdfsUser;
+	
+	//models
 	private String rapiNoShow;	
 	private String rapiLHE;
 	private String rapiLHC;
+	private String rapiPersona;
+	private String rapiNC;
 	
-//	public String getrApiURL() {
-//		return rApiURL;
-//	}
-//	public void setrApiURL(String rApiURL) {
-//		this.rApiURL = rApiURL;
-//	}
-//	public String getCoreSite() {
-//		return coreSite;
-//	}
-//	public void setCoreSite(String coreSite) {
-//		this.coreSite = coreSite;
-//	}
-//	public String getHdfsSite() {
-//		return hdfsSite;
-//	}
-//	public void setHdfsSite(String hdfsSite) {
-//		this.hdfsSite = hdfsSite;
-//	}
-//	public String getHdfsURL() {
-//		return hdfsURL;
-//	}
-//	public void setHdfsURL(String hdfsURL) {
-//		this.hdfsURL = hdfsURL;
-//	}
-//	public String getWritePath() {
-//		return writePath;
-//	}
-//	public void setWritePath(String writePath) {
-//		this.writePath = writePath;
-//	}
-//	public String getReadFile() {
-//		return readFile;
-//	}
-//	public void setReadFile(String readFile) {
-//		this.readFile = readFile;
-//	}
-//	public String getHdfsUser() {
-//		return hdfsUser;
-//	}
-//	public void setHdfsUser(String hdfsUser) {
-//		this.hdfsUser = hdfsUser;
-//	}	
+//	//models upload path	
+//	private String uploadPathNoshow;	
+//	private String uploadPathLHE;
+//	private String uploadPathLHC;		
+//	private String uploadPathPersona;
+//	private String uploadPathNC;	
 	
-	
+//qmsHDFS.uploadPathNoshow=/home/hdp-hadoop/models/noshow/input/
+//qmsHDFS.uploadPathLHE=/home/hdp-hadoop/models/me/lhe/input/
+//qmsHDFS.uploadPathLHC=/home/hdp-hadoop/models/me/lhc/input/
+//qmsHDFS.uploadPathPersona=/home/hdp-hadoop/models/me/persona/input/
+//qmsHDFS.uploadPathNC=/home/hdp-hadoop/models/nc/input/	
 }
