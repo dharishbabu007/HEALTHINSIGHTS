@@ -1,0 +1,157 @@
+<div class="col-lg-12" style="padding: 0px">
+ 
+        <h2 [ngStyle]="{ 'background-color': 'rgba(255, 156, 7, 0.59)',
+        'height': '59px','color':'white','padding': '10px'}"><i class="fa fa-list"></i>Likelihood Statictics</h2>
+</div>
+<div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
+    <div class="card">
+
+        <div class="row p-3 align-items-center" *ngIf="type==1">
+            <div class="col  col-lg-12">
+                    <span class="col-lg-6">
+                            <h4>Model Summary</h4>
+                          </span>
+               
+           
+
+                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
+
+                 <br><br>
+                <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns" >
+                             
+                                <span >{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+           </div>
+    
+        <span class="col-lg-6" style="margin-top: 10px">
+        <h4 >Model Performance</h4>
+        </span>
+        <br>
+        <div class="row col-lg-12">
+
+            <div class="col-lg-6 ">
+              <img src="assets/images/FourFoldPlot.jpeg"></div>
+            <div class="col-lg-6">
+               <img src="assets/images/ROCplot.jpeg">
+            </div>
+        </div>
+    </div>
+    <p-tabView *ngIf="type==2">
+              
+        <p-tabPanel header="Likelihood to enroll"  leftIcon="pi pi-calendar" >
+            <div class="row p-3 align-items-center" *ngIf="type==2">
+                    <div class="col  col-lg-12">
+                            <span class="col-lg-6">
+                                    <h4>Model Summary </h4>
+                                </span>
+                
+
+                        <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
+                        <br><br>
+
+            
+                        <p-table #dt3 class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="LHEModelSummary" [paginator]="true" [rows]="5" exportFilename="LHEModelSummary">
+                            <ng-template pTemplate="header">
+                                <tr class="header-class">
+                                    <th *ngFor="let col of LHEModelSummary" [pSortableColumn]="col.field" >
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let col of LHEModelSummary" [ngSwitch]="col.field">
+                                    <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td *ngFor="let col of columns" >
+                                    
+                                        <span >{{rowData[col.field]}}</span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                </div>
+                <span class="col-lg-6" style="margin-top: 10px">
+                <h4 *ngIf="type==2">Model Performance</h4>
+                </span>
+                <br>
+                <div class="row col-lg-12" *ngIf="type==2">
+
+                    <div class="col-lg-6 ">
+                    <img src="assets/images/FourFoldPlot.jpeg"></div>
+                    <div class="col-lg-6">
+                    <img src="assets/images/ROCplot.jpeg">
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Reason to not enroll" leftIcon="pi pi-calendar">
+                <div class="row p-3 align-items-center" *ngIf="type==2">
+                        <div class="col col-lg-12 ">
+                        <span class="col-lg-6">
+                                <h4>Cluster Analysis</h4>
+                        </span>        
+                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right"></button>
+                            <br><br>
+                            <p-table #dt3  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="membergaps2" [columns]="cols1" [loading]="loading" exportFilename="Cluster_Analysis">
+                                
+                                        <ng-template pTemplate="header">
+                                                <tr class="header-class">
+                                                    <th  *ngFor="let col of cols1[0] ">
+                                                            {{col}}
+                                                        </th>
+                                                    </tr>
+                                                <tr *ngFor="let col of cols1;let i=index">
+                                                    <td  *ngFor="let col of cols1[i+1] ">
+                                                        {{col}}
+                                                    </td>
+                                                </tr>
+                                        </ng-template>
+                                </p-table>
+                        </div>
+                </div>
+                <div class="row col-lg-12">
+                    <br>
+                    <div class="row col-lg-12">
+                        <div class="col-lg-6">
+                            <h4>Silhouette width</h4>
+                        </div>
+                        <div class="col-lg-6">
+                            <h4>Elbow Method</h4>
+                        </div>
+                    </div>
+                    <br><br>
+                        <div class="col-lg-6 ">
+                            <img src="assets/images/Kmean_silhouette_validation.png" height="500px" width="500px">
+                        </div>
+                        <div class="col-lg-6 ">
+                            <img src="assets/images/Kmean_elbow_validation.png" height="500px" width="500px">
+                        </div>
+                </div>
+
+        </p-tabPanel>    
+    </p-tabView>
+    </div>
+</div>

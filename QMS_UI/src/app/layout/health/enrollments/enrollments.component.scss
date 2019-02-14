@@ -80,3 +80,21 @@ border-left: 1px solid white;
         width: 35px;
         float: left;
     }
+    p-paginator{
+    /deep/{
+        .ui-paginator .ui-paginator-page{
+        height: 1.9em;
+    }
+}
+}
+/deep/{
+body .ui-paginator .ui-paginator-pages .ui-paginator-page{
+    padding: 0;
+}
+}
+
+/deep/{
+    
+body .ui-chkbox .ui-chkbox-box {
+    border: 1px solid #AFAFAF;}
+}

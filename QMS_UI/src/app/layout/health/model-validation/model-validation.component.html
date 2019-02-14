@@ -1,7 +1,7 @@
 <div class="col-lg-12" style="padding: 0px">
  
         <h2 [ngStyle]="{ 'background-color': 'rgba(255, 156, 7, 0.59)',
-        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-home"></i> Model Validation</h2>
+        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Model Validation</h2>
 </div>
 <div class="row p-3 align-items-center">
     <div class="row col-lg-12"  style=" margin-left: 13px;">
@@ -21,25 +21,25 @@
                         <td *ngIf="data == 'Likelihood to churn'">View Performance <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/LikelihoodtoChurnPerformanceDashboard/LikelihoodtoChurnPerformanceDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-bar-chart" pTooltip="Performance"></i></a></td>
                         <td *ngIf="data == 'Likelihood to enroll'">View Performance <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/LikelihoodtoEnrollPerformanceDashboard/LikelihoodtoEnrollPerformanceDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-bar-chart" pTooltip="Performance"></i></a></td>
                         <td *ngIf="data == 'Preferred Channel of Communication'">View Performance <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/PredictedChannelPerformanceDashboard/PredictedChannelPerformanceDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-bar-chart" pTooltip="Performance"></i></a></td>
-                         <td  *ngIf="data == 'Clustering'">View Performance <i class="fa fa-bar-chart" pTooltip="Performance"></i></td> 
-                         <td  *ngIf="data == 'Likelihood to recommend'">View Performance <i class="fa fa-bar-chart" pTooltip="Performance"></i></td>
+                         <td  *ngIf="data == 'Clustering'"></td> 
+                         <td  *ngIf="data == 'Likelihood to recommend'">View Performance <a [routerLink]=""><i class="fa fa-bar-chart" pTooltip="Performance"></i></a></td>
                         <td *ngIf="data == 'Preferred Rewards'">View Performance <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/PredictedRewardPerformanceDashboard/PredictedRewardPerformanceDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-bar-chart" pTooltip="Performance"></i></a></td>
                         
 
                         <td *ngIf="data == 'Likelihood to churn'">View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ChurnModeling/Churn?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></td>
                         <td *ngIf="data == 'Likelihood to enroll'">View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a> </td>
-                        <td *ngIf="data == 'Preferred Channel of Communication'">View Dashboard  <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></td>
+                        <td *ngIf="data == 'Preferred Channel of Communication'">View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ChannelAnalysisDashboard/ChannelDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"> <i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a> </td>
                         <td *ngIf="data == 'Clustering'">View Dashboard  <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering/Clustering?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></td>
-                        <td *ngIf="data == 'Likelihood to recommend'">View Dashboard <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></td>
-                        <td *ngIf="data == 'Preferred Rewards'">View Dashboard <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></td>
+                        <td *ngIf="data == 'Likelihood to recommend'">View Dashboard <a [routerLink]=""><i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a> </td>
+                        <td *ngIf="data == 'Preferred Rewards'">View Dashboard <a [routerLink]=""><i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a> </td>
 
 
-                        <td *ngIf="data == 'Likelihood to churn'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
-                        <td *ngIf="data == 'Likelihood to enroll'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
-                        <td *ngIf="data == 'Preferred Channel of Communication'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
-                        <td *ngIf="data == 'Clustering'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
-                        <td *ngIf="data == 'Likelihood to recommend'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
-                        <td *ngIf="data == 'Preferred Rewards'">View Statistics <i class="fa fa-bar-chart" pTooltip="Statistics"></i></td>
+                        <td *ngIf="data == 'Likelihood to churn'">View Statistics   <a [routerLink]="['/health/likelihood',1]"><i class="fa fa-bar-chart" pTooltip="Statistics"></i></a></td>
+                        <td *ngIf="data == 'Likelihood to enroll'">View Statistics   <a [routerLink]="['/health/likelihood',2]"><i class="fa fa-bar-chart" pTooltip="Statistics"></i></a></td>
+                        <td *ngIf="data == 'Preferred Channel of Communication'">View Statistics  <a [routerLink]=""><i class="fa fa-bar-chart" pTooltip="Statistics"></i></a></td>
+                        <td *ngIf="data == 'Clustering'">View Statistics <a [routerLink]="['/health/cluster-statistics']"><i class="fa fa-bar-chart" pTooltip="Statistics"></i></a></td>
+                        <td *ngIf="data == 'Likelihood to recommend'">View Statistics <a [routerLink]=""><i class="fa fa-bar-chart" pTooltip="Statistics"></i> </a> </td>
+                        <td *ngIf="data == 'Preferred Rewards'">View Statistics <a [routerLink]=""><i class="fa fa-bar-chart" pTooltip="Statistics"></i></a> </td>
                     </tr>
                 </tbody>
             </table>

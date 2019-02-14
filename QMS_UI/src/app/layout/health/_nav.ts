@@ -69,7 +69,7 @@ export const navItems2 = [
     icon: 'fa fa-users',
   },
   {
-    name: 'Cliams',
+    name: 'Claims',
     url: '/health/home',
     icon: 'fa fa-user',
   },
@@ -89,3 +89,43 @@ export const navItems2 = [
     icon: 'fa fa-sliders',
   }
 ];
+
+export const demoRole = [
+  {
+    name: 'Care Coordinator',
+    url: '/health/care_home',
+    icon: 'fa fa-home',
+  },
+  {
+    name: 'Business Analyst',
+    url: '/health/analyst_home',
+    icon: 'fa fa-home',
+  },
+  {
+    name: 'Quality Director',
+    url: '/health/director_home',
+    icon: 'fa fa-home',
+  },
+  {
+    name: 'Clustering Dashboard',
+    url: 'http://192.168.184.70/t/CurisSite/views/Clustering/Clustering?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+    icon: 'fa fa-sliders',
+  },
+  { 
+    name: 'Personas',
+    url: '/health/create-persona1',
+    icon: 'fa fa-user',
+  },
+  {
+    name: 'Enrollments',
+    url: '/health/enrollments',
+    icon: 'fa fa-list',
+  },
+  {
+    name: 'Model Validation',
+    url: '/health/model-validation',
+    icon: 'fa fa-users',
+  },
+
+];
+

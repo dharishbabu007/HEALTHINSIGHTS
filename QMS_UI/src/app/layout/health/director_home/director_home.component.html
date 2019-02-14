@@ -1,0 +1,119 @@
+
+  <!-- <app-page-header [heading]="'Home'" [icon]="'fa fa-home'"></app-page-header> -->
+  <div class="col-lg-12" style="padding: 0px">
+ 
+      <h2 [ngStyle]="{ 'background-color': '#F26363',
+      'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-home"></i> Quality Director</h2>
+  </div>
+  
+  
+  
+  <div class="row p-3 align-items-center">
+      <div class="row col-lg-12"  style=" margin-left: 13px;">
+          <div class="col-lg-12" style="margin-bottom: 12px">
+            <h2>Objectives</h2>
+            <hr class="lineClass">
+          </div>
+            <div class="row col-lg-12" style="display: -webkit-box">
+              <div class="col-lg-5 card round-borders" style="padding: 10px;margin-right: 25px;">
+                <div class="col-lg-12">
+                  <h4>Enrollments <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
+                  <hr class="lineClass">
+                </div>
+                <div class="row col-lg-12" style="margin-top: 10px;">
+                  <div class="col-lg-5"><h5>Enrolled {{enrollmentPercent}}%</h5> </div>
+                  <div class="col-lg-6"><h5>Year on Year</h5></div>
+                </div>
+                <div class="row col-lg-12  no-padding-class">
+                  <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="enrollmentChart"  height="20vh"></p-chart></div>
+                  <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="enrollmentChart1"    width="14vw" height="13vh" ></p-chart></div>
+                  <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                    <span *ngIf="enrollmentyoy > 0">{{enrollmentyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
+                    <span *ngIf="enrollmentyoy < 0">{{enrollmentyoy}}% <img src="assets/images/Icon Arrow down.jpg"></span>
+                  </div>
+                </div>
+                <div class="col-lg-12"><button type="button" class="btn btn-primary"  [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/Enrollment_Engagement/EnrollmentDashboard?:embed=y&:ShowAppBanner=false&:ShowShareOptions=true&:Display_count=no&:ShowVizHome=no']" style="float: right">View Dashboard</button></div>
+              </div>
+              <div class="col-lg-5 card round-borders" style="padding: 10px">
+                  <div class="col-lg-12">
+                    <h4>Claims <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
+                    <hr class="lineClass">
+                  </div>
+                  <div class="row col-lg-12" style="margin-top: 10px;">
+                      <div class="col-lg-5"><h5>Claims {{claimsPercent}}%</h5> </div>
+                      <div class="col-lg-6"><h5>Year on Year</h5></div>
+                  </div>
+
+                  <div class="row col-lg-12  no-padding-class">
+                    <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="cliamsChart"  height="20vh"></p-chart></div>
+                    <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1"    width="14vw" height="13vh"></p-chart></div>
+                    <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                        <span *ngIf="cliamsyoy > 0">{{cliamsyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
+                        <span *ngIf="cliamsyoy < 0">{{cliamsyoy}}% <img src="assets/images/Icon Arrow down.jpg"></span>
+                    </div>
+                  </div>
+                  <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+              </div> 
+            </div>
+            <div class="row col-lg-12"  style="display: -webkit-box">
+                <div class="col-lg-5 card round-borders" style="padding: 10px;margin-right: 25px;">
+                  <div class="col-lg-12">
+                    <h4>Member Health <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
+                    <hr class="lineClass">
+                  </div>
+                  <div class="row col-lg-12" style="margin-top: 10px;">
+                      <div class="col-lg-6"><h5>Improvement {{memberHealthPercent}}%</h5> </div>
+                      <div class="col-lg-6"><h5>Year on Year</h5></div>
+                    </div>
+                  <div class="row col-lg-12  no-padding-class">
+                    <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="memberHealthChart"  height="20vh"></p-chart></div>
+                    <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="memberHealthChart1"    width="14vw" height="13vh"></p-chart></div>
+                    <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                      <span *ngIf="memberHealthyoy > 0">{{memberHealthyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
+                      <span *ngIf="memberHealthyoy < 0">{{memberHealthyoy}}% <img src="assets/images/Icon Arrow down.jpg"> </span>
+                    </div>
+                  </div>
+                  <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+                </div>
+                <div class="col-lg-5 card round-borders" style="padding: 10px">
+                  <div class="col-lg-12">
+                    <h4>Brand Loyalty <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
+                    <hr class="lineClass">
+                  </div>
+                  <div class="row col-lg-12" style="margin-top: 10px;">
+                      <div class="col-lg-5"><h5>Positive {{brandLoyaltyPercent}}%</h5> </div>
+                      <div class="col-lg-6"><h5>Year on Year</h5></div>
+                    </div>
+                  <div class="row col-lg-12  no-padding-class">
+                      <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="brandChart"  height="20vh"></p-chart></div>
+                      <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="brandChart1"    width="14vw" height="13vh"></p-chart></div>
+                      <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                          <span *ngIf="brandyoy > 0">{{brandyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
+                        <span *ngIf="brandyoy < 0">{{brandyoy}}% <img src="assets/images/Icon Arrow down.jpg"></span>
+                      </div>
+                  </div>
+                  <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+                </div>
+            </div>
+            <div class="row col-lg-12"  style="display: -webkit-box">
+              <div class="col-lg-5 card round-borders" style="padding: 10px">
+                <div class="col-lg-12">
+                  <h4>Risk <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
+                  <hr class="lineClass">
+                </div>
+                <div class="row col-lg-12" style="margin-top: 10px;">
+                    <div class="col-lg-4"><h5>Risk %</h5> </div>
+                    <div class="col-lg-6"><h5>Year on Year</h5></div>
+                  </div>
+                <div class="row col-lg-12  no-padding-class">
+                    <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="riskChart"  height="20vh"></p-chart></div>
+                    <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1"    width="14vw" height="13vh"></p-chart></div>
+                    <div class="col-lg-2"></div>
+                </div>
+                <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+              </div>
+            </div>
+      </div>
+  </div>
+
+

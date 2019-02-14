@@ -38,6 +38,11 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RewardsComponent } from './rewards/rewards.component';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import { FrameUrlComponent } from './frame-url/frame-url.component';
+import { ClusterStatisticsComponent } from './cluster-statistics/cluster-statistics.component';
+import {LikelihoodStatisticsComponent} from './likelihood-Statistics/likelihood-statistics.component';
+import { CoordinatorHomeComponent } from './coordinator_home/care_home.component';
+import { AnalystHomeComponent } from './analyst_home/analyst_home.component';
+import { DirectorHomeComponent } from './director_home/director_home.component';
 
 
 @NgModule({
@@ -75,7 +80,12 @@ import { FrameUrlComponent } from './frame-url/frame-url.component';
         ViewPersonaComponent,
         GoalsComponent,
         RewardsComponent,
-        FrameUrlComponent
+        FrameUrlComponent,
+        ClusterStatisticsComponent,
+        LikelihoodStatisticsComponent,
+        CoordinatorHomeComponent,
+        AnalystHomeComponent,
+        DirectorHomeComponent
   ]
 })
 export class HealthModule { }
