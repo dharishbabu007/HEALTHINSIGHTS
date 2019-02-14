@@ -8,21 +8,20 @@
             <div class="col-lg-12"  style="padding-bottom: 10px;"><h3>Personas</h3><hr class="lineClass"></div>
             <!-- <div class="col-lg-3" style="padding: 0px"> -->
                    
-                <!-- <hr class="lineclass"> -->
-                <div *ngFor="let condRow of clusterLength; let i=index;" class="panel panel-default card"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
+                <!-- <hr class="lineclass"> --> 
+                <div class="panel panel-default card"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
                         <div class="row">
                             <div class="col-lg-4">
-                                <i class="fa fa-5x fa-user-circle-o "></i>
+                                    <img src="/assets/images/lazyPerson.png" width="80px" height="70px" class="user-avatar" />
+                                            <!-- <div class="h3">Healthcare Insight</div> -->
+                                <!-- <img src="/assets/images/lazyPerson.png" width="20px" height="20px" > -->
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-8">
                                 <span class="col-lg-12">
-                                    <label class="font-weight-bold">persona name</label>
+                                    <label class="font-weight-bold">Lazy Doers</label>
                                 </span>
                                 <span class="col-lg-12">
-                                    <label class="font-weight-bold">Gender</label>
-                                </span>
-                                <span class="col-lg-12">
-                                        <label class="font-weight-bold">yrs</label>
+                                        <label class="font-weight-bold">30-35</label>
                                 </span>
                             </div>             
                         </div>
@@ -31,8 +30,35 @@
                             <span class="col-lg-12">
                                 <label class="font-weight-bold">Cluster Associated</label>
                             </span>
+                            <span class="col-lg-12" style="color: #0275D8">
+                                <u><label class="font-weight-bold" (click)="smallCardClick(1)">cluster 1</label></u> 
+                            </span>
                             <span class="col-lg-12">
-                                 <label class="font-weight-bold">cluster 1</label>
+                                <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
+                            </span>
+                        </div>
+                </div>
+                <div *ngFor="let condRow of clusterLength;let i=index;"class="panel panel-default card"  style="background-color: #F7F8FA;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <i class="fa fa-5x fa-user-circle-o "></i>
+                            </div>
+                            <div class="col-lg-8">
+                                <span class="col-lg-12">
+                                    <label class="font-weight-bold"></label>
+                                </span>
+                                <span class="col-lg-12">
+                                        <label class="font-weight-bold">{{personaFormData[i]?.demoAgeGroup}}</label>
+                                </span>
+                            </div>             
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <span class="col-lg-12">
+                                <label class="font-weight-bold">Cluster Associated</label>
+                            </span>
+                            <span class="col-lg-12" style="color: #0275D8">
+                                <u><label class="font-weight-bold" (click)="smallCardClick(personaFormData[i]?.clusterId)">cluster {{personaFormData[i]?.clusterId}}</label></u> 
                             </span>
                             <span class="col-lg-12">
                                 <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
@@ -89,7 +115,9 @@
                         <span class="col-lg-10">
                            <b>Select a cluster &nbsp;</b> 
                             <p-dropdown placeholder="Cluster" [autoDisplayFirst]="false"  styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)"></p-dropdown>
+                           
                         </span>
+                        <span class="col-lg-2"> <button class="btn btn-primary"  style="float: right; margin: 5px" (click)="showAllDialog()">&nbsp; View All</button> </span>
                     </div>
                 <div class="col-sm-12">
                    <div class="text-black pb-2  margin-table">
@@ -180,10 +208,12 @@
                                     </div>
                                     <div class="row">
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="ageGroupList" formControlName="ageGroup" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown [autoDisplayFirst]="false"  styleClass="form-control" formControlName="ageGroup" [options]="ageGroupList"  [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="ageGroup">
                                         </span>
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="educationList" formControlName="education" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="educationList" formControlName="education" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="education">
                                         </span>
                                     </div>
                                     <div class="row">
@@ -192,10 +222,12 @@
                                     </div>
                                     <div class="row">
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="occupationList" formControlName="occupation" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="occupationList" formControlName="occupation" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="occupation">
                                         </span>
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="familySizeList" formControlName="familySize" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="familySizeList" formControlName="familySize" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="familySize">
                                         </span>
                                     </div>
                                     <div class="row">
@@ -203,7 +235,8 @@
                                     </div>
                                     <div class="row">
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="incomeList" formControlName="income" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="incomeList" formControlName="income" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="income">
                                         </span>
                                     </div>
                                     <br>
@@ -216,10 +249,12 @@
                                     </div>
                                     <div class="row">
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="socialMediaList" formControlName="socialMedia" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="socialMediaList" formControlName="socialMedia" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="socialMedia">
                                         </span>
                                         <span class="col-lg-6">
-                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="addictionList" formControlName="addiction" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                            <!-- <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="addictionList" formControlName="addiction" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                            <input type="text" class="form-control" formControlName="addiction">
                                         </span>
                                     </div>
                                     <div class="row">
@@ -287,7 +322,7 @@
            <div class="text-black pb-2  margin-table">
                 <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols2" [columns]="cols2" exportFilename="Model_Score">
                         <ng-template pTemplate="header">
-                                <tr>
+                                <tr class="header-class">
                                     <th>Attribute</th>
                                     <th>Max Frequency</th>
                                     <th>Histogram</th>

@@ -44,6 +44,10 @@
       <app-sidebar-nav [navItems]="navItems2"  disabled="sidebarMinimized"></app-sidebar-nav>
       <app-sidebar-minimizer></app-sidebar-minimizer>
   </app-sidebar>
+  <app-sidebar [fixed]="true" [display]="'lg'" *ngIf="demo_user">
+      <app-sidebar-nav [navItems]="demoRole"  disabled="sidebarMinimized"></app-sidebar-nav>
+      <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
   <!-- Main content -->
   <main class="main">
     

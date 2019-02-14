@@ -122,7 +122,7 @@ export class SidebarNavItemComponent implements OnInit {
       <span *ngIf="isBadge()" [ngClass]="'badge badge-' + link.badge.variant">{{ link.badge.text }}</span>
     </a>
     <ng-template #external>
-      <a [ngClass]="hasVariant() ? 'nav-link nav-link-' + link.variant : 'nav-link'" [routerLink]="['/frame-url/', link.url]">
+      <a [ngClass]="hasVariant() ? 'nav-link nav-link-' + link.variant : 'nav-link'" [routerLink]="['/health/frame-url/', link.url]">
         <i *ngIf="isIcon()" class="nav-icon {{ link.icon }}"></i>
         {{ link.name }}
         <span *ngIf="isBadge()" [ngClass]="'badge badge-' + link.badge.variant">{{ link.badge.text }}</span>

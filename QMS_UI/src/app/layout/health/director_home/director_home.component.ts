@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {GapsService }from '../../../shared/services/gaps.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-director_home',
+  templateUrl: './director_home.component.html',
+  styleUrls: ['./director_home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class DirectorHomeComponent implements OnInit {
   coordinator:boolean = false;
   analyst: boolean = false;
   qulaity_director: boolean = false;
@@ -209,7 +209,6 @@ export class HomeComponent implements OnInit {
   //  console.log(this.Persona)
 
   });
-
   this.GapsService.getObjectiveEnrollment().subscribe((res: any)=>{
     this.enrollmentPercent = res.metricValueList[0];
     let xvalues =[];

@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { navItems } from './_nav';
 import { navItems1 } from './_nav';
 import { navItems2 } from './_nav';
+import {demoRole} from './_nav'
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import {GapsService }from '../../shared/services/gaps.service';
@@ -20,6 +21,7 @@ export class HealthComponent implements OnInit {
   public navItems = navItems;
   public navItems1 = navItems1;
   public navItems2 = navItems2;
+  public demoRole = demoRole;
   public micEnabled = true;
   private changes: MutationObserver;
   public element: HTMLElement = document.body;
@@ -29,6 +31,7 @@ export class HealthComponent implements OnInit {
   roleList: any;
   rolename: any;
   qulaity_director: any;
+  demo_user: any;
   constructor(private router: Router,
     private http: HttpClient,
     private GapsService:GapsService) {
@@ -52,6 +55,9 @@ export class HealthComponent implements OnInit {
       }
       else if(this.rolename == "Quality_Director"){
         this.qulaity_director = true;
+      }
+      else if(this.rolename == "Demo"){
+        this.demo_user = true;
       }
       else{
         this.coordinator = true;

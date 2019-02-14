@@ -1,0 +1,62 @@
+
+  <!-- <app-page-header [heading]="'Home'" [icon]="'fa fa-home'"></app-page-header> -->
+  <div class="col-lg-12" style="padding: 0px">
+ 
+      <h2 [ngStyle]="{ 'background-color': '#F26363',
+      'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-home"></i> Business Analyst</h2>
+  </div>
+
+    <div class="row p-3 align-items-center">
+    <div class="row col-lg-12"  style=" margin-left: 13px;">
+        <div class="row col-lg-12">
+          <h2>Snapshot</h2>
+        </div>
+        <div class="row col-lg-12">
+          <div class="col-lg-4 images-heightClass" style="background-image: url('assets/images/HealthyMe_DesignAssets_V2/ModelValidationCard.png'); background-repeat: no-repeat;background-size: cover;height: 35vh;">
+            <!-- < -->
+            <div class="col-lg-12" style="margin-top: 34px;color: black;">
+                <h4>MODEL VALIDATION</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Model_Validation" style="color: #6D6B6B">
+                <div class="col-lg-10">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2">
+                  {{data?.value}}  
+                </div>
+              </div>
+              
+              <a [routerLink]="['/health/model-validation']"><button type="submit" class="btn btn-primary btn-style">Manage</button></a>
+          </div>
+          <div class="col-lg-4 images-heightClass" style="background-image: url('assets/images/HealthyMe_DesignAssets_V2/PersonasCard.png'); background-repeat: no-repeat;background-size: cover;height: 35vh;">
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12" style="margin-top: 34px;color: black;">
+                <h4>PERSONAS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Persona" style="color: #6D6B6B">
+                <div class="col-lg-10">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2">
+                  {{data?.value}}  
+                </div>
+              </div>
+                  <a [routerLink]="['/health/create-persona1']"><button type="submit" class="btn btn-primary btn-style">Manage</button>
+                  </a>
+          </div>
+          <div class="col-lg-4 images-heightClass" style="background-image: url('assets/images/HealthyMe_DesignAssets_V2/EffectivenessCard.png'); background-repeat: no-repeat;background-size: cover;height: 35vh;">
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12" style="margin-top: 34px;color: black;">
+                <h4>EFFECTIVENESS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Effectiveness" style="color: #6D6B6B">
+                <div class="col-lg-10">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2">
+                  {{data?.value}}  
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-style">Manage</button>
+          </div>
+        </div>
+    </div>
+  </div>
+

@@ -308,7 +308,7 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Brand Loyalty`);
     }
     getGoalsMemberDetails(id){
-        return this.http.get(`http://healthinsight:8082/curis/pat/member/111`);
+        return this.http.get(`http://healthinsight:8082/curis/pat/member/${id}`);
     }
     getPhysicalActivityGoal(){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/GOAL`)
@@ -334,5 +334,20 @@ export class GapsService {
     
     getModelValidationData(){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_MODEL/MODEL_NAME`);
+    }
+    getCRMData(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_enrollment_file_output/crm`);
+    }
+    getVerifiedData(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_enrollment_file_output/verify`)
+    }
+    getRewardsList(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_all_rewards/9`)
+    }
+    updateRewardList(id,model){
+        return this.http.post(`http://healthinsight:8082/curis/enrollment/update_rewards/${id}`,model)
+    }
+    updateEnrollmentrow(button,data){
+        return this.http.post(`http://healthinsight:8082/curis/enrollment/update_enrollment_file_output/${button}`,data)
     }
 }

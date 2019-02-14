@@ -26,7 +26,7 @@ export class CreatePersonaComponent implements OnInit {
   clusterList: any;
   type: string;
   measureId: string; 
-  ageGroupList: any;
+  ageGroupList: string;
   educationList: any;
   occupationList: any;
   familySizeList: any;
@@ -35,6 +35,7 @@ export class CreatePersonaComponent implements OnInit {
   socialMediaList: any;
   addictionList: any;
   clusterLength: any;
+  personaFormData:any;
   constructor(private _fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
@@ -45,11 +46,7 @@ private gapsService: GapsService) {
             this.measureId = params['measureId'];
         }); 
      // console.log(this.labels1)
-      
-}
-       
-  ngOnInit() {
-    this.myForm = this._fb.group({
+     this.myForm = this._fb.group({
       personaName: [''],
       bio:[''],
       motivations: [''],
@@ -57,7 +54,7 @@ private gapsService: GapsService) {
       socialMedia: [''],
       healthStatus: [''],
       goals:[''],
-      ageGroup:[''],
+      ageGroup: [''],
       education:[''],
       occupation:[''],
       income:[''],
@@ -66,7 +63,10 @@ private gapsService: GapsService) {
 
 
       });
-
+      
+}
+       
+  ngOnInit() {
       this.personaData = this._fb.group({
         conditionList: this._fb.array([
           this.conditionParamForm(),
@@ -78,18 +78,31 @@ private gapsService: GapsService) {
         res.forEach(item => {
             this.clusterList.push({label: "cluster "+item,value: item});
             });
+          //  console.log()
             this.clusterLength =[];
             if(this.clusterLength){
-              for(let i=1;i<3;i++){
+              for(let i=1;i<this.clusterList.length;i++){
                 this.clusterLength.push(this.clusterList[i])
-                this.gapsService.getClusterData(this.clusterList[i].value).subscribe((res: any)=>{
-                });
+              this.personaFormDataFunc(i,this.clusterList[i].value);
               }
             }
       });
      
   }
+personaFormDataFunc(i,value){
+  this.personaFormData =[];
+  this.gapsService.getClusterFormData(value).subscribe((res: any)=>{              
+    this.personaFormData.push(res.clusterPersona);
+   // console.log(this.personaFormData)
+  });
 
+
+}
+smallCardClick(event){
+  //console.log(event);
+  event = {label:event,value:event}
+  this.clusterSelection(event)
+}
   validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
     const control = formGroup.get(field);
@@ -153,7 +166,17 @@ cancelPc() {
 clusterSelection(event){
   this.selectedClusterId = event.value;
   this.gapsService.getClusterData(event.value).subscribe((data: any)=>{
-  console.log(data)
+    
+// this.cols1 = [];
+//  this.cols1.push(data.filter(item => item.featureName =="form_of_exercise"));  
+//  this.cols1.push(data.filter(item => item.featureName =="set_and_achieve_health_goal"));
+//  this.cols1.push(data.filter(item => item.featureName =="take_care_of_loved_ones"));
+//  this.cols1.push(data.filter(item => item.featureName =="ideal_health_goal"));
+// this.cols =[];
+// this.cols.push(data.filter(item => item.featureName =="frequency_of_exercise"));
+//  this.cols.push(data.filter(item => item.featureName =="measure_calorie_intake"));
+//  this.cols.push(data.filter(item => item.featureName =="reason_to_not_enroll"));
+//  this.cols2= data.filter(item => item);
     
 this.cols1 = [];
  this.cols1.push(data.filter(item => item.featureName =="Age"));
@@ -168,23 +191,32 @@ this.cols.push(data.filter(item => item.featureName =="What are your motivations
  //this.cols.push(data.filter(item => item.featureName =="How many chronic diseases do you suffer from?"));
 //console.log(this.cols)
  this.cols2= data.filter(item => item);
-//console.log(this.cols)
-/* this.cols = [
-  { field: 'attribute', header: 'Attribute' },
-  { field: 'min', header: 'Min' },
-  { field: 'firstQuartile', header: '1st Quartile' },
-  { field: 'median', header: 'Median' },
-  { field: 'secondQuartile', header: '2nd Quartile' },
-  { field: '', header: 'Histogram' }
-];*/
 
-// && item.featureName =="Education"  && item.featureName =="Addictions" && item.featureName =="Family Size"
- //console.log(this.cols1[1][0].featureName)
 });
+if(event.value == 1){
+  this.myForm.controls['personaName'].setValue('Lazy Doer');
+ //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
+ this.myForm.controls['motivations'].setValue('Need a Partner');
+ this.myForm.controls['barriers'].setValue('The Frequency of excersice');
+ this.myForm.controls['socialMedia'].setValue('Use Frequently');
+ this.myForm.controls['healthStatus'].setValue('Email');
+ this.myForm.controls['goals'].setValue('To avoid diseases');
+ this.myForm.controls['bio'].setValue('Lazy doers are not proactive in nature. These are people who are not intrinsically motivated.');
+ //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
+ this.myForm.controls['ageGroup'].setValue('30-35');
+ console.log(this.myForm.controls['ageGroup'].value)
+ this.myForm.controls['education'].setValue('High school, Graduation');
+ this.myForm.controls['income'].setValue('$40,000 - $60,000');
+ this.myForm.controls['occupation'].setValue('Desk job, Unemployed');
+ this.myForm.controls['addiction'].setValue('Drinking, Smoking');
+ this.myForm.controls['familySize'].setValue('3-6');
+
+}
+else{
 
 this.gapsService.getClusterFormData(event.value).subscribe((data : any)=>{
   this.clusterData = data;
- this.myForm.controls['personaName'].setValue(this.clusterData.clusterPersona.personaName);
+  this.myForm.controls['personaName'].setValue(this.clusterData.clusterPersona.personaName);
  //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
  this.myForm.controls['motivations'].setValue(this.clusterData.clusterPersona.motivations);
  this.myForm.controls['barriers'].setValue(this.clusterData.clusterPersona.barriers);
@@ -194,13 +226,16 @@ this.gapsService.getClusterFormData(event.value).subscribe((data : any)=>{
  this.myForm.controls['bio'].setValue(this.clusterData.clusterPersona.bio);
  //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
  this.myForm.controls['ageGroup'].setValue(this.clusterData.clusterPersona.demoAgeGroup);
+ console.log(this.myForm.controls['ageGroup'].value)
  this.myForm.controls['education'].setValue(this.clusterData.clusterPersona.demoEducation);
  this.myForm.controls['income'].setValue(this.clusterData.clusterPersona.demoIncome);
  this.myForm.controls['occupation'].setValue(this.clusterData.clusterPersona.demoOccupation);
  this.myForm.controls['addiction'].setValue(this.clusterData.clusterPersona.demoAddictions);
  this.myForm.controls['familySize'].setValue(this.clusterData.clusterPersona.demoFamilySize);
 
+
 }); 
+}
 }
 
 
@@ -276,7 +311,7 @@ showAllDialog(){
 } 
 
 
-export interface ProgramCreator {
+export interface CreatePersona {
   personaName: string,
   bio: string,
   motivations: string,
@@ -284,8 +319,8 @@ export interface ProgramCreator {
   socialMedia: string,
   healthStatus: string,
   goals:string,
-  ageGroup:string,
-  education:string,
+
+  education:number,
   occupation:string,
   income:string,
   addiction:string,
