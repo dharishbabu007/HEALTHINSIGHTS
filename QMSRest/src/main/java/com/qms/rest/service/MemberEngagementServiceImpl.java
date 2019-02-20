@@ -765,9 +765,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 
 	@Override
 	public Set<PersonaClusterFeatures> getPersonaClusterFeatures(String clusterId) {
-		
 		Set<PersonaClusterFeatures> personaClusterFeaturesList = new HashSet<>();
-		
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
@@ -781,12 +779,13 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				personaClusterFeatures.setClusterId(resultSet.getString("cluster_id"));
 				personaClusterFeatures.setFeatureName(resultSet.getString("feature_name"));
 				personaClusterFeatures.setFeatureType(resultSet.getString("feature_type"));
-				personaClusterFeatures.setFeatureSignificanceValue(resultSet.getString("feature_significance_value"));
-				personaClusterFeatures.setMaxFrequency(resultSet.getString("max_frequency"));
+				if(resultSet.getString("feature_significance_value") != null)
+					personaClusterFeatures.setFeatureSignificanceValue(resultSet.getString("feature_significance_value"));
+				if(resultSet.getString("max_frequency") != null)
+					personaClusterFeatures.setMaxFrequency(resultSet.getString("max_frequency"));
 				//personaClusterFeatures.setModelId(resultSet.getString("modelid"));				
 				personaClusterFeaturesList.add(personaClusterFeatures);
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}

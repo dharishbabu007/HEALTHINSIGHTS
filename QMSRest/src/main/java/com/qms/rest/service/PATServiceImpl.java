@@ -57,13 +57,12 @@ public class PATServiceImpl implements PATService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT RL.LOB_DESC FROM FACT_HEDIS_GAPS_IN_CARE FHGIC "+
-						   "INNER JOIN DIM_PRODUCT_PLAN DPP ON FHGIC.PRODUCT_PLAN_SK = DPP.PRODUCT_PLAN_SK "+
-						   "INNER JOIN REF_LOB RL ON DPP.LOB_ID = RL.LOB_ID";
+			String query = "SELECT DISTINCT DPP.LOB_PRODUCT FROM FACT_HEDIS_GAPS_IN_CARE FHGIC "+ 
+					"INNER JOIN DIM_PRODUCT_PLAN DPP ON FHGIC.PRODUCT_PLAN_SK = DPP.PRODUCT_PLAN_SK "+ 
+					"INNER JOIN REF_LOB RL ON DPP.LOB_ID = RL.LOB_ID";			
 			resultSet = statement.executeQuery(query);
-			
 			while (resultSet.next()) {
-				categorySet.add(resultSet.getString("LOB_DESC"));				
+				categorySet.add(resultSet.getString("LOB_PRODUCT"));				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -181,20 +180,18 @@ public class PATServiceImpl implements PATService {
 	public RestResult insertPatCreator(Pat pat) {
 		
 		String sqlStatementInsert = 
-				"insert into QMS_MIT(MIT_ID,MEASURE_SK,PATIENT_ID,COMPLIANT_FLAG,LOB_ID,MRN,APPOINTMENT_DATE,PROVIDER_ID,GENDER,DOB,"
-				+ "MEMBER_STATUS,VALUE_SET,CODE_TYPE,CODES,REASON,CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,"
-				+ "INGESTION_DATE,SOURCE_NAME,USER_NAME)" 		
-				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"insert into QMS_MIT(MIT_ID,MEASURE_SK,PATIENT_ID,LOB_ID,MRN,APPOINTMENT_DATE,PROVIDER_ID,"
+				+ "GENDER,DOB,MEMBER_STATUS,VALUE_SET,CODE_TYPE,CODES,REASON,CURR_FLAG,REC_CREATE_DATE,"
+				+ "REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME,COMPLIANT_FLAG) " 		
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
-		
 		PreparedStatement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Statement getStatement = null;
 		
 		try {	
-			
 			connection = qmsConnection.getOracleConnection();
 				
 			int mitId = 0;
@@ -212,8 +209,7 @@ public class PATServiceImpl implements PATService {
 			
 			statement.setInt(++i, mitId);
 			statement.setString(++i, pat.getMeasureSk());
-			statement.setString(++i, pat.getPatientId());
-			statement.setString(++i, pat.getCompliantFlag());
+			statement.setString(++i, pat.getPatientId());			
 			statement.setString(++i, pat.getLobId());
 			statement.setString(++i, pat.getMrn());
 			statement.setString(++i, pat.getAppointmentDate());
@@ -235,7 +231,8 @@ public class PATServiceImpl implements PATService {
 			if(userData != null && userData.getName() != null)
 				statement.setString(++i, userData.getName());
 			else 
-				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);										
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+			statement.setString(++i, "Y"); //COMPLIANT_FLAG
 			statement.executeUpdate();
 			
 			httpSession.setAttribute(QMSConstants.SESSION_PAT_ID, mitId+"");			
@@ -248,7 +245,6 @@ public class PATServiceImpl implements PATService {
 			qmsConnection.closeJDBCResources(resultSet, getStatement, null);
 			qmsConnection.closeJDBCResources(null, statement, connection);
 		}	
-
 	}	
 
 
@@ -308,8 +304,8 @@ public class PATServiceImpl implements PATService {
 			System.out.println(" Adding the file upload with file id --> " + fileId);
 			
 			String sqlStatementInsert = "insert into QMS_PAT_FILE_UPLOAD "
-					                    + "(FILE_ID,PAT_ID,FILE_PATH,FILE_NAME,CREATION_DATE,"
-										+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,"
+					                    + "(FILE_ID,PAT_ID,FILE_PATH,FILE_NAME,CREATION_DATE,CURR_FLAG,"
+										+ "REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,"
 										+ "INGESTION_DATE,SOURCE_NAME,USER_NAME)"						
 										+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			statement = connection.prepareStatement(sqlStatementInsert);

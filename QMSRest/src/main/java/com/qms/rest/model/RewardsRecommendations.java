@@ -13,9 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
-public class RewardsFileOutput {	
-	private String rewardId;
+public class RewardsRecommendations {
+	private String rewardRecId;
 	private String memberId;
 	private String name;
 	private String age;
@@ -28,9 +27,7 @@ public class RewardsFileOutput {
 	private String goal;
 	private String frequency;
 	private String goalDate;
-	private String reward1;
-	private String reward2;
-	private String reward3;
+	private String reward;
 	private String currFlag;
 	private String recCreateDate;
 	private String recUpdateDate;
@@ -39,6 +36,6 @@ public class RewardsFileOutput {
 	private String ingestionDate;
 	private String sourceName;
 	private String userName;
-	//private String others;
 	
+
 }
