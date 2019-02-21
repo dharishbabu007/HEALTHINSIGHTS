@@ -8,7 +8,7 @@ import org.apache.spark.sql.functions.to_date
 import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add, date_format, datediff, expr, lit, to_date, when}
 
 object NcqaWCC2C {
-
+/*
 
   def main(args: Array[String]): Unit = {
 
@@ -144,5 +144,5 @@ object NcqaWCC2C {
     spark.sparkContext.stop()
   }
 
-
+*/
 }

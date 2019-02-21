@@ -9,6 +9,7 @@ import scala.util._
 
 object NcqaSMC {
 
+  /*
 
   def main(args: Array[String]): Unit = {
 
@@ -461,6 +462,9 @@ object NcqaSMC {
     spark.sparkContext.stop()
 
   }
+
+
+*/
 
 }
 

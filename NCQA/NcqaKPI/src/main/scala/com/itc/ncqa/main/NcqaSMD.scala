@@ -8,6 +8,8 @@ import org.apache.spark.sql.functions._
 import scala.util._
 
 object NcqaSMD {
+/*
+
 
   def main(args: Array[String]): Unit = {
 
@@ -418,6 +420,7 @@ object NcqaSMD {
 
   }
 
+*/
 
 }
 

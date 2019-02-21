@@ -73,6 +73,7 @@ object NcqaABA {
     val argmapForInitJoin = mutable.Map(KpiConstants.dimMemberTblName -> dimMemberDf, KpiConstants.factMembershipTblName -> factMembershipDf,
                                         KpiConstants.dimProductTblName -> dimProductPlanDf, KpiConstants.refLobTblName -> refLobDf,
                                         KpiConstants.factMemAttrTblName -> factMemAttrDf, KpiConstants.dimDateTblName -> dimDateDf)
+
     val initialJoinedDf = UtilFunctions.initialJoinFunction(spark,argmapForInitJoin)
     //<editor-fold desc="Age Filter">
 

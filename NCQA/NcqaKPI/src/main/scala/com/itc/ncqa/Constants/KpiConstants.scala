@@ -10,7 +10,7 @@ object KpiConstants {
   //val competingDiagnosisVal = "Competing Diagnosis"
   val nutritionCounselVal = "Nutrition Counseling"
   val physicalActCounselVal = "Physical Activity Counseling"
-  val ncqaDataSource = "null"
+  val ncqaDataSource = "NCQA"
   val clientDataSource = ""
   val userNameVal = "ETL"
   val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob",/*"location_sk",*/"product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
@@ -19,6 +19,8 @@ object KpiConstants {
   var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
+  val zeroVal = "0"
+  val oneVal = "1"
   val actFlgVal = "A"
   val emptyStrVal = ""
   val maleVal = "M"
@@ -29,6 +31,9 @@ object KpiConstants {
   val commercialLobName = "Commercial"
   val medicareLobName = "Medicare"
   val medicaidLobName = "Medicaid"
+
+
+  val lobProductNameConVal = "Special Needs Plan—Institutionalized (SN2)"
 
   /*function for setting the dbName with the value getting as argument */
   def setDbName(dbVal:String):String={
@@ -104,6 +109,7 @@ object KpiConstants {
 
   /*count constants*/
   val count0Val = 0
+  val count1Val = 1
   val count2Val = 2
   val count4Val = 4
   val count3Val = 3
@@ -134,6 +140,7 @@ object KpiConstants {
   val months108 = 108
   val months216 = 216
   val months240 = 240
+  val months792 = 792
   val months888 = 888
 
   /*measurement Year Constants*/
@@ -172,6 +179,7 @@ object KpiConstants {
   val factImmunTblName = "fact_immunization"
   val factpatmemTblName = "fact_pat_mem"
   val factMembershipTblName = "fact_membership"
+  val factMonMembershipTblName = "fact_monthly_membership"
   val factRxClaimTblName = "fact_rx_claims"
   val factMemAttrTblName = "fact_mem_attribution"
   val factGapsInHedisTblName = "fact_hedis_gaps_in_care"
@@ -184,8 +192,20 @@ object KpiConstants {
   val outGapsInHedisTestTblName = "fact_hedis_gaps_in_care"
   val outFactHedisGapsInTblName = "fact_hedis_gaps_in_care"
   val outFactQmsTblName = "fact_hedis_qms"
+  val visitTblName = "visits"
+  val membershipTblName = "membership_enrollment"
+  val generalmembershipTblName = "member"
+  val providerTblName = "provider"
 
+
+  /*dataframe name constants*/
+  val initjoinDfName = "initialjoin_df"
+  val totalPopDfName = "totalPop_df"
   val eligibleDfName = "eligible_df"
+  val mandatoryExclDfname = "mandatoryExcl_df"
+  val optionalExclDfName = "optionalExcl_df"
+  val numeratorDfName = "numerator_df"
+
 
   /*Measure Title constants*/
   val abaMeasureTitle = "Adult BMI Assessment (ABA)"
@@ -224,26 +244,17 @@ object KpiConstants {
 
   /*columnname constants*/
   val memberskColName = "member_sk"
-  val memberidColName = "member_id"
   val lobIdColName = "lob_id"
-  val lobColName = "lob"
   val lobNameColName = "lob_name"
   val dobskColame = "date_of_birth_sk"
   val dateSkColName = "date_sk"
   val calenderDateColName = "calendar_date"
-  val dobColName = "dob"
-  val memStartDateColName = "mem_start_date"
-  val memEndDateColName = "mem_end_date"
-  val genderColName = "gender"
-  val stateColName = "state"
   val qualityMsrSkColName = "quality_measure_sk"
-  val proceedureCodeColName = "procedure_code"
-  val primaryDiagnosisColname = "primary_diagnosis"
   val memPlanStartDateSkColName = "member_plan_start_date_sk"
   val memPlanEndDateSkColName = "member_plan_end_date_sk"
   val productplanSkColName = "product_plan_sk"
   val startDateColName = "start_date"
-  val serviceDateColName = "service_date"
+  val maxserviceDateColName = "max_service_date"
   val immStartDateSkColname = "immune_date_sk"
   val immuneDateColName = "immune_date"
   val immuneDate2ColName = "immune_date2"
@@ -252,8 +263,7 @@ object KpiConstants {
   val patientSkColname = "patient_sk"
   val patientidColname = "pat_id"
   val rxStartDateColName = "rx_start_date"
-  val admitDateColName = "admit_date"
-  val dischargeDateColName = "discharge_date"
+  val rxServiceDateColName = "rx_service_date"
   val endDateColName = "end_date"
   val locationSkColName = "location_sk"
   val facilitySkColName = "facility_sk"
@@ -262,13 +272,8 @@ object KpiConstants {
   val obgynColName = "obgyn"
   val eyeCareProvColName = "eye_care_provider"
   val nephrologistColName = "nephrologist"
-  val ndcNmberColName = "ndc_number"
-  val ndcCodeColName = "ndc_code"
-  val measureIdColName = "measure_id"
-  val startDateSkColName = "start_date_sk"
-  val serviceDateSkColName = "service_date_sk"
-  val admitDateSkColName = "admit_date_sk"
-  val dischargeDateSkColName = "discharge_date_sk"
+  val measureIdColName = "measureid"
+  val measure_idColName = "measure_id"
   val startTempColName = "start_temp"
   val rxStartTempColName = "rx_start_date"
   val diagStartColName = "dig_start_date"
@@ -303,14 +308,187 @@ object KpiConstants {
   val leadColName = "lead_col"
   val anchorflagColName = "anchor_flag"
   val secondContFlag = "second_cont_flag"
-  val benefitMedicalColname = "benefit_medical"
-  val claimstatusColName = "claim_status"
   val ltiFlagColName = "lti_flag"
-  val considerationsColName = "considerations"
-  val lobProductColName = "lob_product"
   val serviceTempColName = "service_temp"
   val admitTempColName = "admit_temp"
   val dischargeTempColName = "discharge_temp"
+  val sumBenefitColName = "sum_benefit"
+  val countBenefitColName = "count_benefit"
+  val secondDiagColName = "second_diagnosis"
+  val medicatiolListColName = "medication_list"
+  val lisPremiumSubColName = "lis_premium_subsidy"
+  val orgreasentcodeColName = "ori_reason_for_entitle_code"
+
+
+  /*member table column name constants*/
+  val memberidColName = "member_id"
+  val dobColName = "dob"
+  val genderColName = "gender"
+  val stateColName = "state"
+
+
+  /*membership col names*/
+  val payerColName = "payer"
+  val productColName = "product"
+  val lobColName = "lob"
+  val lobproductColName = "lob_product"
+  val plannameColName = "plan_name"
+  val memStartDateColName = "member_plan_start_date"
+  val memEndDateColName = "member_plan_end_date"
+  val benefitdentalColName = "benefit_dental"
+  val benefitdrugColName = "benefit_drug"
+  val benefitmhiColName = "benefit_mental_health_inpatient"
+  val benefitmhioColName = "benefit_mental_health_intensive_outpatient"
+  val benefitmhoedColName = "benefit_mental_health_outpatient_ed"
+  val benefitchmdepinpatColName = "benefit_chemdep_inpatient"
+  val benefitcheintoutpatColName = "benefit_chemdep_intensive_outpatient"
+  val benefitcheoutpatedColName = "benefit_chemdep_outpatient_ed"
+  val benefitMedicalColname = "benefit_medical"
+  val healthpefColName = "health_plan_employee_flag"
+  val considerationsColName = "considerations"
+
+
+
+
+  /*visit table column name cnstants*/
+  val claimsidColName = "claims_id"
+  val claimlineidColName = "claim_line_id"
+  val patientencscnidColName = "pat_enc_csn_id"
+  val parentenccsnidColName = "parent_enc_csn_id"
+  val serviceDateColName = "service_date"
+  val servicestdateColName = "service_start_date"
+  val serviceeddateColname = "service_end_date"
+  val admitDateColName = "admit_date"
+  val dischargeDateColName = "discharge_date"
+  val covereddaysColName = "covered_days"
+  val claimstatusColName = "claim_status"
+  val proceedureCodeColName = "procedure_code"
+  val primaryDiagnosisColname = "primary_diagnosis"
+  val proccodemod1ColName = "procedure_code_modifier1"
+  val proccodemod2ColName = "procedure_code_modifier2"
+  val proccode2mod1ColName = "procedure_code2_modifier1"
+  val proccode2mod2ColName = "procedure_code2_modifier2"
+  val proccodeColName = "procedure_code"
+  val proccode2ColName = "procedure_code_2"
+  val prochcpscodeColName = "procedure_hcpcs_code"
+  val prochcpsmod1codeColName = "procedure_hcpcs_modifier1_code"
+  val prochcpsmod2codeColName = "procedure_hcpcs_modifier2_code"
+  val prochcpsmod3codeColName = "procedure_hcpcs_modifier3_code"
+  val prochcpsmod4codeColName = "procedure_hcpcs_modifier4_code"
+  val prochcpsmod5codeColName = "procedure_hcpcs_modifier5_code"
+  val diagcode2ColName = "diagnosis_code_2"
+  val diagcode3ColName = "diagnosis_code_3"
+  val diagcode4ColName = "diagnosis_code_4"
+  val diagcode5ColName = "diagnosis_code_5"
+  val diagcode6ColName = "diagnosis_code_6"
+  val diagcode7ColName = "diagnosis_code_7"
+  val diagcode8ColName = "diagnosis_code_8"
+  val diagcode9ColName = "diagnosis_code_9"
+  val diagcode10ColName = "diagnosis_code_10"
+  val priicdprocColName = "principal_icd_procedure"
+  val icdproc2ColName = "icd_procedure_2"
+  val icdproc3ColName = "icd_procedure_3"
+  val icdproc4ColName = "icd_procedure_4"
+  val icdproc5ColName = "icd_procedure_5"
+  val icdproc6ColName = "icd_procedure_6"
+  val icdflagColName = "icd_flag"
+  val loinccodeColName = "loinc_code"
+  val labvalueColName = "lab_value"
+  val obscodetextColName = "obs_code_text"
+  val billtypecodeColName = "bill_type_code"
+  val poscodeColName = "pos_code"
+  val drgcodeColName = "drg_code"
+  val claimtypeColName = "claim_type"
+  val revenuecodeColName = "revenue_code"
+  val admissioncodeColName = "admission_code"
+  val admissiontypeColName = "admission_type"
+  val dischargestatuscodeColName = "discharge_status_code"
+  val provideridColName = "provider_id"
+  val ispcpColName = "is_pcp"
+  val isobgynColName = "is_obgyn"
+  val ismhproviderColName = "is_mh_provider"
+  val iseyecareproviderColName = "is_eye_care_provider"
+  val isdentistColName = "is_dentist"
+  val isnephrologistColName = "is_nephrologist"
+  val isanesthesiologistColName = "is_anesthesiologist"
+  val isnprproviderColName = "is_npr_provider"
+  val ispasproviderColName = "is_pas_provider"
+  val provprescprivColName = "provider_prescribing_privileges"
+  val clinicalpharmacistColName = "clinical_pharmacist"
+  val isprovhospitalColName = "is_provider_hospital"
+  val isprovidersnfColName = "is_provider_snf"
+  val issurgeonColName = "is_surgeon"
+  val isregnurseColName = "is_registered_nurse"
+  val locofcareColName = "location_of_care"
+  val amountpaidColName = "amount_paid"
+  val rxdayssuppliedColName = "rx_days_supplied"
+  val ndcNmberColName = "ndc_number"
+  val ndcCodeColName = "ndc_code"
+  val rxmetquanColName = "rx_metric_quantity"
+  val rxdispquanColName = "rx_dispensed_quantity"
+  val providernpiColName = "provider_npi"
+  val pharmacynpiColName = "pharmacy_npi"
+  val obstestColName = "observation_test"
+  val test_codeColName = "test_code"
+  val codetextColName = "code_text"
+  val snomedColName = "snomed"
+  val obsvalueColName = "obs_value"
+  val obsunitsColName = "obs_units"
+  val obsstatusColName = "obs_status"
+  val obsrestypeColName = "obs_result_type"
+  val obsresvalflagColName = "obs_result_value_flag"
+  val obstypeflagColName = "obs_type_flag"
+  val medorderdateColName = "med_order_date"
+  val medstartdateColName = "med_start_date"
+  val medcodeColName = "med_code"
+  val medcodeflagColName = "med_code_flag"
+  val medcodetextColName = "med_code_text"
+  val medfrequencyColName = "med_frequency"
+  val meddispdateColName = "med_disp_date"
+  val medenddateColName = "med_end_date"
+  val medactiveflagColName = "med_active_flag"
+  val immunizationyearColName = "immunization_year"
+  val apptstatusColName = "appt_status"
+  val lobProductColName = "lob_product"
+  val planColName = "plan"
+  val supplflagColName = "supplement_flag"
+
+
+
+
+
+
+
+
+
+  val labCodeColName = "lab_code"
+
+
+
+
+
+
+
+
+  /*audit column names*/
+  val ingestiondateColName = "ingestion_date"
+  val activeflasgColname = "active_flag"
+  val latestflagColName = "latest_flag"
+
+
+  /*fact_claims column name constants*/
+
+  val startDateSkColName = "start_date_sk"
+  val serviceDateSkColName = "service_date_sk"
+  val admitDateSkColName = "admit_date_sk"
+  val dischargeDateSkColName = "discharge_date_sk"
+
+
+  /*ref_hedis2019 column constants*/
+  val measureidColname = "measureid"
+  val codeColName = "code"
+  val valuesetColName = "valueset"
+  val codesystemColname = "codesystem"
 
 
 
@@ -371,6 +549,32 @@ object KpiConstants {
   val outHedisQmsDinoExcColName = "deno_exception"
   val outHedisQmsPerformanceColName = "performance"
   val outHedisQmsBonusColName = "bonus"
+
+
+
+
+  /*NCQA outputformat Column Names*/
+  val ncqaOutmemberIdCol = "MemID"
+  val ncqaOutMeasureCol = "Meas"
+  val ncqaOutPayerCol = "Payer"
+  val ncqaOutEpopCol = "Epop"
+  val ncqaOutExclCol = "Excl"
+  val ncqaOutNumCol = "Num"
+  val ncqaOutRexclCol ="RExcl"
+  val ncqaOutIndCol = "Ind"
+  val ncqaOutHmoCol = "HMO"
+  val ncqaPosOutCol = "POS"
+  val ncqaPpoOutCol = "PPO"
+  val ncqaCepOutCol = "CEP"
+  val ncqaMcrOutCol = "MCR"
+  val ncqaMcOutCol = "MC"
+  val ncqaMcsOutCol = "MCS"
+  val ncqaMpOutCol = "MP"
+  val ncqaMcdOutCol = "MCD"
+
+
+  /*order of columns in ncqa Ouput format*/
+  val outncqaFormattedList = List(ncqaOutmemberIdCol,ncqaOutMeasureCol,ncqaOutPayerCol,ncqaOutEpopCol,ncqaOutExclCol,ncqaOutNumCol,ncqaOutRexclCol,ncqaOutIndCol)
 
 
   /*order of columns in fact_hedis_qms*/
@@ -550,7 +754,7 @@ object KpiConstants {
   val kidneyTransplantVal = "Kidney Transplant"
   val systolicLt140Val = "Systolic Less Than 140"
   val diastolicLt80Val = "Diastolic Less Than 80"
-  val diastolicBtwn8090Val = "Diastolic 80–89"
+  val diastolicBtwn8090Val = "Diastolic 80-89"
   val dentalVisitsVal = "Dental Visits"
   val wellCareVal= "Well-Care"
   val observationVal = "Observation"
@@ -710,6 +914,10 @@ object KpiConstants {
 
   /*Codesystem constants*/
   val icdCodeVal = "ICD%"
+  val icd9cmCodeVal = "ICD9CM"
+  val icd10cmCodeVal = "ICD10CM"
+  val icd9pcsCodeVal = "ICD9PCS"
+  val icd10pcsCodeVal = "ICD10PCS"
   val cptCodeVal = "CPT"
   val cptcat2CodeVal = "CPT-CAT-II"
   val hcpsCodeVal = "HCPCS"
@@ -720,7 +928,8 @@ object KpiConstants {
   val posCodeVal = "POS"
   val cvxCodeVal = "CVX"
   val hl7CodeVal = "HL7"
-  val snomedctCodeVal = "SNOMED CT US Edition"
+  val rxnormCodeVal = "RXNORM"
+  val snomedctCodeVal = "SNOMED"
   val bilateralCodeVal = "bilateral (2-view study of each breast)"
   val g204CodeVal = "including computer-aided detection (cad) when performed; bilateral (G0204)"
   val g206CodeVal = "including computer-aided detection (cad) when performed; unilateral (G0206)"
