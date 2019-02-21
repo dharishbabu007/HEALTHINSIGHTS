@@ -1,7 +1,9 @@
 package com.itc.ncqa.Functions
 
 import com.itc.ncqa.Constants.KpiConstants
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions._
 
 object DataLoadFunctions {
 
@@ -20,11 +22,46 @@ object DataLoadFunctions {
     val source_name = "'"+sourceName+"'"
     val query = "select * from "+ dbName+"."+ tblName/*+" where source_name ="+source_name*/
     val df_init = spark.sql(query)
-    //df_init.select("source_name").show(50)
-    val dfColumns = df_init.columns.map(f => f.toUpperCase)
-    val resultDf = UtilFunctions.removeHeaderFromDf(df_init, dfColumns, dfColumns(0))
+   // val dfColumns = df_init.columns.map(f => f.toUpperCase)
+    //println("dfColumns(0) value is:"+dfColumns(0))
+    //val resultDf = UtilFunctions.removeHeaderFromDf(df_init, dfColumns, dfColumns(0))
+    //println("resultDf count is:"+df_init.count()+","+ resultDf.count())
+    df_init
+  }
+
+
+
+  def dataLoadFromHive(spark:SparkSession,dbName:String,tblName:String,colName:String):DataFrame ={
+
+    import spark.implicits._
+
+    val query = "select * from "+ dbName+"."+ tblName
+    val df_init = spark.sql(query)
+    val windowcreate = Window.partitionBy(s"$colName").orderBy(org.apache.spark.sql.functions.col(s"${KpiConstants.ingestiondateColName}").desc)
+    val dfrankaddedDf = df_init.withColumn(KpiConstants.rankColName, rank().over(windowcreate))
+    val resultDf = dfrankaddedDf.filter(($"${KpiConstants.activeflasgColname}".===("A"))
+                                     && ($"${KpiConstants.latestflagColName}".===("Y"))
+                                     && ($"${KpiConstants.rankColName}".===(1)))
     resultDf
   }
+
+
+  /**
+    *
+    * @param spark
+    * @param dbName
+    * @param tblName
+    * @return
+    */
+  def dataLoadFromHiveStageTable(spark:SparkSession,dbName:String,tblName:String,colNames:List[String]):DataFrame ={
+
+
+    val query = "select * from "+ dbName+"."+ tblName
+    val resultDf = spark.sql(query)
+    resultDf
+  }
+
+
 
 
   /**

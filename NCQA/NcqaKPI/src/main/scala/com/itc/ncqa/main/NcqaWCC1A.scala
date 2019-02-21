@@ -12,7 +12,7 @@ import org.apache.spark.sql.functions.{countDistinct, to_date}
 object NcqaWCC1A {
 
 
-
+/*
   def main(args: Array[String]): Unit = {
 
 
@@ -131,5 +131,5 @@ object NcqaWCC1A {
 
     spark.sparkContext.stop()
   }
-
+*/
 }

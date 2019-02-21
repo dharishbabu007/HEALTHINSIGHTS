@@ -13,6 +13,7 @@ import org.apache.spark.sql.types.DateType
 import scala.collection.JavaConversions._
 
 object NcqaSPR {
+/*
 
   def main(args: Array[String]): Unit = {
 
@@ -299,5 +300,5 @@ object NcqaSPR {
     spark.sparkContext.stop()
 
   }
-
+*/
 }

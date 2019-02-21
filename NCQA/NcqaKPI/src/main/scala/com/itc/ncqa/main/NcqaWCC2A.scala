@@ -9,6 +9,8 @@ import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add,
 
 object NcqaWCC2A {
 
+  /*
+
   def main(args: Array[String]): Unit = {
 
 
@@ -134,7 +136,7 @@ object NcqaWCC2A {
     //  outFormattedDf.write.mode(SaveMode.Overwrite).saveAsTable("ncqa_sample.fact_hedis_qms")
     spark.sparkContext.stop()
   }
-
+*/
 
 
 }

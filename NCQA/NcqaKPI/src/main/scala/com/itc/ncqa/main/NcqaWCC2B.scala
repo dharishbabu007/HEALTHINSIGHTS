@@ -9,7 +9,7 @@ import org.apache.spark.sql.functions.{abs, concat, current_timestamp, date_add,
 
 object NcqaWCC2B {
 
-
+/*
 
   def main(args: Array[String]): Unit = {
 
@@ -145,6 +145,6 @@ object NcqaWCC2B {
     spark.sparkContext.stop()
   }
 
-
+*/
 
 }

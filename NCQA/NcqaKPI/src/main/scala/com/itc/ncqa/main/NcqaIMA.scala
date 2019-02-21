@@ -1,5 +1,7 @@
 package com.itc.ncqa.main
 
+import java.sql.Date
+
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import com.itc.ncqa.Functions.SparkObject._
@@ -9,7 +11,8 @@ import org.apache.spark.sql.types.DateType
 
 import scala.collection.mutable
 
-case class Member(member_sk:String, start_date:DateType)
+case class Member(member_sk:String, service_date:Date)
+case class GroupMember(member_sk:String, dateList:List[Long])
 
 object NcqaIMA {
 
@@ -62,29 +65,33 @@ object NcqaIMA {
     /*loading ref_hedis table*/
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
     val primaryDiagnosisCodeSystem = KpiConstants.primaryDiagnosisCodeSystem
-
+    factClaimDf.cache()
+    refHedisDf.cache()
     //</editor-fold>
 
     //<editor-fold desc="Eligible Population Calculation">
 
-    /*Initial join function call for prepare the data fro common filter*/
+    //<editor-fold desc="Initial join function">
 
     val argmapForInitJoin = mutable.Map(KpiConstants.dimMemberTblName -> dimMemberDf, KpiConstants.factMembershipTblName -> factMembershipDf,
                                         KpiConstants.dimProductTblName -> dimProductPlanDf, KpiConstants.refLobTblName -> refLobDf,
                                         KpiConstants.factMemAttrTblName -> factMemAttrDf, KpiConstants.dimDateTblName -> dimDateDf)
     val initialJoinedDf = UtilFunctions.initialJoinFunction(spark,argmapForInitJoin)
-    //val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark, dimMemberDf, dimProductPlanDf, factMembershipDf, spark.emptyDataFrame, spark.emptyDataFrame, spark.emptyDataFrame, lob_name, "quality")
 
     //initialJoinedDf.printSchema()
     //initialJoinedDf.show(50)
+    //</editor-fold>
 
-    /*doing age filter 13th birthday during the measurement year */
+    //<editor-fold desc="Age filter">
+
     val ageEndDate = year + "-12-31"
     val ageStartDate = year + "-01-01"
 
-
     val ageFilterDf = initialJoinedDf.filter((add_months($"${KpiConstants.dobColName}",KpiConstants.months156).>=(ageStartDate)) && (add_months($"${KpiConstants.dobColName}",KpiConstants.months156).<=(ageEndDate)))
     //ageFilterDf.show(50)
+    //</editor-fold>
+
+    //<editor-fold desc="Continuous Enrollment, Allowable Gap and Benefit">
 
     val inputForContEnrolldf = ageFilterDf.select(KpiConstants.memberskColName, KpiConstants.dobColName, KpiConstants.benefitMedicalColname, KpiConstants.memStartDateColName,KpiConstants.memEndDateColName,KpiConstants.lobColName)
     val argMap = mutable.Map(KpiConstants.ageStartKeyName -> "12", KpiConstants.ageEndKeyName -> "13", KpiConstants.ageAnchorKeyName -> "13",
@@ -94,16 +101,21 @@ object NcqaIMA {
 
     val contEnrollDf = ageFilterDf.as("df1").join(contEnrollmemDf.as("df2"),$"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
                                   .select("df1.*")
+    //</editor-fold>
 
-    /*find out the hospice members*/
-    val hospiceDf = UtilFunctions.hospiceFunction(spark, factClaimDf, refHedisDf)
+    //<editor-fold desc="Mandatory Exclusion Calculation">
+
+    val argmapForHospice = mutable.Map(KpiConstants.eligibleDfName -> contEnrollDf.select(KpiConstants.memberskColName), KpiConstants.factClaimTblName -> factClaimDf,
+                                       KpiConstants.refHedisTblName -> refHedisDf, KpiConstants.dimDateTblName -> dimDateDf)
+    val hospiceDf = UtilFunctions.hospiceExclusionFunction(spark, argmapForHospice,year)
+    //</editor-fold>
 
     /*eligble population for IMA measure*/
     val eligibleDf = contEnrollDf.as("df1").join(hospiceDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.leftOuterJoinType)
-                                                  .filter($"df2.${KpiConstants.startDateColName}".===(null))
+                                                  .filter($"df2.${KpiConstants.memberskColName}".===(null))
                                                   .select(s"df1.${KpiConstants.memberskColName}", KpiConstants.productplanSkColName, KpiConstants.qualityMsrSkColName,KpiConstants.dobColName)
 
-
+    eligibleDf.cache()
     eligibleDf.printSchema()
 
     val filterdEligibleDf = eligibleDf.select(KpiConstants.memberskColName, KpiConstants.dobColName)
@@ -118,44 +130,58 @@ object NcqaIMA {
 
     //<editor-fold desc="Optional Exclusion Calculation">
 
-
+    val dfMapForCalculation = mutable.Map(KpiConstants.eligibleDfName -> filterdEligibleDf, KpiConstants.factClaimTblName -> factClaimDf ,
+                                          KpiConstants.refHedisTblName -> refHedisDf, KpiConstants.dimDateTblName -> dimDateDf)
     /*Dinominator Exclusion1(Anaphylactic Reaction Due To Vaccination)*/
 
-
-    /*Find memebers who has not any of the 2 vaccines*/
-    val valList = List(KpiConstants.meningococcalVal,KpiConstants.hpvVal)
+    /*Find memebers who has any of the 3 vaccines*/
+    val valList = List(KpiConstants.meningococcalVal,KpiConstants.hpvVal,KpiConstants.tdapVaccineVal)
     val codeSystem = List(KpiConstants.cptCodeVal, KpiConstants.cvxCodeVal)
-    val dfMapForCalculation = mutable.Map(KpiConstants.eligibleDfName -> filterdEligibleDf, KpiConstants.factClaimTblName -> factClaimDf , KpiConstants.refHedisTblName -> refHedisDf)
     val joinedForDinoExcl1Df = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, valList, codeSystem)
                                             .select(KpiConstants.memberskColName)
 
 
 
-
+    /*ind memebers who has  Tdap vaccines*/
     val tdapvalList = List(KpiConstants.tdapVaccineVal)
     val joinedForTdap = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, tdapvalList, codeSystem)
                                      .select(KpiConstants.memberskColName)
 
+    /*Find out the members who has not the vaccines based on the measure id*/
+    val membersDf = measureId match {
 
 
-    val membersDf = eligibleDf.select(KpiConstants.memberskColName).except(joinedForDinoExcl1Df)
+      case KpiConstants.imatdMeasureId => eligibleDf.select(KpiConstants.memberskColName).except(joinedForTdap)
+
+      case KpiConstants.imamenMeasureId => eligibleDf.select(KpiConstants.memberskColName).except(joinedForDinoExcl1Df)
+
+      case KpiConstants.imahpvMeasureId => eligibleDf.select(KpiConstants.memberskColName).except(joinedForDinoExcl1Df)
+
+      case KpiConstants.imacmb1MeasureId => eligibleDf.select(KpiConstants.memberskColName).except(joinedForDinoExcl1Df)
+
+      case KpiConstants.imacmb2MeasureId => eligibleDf.select(KpiConstants.memberskColName).except(joinedForDinoExcl1Df)
+    }
 
 
-    /*ARDV on or before 13th birth day.*/
+    //<editor-fold desc="ARDV on or before 13th birth day">
+
     val imaDinoExclValSet1 = List(KpiConstants.ardvVal)
     val ardvBef13yeardf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, imaDinoExclValSet1, primaryDiagnosisCodeSystem)
                                         .filter($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156)))
                                         .select(s"${KpiConstants.memberskColName}")
+    //</editor-fold>
 
-    /*Dinominator Exclusion2(Anaphylactic Reaction Due To Serum Value Set)*/
+    //<editor-fold desc="Anaphylactic Reaction Due To Serum Value Set">
+
     val filterOct1st2011 = "2011-10-01"
     val imaDinoExclValSet2 = List(KpiConstants.ardtsVal)
     val ardtsrBefOct1st2011Df = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, imaDinoExclValSet2, primaryDiagnosisCodeSystem)
                                              .filter($"${KpiConstants.serviceDateColName}".<=(filterOct1st2011))
                                              .select(s"${KpiConstants.memberskColName}")
+    //</editor-fold>
 
+    //<editor-fold desc="Encephalopathy Due To Vaccination Value Set">
 
-    /*Dinominator Exclusion3 (Encephalopathy Due To Vaccination Value Set) ) */
     val imaDinoExclValSet3a = List(KpiConstants.encephalopathyVal)
     val edvBefore13YearDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.primaryDiagnosisColname, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, imaDinoExclValSet3a, primaryDiagnosisCodeSystem)
                                          .filter($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156)))
@@ -170,7 +196,7 @@ object NcqaIMA {
 
     /* Encephalopathy Due To Vaccination Value Set with Vaccine Causing Adverse Effect Value Set */
     val imaExlc3Df = edvBefore13YearDf.intersect(vcabefore13YearDf)
-
+    //</editor-fold>
 
 
     /*Optional exclusion based on the Measure id*/
@@ -187,15 +213,7 @@ object NcqaIMA {
       case KpiConstants.imacmb2MeasureId => ardvBef13yeardf.union(ardtsrBefOct1st2011Df).union(imaExlc3Df)
     }
 
-
     val optionalExclDf = membersDf.intersect(optionalDinoxclDf)
-    val dinominatorExclDf = spark.emptyDataFrame
-
-
-    /*Dinominator After Exclusion*/
-    val dinominatorAfterExclusionDf = dinominatorForKpiCalDf.except(dinominatorExclDf)
-    //dinominatorAfterExclusionDf.printSchema()
-
     //</editor-fold>
 
     //<editor-fold desc="Numerator Calculation">
@@ -234,40 +252,30 @@ object NcqaIMA {
     val imaHpvAgeFilterDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark, dfMapForCalculation, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.imaMeasureId, imaHpvValueSet, imaHpvCodeSystem)
                                          .filter(($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months108))) && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months156)))
                                                   && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList)))
-                                         .select(s"${KpiConstants.memberskColName}", s"${KpiConstants.startDateColName}")
+                                         .select(s"${KpiConstants.memberskColName}", s"${KpiConstants.serviceDateColName}")
 
 
 
 
-    /*At least 2 HPV test between 9 and 13th birthday*/
-    val imaHpvAtleast2Df = imaHpvAgeFilterDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias(KpiConstants.countColName))
-                                            .filter($"${KpiConstants.countColName}".>=(KpiConstants.count2Val))
+    /*HPV First Condition(atleast 2 date of service with 146 days gap)*/
+    val imaHpv1Df = imaHpvAgeFilterDf.groupBy(KpiConstants.memberskColName).agg(count(when(datediff(max($"${KpiConstants.serviceDateColName}"), min($"${KpiConstants.serviceDateColName}")).>=(146), 1)).alias(KpiConstants.countColName))
+                                            .filter($"${KpiConstants.countColName}".>=(KpiConstants.count1Val))
                                             .select(KpiConstants.memberskColName)
-    /*ima Hpv with start date*/
-    val imaHpvStDateDf = imaHpvAgeFilterDf.as("df1").join(imaHpvAtleast2Df.as("df2"),$"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
-                                          .select(s"df1.${KpiConstants.memberskColName}",s"df1.${KpiConstants.startDateColName}")
-
-    val rdd1 = imaHpvStDateDf.rdd.map(r=> (r.getString(0),r.getDate(1)))
-
-
-    //imaHpvStDateDf.printSchema()
-
-    /*window creation for finding out the first and second date for each member_sk*/
-    val windowVal = Window.partitionBy(s"${KpiConstants.memberskColName}").orderBy(s"${KpiConstants.startDateColName}")
-
-    /*imHpv with at least 2 visit (member_sk and first 2 visit dates)*/
-    val imaHpv1Df = imaHpvStDateDf.withColumn(KpiConstants.rankColName, rank().over(windowVal)).withColumn(KpiConstants.immuneDate2ColName, first(KpiConstants.immuneDateColName).over(windowVal))
-                                  .filter(($"${KpiConstants.rankColName}".<=(KpiConstants.count2Val)) && (datediff($"${KpiConstants.immuneDateColName}", $"${KpiConstants.immuneDate2ColName}").>=(KpiConstants.days146)))
-                                  .select(s"${KpiConstants.memberskColName}")
 
 
 
+    val imaHpv2InDf = imaHpvAgeFilterDf.as("df1").join(imaHpv1Df.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.leftOuterJoinType)
+                                       .filter($"df2.${KpiConstants.memberskColName}".isNull)
+                                       .select("df1.*")
 
-    /*ImaHPV numerator first part (at least 3 HPV test between 9 and 13th birthday)*/
-    val imaHpv2Df =  imaHpvAgeFilterDf.groupBy(KpiConstants.memberskColName).agg(countDistinct(KpiConstants.startDateColName).alias(KpiConstants.countColName))
-                                              .filter($"${KpiConstants.countColName}".>=(KpiConstants.count3Val))
-                                              .select(KpiConstants.memberskColName)
+    val inDs = imaHpv2InDf.as[Member]
 
+    val groupedDs = inDs.groupByKey(inDs => (inDs.member_sk))
+                        .mapGroups((k,itr) => (k,itr.map(f=> f.service_date.getTime).toArray.sorted))
+
+
+    val imaHpv2Df = groupedDs.map(f=> UtilFunctions.getMembers(f._1,f._2))
+                            .filter(f=> f._2.equals("Y")).select("_1").toDF("member_sk")
 
 
     val imaHpvDf = imaHpv1Df.union(imaHpv2Df)
@@ -302,7 +310,7 @@ object NcqaIMA {
 
     }
 
-    val numeratorDf =  imaNumeratorDf.intersect(dinominatorAfterExclusionDf)
+    val numeratorDf =  imaNumeratorDf
     //numeratorDf.show()
     //</editor-fold>
 
