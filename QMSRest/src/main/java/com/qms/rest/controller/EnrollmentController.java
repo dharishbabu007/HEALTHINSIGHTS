@@ -17,11 +17,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.qms.rest.model.EnrollmentFileOutput;
 import com.qms.rest.model.FactGoalRecommendations;
+import com.qms.rest.model.GoalRecommendation;
+import com.qms.rest.model.GoalRecommendationSet;
+import com.qms.rest.model.GoalSet;
 import com.qms.rest.model.Objectives;
 import com.qms.rest.model.PersonaMemberListView;
 import com.qms.rest.model.RefModel;
 import com.qms.rest.model.RestResult;
+import com.qms.rest.model.RewardRecommendationSet;
 import com.qms.rest.model.RewardsFileOutput;
+import com.qms.rest.model.RewardsRecommendations;
 import com.qms.rest.service.EnrollmentService;
 
 @RestController
@@ -70,10 +75,10 @@ public class EnrollmentController {
 		return new ResponseEntity<Set<String>>(dataList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/getCearGapList/{mid}", method = RequestMethod.GET)
-	public ResponseEntity<Set<String>> getCearGapList(@PathVariable("MEMBER_ID") String mid ){ 
+	@RequestMapping(value = "/get_caregap_list_by_memberid/{memberId}", method = RequestMethod.GET)
+	public ResponseEntity<Set<String>> getCareGapListByMemberId(@PathVariable("memberId") String memberId ){ 
 		
-		Set<String> dataList = enrollmentService.getCearGapList(mid);
+		Set<String> dataList = enrollmentService.getCareGapListByMemberId(memberId);
 		if (dataList.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);			
 		}
@@ -90,16 +95,6 @@ public class EnrollmentController {
 		headers.setLocation(ucBuilder.path("/api/factGoalRecommendations/{id}").buildAndExpand(10).toUri());
 		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.CREATED);
 	}	
-	
-	@RequestMapping(value = "/getCareGapList/{mid}", method = RequestMethod.GET)
-	public ResponseEntity<Set<String>> getCareGapList(@PathVariable("mid") String mid ){ 
-		
-		Set<String> dataList = enrollmentService.getcareGapMeasurelist(mid);
-		if (dataList.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);			
-		}
-		return new ResponseEntity<Set<String>>(dataList, HttpStatus.OK);
-	}
 	
 	@RequestMapping(value = "/get_Persona_Member_list/{mid}", method = RequestMethod.GET)
 	public ResponseEntity<PersonaMemberListView> getPersonaMemberList(@PathVariable("mid") String mid ) {
@@ -150,6 +145,63 @@ public class EnrollmentController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/rewards_File_Output/{id}").buildAndExpand(10).toUri());
 		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.CREATED);
+	}	
+	
+	@RequestMapping(value = "/insert_Rewards_Recommendations", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> insertRewardsRecommendations(@RequestBody RewardsRecommendations rewardsRecommendations,
+			UriComponentsBuilder ucBuilder) {
+		System.out.println(" Insert Rewards Recommendations --> " + rewardsRecommendations.getRewardRecId());
+		RestResult restResult = enrollmentService.insertRewardsRecommendations(rewardsRecommendations);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(ucBuilder.path("/api/insert_Rewards_Recommendations/{id}").buildAndExpand(10).toUri());
+		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.CREATED);
+	}	
+	
+	@RequestMapping(value = "/filter_Persona_Member_list/{filterType}/{filterValue}", method = RequestMethod.GET)
+	public ResponseEntity<Set<PersonaMemberListView>> filterPersonaMemberList(@PathVariable("filterType") String filterType, 
+			@PathVariable("filterValue") String filterValue ) {
+		Set<PersonaMemberListView> workList = enrollmentService.filterPersonaMemberList(filterType, filterValue);
+		if (workList==null) {
+			return new ResponseEntity<Set<PersonaMemberListView>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<PersonaMemberListView>>(workList, HttpStatus.OK);
+	}
+	
+//	@RequestMapping(value = "/getGoalRecommendationsMemberList", method = RequestMethod.GET)
+//	public ResponseEntity<Set<GoalRecommendation>> getGoalRecommendationsMemberList() {
+//		Set<GoalRecommendation> workList = enrollmentService.getGoalRecommendationsMemberList();
+//		if (workList==null) {
+//			return new ResponseEntity<Set<GoalRecommendation>>(HttpStatus.NO_CONTENT);
+//		}
+//		return new ResponseEntity<Set<GoalRecommendation>>(workList, HttpStatus.OK);
+//	}
+//	
+//	@RequestMapping(value = "/getGoalsSetMemberList", method = RequestMethod.GET)
+//	public ResponseEntity<Set<GoalSet>> getGoalsSetMemberList() {
+//		Set<GoalSet> workList = enrollmentService.getGoalsSetMemberList();
+//		if (workList==null) {
+//			return new ResponseEntity<Set<GoalSet>>(HttpStatus.NO_CONTENT);
+//		}
+//		return new ResponseEntity<Set<GoalSet>>(workList, HttpStatus.OK);
+//	}
+	
+	@RequestMapping(value = "/getGoalRecommendationsSetMemberList", method = RequestMethod.GET)
+	public ResponseEntity<Set<GoalRecommendationSet>> getGoalRecommendationsSetMemberList() {
+		Set<GoalRecommendationSet> workList = enrollmentService.getGoalRecommendationsSetMemberList();
+		if (workList==null) {
+			return new ResponseEntity<Set<GoalRecommendationSet>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<GoalRecommendationSet>>(workList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/getRewardRecommendationsSetMemberList", method = RequestMethod.GET)
+	public ResponseEntity<Set<RewardRecommendationSet>> getRewardRecommendationsSetMemberList() {
+		Set<RewardRecommendationSet> workList = enrollmentService.getRewardRecommendationsSetMemberList();
+		if (workList==null) {
+			return new ResponseEntity<Set<RewardRecommendationSet>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<RewardRecommendationSet>>(workList, HttpStatus.OK);
 	}	
 	
 }

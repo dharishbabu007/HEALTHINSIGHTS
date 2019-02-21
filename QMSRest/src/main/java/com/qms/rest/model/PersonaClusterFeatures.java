@@ -12,15 +12,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class PersonaClusterFeatures {
-	String clusterId;
-	String featureName;
-	String featureType;
-	String featureSignificanceValue;
-	String maxFrequency;
-	String modelId;
+	String clusterId="";
+	String featureName="";
+	String featureType="";
+	String featureSignificanceValue="";
+	String maxFrequency="";
+	String modelId="";
 	String x;
 	int y;
-	String personaName;
+	String personaName="";
 	
 	@Override
 	public int hashCode() {
