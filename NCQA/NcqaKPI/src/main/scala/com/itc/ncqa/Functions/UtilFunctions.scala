@@ -951,31 +951,21 @@ object UtilFunctions {
 
     import spark.implicits._
 
-    val primaryDiagnosisCodeSystem = KpiConstants.primaryDiagnosisCodeSystem
-    val contEnrollDf = argMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
-    val factClaimDf  = argMap.get(KpiConstants.factClaimTblName).getOrElse(spark.emptyDataFrame)
+
+    val eligibleDf = argMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
     val refHedisDf   = argMap.get(KpiConstants.refHedisTblName).getOrElse(spark.emptyDataFrame)
-    val dimDateDf    = argMap.get(KpiConstants.dimDateTblName).getOrElse(spark.emptyDataFrame)
 
-    val ageMoreThanDf = UtilFunctions.ageFilter(contEnrollDf,KpiConstants.dobColName,year,lowerAge, upperAge,KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-                                     .select(KpiConstants.memberskColName)
 
-    val argmapForFralityExclusion = mutable.Map(KpiConstants.eligibleDfName -> ageMoreThanDf, KpiConstants.factClaimTblName -> factClaimDf,
-                                                KpiConstants.refHedisTblName -> refHedisDf, KpiConstants.dimDateTblName -> dimDateDf)
-    /*Frality As Primary Diagnosis*/
+    val ageMoreThanDf = UtilFunctions.ageFilter(eligibleDf,KpiConstants.dobColName,year,lowerAge, upperAge,KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+
+    val argmapForFralityExclusion = mutable.Map(KpiConstants.eligibleDfName -> ageMoreThanDf, KpiConstants.refHedisTblName -> refHedisDf)
+
     val fralityValList = List(KpiConstants.fralityVal)
-    val joinedForFralityAsDiagDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,argmapForFralityExclusion,KpiConstants.primaryDiagnosisColname,KpiConstants.innerJoinType,KpiConstants.cbpMeasureId,fralityValList,primaryDiagnosisCodeSystem)
-    val fralityAsDiagDf = UtilFunctions.measurementYearFilter(joinedForFralityAsDiagDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement0Val)
-                                       .select(KpiConstants.memberskColName)
+    val fralityCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.icd10cmCodeVal)
+    val joinedForFralityAsDiagDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapForFralityExclusion,fralityValList,fralityCodeSystem)
+    val fralityDf = UtilFunctions.measurementYearFilter(joinedForFralityAsDiagDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement0Val)
+                                 .select(KpiConstants.memberidColName)
 
-    /*Frality As Proceedure Code*/
-    val fralityCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal)
-    val joinedForFralityAsProcDf = UtilFunctions.dimMemberFactClaimHedisJoinFunction(spark,argmapForFralityExclusion,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.cbpMeasureId,fralityValList,fralityCodeSystem)
-    val fralityAsProcDf = UtilFunctions.measurementYearFilter(joinedForFralityAsProcDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement2Val)
-                                       .select(KpiConstants.memberskColName)
-
-    /*Frality Union Data*/
-    val fralityDf = fralityAsDiagDf.union(fralityAsProcDf)
     fralityDf
   }
 
@@ -1140,7 +1130,7 @@ object UtilFunctions {
                                                                          .select("df1.*")
 
 
-        case KpiConstants.loincCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.loincCodeVal}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+        case KpiConstants.loincCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.loinccodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                       .filter($"df2.${KpiConstants.valuesetColName}".isin(valueset:_*))
                                                                       .select("df1.*")
 
@@ -1168,10 +1158,11 @@ object UtilFunctions {
 
 
       }
-
+      //println("--------------df counts-----------:"+df.count())
       if(inDf == spark.emptyDataFrame){
 
         inDf = df
+        //println("count in join function:"+inDf.count())
       }
       else{
 
@@ -1237,6 +1228,7 @@ object UtilFunctions {
 
 
     val measAddedDf = numColAddedDf.withColumn(KpiConstants.ncqaOutMeasureCol,lit(measureId))
+                                   .withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
 
     val resultDf = measAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
     resultDf

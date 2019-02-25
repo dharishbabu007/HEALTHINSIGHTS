@@ -1,10 +1,15 @@
 package com.itc.ncqa.main
 
 import com.itc.ncqa.Constants.KpiConstants
+import com.itc.ncqa.Functions.SparkObject.spark
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.DateType
+
+import scala.collection.mutable
 
 
 object NcqaLSC {
@@ -12,113 +17,240 @@ object NcqaLSC {
   def main(args: Array[String]): Unit = {
 
 
-    //<editor-fold desc="Reading Program arguments and SparkSession Object Creation.">
+    //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
     val year = args(0)
     val lob_name = args(1)
     val programType = args(2)
     val dbName = args(3)
     val measureId = args(4)
-    var data_source =""
+    var data_source = ""
 
-    /*define data_source on program type. */
-    if("ncqatest".equals(programType)) {
+    /*define data_source based on program type. */
+    if ("ncqatest".equals(programType)) {
       data_source = KpiConstants.ncqaDataSource
     }
     else {
       data_source = KpiConstants.clientDataSource
     }
 
-
     /*calling function for setting the dbname for dbName variable*/
     KpiConstants.setDbName(dbName)
 
-
-    /*define data_source based on program type. */
-    val conf = new SparkConf().setMaster("local[*]").setAppName("NCQALSC")
-    conf.set("hive.exec.dynamic.partition.mode","nonstrict")
-    val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     //</editor-fold>
 
-    //<editor-fold desc="Laoding Required tables to memory">
+    //<editor-fold desc="Loading Required Tables to memory">
 
     import spark.implicits._
 
-    /*Loading dim_member,fact_claims,fact_membership tables*/
-    val dimMemberDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName,KpiConstants.dimMemberTblName,data_source)
-    val factClaimDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName,KpiConstants.factClaimTblName,data_source)
-    val factMembershipDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName,KpiConstants.factMembershipTblName,data_source)
-    val ref_lobDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refLobTblName)
-    val dimFacilityDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName,KpiConstants.dimFacilityTblName,data_source).select(KpiConstants.facilitySkColName)
-    val dimLocationDf = DataLoadFunctions.dataLoadFromTargetModel(spark,KpiConstants.dbName,KpiConstants.dimLocationTblName,data_source)
+    val aLiat = List("col1")
+    //val generalmembershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.generalmembershipTblName,aLiat)
+
+    val membershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.membershipTblName,aLiat)
+                                        .filter(($"${KpiConstants.considerationsColName}".===(KpiConstants.yesVal))
+                                             && ($"${KpiConstants.memStartDateColName}".isNotNull)
+                                             && ($"${KpiConstants.memEndDateColName}".isNotNull))
+                                        .cache()
+
+    val visitDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.visitTblName,aLiat)
+                                   .filter(($"${KpiConstants.serviceDateColName}".isNotNull)
+                                        &&(($"${KpiConstants.admitDateColName}".isNotNull && $"${KpiConstants.dischargeDateColName}".isNotNull)
+                                        || ($"${KpiConstants.admitDateColName}".isNull && $"${KpiConstants.dischargeDateColName}".isNull)))
+                                   .cache()
+
+    val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
+                                      .filter($"${KpiConstants.measureIdColName}".===(KpiConstants.lscMeasureId))
+                                      .cache()
+
+    val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refmedValueSetTblName)
+                                             .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.lscMeasureId))
+                                             .cache()
+
     //</editor-fold>
 
-    //<editor-fold desc="Initial Join, Allowable Gap,Age filter and Continous enrollment">
+    //<editor-fold desc="Eligible Population Calculation">
 
-    /*Initial join function call for prepare the data from common filter*/
-    val initialJoinedDf = UtilFunctions.joinForCommonFilterFunction(spark,dimMemberDf,factClaimDf,factMembershipDf,dimLocationDf,ref_lobDf,dimFacilityDf,lob_name,KpiConstants.lscMeasureTitle)
+    //<editor-fold desc="Initial join function">
 
-    var lookUpDf = spark.emptyDataFrame
+    val argmapForInitJoin = mutable.Map( KpiConstants.membershipTblName -> membershipDf, KpiConstants.visitTblName -> visitDf)
+    val initialJoinedDf = UtilFunctions.initialJoinFunction(spark,argmapForInitJoin).cache()
+    initialJoinedDf.count()
+    // println("initialJoinedDf.count():"+initialJoinedDf.count())
+    //</editor-fold>
 
-    if(lob_name.equalsIgnoreCase(KpiConstants.commercialLobName)) {
+    //<editor-fold desc="Hospice Removal">
 
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view45Days)
+    val argmapforHospice = mutable.Map(KpiConstants.eligibleDfName -> initialJoinedDf, KpiConstants.refHedisTblName -> refHedisDf
+      ,KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
+
+    val hospiceValList = List(KpiConstants.hospiceVal)
+    val hospiceCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal, KpiConstants.ubtobCodeVal)
+    val hospiceClaimsDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapforHospice,hospiceValList,hospiceCodeSystem)
+    val hospiceincurryearDf = UtilFunctions.measurementYearFilter(hospiceClaimsDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val, KpiConstants.measurement0Val)
+      .select(KpiConstants.memberidColName)
+
+    var hospiceRemovedClaimsDf = spark.emptyDataFrame
+    if (hospiceincurryearDf.count()> 0){
+      hospiceRemovedClaimsDf = initialJoinedDf.as("df1").join(hospiceincurryearDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.leftOuterJoinType)
+        .filter($"df2.${KpiConstants.memberidColName}".isNull)
+        .select("df1.*").cache()
     }
-    else{
-
-      lookUpDf = DataLoadFunctions.viewLoadFunction(spark,KpiConstants.view60Days)
+    else {
+      hospiceRemovedClaimsDf = initialJoinedDf.cache()
     }
+    hospiceRemovedClaimsDf.count()
+    initialJoinedDf.unpersist()
+    //</editor-fold>
+
+    //<editor-fold desc="Age Filter">
+
+    val age_filter_upperDate = year + "-12-31"
+    val age_filter_lowerDate = year + "-01-01"
+    val ageFilterDf = hospiceRemovedClaimsDf.filter((add_months($"${KpiConstants.dobColName}", KpiConstants.months24).>=(age_filter_lowerDate)) && (add_months($"${KpiConstants.dobColName}", KpiConstants.months24).<=(age_filter_upperDate)))
+    //</editor-fold>
+
+    //<editor-fold desc="Continuous Enrollment, Allowable Gap and Benefit">
 
 
-    /*common filter checking*/
-    val commonFilterDf = initialJoinedDf.as("df1").join(lookUpDf.as("df2"),initialJoinedDf.col(KpiConstants.memberskColName) === lookUpDf.col(KpiConstants.memberskColName),KpiConstants.leftOuterJoinType).filter(lookUpDf.col("start_date").isNull).select("df1.*")
+    val contEnrollStartDate = year + "-01-01"
+    val contEnrollEndDate = year + "-12-31"
+    val inputForContEnrolldf = ageFilterDf.select(KpiConstants.memberidColName, KpiConstants.benefitMedicalColname,
+                                                  KpiConstants.memStartDateColName,KpiConstants.memEndDateColName,
+                                                  KpiConstants.lobColName, KpiConstants.dobColName)
 
-    /*Age filter*/
+    val contEnrollInDf = inputForContEnrolldf.withColumn(KpiConstants.contenrollLowCoName, add_months($"${KpiConstants.dobColName}", KpiConstants.months12))
+                                             .withColumn(KpiConstants.contenrollUppCoName, add_months($"${KpiConstants.dobColName}", KpiConstants.months24))
+                                             .withColumn(KpiConstants.anchorDateColName, add_months($"${KpiConstants.dobColName}", KpiConstants.months24))
 
-    val expr = "year(date_add(dob,730)) = "+year
-    val ageFilterDf = commonFilterDf.filter(expr)
 
-    /*Adding first_dob,second_dob columns for continous enrollment check.*/
-    val firstSecondDobAddedDf = ageFilterDf.withColumn("first_dob",add_months(ageFilterDf.col(KpiConstants.dobColName),12)).withColumn("second_dob",add_months(ageFilterDf.col(KpiConstants.dobColName),24))
+    /*step1 (find out the members whoose either mem_start_date or mem_end_date should be in continuous enrollment period)*/
+    val contEnrollStep1Df = contEnrollInDf.filter((($"${KpiConstants.memStartDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
+      || (($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))))
 
-    /*Continous Enroll check(continously enrolled in the 12 months prior to the second birthday)*/
-    val continuousEnrollDf = firstSecondDobAddedDf.filter(firstSecondDobAddedDf.col(KpiConstants.memStartDateColName).<=(firstSecondDobAddedDf.col("first_dob")) && firstSecondDobAddedDf.col(KpiConstants.memEndDateColName).>=(firstSecondDobAddedDf.col("second_dob"))).drop("first_dob")
+
+
+    val contEnrollStep2Df = contEnrollStep1Df.withColumn(KpiConstants.benefitMedicalColname, when($"${KpiConstants.benefitMedicalColname}".===(KpiConstants.yesVal), 1).otherwise(0))
+
+
+
+
+    /*Step3(select the members who satisfy both (min_start_date- ces and cee- max_end_date <= allowable gap) conditions)*/
+    val listDf = contEnrollStep2Df.groupBy($"${KpiConstants.memberidColName}")
+      .agg(max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
+        min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
+        first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
+        first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
+      .filter(((date_add($"max_mem_end_date",KpiConstants.days45+1).>=($"${KpiConstants.contenrollUppCoName}"))
+        && (date_sub($"min_mem_start_date",KpiConstants.days45 +1).<=($"${KpiConstants.contenrollLowCoName}"))))
+      .select($"${KpiConstants.memberidColName}")
+
+    val contEnrollStep3Df = contEnrollStep2Df.as("df1").join(listDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+      .select("df1.*")
+
+
+    // contEnrollStep3Df.printSchema()
+    /*window function creation based on partioned by member_sk and order by mem_start_date*/
+    val contWindowVal = Window.partitionBy(s"${KpiConstants.memberidColName}").orderBy(s"${KpiConstants.memStartDateColName}")
+
+
+    /* added 3 columns (date_diff(datediff b/w next start_date and current end_date for each memeber),
+     anchorflag(if member is continuously enrolled on anchor date 1, otherwise 0)
+     count(if date_diff>1 1, otherwise 0) over window*/
+    val contEnrollStep4Df = contEnrollStep3Df.withColumn(KpiConstants.datediffColName, datediff(lead($"${KpiConstants.memStartDateColName}",1).over(contWindowVal), $"${KpiConstants.memEndDateColName}"))
+      .withColumn(KpiConstants.anchorflagColName,when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.anchorDateColName}"))
+        && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}"))
+        && ($"${KpiConstants.lobColName}".===(lob_name)), lit(1)).otherwise(lit(0)))
+      .withColumn(KpiConstants.countColName, when($"${KpiConstants.datediffColName}".>(1),lit(1)).otherwise(lit(0)) )
+
+
+
+    val contEnrollStep5Df = contEnrollStep4Df.groupBy(KpiConstants.memberidColName)
+      .agg(min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
+        max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
+        max($"${KpiConstants.datediffColName}").alias(KpiConstants.maxDateDiffColName),
+        sum($"${KpiConstants.countColName}").alias(KpiConstants.countColName),
+        sum($"${KpiConstants.anchorflagColName}").alias(KpiConstants.anchorflagColName),
+        first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
+        first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName),
+        sum($"${KpiConstants.benefitMedicalColname}").alias(KpiConstants.sumBenefitColName),
+        count($"${KpiConstants.benefitMedicalColname}").alias(KpiConstants.countBenefitColName))
+
+
+
+    val contEnrollmemDf = contEnrollStep5Df.filter((($"${KpiConstants.maxDateDiffColName}" - 1).<=(KpiConstants.days45) || ($"${KpiConstants.maxDateDiffColName}" - 1).isNull)
+      && ($"${KpiConstants.anchorflagColName}".>(0))
+      && ((($"${KpiConstants.countColName}")
+      + (when(date_sub($"min_mem_start_date", 1).>($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
+      + (when(date_add($"max_mem_end_date", 1).<($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
+      && ($"${KpiConstants.sumBenefitColName}".===($"${KpiConstants.countBenefitColName}")))
+      .select(KpiConstants.memberidColName)
+
+
+    //val contEnrollmemDf = UtilFunctions.contEnrollAndAllowableGapFilter(spark,inputForContEnrolldf,KpiConstants.commondateformatName,argMap)
+
+    val contEnrollDf = ageFilterDf.as("df1").join(contEnrollmemDf.as("df2"),$"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+                                                   .select("df1.*").cache()
+    //val table1 = contEnrollDf.createTempView("contEnrollTable")
+    println(contEnrollDf.count())
+    ageFilterDf.unpersist()
+    //contEnrollDf.printSchema()
+    //println("contEnroll count:"+contEnrollDf.count())
+
+    //</editor-fold>
+
+    val totalPopDf = contEnrollDf
+
+    val eligibleDf = totalPopDf.select(KpiConstants.memberidColName)
+    eligibleDf.show()
     //</editor-fold>
 
     //<editor-fold desc="Dinominator Calculation">
 
-    /*Dinominator calculation*/
-    val dinominatorDf = continuousEnrollDf
-    val dinominatorForKpiCalDf = dinominatorDf.select(KpiConstants.memberskColName).distinct()
-    //dinominatorDf.show()
-    //</editor-fold>
+    val dinominatorDf = eligibleDf
 
-    //<editor-fold desc="Dinominator Exclusion">
-
-    /*loading ref_hedis table*/
-    val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refHedisTblName)
-    /*find out the hospice members*/
-    val hospiceDf = UtilFunctions.hospiceFunction(spark,factClaimDf,refHedisDf).select(KpiConstants.memberskColName).distinct()
-    /*Dinominator After Exclusion*/
-    val dinominatorAfterExclusionDf = dinominatorForKpiCalDf.except(hospiceDf)
-    //dinominatorAfterExclusionDf.show()
     //</editor-fold>
 
     //<editor-fold desc="Numerator Calculation">
 
+    //<editor-fold desc="Numerator Calculation for Non supplement Data">
+
+    val claimStatusList = List(KpiConstants.paidVal, KpiConstants.suspendedVal, KpiConstants.pendingVal, KpiConstants.deniedVal)
+
+    val eligNumsuppNDf = totalPopDf.filter(($"${KpiConstants.supplflagColName}".===("N"))
+                                        && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
+
+    val argmapNumSuppNdata = mutable.Map(KpiConstants.eligibleDfName -> eligNumsuppNDf, KpiConstants.refHedisTblName -> refHedisDf,
+                                         KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
+
     /*Numerator Calculation*/
     val leadTestValList = List(KpiConstants.leadTestVal)
     val leadTestCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.loincCodeVal,KpiConstants.hcpsCodeVal)
-    val hedisJoinedForNumerator = UtilFunctions.factClaimRefHedisJoinFunction(spark,factClaimDf,refHedisDf,KpiConstants.proceedureCodeColName,KpiConstants.innerJoinType,KpiConstants.lsMeasureId,leadTestValList,leadTestCodeSystem)
+    val numeratorNonSuppDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapNumSuppNdata,leadTestValList,leadTestCodeSystem)
+                                               .filter($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months24)))
+                                               .select(KpiConstants.memberidColName)
 
-    /*Lead test on or before the second birth day .*/
-    val leadtestbeforeSecBdayDf = continuousEnrollDf.select("member_sk","second_dob").as("df1").join(hedisJoinedForNumerator.as("df2"),$"df1.member_sk" === $"df2.member_sk",KpiConstants.innerJoinType)
-                                       .filter($"start_date".<=($"second_dob")).select("df1.member_sk")
-    val numeratorDf = leadtestbeforeSecBdayDf.intersect(dinominatorAfterExclusionDf)
-    //dayFilterCondionNumeratorDf.show()
+
+    //</editor-fold>
+
+    //<editor-fold desc="Numerator Calculation for Other Data">
+
+    val eligNumsuppDf = totalPopDf.as("df1").join(numeratorNonSuppDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.leftOuterJoinType)
+                                                   .filter(($"df2.${KpiConstants.memberidColName}".isNull) && ($"df1.${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
+
+    val argmapNumSuppdata = mutable.Map(KpiConstants.eligibleDfName -> eligNumsuppDf, KpiConstants.refHedisTblName -> refHedisDf,
+                                        KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
+
+    val numeratorSuppDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapNumSuppNdata,leadTestValList,leadTestCodeSystem)
+                                       .filter($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months24)))
+                                       .select(KpiConstants.memberidColName)
+    //</editor-fold>
+
+    val numeratorDf = numeratorNonSuppDf.union(numeratorSuppDf)
     numeratorDf.show()
     //</editor-fold>
 
+
+    /*
     //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
     /*Common output format (data to fact_hedis_gaps_in_care)*/
@@ -132,10 +264,9 @@ object NcqaLSC {
 
     val numExclDf = spark.emptyDataFrame
     val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, hospiceDf, numeratorDf, numExclDf, listForOutput, sourceAndMsrIdList)
-    //outFormatDf.write.format("parquet").mode(SaveMode.Append).insertInto("ncqa_sample.gaps_in_hedis_test")*/
     outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
     //</editor-fold>
-
+*/
     spark.sparkContext.stop()
   }
 
