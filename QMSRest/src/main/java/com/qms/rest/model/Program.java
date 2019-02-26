@@ -14,7 +14,7 @@ import java.util.List;
 public class Program {
 
     private String programName;
-
+    
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yy")
     private Date startDate;
 

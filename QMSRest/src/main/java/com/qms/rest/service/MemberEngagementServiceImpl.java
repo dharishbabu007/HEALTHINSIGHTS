@@ -331,17 +331,8 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			else 
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);			
 			
-			
-//			statement.setInt(++i, clusteringPersona.getClusterId());
-//			statement.setString(++i, clusteringPersona.getBarriers());
-//			statement.setString(++i, clusteringPersona.getDemographics());
-//			statement.setString(++i, clusteringPersona.getGoals());
-//			statement.setString(++i, clusteringPersona.getHealthStatus());
-//			statement.setString(++i, clusteringPersona.getMotivations());
-//			statement.setString(++i, clusteringPersona.getPersonaName());
-//			statement.setString(++i, clusteringPersona.getSocialMedia());
 			statement.executeUpdate();
-			//connection.commit();
+			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, clusteringPersona.getClusterId()+"");
 			return RestResult.getSucessRestResult(" Cluster Persona update Success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -744,9 +735,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		try {
 			List<String> xData = new ArrayList<>();
 			List<Integer> yData = new ArrayList<>();
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select x,y from cp_features where cluster_id='"+clusterId+"' and feature_name='"+attributeName+"'");			
+			resultSet = statement.executeQuery("select x,y from qms_cp_features where cluster_id='"+clusterId+"' and feature_name='"+attributeName+"'");			
 			while (resultSet.next()) {
 				xData.add(resultSet.getString("x"));
 				yData.add(resultSet.getInt("y"));
@@ -770,9 +761,9 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {
-			connection = qmsConnection.getHiveConnection();
+			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from cp_features where cluster_id='"+clusterId+"'");
+			resultSet = statement.executeQuery("select * from qms_cp_features where cluster_id='"+clusterId+"'");
 			PersonaClusterFeatures personaClusterFeatures = null;
 			while (resultSet.next()) {
 				personaClusterFeatures = new PersonaClusterFeatures();

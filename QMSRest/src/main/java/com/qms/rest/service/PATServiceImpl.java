@@ -235,7 +235,7 @@ public class PATServiceImpl implements PATService {
 			statement.setString(++i, "Y"); //COMPLIANT_FLAG
 			statement.executeUpdate();
 			
-			httpSession.setAttribute(QMSConstants.SESSION_PAT_ID, mitId+"");			
+			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, mitId+"");			
 			return RestResult.getSucessRestResult("MIT creation sucess. ");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -173,12 +175,18 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 	}
 
 	@Override
-	public RestResult importFile(MultipartFile file) {
+	public RestResult importFile(MultipartFile file, String type) {
 		return null;
 	}
 
 	@Override
 	public RestResult saveFileUpload(GicLifeCycleFileUpload fileUpload) {
+		return null;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getUploadFileByTypeId(Statement statement, List<Integer> typeIds, int typeId,
+			String type) throws Exception {
 		return null;
 	}
 

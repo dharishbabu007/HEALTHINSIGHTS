@@ -79,9 +79,7 @@ public class ImportExportController {
 		User user = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setFileName(uploadfile.getOriginalFilename());
-		fileUpload.setDateTime(new java.util.Date());
 		if(user != null) {
-			fileUpload.setUsersName(user.getLoginId());			
 			fileUpload.setUserName(user.getLoginId());
 		} 
 		fileUpload = importExportService.saveFileUpload(fileUpload);

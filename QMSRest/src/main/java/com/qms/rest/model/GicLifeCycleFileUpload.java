@@ -1,7 +1,5 @@
 package com.qms.rest.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +12,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class GicLifeCycleFileUpload {
-	private int fileId;
-	private int lifeCycleId;
+//	private int fileId;
+//	private int lifeCycleId;
 	private String filePath;
 	private String fileName;
+	private String type;
+	private String typeId;
 }

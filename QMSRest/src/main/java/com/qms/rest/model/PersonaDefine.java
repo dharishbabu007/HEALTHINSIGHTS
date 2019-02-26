@@ -1,5 +1,8 @@
 package com.qms.rest.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +31,5 @@ public class PersonaDefine {
 	private String demoFamilySize;
 	private String imageUrl;
 	private String bio;
+	private List<String> uploadFilesList = new ArrayList<>();
 }

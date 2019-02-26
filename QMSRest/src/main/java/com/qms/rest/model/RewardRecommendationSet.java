@@ -17,6 +17,11 @@ public class RewardRecommendationSet {
 	private String age;
 	private String gender;
 	private String persona;
-	private RewardRecommendationSetData rewardRecommendation; 
-	private RewardRecommendationSetData rewardSet;
+	
+	private String motivations;
+	private String category;
+	private String goal;
+	private String frequency;
+	private String rewardRecommendation;
+	private String rewardSet;	
 }

@@ -34,13 +34,5 @@ public class FactGoalRecommendations {
 	private String currentCalorieIntake;
 	private String numberOfChronicDiseases;
 	private String addictions;
-	private String currFlag;
-	private String recCreateDate;
-	private String recUpdateDate;
-	private String latestFlag;
-	private String activeFlag;
-	private String ingestionDate;
-	private String sourceName;
-	private String userName;
 	
 }
