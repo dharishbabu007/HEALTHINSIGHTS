@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -28,7 +27,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -46,7 +44,6 @@ import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.repository.FileUpoadRepository;
-import com.qms.rest.util.AzureBlob;
 import com.qms.rest.util.AzureBlobStorage;
 import com.qms.rest.util.HDFSFileUtil;
 import com.qms.rest.util.QMSAnalyticsProperty;
@@ -752,6 +749,8 @@ public class ImportExportServiceImpl implements ImportExportService {
 	public FileUpload saveFileUpload(FileUpload fileUpload) {
 		Date currentDate  = new Date();
 		fileUpload.setCurrentFlag("Y");
+		fileUpload.setType("Analytics_models");
+		fileUpload.setPath("HIVE");
 		fileUpload.setRecCreateDate(currentDate);
 		fileUpload.setRecUpdateDate(currentDate);
 		fileUpload.setLatestFlag("Y");

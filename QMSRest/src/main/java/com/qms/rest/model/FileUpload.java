@@ -28,17 +28,20 @@ public class FileUpload {
     private int fileId;
 
     @Column(name = "FILE_NAME")
-    private String fileName;	
+    private String fileName;
     
-    @Column(name = "USERS_NAME")
-    private String usersName;
+    @Column(name = "TYPE_ID")
+    private String typeId;
     
-    @Column(name = "DATETIME")
-    private Date dateTime;    
+    @Column(name = "TYPE")
+    private String type;
+    
+    @Column(name = "PATH")
+    private String path;    
     
     @Column(name = "REC_CREATE_DATE")
     private Date recCreateDate;
-
+    
     @Column(name = "REC_UPDATE_DATE")
     private Date recUpdateDate;
 

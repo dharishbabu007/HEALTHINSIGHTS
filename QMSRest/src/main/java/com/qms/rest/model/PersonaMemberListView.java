@@ -33,5 +33,6 @@ public class PersonaMemberListView {
 	private String age;      
 	private String gender;
 	private String ethnicity;
+	private String weight;
 	private String clusterId;       		
 }

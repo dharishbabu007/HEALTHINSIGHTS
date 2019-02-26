@@ -10,6 +10,7 @@ public interface QMSConstants {
 	//session variables
 	public static final String INPUT_FILE_ID = "INPUT_FILE_ID";
 	public static final String SESSION_GIC_LIFECYCLE_ID = "GIC_LIFECYCLE_ID";	
+	public static final String SESSION_TYPE_ID = "SESSION_TYPE_ID";
 	public static final String SESSION_PAT_ID = "PatId";
 	//status
 	public static final String USER_STATUS_NEW = "New";

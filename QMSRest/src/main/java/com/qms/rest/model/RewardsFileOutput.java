@@ -31,14 +31,7 @@ public class RewardsFileOutput {
 	private String reward1;
 	private String reward2;
 	private String reward3;
-	private String currFlag;
-	private String recCreateDate;
-	private String recUpdateDate;
-	private String latestFlag;
-	private String activeFlag;
-	private String ingestionDate;
-	private String sourceName;
-	private String userName;
+	private String recommendedReward;
 	//private String others;
 	
 }

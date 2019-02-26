@@ -3,6 +3,7 @@ package com.qms.rest.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,13 +21,10 @@ import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.EnrollmentFileOutput;
 import com.qms.rest.model.FactGoalRecommendations;
-import com.qms.rest.model.GoalRecommendation;
 import com.qms.rest.model.GoalRecommendationSet;
 import com.qms.rest.model.GoalRecommendationSetData;
-import com.qms.rest.model.GoalSet;
 import com.qms.rest.model.Objectives;
 import com.qms.rest.model.PersonaMemberListView;
-import com.qms.rest.model.RefModel;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RewardRecommendationSet;
 import com.qms.rest.model.RewardsFileOutput;
@@ -221,19 +219,90 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	}
 	
 	@Override
+	public FactGoalRecommendations getFactGoalRecommendations(String memberId) {
+		FactGoalRecommendations factGoalRecommendations = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String query = "select * from QMS_FACT_GOAL_RECOMMENDATIONS where MEMBER_ID='"+memberId+"'";
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				factGoalRecommendations = new FactGoalRecommendations();
+				factGoalRecommendations.setRecommendationId(resultSet.getString("RECOMMENDATION_ID"));
+				factGoalRecommendations.setMemberId(resultSet.getString("MEMBER_ID"));
+				factGoalRecommendations.setName(resultSet.getString("NAME"));
+				factGoalRecommendations.setAge(resultSet.getString("AGE"));
+				factGoalRecommendations.setGender(resultSet.getString("GENDER"));
+				factGoalRecommendations.setPhysicalActivityGoal(resultSet.getString("PHYSICAL_ACTIVITY_GOAL"));
+				factGoalRecommendations.setPhysicalActivityFrequency(resultSet.getString("PHYSICAL_ACTIVITY_FREQUENCY"));
+				factGoalRecommendations.setPhysicalActivityDate(resultSet.getString("PHYSICAL_ACTIVITY_DATE"));
+				factGoalRecommendations.setCalorieIntakeGoal(resultSet.getString("CALORIE_INTAKE_GOAL"));
+				factGoalRecommendations.setCalorieIntakeFrequency(resultSet.getString("CALORIE_INTAKE_FREQUENCY"));
+				factGoalRecommendations.setCalorieIntakeDate(resultSet.getString("CALORIE_INTAKE_DATE"));
+				factGoalRecommendations.setCareGap(resultSet.getString("CARE_GAP"));
+				factGoalRecommendations.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));
+				factGoalRecommendations.setPersona(resultSet.getString("PERSONA"));
+				factGoalRecommendations.setPreferredGoal(resultSet.getString("PREFERRED_GOAL"));
+				factGoalRecommendations.setCurrentCalorieIntake(resultSet.getString("CURRENT_CALORIE_INTAKE"));
+				factGoalRecommendations.setNumberOfChronicDiseases(resultSet.getString("NUMBER_OF_CHRONIC_DISEASES"));
+				factGoalRecommendations.setAddictions(resultSet.getString("ADDICTIONS"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		return factGoalRecommendations;
+	}
+
+	@Override
+	public RestResult updateFactGoalRecommendations(FactGoalRecommendations factGoalRecommendations) {
+
+		String sqlStatement = 
+				"update QMS_FACT_GOAL_RECOMMENDATIONS set "
+				+ "PHYSICAL_ACTIVITY_GOAL=?,PHYSICAL_ACTIVITY_FREQUENCY=?,PHYSICAL_ACTIVITY_DATE=?,"
+				+ "CALORIE_INTAKE_GOAL=?,CALORIE_INTAKE_FREQUENCY=?,CALORIE_INTAKE_DATE=?,"
+				+ "CARE_GAP=?,CARE_GAP_DATE=? where MEMBER_ID=?";
+				
+		PreparedStatement statement = null;
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getOracleConnection();
+			int i = 0;
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(++i, factGoalRecommendations.getPhysicalActivityGoal());
+			statement.setString(++i, factGoalRecommendations.getPhysicalActivityFrequency());
+			statement.setString(++i, factGoalRecommendations.getPhysicalActivityDate());
+			statement.setString(++i, factGoalRecommendations.getCalorieIntakeGoal());
+			statement.setString(++i, factGoalRecommendations.getCalorieIntakeFrequency());
+			statement.setString(++i, factGoalRecommendations.getCalorieIntakeDate());
+			statement.setString(++i, factGoalRecommendations.getCareGap());
+			statement.setString(++i, factGoalRecommendations.getCareGapDate());
+			statement.setString(++i, factGoalRecommendations.getMemberId());
+			statement.executeUpdate();
+			
+			return RestResult.getSucessRestResult("Fact Goal Recommendations update sucess. ");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestResult.getFailRestResult(e.getMessage());
+		} finally {
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}
+	}	
+	
+	@Override
 	public RestResult insertFactGoalRecommendationsCreator(FactGoalRecommendations factGoalRecommendations) {
 
-		String sqlStatementInsert = "insert into QMS_FACT_GOAL_RECOMMENDATIONS(RECOMMENDATION_ID,MEMBER_ID,NAME,AGE,GENDER"
-									+ "	,PERSONA,PREFERRED_GOAL,CURRENT_CALORIE_INTAKE"
-									+ ",NUMBER_OF_CHRONIC_DISEASES"
-									+ ",ADDICTIONS,PHYSICAL_ACTIVITY_GOAL"
-									+ ",PHYSICAL_ACTIVITY_FREQUENCY,PHYSICAL_ACTIVITY_DATE"
-									+ ",CALORIE_INTAKE_GOAL,CALORIE_INTAKE_FREQUENCY"
-									+ ",CALORIE_INTAKE_DATE,CARE_GAP,CARE_GAP_DATE"
-									+ ",CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE"
-									+ ",LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE"
-									+ ",SOURCE_NAME,USER_NAME)"
-									+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sqlStatementInsert = 
+				"insert into QMS_FACT_GOAL_RECOMMENDATIONS(RECOMMENDATION_ID,MEMBER_ID,NAME,AGE,GENDER"
+				+ ",PERSONA,PREFERRED_GOAL,CURRENT_CALORIE_INTAKE,NUMBER_OF_CHRONIC_DISEASES"
+				+ ",ADDICTIONS,PHYSICAL_ACTIVITY_GOAL,PHYSICAL_ACTIVITY_FREQUENCY,PHYSICAL_ACTIVITY_DATE"
+				+ ",CALORIE_INTAKE_GOAL,CALORIE_INTAKE_FREQUENCY,CALORIE_INTAKE_DATE,CARE_GAP,CARE_GAP_DATE"
+				+ ",CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) "
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				
 		PreparedStatement statement = null;
 		Connection connection = null;
@@ -245,7 +314,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 			connection = qmsConnection.getOracleConnection();
 			int factGoalRecId = 0;
 			getStatement = connection.createStatement();
-			resultSet = getStatement.executeQuery("select max(RECOMMENDATION_ID)from QMS_FACT_GOAL_RECOMMENDATIONS");
+			
+			resultSet = getStatement.executeQuery("select max(RECOMMENDATION_ID) from QMS_FACT_GOAL_RECOMMENDATIONS");
 			while (resultSet.next()) {
 				factGoalRecId = resultSet.getInt(1);
 			}
@@ -274,6 +344,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 			statement.setString(++i, factGoalRecommendations.getCurrentCalorieIntake());
 			statement.setString(++i, factGoalRecommendations.getNumberOfChronicDiseases());
 			statement.setString(++i, factGoalRecommendations.getAddictions());
+			
 			statement.setString(++i, "Y");
 			statement.setTimestamp(++i, timestamp);
 			statement.setTimestamp(++i, timestamp);
@@ -306,15 +377,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		try {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			String query = ("select MEMBER_ID,PERSONA_NAME,GOALS,MEASURE_CALORIE_INTAKE"
-					+ ",COMORBIDITY_COUNT,ADDICTIONS,REWARDS,MOTIVATIONS "
-					+ "from PERSONA_MEMBERLIST_VIEW where member_id = '" + mid + "'");
+			String query = "select MEMBER_ID,PERSONA_NAME,GOALS,MEASURE_CALORIE_INTAKE"
+					+ ",COMORBIDITY_COUNT,ADDICTIONS,REWARDS,MOTIVATIONS,age,weight "
+					+ "from PERSONA_MEMBERLIST_VIEW where member_id='"+mid+"'";
 
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				personaMemberList.setMemberId(resultSet.getString("MEMBER_ID"));
 				personaMemberList.setPersonaName(resultSet.getString("PERSONA_NAME"));
 				personaMemberList.setGoals(resultSet.getString("GOALS"));
+				personaMemberList.setAge(resultSet.getString("age"));
+				personaMemberList.setWeight(resultSet.getString("weight"));
 				personaMemberList.setMeasureCalorieIntake(resultSet.getString("MEASURE_CALORIE_INTAKE"));
 				personaMemberList.setComorbidityCount(resultSet.getString("COMORBIDITY_COUNT"));
 				personaMemberList.setAddictions(resultSet.getString("ADDICTIONS"));
@@ -406,37 +479,40 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	}	
 	
 	@Override
-	public RewardsFileOutput getRewardsFileOutputList(String mid) {
-		RewardsFileOutput rewardsFileOutputList = new RewardsFileOutput();
+	public List<RewardsFileOutput> getRewardsFileOutputList(String memberId) {
+		List<RewardsFileOutput> rewardsFileOutputList = new ArrayList<>();
+		RewardsFileOutput rewardsFileOutput = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
 		try {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			String query = ("select REWARD_ID,"
-					+ "MEMBER_ID,NAME,AGE,GENDER,WEIGHT,PERSONA,PREFERRED_REWARD,MOTIVATIONS,"
-					+ "CATEGORY,GOAL,FREQUENCY,GOAL_DATE,REWARD1,REWARD2,REWARD3,OTHERS "
-					+ "from QMS_REWARDS_FILE_OUTPUT where MEMBER_ID = '" + mid + "'");
+			String query = "select REWARD_ID,MEMBER_ID,NAME,AGE,GENDER,WEIGHT,PERSONA,PREFERRED_REWARD,"
+					+ "MOTIVATIONS,CATEGORY,GOAL,FREQUENCY,GOAL_DATE,REWARD1,REWARD2,REWARD3,Recommended_Reward "
+					+ "from QMS_REWARDS_FILE_OUTPUT where MEMBER_ID='"+memberId+"'";
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
-				rewardsFileOutputList.setRewardId(resultSet.getString("PERSONA_NAME"));
-				rewardsFileOutputList.setMemberId(resultSet.getString("MEMBER_ID"));
-				rewardsFileOutputList.setName(resultSet.getString("NAME"));
-				rewardsFileOutputList.setAge(resultSet.getString("AGE"));
-				rewardsFileOutputList.setGender(resultSet.getString("GENDER"));
-				rewardsFileOutputList.setWeight(resultSet.getString("WEIGHT"));
-				rewardsFileOutputList.setPersona(resultSet.getString("PERSONA"));
-				rewardsFileOutputList.setPreferredReward(resultSet.getString("PREFERRED_REWARD"));
-				rewardsFileOutputList.setMotivations(resultSet.getString("MOTIVATIONS"));
-				rewardsFileOutputList.setCategory(resultSet.getString("CATEGORY"));
-				rewardsFileOutputList.setGoal(resultSet.getString("GOAL"));
-				rewardsFileOutputList.setFrequency(resultSet.getString("FREQUENCY"));
-				rewardsFileOutputList.setGoalDate(resultSet.getString("GOAL_DATE"));
-				rewardsFileOutputList.setReward1(resultSet.getString("REWARD1"));
-				rewardsFileOutputList.setReward2(resultSet.getString("REWARD2"));
-				rewardsFileOutputList.setReward3(resultSet.getString("REWARD3"));
+				rewardsFileOutput = new RewardsFileOutput();
+				rewardsFileOutput.setRewardId(resultSet.getString("REWARD_ID"));
+				rewardsFileOutput.setMemberId(resultSet.getString("MEMBER_ID"));
+				rewardsFileOutput.setName(resultSet.getString("NAME"));
+				rewardsFileOutput.setAge(resultSet.getString("AGE"));
+				rewardsFileOutput.setGender(resultSet.getString("GENDER"));
+				rewardsFileOutput.setWeight(resultSet.getString("WEIGHT"));
+				rewardsFileOutput.setPersona(resultSet.getString("PERSONA"));
+				rewardsFileOutput.setPreferredReward(resultSet.getString("PREFERRED_REWARD"));
+				rewardsFileOutput.setMotivations(resultSet.getString("MOTIVATIONS"));
+				rewardsFileOutput.setCategory(resultSet.getString("CATEGORY"));
+				rewardsFileOutput.setGoal(resultSet.getString("GOAL"));
+				rewardsFileOutput.setFrequency(resultSet.getString("FREQUENCY"));
+				rewardsFileOutput.setGoalDate(resultSet.getString("GOAL_DATE"));
+				rewardsFileOutput.setReward1(resultSet.getString("REWARD1"));
+				rewardsFileOutput.setReward2(resultSet.getString("REWARD2"));
+				rewardsFileOutput.setReward3(resultSet.getString("REWARD3"));
+				rewardsFileOutput.setRecommendedReward(resultSet.getString("Recommended_Reward"));
 				//rewardsFileOutputList.setOthers(resultSet.getString("OTHERS"));
+				rewardsFileOutputList.add(rewardsFileOutput);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -447,65 +523,81 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	}
 
 	@Override
-	public RestResult insertRewardsFileOutput(RewardsFileOutput rewardsFileOutput) {
-		String sqlStatementInsert = "insert into QMS_REWARDS_FILE_OUTPUT"
-										+ "( REWARD_ID,MEMBER_ID,NAME,AGE,GENDER,WEIGHT," 
-										+ "PERSONA,PREFERRED_REWARD,MOTIVATIONS,CATEGORY,"
-										+ "GOAL,FREQUENCY,GOAL_DATE,REWARD1,REWARD2,REWARD3) "
-										+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public RestResult insertRewardsFileOutput(List<RewardsFileOutput> rewardsFileOutputList) {
+		String sqlStatementInsert = 
+				"insert into QMS_REWARDS_FILE_OUTPUT (REWARD_ID,MEMBER_ID,NAME,AGE,GENDER,WEIGHT,"+ 
+				"PERSONA,PREFERRED_REWARD,MOTIVATIONS,CATEGORY,GOAL,FREQUENCY,GOAL_DATE,Recommended_Reward,"+
+				"REWARD1,REWARD2,REWARD3,"+
+				"curr_flag,rec_create_date,rec_update_date,latest_flag,active_flag,ingestion_date,source_name,user_name) "+
+				"values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Statement getStatement = null;
-		User userData1 = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+		if(rewardsFileOutputList == null || rewardsFileOutputList.isEmpty()) 
+			return RestResult.getFailRestResult(" RewardsFileOutputList is null or empty ");
+		
+		String memberId = rewardsFileOutputList.get(0).getMemberId();
 		try {
 			connection = qmsConnection.getOracleConnection();
-			// int factGoalRecId = 0;
+			connection.setAutoCommit(false);
 			getStatement = connection.createStatement();
-			// resultSet = getStatement.executeQuery("select
-			// max(RECOMMENDATION_ID)from QMS_FACT_GOAL_RECOMMENDATIONS");
-			// while (resultSet.next()) {
-			// factGoalRecId = resultSet.getInt(1);
-			// }
-			// factGoalRecId = factGoalRecId + 1;
+			getStatement.executeUpdate("delete from QMS_REWARDS_FILE_OUTPUT where MEMBER_ID="+memberId);			
+			
+			int rewardId = 0;
+			resultSet = getStatement.executeQuery("select max(REWARD_ID) from QMS_REWARDS_FILE_OUTPUT");
+			while (resultSet.next()) {
+				rewardId = resultSet.getInt(1);
+			}
+			
 			int i = 0;
 			Date date = new Date();
 			Timestamp timestamp = new Timestamp(date.getTime());
 			statement = connection.prepareStatement(sqlStatementInsert);
-			// statement.setInt(++i, factGoalRecId);
-			statement.setString(++i, rewardsFileOutput.getRewardId());
-			statement.setString(++i, rewardsFileOutput.getMemberId());
-			statement.setString(++i, rewardsFileOutput.getName());
-			statement.setString(++i, rewardsFileOutput.getAge());
-			statement.setString(++i, rewardsFileOutput.getGender());
-			statement.setString(++i, rewardsFileOutput.getWeight());
-			statement.setString(++i, rewardsFileOutput.getPersona());
-			statement.setString(++i, rewardsFileOutput.getPreferredReward());
-			statement.setString(++i, rewardsFileOutput.getMotivations());
-			statement.setString(++i, rewardsFileOutput.getCategory());
-			statement.setString(++i, rewardsFileOutput.getGoal());
-			statement.setString(++i, rewardsFileOutput.getFrequency());
-			statement.setString(++i, rewardsFileOutput.getGoalDate());
-			statement.setString(++i, rewardsFileOutput.getReward1());
-			statement.setString(++i, rewardsFileOutput.getReward2());
-			statement.setString(++i, rewardsFileOutput.getReward3());
-			
-			statement.setString(++i, "Y");
-			statement.setTimestamp(++i, timestamp);
-			statement.setTimestamp(++i, timestamp);
-			statement.setString(++i, "Y");
-			statement.setString(++i, "A");
-			statement.setTimestamp(++i, timestamp);
-			statement.setString(++i, "UI");
-			if (userData1 != null && userData1.getName() != null)
-				statement.setString(++i, userData1.getName());
-			else
-				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
-			statement.executeUpdate();
-			// httpSession.setAttribute(QMSConstants.SESSION_PAT_ID,
-			// factGoalRecId + "");
+			for (RewardsFileOutput rewardsFileOutput : rewardsFileOutputList) {
+				i=0;
+				rewardId=rewardId+1;
+				statement.setInt(++i, rewardId);
+				statement.setInt(++i, Integer.parseInt(rewardsFileOutput.getMemberId()));
+				statement.setString(++i, rewardsFileOutput.getName());
+				statement.setString(++i, rewardsFileOutput.getAge());
+				statement.setString(++i, rewardsFileOutput.getGender());
+				statement.setString(++i, rewardsFileOutput.getWeight());
+				statement.setString(++i, rewardsFileOutput.getPersona());
+				statement.setString(++i, rewardsFileOutput.getPreferredReward());
+				statement.setString(++i, rewardsFileOutput.getMotivations());
+				statement.setString(++i, rewardsFileOutput.getCategory());
+				statement.setString(++i, rewardsFileOutput.getGoal());
+				statement.setString(++i, rewardsFileOutput.getFrequency());
+				statement.setString(++i, rewardsFileOutput.getGoalDate());
+				statement.setString(++i, rewardsFileOutput.getRecommendedReward());
+				statement.setString(++i, rewardsFileOutput.getReward1());
+				statement.setString(++i, rewardsFileOutput.getReward2());
+				statement.setString(++i, rewardsFileOutput.getReward3());
+				
+				statement.setString(++i, "Y");
+				statement.setTimestamp(++i, timestamp);
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, "Y");
+				statement.setString(++i, "A");
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, "UI");
+				if (userData != null && userData.getName() != null)
+					statement.setString(++i, userData.getName());
+				else
+					statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+				statement.addBatch();
+			}
+			statement.executeBatch();
 			return RestResult.getSucessRestResult("Fact Goal Recommendations creation sucess. ");
 		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				return RestResult.getFailRestResult(e1.getMessage());
+			}
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());
 		} finally {
@@ -630,82 +722,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		return listPersonaMemberList;
 	}
 
-//	@Override
-//	public Set<GoalRecommendation> getGoalRecommendationsMemberList() {
-//		Set<GoalRecommendation> goalRecommendationList = new HashSet<>();
-//		GoalRecommendation goalRecommendation = null;
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = null;
-//		try {
-//			connection = qmsConnection.getOracleConnection();
-//			statement = connection.createStatement();
-//			String query = "select * from Qms_Fact_Goal_Recommendations";
-//
-//			resultSet = statement.executeQuery(query);
-//			while (resultSet.next()) {
-//				goalRecommendation = new GoalRecommendation();
-//				goalRecommendation.setMemberId(resultSet.getString("MEMBER_ID"));
-//				goalRecommendation.setName(resultSet.getString("NAME"));
-//				goalRecommendation.setAge(resultSet.getString("AGE"));
-//				goalRecommendation.setGender(resultSet.getString("GENDER"));
-//				goalRecommendation.setPersona(resultSet.getString("PERSONA"));
-//				goalRecommendation.setPhysicalActivityGoal(resultSet.getString("PHYSICAL_ACTIVITY_GOAL"));
-//				goalRecommendation.setPhysicalActivityFrequency(resultSet.getString("PHYSICAL_ACTIVITY_FREQUENCY"));
-//				goalRecommendation.setPhysicalActivityDate(resultSet.getString("PHYSICAL_ACTIVITY_DATE"));
-//				goalRecommendation.setCalorieIntakeGoal(resultSet.getString("CALORIE_INTAKE_GOAL"));
-//				goalRecommendation.setCalorieIntakeFrequency(resultSet.getString("CALORIE_INTAKE_FREQUENCY"));
-//				goalRecommendation.setCalorieIntakeDate(resultSet.getString("CALORIE_INTAKE_DATE"));
-//				goalRecommendation.setCareGap(resultSet.getString("CARE_GAP"));
-//				goalRecommendation.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));
-//				goalRecommendationList.add(goalRecommendation);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
-//		}
-//		return goalRecommendationList;
-//	}
-//
-//	@Override
-//	public Set<GoalSet> getGoalsSetMemberList() {
-//		Set<GoalSet> goalRecommendationList = new HashSet<>();
-//		GoalSet goalRecommendation = null;
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = null;
-//		try {
-//			connection = qmsConnection.getOracleConnection();
-//			statement = connection.createStatement();
-//			String query = "select * from Qms_Fact_Goal_Set";
-//
-//			resultSet = statement.executeQuery(query);
-//			while (resultSet.next()) {
-//				goalRecommendation = new GoalSet();
-//				goalRecommendation.setMemberId(resultSet.getString("MEMBER_ID"));
-//				goalRecommendation.setName(resultSet.getString("NAME"));
-//				goalRecommendation.setAge(resultSet.getString("AGE"));
-//				goalRecommendation.setGender(resultSet.getString("GENDER"));
-//				goalRecommendation.setPersona(resultSet.getString("PERSONA"));
-//				goalRecommendation.setPhysicalActivityGoal(resultSet.getString("PHYSICAL_ACTIVITY_GOAL"));
-//				goalRecommendation.setPhysicalActivityFrequency(resultSet.getString("PHYSICAL_ACTIVITY_FREQUENCY"));
-//				goalRecommendation.setPhysicalActivityDate(resultSet.getString("PHYSICAL_ACTIVITY_DATE"));
-//				goalRecommendation.setCalorieIntakeGoal(resultSet.getString("CALORIE_INTAKE_GOAL"));
-//				goalRecommendation.setCalorieIntakeFrequency(resultSet.getString("CALORIE_INTAKE_FREQUENCY"));
-//				goalRecommendation.setCalorieIntakeDate(resultSet.getString("CALORIE_INTAKE_DATE"));
-//				goalRecommendation.setCareGap(resultSet.getString("CARE_GAP"));
-//				goalRecommendation.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));
-//				goalRecommendationList.add(goalRecommendation);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
-//		}
-//		return goalRecommendationList;
-//	}
-
 	@Override
 	public Set<GoalRecommendationSet> getGoalRecommendationsSetMemberList() {
 		Map<String, GoalRecommendationSet> goalRecommendationSetMap = 
@@ -728,7 +744,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				goalRecommendationSetData = new GoalRecommendationSetData();
 				goalRecommendationSet.setGoalRecommendation(goalRecommendationSetData);
 				goalRecommendationSetMap.put(memberId, goalRecommendationSet);
-				
+
 				goalRecommendationSet.setMemberId(resultSet.getString("MEMBER_ID"));
 				goalRecommendationSet.setName(resultSet.getString("NAME"));
 				goalRecommendationSet.setAge(resultSet.getString("AGE"));
@@ -784,7 +800,71 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 	@Override
 	public Set<RewardRecommendationSet> getRewardRecommendationsSetMemberList() {
-		return null;
+		Map<String, RewardRecommendationSet> rewardRecommendationSetMap = 
+				new HashMap<String, RewardRecommendationSet>(); 
+		Set<RewardRecommendationSet> rewardRecommendationListSet = new HashSet<>();
+		RewardRecommendationSet rewardRecommendationSet = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String query = "select * from Qms_Rewards_Recommendations";
+			resultSet = statement.executeQuery(query);
+			String key = null;
+			while (resultSet.next()) {
+				key = resultSet.getString("MEMBER_ID")+"#"+
+						resultSet.getString("CATEGORY")+"#"+
+						resultSet.getString("GOAL")+"#"+
+						resultSet.getString("FREQUENCY");
+				rewardRecommendationSet = new RewardRecommendationSet();
+				rewardRecommendationSetMap.put(key, rewardRecommendationSet);
+				
+				rewardRecommendationSet.setMemberId(resultSet.getString("MEMBER_ID"));
+				rewardRecommendationSet.setName(resultSet.getString("NAME"));
+				rewardRecommendationSet.setAge(resultSet.getString("AGE"));
+				rewardRecommendationSet.setGender(resultSet.getString("GENDER"));
+				rewardRecommendationSet.setPersona(resultSet.getString("PERSONA"));
+				rewardRecommendationSet.setMotivations(resultSet.getString("MOTIVATIONS"));
+				rewardRecommendationSet.setCategory(resultSet.getString("CATEGORY"));
+				rewardRecommendationSet.setGoal(resultSet.getString("GOAL"));
+				rewardRecommendationSet.setFrequency(resultSet.getString("FREQUENCY"));
+				rewardRecommendationSet.setRewardRecommendation(resultSet.getString("REWARD"));
+			}
+			
+			resultSet.close();
+			query = "select * from Qms_Rewards_set";
+			resultSet = statement.executeQuery(query);			
+			while (resultSet.next()) {
+				key = resultSet.getString("MEMBER_ID")+"#"+
+						resultSet.getString("CATEGORY")+"#"+
+						resultSet.getString("GOAL")+"#"+
+						resultSet.getString("FREQUENCY");
+				rewardRecommendationSet = rewardRecommendationSetMap.get(key);
+				if(rewardRecommendationSet == null) {
+					rewardRecommendationSet = new RewardRecommendationSet();
+					rewardRecommendationSetMap.put(key, rewardRecommendationSet);
+					
+					rewardRecommendationSet.setMemberId(resultSet.getString("MEMBER_ID"));
+					rewardRecommendationSet.setName(resultSet.getString("NAME"));
+					rewardRecommendationSet.setAge(resultSet.getString("AGE"));
+					rewardRecommendationSet.setGender(resultSet.getString("GENDER"));
+					rewardRecommendationSet.setPersona(resultSet.getString("PERSONA"));		
+					rewardRecommendationSet.setMotivations(resultSet.getString("MOTIVATIONS"));
+					rewardRecommendationSet.setCategory(resultSet.getString("CATEGORY"));
+					rewardRecommendationSet.setGoal(resultSet.getString("GOAL"));
+					rewardRecommendationSet.setFrequency(resultSet.getString("FREQUENCY"));								
+				} 
+				rewardRecommendationSet.setRewardSet(resultSet.getString("REWARD"));	
+			}						
+			rewardRecommendationListSet.addAll(rewardRecommendationSetMap.values());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		return rewardRecommendationListSet;
 	}
 
 }

@@ -31,7 +31,7 @@ public class CloseGapController {
 			@PathVariable("measureId") String measureId) {
 		CloseGaps closeGaps = closeGapsService.getCloseGaps(memberId, measureId);
 		if (closeGaps == null) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);			
+			return new ResponseEntity<CloseGaps>(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<CloseGaps>(closeGaps, HttpStatus.OK);
 	}
@@ -44,8 +44,9 @@ public class CloseGapController {
 		return new ResponseEntity<RestResult>(restResult, HttpStatus.CREATED);
 	}	
 	
-	@RequestMapping(value = "/gic_lifecycle_import/", method = RequestMethod.POST)
-	public ResponseEntity<RestResult> importFile(@RequestParam("file") MultipartFile uploadfile) {
+	@RequestMapping(value = "/file_upload/{type}", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> importFile(@PathVariable("type") String type, 
+			@RequestParam("file") MultipartFile uploadfile) {
 		System.out.println(" CloseGapController - Uploading Gic File Upload");
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Access-Control-Allow-Origin", "*");		
@@ -57,7 +58,7 @@ public class CloseGapController {
         }
 		
 		//storing file data in linux 
-		RestResult restResult = closeGapsService.importFile(uploadfile);				
+		RestResult restResult = closeGapsService.importFile(uploadfile, type);				
 		if(RestResult.isSuccessRestResult(restResult)) {
 			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
 		} else {

@@ -9,9 +9,11 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
@@ -126,19 +128,30 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			}
 			closeGaps.setCareGaps(closeGapSet);
 			if(lifeCycleIds.size() > 0) {
-				resultSet.close();
-				String glcIds = lifeCycleIds.toString().substring(1, (lifeCycleIds.toString().length()-1));
-				resultSet = statement.executeQuery("select GIC_LIFECYCLE_ID,FILE_PATH,FILE_NAME from "
-						+ "QMS_GIC_FILE_UPLOAD where GIC_LIFECYCLE_ID in("+glcIds+")");
-				int lifeCycleId = 0;
-				while (resultSet.next()) {
-					lifeCycleId = resultSet.getInt("GIC_LIFECYCLE_ID");
+//				resultSet.close();
+//				String glcIds = lifeCycleIds.toString().substring(1, (lifeCycleIds.toString().length()-1));
+//				resultSet = statement.executeQuery("select GIC_LIFECYCLE_ID,FILE_PATH,FILE_NAME from "
+//						+ "QMS_GIC_FILE_UPLOAD where GIC_LIFECYCLE_ID in("+glcIds+")");
+//				int lifeCycleId = 0;
+//				while (resultSet.next()) {
+//					lifeCycleId = resultSet.getInt("GIC_LIFECYCLE_ID");
+//					for (CloseGap closeGap1 : closeGapSet) {
+//						if(closeGap1.getLifeCycleId() == lifeCycleId) {
+//							closeGap1.getUploadList().add(resultSet.getString("FILE_PATH")+
+//									resultSet.getString("GIC_LIFECYCLE_ID")+"/"+
+//									resultSet.getString("FILE_NAME"));
+//							break;
+//						}
+//					}
+//				}
+				
+				HashMap<Integer, List<String>> upLoadData = getUploadFileByTypeId(statement, lifeCycleIds, 0, "close_gap");
+				if(upLoadData != null) {
+					List<String> fileNames = null;
 					for (CloseGap closeGap1 : closeGapSet) {
-						if(closeGap1.getLifeCycleId() == lifeCycleId) {
-							closeGap1.getUploadList().add(resultSet.getString("FILE_PATH")+
-									resultSet.getString("GIC_LIFECYCLE_ID")+"/"+
-									resultSet.getString("FILE_NAME"));
-							break;
+						fileNames = upLoadData.get(closeGap1.getLifeCycleId());
+						if(fileNames != null && !fileNames.isEmpty()) {
+							closeGap1.getUploadList().addAll(fileNames);
 						}
 					}
 				}
@@ -239,7 +252,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, closeGap.getTargetDate());
 			statement.setString(++i, closeGap.getActionCareGap());
 			statement.executeUpdate();
-			httpSession.setAttribute(QMSConstants.SESSION_GIC_LIFECYCLE_ID, lifeCycleId+"");
+			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, lifeCycleId+"");
 			return RestResult.getSucessRestResult(" Close Gaps updation Success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -275,36 +288,47 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 		System.out.println(roleName + " updating status to --> " + updateStatus);
 		return null;
 	}
+	
+	private String getPath (String type) {
+		if(type.equalsIgnoreCase("close_gap"))
+			return "D:/import_export/CLOSE_GAP/";
+		if(type.equalsIgnoreCase("mit"))
+			return "D:/import_export/MIT/";
+		if(type.equalsIgnoreCase("persona"))
+			return "D:/import_export/ME/PERSONA/";		
+		return null;
+	}
 
 	@Override
-	public RestResult importFile(MultipartFile uploadFile) {
+	public RestResult importFile(MultipartFile uploadFile, String type) {
 		try {
-			String lifeCycleId = (String)httpSession.getAttribute(QMSConstants.SESSION_GIC_LIFECYCLE_ID);
-			System.out.println(" lifeCycleId from session --> " + lifeCycleId);
-			if(lifeCycleId != null) {
-				String path = "D:/import_export/CLOSE_GAP/";
+			String typeId = (String)httpSession.getAttribute(QMSConstants.SESSION_TYPE_ID);
+			System.out.println(" TypeId from session --> " + typeId);
+			if(typeId != null) {
+				String path = getPath (type); //"D:/import_export/CLOSE_GAP/";
 				GicLifeCycleFileUpload fileUpload = new GicLifeCycleFileUpload();
 				fileUpload.setFileName(uploadFile.getOriginalFilename());
 				fileUpload.setFilePath(path);
-				fileUpload.setLifeCycleId(Integer.parseInt(lifeCycleId));
+				fileUpload.setTypeId(typeId);
+				fileUpload.setType(type);
 				saveFileUpload(fileUpload);
-				System.out.println(lifeCycleId+" GicLifeCycleFileUpload DB success");
+				System.out.println(" QMSFileUpload DB success for typeId " + typeId);
 				
-				String parentDir = path+lifeCycleId;
+				String parentDir = path+typeId;
 				File parentDirFile = new File(parentDir);		
 				if(!parentDirFile.exists()) {
 					parentDirFile.mkdir();
-					System.out.println(lifeCycleId+" upload dir created..");
+					System.out.println(typeId+" upload dir created..");
 				}
 				
 				FileOutputStream out = new FileOutputStream(parentDir+"/"+uploadFile.getOriginalFilename());
 				out.write(uploadFile.getBytes());
 				out.close();	
 				System.out.println(" file created success in windows ..");
-				httpSession.removeAttribute(QMSConstants.SESSION_GIC_LIFECYCLE_ID);
+				httpSession.removeAttribute(QMSConstants.SESSION_TYPE_ID);
 				return RestResult.getSucessRestResult(" File Upload Success.. ");			
 			} else {
-				return RestResult.getFailRestResult(" Update close gap status failed. ");
+				return RestResult.getFailRestResult(" TypeId is null. Update "+type+" failed. ");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -324,28 +348,29 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			connection = qmsConnection.getOracleConnection();	
 			statementObj = connection.createStatement();			
 			
-			resultSet = statementObj.executeQuery("select max(FILE_ID) from QMS_GIC_FILE_UPLOAD");
+			resultSet = statementObj.executeQuery("select max(FILE_ID) from QMS_FILE_UPLOAD");
 			int fileId = 0;
 			while (resultSet.next()) {
-				fileId = resultSet.getInt(1)+1;
+				fileId = resultSet.getInt(1);
 			}
-			if(fileId == 0) fileId = 1;
+			fileId = fileId+1;
 			resultSet.close();			
 			System.out.println(" Adding the file upload with file id --> " + fileId);
 			
-			String sqlStatementInsert = "insert into QMS_GIC_FILE_UPLOAD(FILE_ID,"
-					+ "GIC_LIFECYCLE_ID,FILE_PATH,FILE_NAME,CREATION_DATE,"
+			String sqlStatementInsert = "insert into QMS_FILE_UPLOAD(FILE_ID,"
+					+ "TYPE_ID,PATH,FILE_NAME,TYPE,"
 					+ "curr_flag,rec_create_date,rec_update_date,latest_flag,active_flag,ingestion_date,source_name,user_name) "
 					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;
 			statement.setInt(++i, fileId);
-			statement.setInt(++i, fileUpload.getLifeCycleId());
+			statement.setString(++i, fileUpload.getTypeId());
 			statement.setString(++i, fileUpload.getFilePath());
 			statement.setString(++i, fileUpload.getFileName());
+			statement.setString(++i, fileUpload.getType());
+			
 			Date date = new Date();				
-			Timestamp timestamp = new Timestamp(date.getTime());				
-			statement.setTimestamp(++i, timestamp);
+			Timestamp timestamp = new Timestamp(date.getTime());							
 			
 			statement.setString(++i, "Y");
 			statement.setTimestamp(++i, timestamp);
@@ -354,14 +379,13 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, "A");
 			statement.setTimestamp(++i, timestamp);
 			statement.setString(++i, "UI");				
-			
 			if(userData != null && userData.getName() != null)
 				statement.setString(++i, userData.getName());
 			else 
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);			
 			
 			statement.executeUpdate();
-			restResult = RestResult.getSucessRestResult("QMS_GIC_FILE_UPLOAD added successfully.");
+			restResult = RestResult.getSucessRestResult("Saving uploaded file Metadata in DB success.");
 		} catch (Exception e) {
 			restResult = RestResult.getFailRestResult(e.getMessage());
 			e.printStackTrace();
@@ -371,7 +395,37 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			qmsConnection.closeJDBCResources(null, statement, connection);
 		}	
 		return restResult;		
-
+	}
+	
+	@Override
+	public HashMap<Integer, List<String>> getUploadFileByTypeId (Statement statement, List<Integer> typeIds, 
+			int typeId, String type) throws Exception {
+		HashMap<Integer, List<String>> typeIdFileNameMap = null; 
+		
+		if(typeIds == null) {
+			typeIds = new ArrayList<>();
+			typeIds.add(typeId);
+		}
+		
+		String glcIds = typeIds.toString().substring(1, (typeIds.toString().length()-1));
+		ResultSet resultSet = statement.executeQuery("select TYPE_ID,PATH,FILE_NAME from "
+				+ "QMS_FILE_UPLOAD where TYPE='"+type+"' AND TYPE_ID in("+glcIds+")");
+		int typeIdLocal = 0;
+		List<String> fileNames = null;
+		while (resultSet.next()) {
+			if(typeIdFileNameMap == null)
+				typeIdFileNameMap = new HashMap<>();
+			
+			typeIdLocal = resultSet.getInt("TYPE_ID");
+			fileNames = typeIdFileNameMap.get(typeIdLocal);
+			if(fileNames == null) {
+				fileNames = new ArrayList<>();
+				typeIdFileNameMap.put(typeIdLocal, fileNames);
+			} 
+			fileNames.add(resultSet.getString("PATH")+resultSet.getString("TYPE_ID")+"/"+resultSet.getString("FILE_NAME"));			
+		}		
+		qmsConnection.closeJDBCResources(resultSet, null, null);
+		return typeIdFileNameMap;
 	}
 
 }
