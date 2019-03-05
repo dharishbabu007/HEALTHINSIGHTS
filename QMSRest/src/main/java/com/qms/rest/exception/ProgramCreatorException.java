@@ -2,7 +2,9 @@ package com.qms.rest.exception;
 
 public class ProgramCreatorException extends RuntimeException {
 
-    public ProgramCreatorException(String errorMessage) {
+	private static final long serialVersionUID = 1L;
+
+	public ProgramCreatorException(String errorMessage) {
         super(errorMessage);
     }
 

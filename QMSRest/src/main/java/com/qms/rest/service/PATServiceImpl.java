@@ -1,20 +1,14 @@
 package com.qms.rest.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -22,16 +16,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.qms.rest.model.DimMemeber;
-import com.qms.rest.model.DimMemeberList;
-import com.qms.rest.model.FactHedisGapsInCare;
 import com.qms.rest.model.NameValue;
 import com.qms.rest.model.Pat;
 import com.qms.rest.model.PatActionCareGap;
-import com.qms.rest.model.PatFileUpload;
-import com.qms.rest.model.QmsGicLifecycle;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.SearchAssociatedPatient;
 import com.qms.rest.model.User;
@@ -248,101 +237,101 @@ public class PATServiceImpl implements PATService {
 	}	
 
 
-	public RestResult importFile(MultipartFile uploadFile) {
-		try {
-			String patId = (String)httpSession.getAttribute(QMSConstants.SESSION_PAT_ID);
-			if(patId != null) {
-				String path = "D:/import_export/PAT/";
-				PatFileUpload fileUpload = new PatFileUpload();
-				fileUpload.setFileName(uploadFile.getOriginalFilename());
-				fileUpload.setFilePath(path);
-				fileUpload.setPatId(patId);
-				saveFileUpload(fileUpload);
-				System.out.println(patId+" PAT DB success");
-				
-				String parentDir = path+patId;
-				File parentDirFile = new File(parentDir);		
-				if(!parentDirFile.exists()) {
-					parentDirFile.mkdir();
-					System.out.println(patId+" upload dir created..");
-				}
-				
-				FileOutputStream out = new FileOutputStream(parentDir+"/"+uploadFile.getOriginalFilename());
-				out.write(uploadFile.getBytes());
-				out.close();	
-				System.out.println(" file created success in windows ..");
-				httpSession.removeAttribute(QMSConstants.SESSION_PAT_ID);
-				return RestResult.getSucessRestResult(" File Upload Success.. ");			
-			} else {
-				return RestResult.getFailRestResult(" Update close gap status failed. ");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return RestResult.getFailRestResult(e.getMessage());
-		} 
-	}
-
-	@Override
-	public RestResult saveFileUpload(PatFileUpload fileUpload) {		
-		PreparedStatement statement = null;
-		Connection connection = null;
-		RestResult restResult = null;
-		Statement statementObj = null;
-		ResultSet resultSet = null;
-		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
-		try {
-			connection = qmsConnection.getOracleConnection();	
-			statementObj = connection.createStatement();			
-			
-			resultSet = statementObj.executeQuery("select max(FILE_ID) from QMS_PAT_FILE_UPLOAD");
-			int fileId = 0;
-			while (resultSet.next()) {
-				fileId = resultSet.getInt(1)+1;
-			}
-			if(fileId == 0) fileId = 1;
-			resultSet.close();			
-			System.out.println(" Adding the file upload with file id --> " + fileId);
-			
-			String sqlStatementInsert = "insert into QMS_PAT_FILE_UPLOAD "
-					                    + "(FILE_ID,PAT_ID,FILE_PATH,FILE_NAME,CREATION_DATE,CURR_FLAG,"
-										+ "REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,"
-										+ "INGESTION_DATE,SOURCE_NAME,USER_NAME)"						
-										+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			statement = connection.prepareStatement(sqlStatementInsert);
-			int i=0;
-			statement.setInt(++i, fileId);
-		//	statement.setInt(++i, fileUpload.patId());
-			statement.setString(++i, fileUpload.getFilePath());
-			statement.setString(++i, fileUpload.getFileName());
-			Date date = new Date();				
-			Timestamp timestamp = new Timestamp(date.getTime());				
-			statement.setTimestamp(++i, timestamp);
-			statement.setString(++i, "Y");
-			statement.setTimestamp(++i, timestamp);
-			statement.setTimestamp(++i, timestamp);
-			statement.setString(++i, "Y");
-			statement.setString(++i, "A");
-			statement.setTimestamp(++i, timestamp);
-			statement.setString(++i, "UI");				
-			
-			if(userData != null && userData.getName() != null)
-				statement.setString(++i, userData.getName());
-			else 
-				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);			
-			
-			statement.executeUpdate();
-			restResult = RestResult.getSucessRestResult("PAT UPLOAD added successfully.");
-		} catch (Exception e) {
-			restResult = RestResult.getFailRestResult(e.getMessage());
-			e.printStackTrace();
-		}
-		finally {
-			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
-			qmsConnection.closeJDBCResources(null, statement, connection);
-		}	
-		return restResult;		
-
-	}
+//	public RestResult importFile(MultipartFile uploadFile) {
+//		try {
+//			String patId = (String)httpSession.getAttribute(QMSConstants.SESSION_PAT_ID);
+//			if(patId != null) {
+//				String path = "D:/import_export/PAT/";
+//				PatFileUpload fileUpload = new PatFileUpload();
+//				fileUpload.setFileName(uploadFile.getOriginalFilename());
+//				fileUpload.setFilePath(path);
+//				fileUpload.setPatId(patId);
+//				saveFileUpload(fileUpload);
+//				System.out.println(patId+" PAT DB success");
+//				
+//				String parentDir = path+patId;
+//				File parentDirFile = new File(parentDir);		
+//				if(!parentDirFile.exists()) {
+//					parentDirFile.mkdir();
+//					System.out.println(patId+" upload dir created..");
+//				}
+//				
+//				FileOutputStream out = new FileOutputStream(parentDir+"/"+uploadFile.getOriginalFilename());
+//				out.write(uploadFile.getBytes());
+//				out.close();	
+//				System.out.println(" file created success in windows ..");
+//				httpSession.removeAttribute(QMSConstants.SESSION_PAT_ID);
+//				return RestResult.getSucessRestResult(" File Upload Success.. ");			
+//			} else {
+//				return RestResult.getFailRestResult(" Update close gap status failed. ");
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return RestResult.getFailRestResult(e.getMessage());
+//		} 
+//	}
+//
+//	@Override
+//	public RestResult saveFileUpload(PatFileUpload fileUpload) {		
+//		PreparedStatement statement = null;
+//		Connection connection = null;
+//		RestResult restResult = null;
+//		Statement statementObj = null;
+//		ResultSet resultSet = null;
+//		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+//		try {
+//			connection = qmsConnection.getOracleConnection();	
+//			statementObj = connection.createStatement();			
+//			
+//			resultSet = statementObj.executeQuery("select max(FILE_ID) from QMS_PAT_FILE_UPLOAD");
+//			int fileId = 0;
+//			while (resultSet.next()) {
+//				fileId = resultSet.getInt(1)+1;
+//			}
+//			if(fileId == 0) fileId = 1;
+//			resultSet.close();			
+//			System.out.println(" Adding the file upload with file id --> " + fileId);
+//			
+//			String sqlStatementInsert = "insert into QMS_PAT_FILE_UPLOAD "
+//					                    + "(FILE_ID,PAT_ID,FILE_PATH,FILE_NAME,CREATION_DATE,CURR_FLAG,"
+//										+ "REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,"
+//										+ "INGESTION_DATE,SOURCE_NAME,USER_NAME)"						
+//										+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+//			statement = connection.prepareStatement(sqlStatementInsert);
+//			int i=0;
+//			statement.setInt(++i, fileId);
+//		//	statement.setInt(++i, fileUpload.patId());
+//			statement.setString(++i, fileUpload.getFilePath());
+//			statement.setString(++i, fileUpload.getFileName());
+//			Date date = new Date();				
+//			Timestamp timestamp = new Timestamp(date.getTime());				
+//			statement.setTimestamp(++i, timestamp);
+//			statement.setString(++i, "Y");
+//			statement.setTimestamp(++i, timestamp);
+//			statement.setTimestamp(++i, timestamp);
+//			statement.setString(++i, "Y");
+//			statement.setString(++i, "A");
+//			statement.setTimestamp(++i, timestamp);
+//			statement.setString(++i, "UI");				
+//			
+//			if(userData != null && userData.getName() != null)
+//				statement.setString(++i, userData.getName());
+//			else 
+//				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);			
+//			
+//			statement.executeUpdate();
+//			restResult = RestResult.getSucessRestResult("PAT UPLOAD added successfully.");
+//		} catch (Exception e) {
+//			restResult = RestResult.getFailRestResult(e.getMessage());
+//			e.printStackTrace();
+//		}
+//		finally {
+//			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
+//			qmsConnection.closeJDBCResources(null, statement, connection);
+//		}	
+//		return restResult;		
+//
+//	}
 	
 	
 	@Override

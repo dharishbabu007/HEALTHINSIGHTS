@@ -32,6 +32,7 @@ import com.qms.rest.model.RewardsRecommendations;
 import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSConstants;
+import com.qms.rest.util.QMSDateUtil;
 
 @Service("enrollmentService")
 public class EnrollmentServiceImpl implements EnrollmentService {
@@ -506,7 +507,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				rewardsFileOutput.setCategory(resultSet.getString("CATEGORY"));
 				rewardsFileOutput.setGoal(resultSet.getString("GOAL"));
 				rewardsFileOutput.setFrequency(resultSet.getString("FREQUENCY"));
-				rewardsFileOutput.setGoalDate(resultSet.getString("GOAL_DATE"));
+				rewardsFileOutput.setGoalDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("GOAL_DATE")));
 				rewardsFileOutput.setReward1(resultSet.getString("REWARD1"));
 				rewardsFileOutput.setReward2(resultSet.getString("REWARD2"));
 				rewardsFileOutput.setReward3(resultSet.getString("REWARD3"));
