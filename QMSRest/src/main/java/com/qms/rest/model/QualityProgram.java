@@ -20,7 +20,7 @@ public class QualityProgram {
    // @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "QUALITY_PROGRAM_ID")
     private int qualityProgramId;
-
+    
     @Column(name = "PROGRAM_ID")
     private int programId;
 

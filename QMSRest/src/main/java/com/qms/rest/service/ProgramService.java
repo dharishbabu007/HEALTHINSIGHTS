@@ -2,8 +2,15 @@ package com.qms.rest.service;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +24,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.qms.rest.exception.ProgramCreatorException;
 import com.qms.rest.model.Program;
 import com.qms.rest.model.ProgramCategory;
+import com.qms.rest.model.ProgramCategoryEdit;
+import com.qms.rest.model.ProgramEdit;
 import com.qms.rest.model.QualityProgram;
 import com.qms.rest.model.QualityProgramUI;
+import com.qms.rest.model.RestResult;
+import com.qms.rest.model.RoleScreen;
+import com.qms.rest.model.ScreenPermission;
+import com.qms.rest.model.User;
 import com.qms.rest.repository.ProgramRepository;
+import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSConstants;
+import com.qms.rest.util.QMSDateUtil;
 
 @Service
 public class ProgramService {
@@ -29,7 +45,10 @@ public class ProgramService {
 
     @Autowired
     private HttpSession httpSession;
-
+    
+	@Autowired
+	private QMSConnection qmsConnection;	
+	
     private final String CURRENT_FLAG="Y";
 
     private static int nextQualityProgramId = 1050;
@@ -118,4 +137,137 @@ public class ProgramService {
         System.out.println("Quality Program : "+qualityProgram);
         return qualityPrograms != null && qualityPrograms.size() > 0 ? true : false;
     }
+    
+    public ProgramEdit getProgramByName(String programName) {
+        
+    	ProgramEdit programEdit = null;
+        Statement statement = null;
+        ResultSet resultSet = null;         
+        Connection connection = null;
+        try {                               
+              connection = qmsConnection.getOracleConnection();
+              statement = connection.createStatement();
+              resultSet = statement.executeQuery("select * from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+programName+"'");  
+              
+              ProgramCategoryEdit programCategory = null;
+              List<ProgramCategoryEdit> programCategoryList = new ArrayList<>();
+              while (resultSet.next()) {
+            	  if(programEdit == null) {
+	            	  programEdit = new ProgramEdit();
+	            	  programEdit.setProgramId(resultSet.getInt("PROGRAM_ID"));
+	            	  programEdit.setProgramName(resultSet.getString("PROGRAM_NAME"));
+	            	  programEdit.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
+	            	  programEdit.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+            	  }
+	              
+	              programCategory =  new ProgramCategoryEdit();
+	              programCategory.setCategoryName(resultSet.getString("CATEGORY_NAME"));
+	              programCategory.setMaxPoints(resultSet.getInt("MAX_POINTS"));
+	              programCategory.setMaxScore(resultSet.getInt("MAX_SCORE"));
+	              programCategoryList.add(programCategory);
+              }
+              if(programEdit != null)
+            	  programEdit.setProgramCategorys(programCategoryList);
+        } catch (Exception e) {
+              e.printStackTrace();
+        }
+        finally {
+              qmsConnection.closeJDBCResources(resultSet, statement, connection);
+        }                 
+        return programEdit;          
+    }
+    
+	public RestResult editProgram(ProgramEdit program) {
+		PreparedStatement statement = null;
+		Connection connection = null;
+		RestResult restResult = null;
+		Statement statementObj = null;
+		ResultSet resultSet = null;
+		
+		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+		try {
+			connection = qmsConnection.getOracleConnection();
+			connection.setAutoCommit(false);
+			
+			List<ProgramCategoryEdit> programCategoryList =  program.getProgramCategorys();
+			if(programCategoryList ==null || programCategoryList.isEmpty()) {
+				ProgramCategoryEdit programCategoryEdit = new ProgramCategoryEdit();
+				if(programCategoryList == null) programCategoryList = new ArrayList<>();
+				programCategoryList.add(programCategoryEdit);
+			}
+			
+			statementObj = connection.createStatement();
+			statementObj.executeUpdate("delete from QMS_QUALITY_PROGRAM where PROGRAM_NAME='"+program.getProgramName()+"'");			
+			
+			int maxQualityProgramId = 0; 
+			int maxProgramId = 0;
+			resultSet = statementObj.executeQuery("select max(QUALITY_PROGRAM_ID) from QMS_QUALITY_PROGRAM");
+			if (resultSet.next()) {
+				maxQualityProgramId = resultSet.getInt(1);
+			}						
+			resultSet.close();
+			
+			resultSet = statementObj.executeQuery("select max(PROGRAM_ID) from QMS_QUALITY_PROGRAM");
+			if (resultSet.next()) {
+				maxProgramId = resultSet.getInt(1);
+			}								
+			
+			maxProgramId = maxProgramId+1;
+			String sqlStatementInsert = "insert into QMS_QUALITY_PROGRAM(QUALITY_PROGRAM_ID,PROGRAM_ID,"
+					+ "PROGRAM_NAME,START_DATE,END_DATE,CATEGORY_NAME,MAX_POINTS,MAX_SCORE,"
+					+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) "
+					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			statement = connection.prepareStatement(sqlStatementInsert);
+			
+			for (ProgramCategoryEdit programCategoryEdit : programCategoryList) {
+				int i=0;
+				maxQualityProgramId++;
+				System.out.println(" Adding QMS_QUALITY_PROGRAM with id --> " + maxQualityProgramId);
+				statement.setInt(++i, maxQualityProgramId);
+				statement.setInt(++i, maxProgramId);
+				statement.setString(++i, program.getProgramName());
+				statement.setString(++i, program.getStartDate());
+				statement.setString(++i, program.getEndDate());
+				statement.setString(++i, programCategoryEdit.getCategoryName());
+				statement.setInt(++i, programCategoryEdit.getMaxPoints());
+				statement.setInt(++i, programCategoryEdit.getMaxScore());
+				
+				Date date = new Date();				
+				Timestamp timestamp = new Timestamp(date.getTime());				
+				statement.setString(++i, "Y");
+				statement.setTimestamp(++i, timestamp);
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, "Y");
+				statement.setString(++i, "A");
+				statement.setTimestamp(++i, timestamp);
+				statement.setString(++i, QMSConstants.MEASURE_SOURCE_NAME);				
+				
+				if(userData == null || userData.getId() == null)
+					statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+				else
+					statement.setString(++i, userData.getLoginId());
+				
+				statement.addBatch();
+			}
+			int [] rowsAdded = statement.executeBatch();
+			connection.commit();
+			System.out.println(" Rows added   --> " + rowsAdded!=null?rowsAdded.length:0);
+			restResult = RestResult.getSucessRestResult("Program edit success.");
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {				
+				e1.printStackTrace();
+			}
+			restResult = RestResult.getFailRestResult(e.getMessage());
+			e.printStackTrace();
+		}
+		finally {			
+			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}	
+		return restResult;
+	}    
+    
+    
 }
