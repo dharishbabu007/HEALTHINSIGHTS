@@ -27,7 +27,7 @@ object UtilFunctions {
 
     val df1 = df.filter(df.col(colName).isin(headervalues: _*))
     val returnDf = df.except(df1)
-    println("df and returndf count:"+ df.count()+","+ returnDf.count()+","+ df1.count())
+    //println("df and returndf count:"+ df.count()+","+ returnDf.count()+","+ df1.count())
     returnDf
   }
 
@@ -961,10 +961,10 @@ object UtilFunctions {
     val argmapForFralityExclusion = mutable.Map(KpiConstants.eligibleDfName -> ageMoreThanDf, KpiConstants.refHedisTblName -> refHedisDf)
 
     val fralityValList = List(KpiConstants.fralityVal)
-    val fralityCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.icd10cmCodeVal)
+    val fralityCodeSystem = KpiConstants.codeSystemList
     val joinedForFralityAsDiagDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapForFralityExclusion,fralityValList,fralityCodeSystem)
     val fralityDf = UtilFunctions.measurementYearFilter(joinedForFralityAsDiagDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement0Val)
-                                 .select(KpiConstants.memberidColName)
+                                 .select(KpiConstants.memberidColName).distinct()
 
     fralityDf
   }
@@ -1021,16 +1021,15 @@ object UtilFunctions {
     val visitDf = dfMap.get(KpiConstants.visitTblName).getOrElse(spark.emptyDataFrame)
 
 
-    val df = membershipDf.as("df1").join(visitDf.as("df2"), KpiConstants.memberidColName)
-    val resultantDf = df.withColumn(KpiConstants.dobColName, to_date($"${KpiConstants.dobColName}", "yyyy-mm-dd"))
+    val resultantDf = membershipDf.as("df1").join(visitDf.as("df2"), KpiConstants.memberidColName)
+    /*val resultantDf = df.withColumn(KpiConstants.dobColName, to_date($"${KpiConstants.dobColName}", "yyyy-mm-dd"))
                 .withColumn(KpiConstants.memStartDateColName, to_date($"${KpiConstants.memStartDateColName}", "yyyy-mm-dd"))
                 .withColumn(KpiConstants.memEndDateColName, to_date($"${KpiConstants.memEndDateColName}", "yyyy-mm-dd"))
                 .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", "yyyy-mm-dd"))
                 .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}", "yyyy-mm-dd")))
                 .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}", "yyyy-mm-dd")))
-
-
-    //df1.printSchema()
+                .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}", "yyyy-mm-dd")))
+*/
 
     resultantDf
   }
@@ -1051,11 +1050,19 @@ object UtilFunctions {
 
     val factClaimDf = dfMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
     val refhedisDf = dfMap.get(KpiConstants.refHedisTblName).getOrElse(spark.emptyDataFrame)
-    val refmedDf = dfMap.get(KpiConstants.refmedValueSetTblName).getOrElse(spark.emptyDataFrame)
+
 
     var inDf = spark.emptyDataFrame
 
-    for (item <- codeSystem){
+    val codesystemList = refhedisDf.filter($"${KpiConstants.valuesetColName}".isin(valueset:_*))
+      .select(KpiConstants.codesystemColname)
+      .distinct()
+      .rdd
+      .map(r=> r.getString(0))
+      .collect()
+
+
+    for (item <- codesystemList){
 
       val df = item match {
 
@@ -1066,6 +1073,8 @@ object UtilFunctions {
                                                                                                                    || $"df1.${KpiConstants.proccodemod2ColName}" === $"df2.${KpiConstants.codeColName}",KpiConstants.innerJoinType)
                                                                         .filter($"df2.${KpiConstants.valuesetColName}".isin(valueset:_*))
                                                                         .select("df1.*")
+
+
 
         case KpiConstants.cptCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.proccodeColName}" === $"df2.${KpiConstants.codeColName}"
                                                                                                               || $"df1.${KpiConstants.obstestColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
@@ -1139,9 +1148,8 @@ object UtilFunctions {
                                                                     .filter($"df2.${KpiConstants.valuesetColName}".isin(valueset:_*))
                                                                     .select("df1.*")
 
-        case KpiConstants.rxnormCodeVal => factClaimDf.as("df1").join(refmedDf.as("df2"), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.ndcCodeColName}"
-                                                                                                               || $"df1.${KpiConstants.ndcCodeColName}" === $"df2.${KpiConstants.ndcCodeColName}", KpiConstants.innerJoinType)
-                                                                       .filter($"df2.${KpiConstants.medicatiolListColName}".isin(valueset:_*))
+        case KpiConstants.rxnormCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.codeColName}" , KpiConstants.innerJoinType)
+                                                                       .filter($"df2.${KpiConstants.valuesetColName}".isin(valueset:_*))
                                                                        .select("df1.*")
 
         case KpiConstants.snomedctCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.revenuecodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
@@ -1158,23 +1166,44 @@ object UtilFunctions {
 
 
       }
-      //println("--------------df counts-----------:"+df.count())
+
       if(inDf == spark.emptyDataFrame){
 
         inDf = df
-        //println("count in join function:"+inDf.count())
+
       }
       else{
 
         inDf = inDf.union(df)
       }
+
     }
 
-    inDf
+    inDf.dropDuplicates()
   }
 
 
+  /**
+    *
+    * @param spark
+    * @param dfMap
+    * @param valueset
+    * @return
+    */
+  def joinWithRefMedFunction(spark:SparkSession, dfMap:mutable.Map[String,DataFrame], valueset:List[String]):DataFrame ={
 
+
+    import spark.implicits._
+
+    val factClaimDf = dfMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
+    val refmedDf = dfMap.get(KpiConstants.refmedValueSetTblName).getOrElse(spark.emptyDataFrame)
+
+
+    val resultantDf = factClaimDf.as("df1").join(refmedDf.as("df2"), $"df1.${KpiConstants.ndcCodeColName}" === $"df2.${KpiConstants.ndcCodeColName}" , KpiConstants.innerJoinType)
+                                                  .filter($"df2.${KpiConstants.medicatiolListColName}".isin(valueset:_*))
+                                                  .select("df1.*")
+    resultantDf
+  }
 
 
   /**
@@ -1196,6 +1225,7 @@ object UtilFunctions {
     val mandatoryExclDf = dfMap.get(KpiConstants.mandatoryExclDfname).getOrElse(spark.emptyDataFrame)
     val optionalExclDf = dfMap.get(KpiConstants.optionalExclDfName).getOrElse(spark.emptyDataFrame)
     val numeratorPopDf = dfMap.get(KpiConstants.numeratorDfName).getOrElse(spark.emptyDataFrame)
+    val productPlanDf = dfMap.get(KpiConstants.productPlanTblName).getOrElse(spark.emptyDataFrame)
 
 
     val eligiblePopList = if(eligiblePopDf.count() > 0) eligiblePopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
@@ -1208,29 +1238,34 @@ object UtilFunctions {
 
     val epopColAddedDf = if (eligiblePopList.isEmpty) totalPopDf.withColumn(KpiConstants.ncqaOutEpopCol, lit(KpiConstants.zeroVal))
                          else
-                             totalPopDf.withColumn(KpiConstants.ncqaOutEpopCol, when(totalPopDf.col(KpiConstants.memberskColName).isin(eligiblePopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+                             totalPopDf.withColumn(KpiConstants.ncqaOutEpopCol, when(totalPopDf.col(KpiConstants.memberidColName).isin(eligiblePopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
 
 
 
     val exclColAddedDf = if (optionalExclList.isEmpty) epopColAddedDf.withColumn(KpiConstants.ncqaOutExclCol, lit(KpiConstants.zeroVal))
                          else
-                             epopColAddedDf.withColumn(KpiConstants.ncqaOutExclCol, when(epopColAddedDf.col(KpiConstants.memberskColName).isin(optionalExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+                             epopColAddedDf.withColumn(KpiConstants.ncqaOutExclCol, when(epopColAddedDf.col(KpiConstants.memberidColName).isin(optionalExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
 
 
     val rexclColAddedDf = if (mandatoryExclList.isEmpty) exclColAddedDf.withColumn(KpiConstants.ncqaOutRexclCol, lit(KpiConstants.zeroVal))
                           else
-                              exclColAddedDf.withColumn(KpiConstants.ncqaOutRexclCol, when(exclColAddedDf.col(KpiConstants.memberskColName).isin(mandatoryExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+                              exclColAddedDf.withColumn(KpiConstants.ncqaOutRexclCol, when(exclColAddedDf.col(KpiConstants.memberidColName).isin(mandatoryExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
 
 
     val numColAddedDf = if (numeratorPopList.isEmpty) rexclColAddedDf.withColumn(KpiConstants.ncqaOutNumCol, lit(KpiConstants.zeroVal))
                         else
-                            rexclColAddedDf.withColumn(KpiConstants.ncqaOutNumCol, when(exclColAddedDf.col(KpiConstants.memberskColName).isin(numeratorPopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+                            rexclColAddedDf.withColumn(KpiConstants.ncqaOutNumCol, when(exclColAddedDf.col(KpiConstants.memberidColName).isin(numeratorPopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
 
 
-    val measAddedDf = numColAddedDf.withColumn(KpiConstants.ncqaOutMeasureCol,lit(measureId))
+    val measAddedDf = numColAddedDf.withColumnRenamed(KpiConstants.memberidColName, KpiConstants.ncqaOutmemberIdCol)
+                                   .withColumn(KpiConstants.ncqaOutMeasureCol,lit(measureId))
                                    .withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
 
-    val resultDf = measAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
+    val prodplanAddedDf = measAddedDf.as("df1").join(productPlanDf.as("df2"), $"df1.${KpiConstants.lobProductColName}" === $"df2.${KpiConstants.lobProductColName}", KpiConstants.innerJoinType)
+                                                      .select("df1.*", s"df2.${KpiConstants.codeColName}")
+                                                      .withColumnRenamed(KpiConstants.codeColName, KpiConstants.ncqaOutPayerCol)
+
+    val resultDf = prodplanAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
     resultDf
 
   }

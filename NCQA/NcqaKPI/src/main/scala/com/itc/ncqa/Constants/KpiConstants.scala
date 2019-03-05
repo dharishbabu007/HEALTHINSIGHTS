@@ -31,9 +31,10 @@ object KpiConstants {
   val commercialLobName = "Commercial"
   val medicareLobName = "Medicare"
   val medicaidLobName = "Medicaid"
+  val dateFormatString = "yyyy-mm-dd"
 
 
-  val lobProductNameConVal = "Special Needs Plan—Institutionalized (SN2)"
+  val lobProductNameConVal = "Special Needs Plan-Institutionalized"
 
   /*function for setting the dbName with the value getting as argument */
   def setDbName(dbVal:String):String={
@@ -42,8 +43,8 @@ object KpiConstants {
   }
 
   /*claim status constants*/
-  val paidVal = "paid"
-  val suspendedVal = "suspended"
+  val paidVal = "1"
+  val suspendedVal = "2"
   val pendingVal = "pending"
   val deniedVal = "denied"
 
@@ -142,6 +143,7 @@ object KpiConstants {
   val months240 = 240
   val months792 = 792
   val months888 = 888
+  val months1032 = 1032
 
   /*measurement Year Constants*/
   val measurementYearLower = 0
@@ -196,6 +198,8 @@ object KpiConstants {
   val membershipTblName = "membership_enrollment"
   val generalmembershipTblName = "member"
   val providerTblName = "provider"
+  val medmonmemTblName = "medicare_monthly_membership"
+  val productPlanTblName = "product_plan"
 
 
   /*dataframe name constants*/
@@ -304,9 +308,12 @@ object KpiConstants {
   val minMemStDateColName = "min_mem_start_date"
   val maxMemEndDateColName = "max_mem_end_date"
   val datediffColName = "date_diff"
+  val overlapFlagColName = "overlap_flag"
+  val coverageDaysColName = "coverage_days"
   val maxDateDiffColName = "max_date_diff"
   val leadColName = "lead_col"
   val anchorflagColName = "anchor_flag"
+  val contEdFlagColName = "cont_enroll_flag"
   val secondContFlag = "second_cont_flag"
   val ltiFlagColName = "lti_flag"
   val serviceTempColName = "service_temp"
@@ -325,6 +332,7 @@ object KpiConstants {
   val dobColName = "dob"
   val genderColName = "gender"
   val stateColName = "state"
+  val dateofbirthColName = "date_of_birth"
 
 
   /*membership col names*/
@@ -704,6 +712,7 @@ object KpiConstants {
   val coa2MeasureId = "COA2"
   val coa3MeasureId = "COA3"
   val coa4MeasureId = "COA4"
+  val ggMeasureId = "GG"
 
 
 
@@ -929,7 +938,7 @@ object KpiConstants {
   val cvxCodeVal = "CVX"
   val hl7CodeVal = "HL7"
   val rxnormCodeVal = "RXNORM"
-  val snomedctCodeVal = "SNOMED"
+  val snomedctCodeVal = "SNOMED CT US Edition"
   val bilateralCodeVal = "bilateral (2-view study of each breast)"
   val g204CodeVal = "including computer-aided detection (cad) when performed; bilateral (G0204)"
   val g206CodeVal = "including computer-aided detection (cad) when performed; unilateral (G0206)"
@@ -938,6 +947,9 @@ object KpiConstants {
   val initialCodeVal = "initial visit (G0438)"
   val g0402CodeVal = "services limited to new beneficiary during the first 12 months of medicare enrollment (G0402)"
   val unspecifiedCodeVal = "unspecified"
+
+  val codeSystemList = List(icd9cmCodeVal,icd10cmCodeVal,icd9pcsCodeVal,icd10pcsCodeVal,cptCodeVal,cptcat2CodeVal,hcpsCodeVal,ubrevCodeVal,
+                            ubtobCodeVal, loincCodeVal, modifierCodeVal, posCodeVal, cvxCodeVal,rxnormCodeVal,snomedctCodeVal)
 
 
 
