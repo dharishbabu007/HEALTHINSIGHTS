@@ -223,7 +223,7 @@ object NcqaIMA {
 
     /*eligble population for IMA measure*/
     val eligiblePopDf = totalPopOutDf.select(KpiConstants.memberidColName).distinct().cache()
-    totalPopOutDf.coalesce(1)
+    eligiblePopDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")

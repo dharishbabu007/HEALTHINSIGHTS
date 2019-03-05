@@ -218,15 +218,13 @@ object NcqaCBP {
     val hospiceRemovedMemsDf  = contEnrollDf.as("df1").join(hosremMemidDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
                                                              .select("df1.*").cache()
 
-   /* hospiceRemovedMemsDf.coalesce(1)
+    hospiceRemovedMemsDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
       .csv("/home/hbase/ncqa/cbp_test_out/hospiceRemovedMemsDf/")
-*/
+
     //</editor-fold>
-
-
 
     //<editor-fold desc="Eligible Event calculation">
 
@@ -249,14 +247,26 @@ object NcqaCBP {
     val joinForOutpatWoUbrevDf = UtilFunctions.joinWithRefHedisFunction(spark, baseargMap,outPatwoUbrevValList,outPatwoUbrevCodeSystem)
     val outpatientWoUbrevDf = UtilFunctions.measurementYearFilter(joinForOutpatWoUbrevDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement1Val)
 
+   /* outpatientWoUbrevDf.select(KpiConstants.memberidColName,KpiConstants.serviceDateColName).coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/outpatientWoUbrev/")*/
+
     //</editor-fold>
 
     //<editor-fold desc="Outpatient without UBREV with Essential Hyper Tension">
 
-    val outpatessargMap= mutable.Map(KpiConstants.eligibleDfName -> outpatientWoUbrevDf.limit(20) , KpiConstants.refHedisTblName ->refHedisDf)
+    val outpatessargMap= mutable.Map(KpiConstants.eligibleDfName -> outpatientWoUbrevDf , KpiConstants.refHedisTblName ->refHedisDf)
     val essHypTenValList = List(KpiConstants.essentialHyptenVal)
     val essCodeSsytem = KpiConstants.codeSystemList
     val outpatwessentialHyptensDf = UtilFunctions.joinWithRefHedisFunction(spark, outpatessargMap,  essHypTenValList, essCodeSsytem)
+
+  /*  outpatwessentialHyptensDf.select(KpiConstants.memberidColName,KpiConstants.serviceDateColName).coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/outpatwessentialHyptens/")*/
 
     //</editor-fold>
 
@@ -270,11 +280,11 @@ object NcqaCBP {
     val optesshyptentelheaModDf =  UtilFunctions.joinWithRefHedisFunction(spark, outpatesswtelhealthargMap,teleHealthModValList,teleHealthModCodeSystem)
                                                 .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName).cache()
 
-    optesshyptentelheaModDf.coalesce(1)
+   /* optesshyptentelheaModDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/optesshyptentelheaModDf/")
+      .csv("/home/hbase/ncqa/cbp_test_out/optesshyptentelheaModDf/")*/
 
     //</editor-fold>
 
@@ -283,11 +293,11 @@ object NcqaCBP {
     val opesshyptenwotelheaDf = (outpatwessentialHyptensDf.select(KpiConstants.memberidColName,KpiConstants.serviceDateColName)).except(optesshyptentelheaModDf.withColumnRenamed(KpiConstants.memberidColName, "member_id1").withColumnRenamed(KpiConstants.serviceDateColName,"service_date1"))
       .cache()
 
-    opesshyptenwotelheaDf.coalesce(1)
+  /*  opesshyptenwotelheaDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/opesshyptenwotelheaDf/")
+      .csv("/home/hbase/ncqa/cbp_test_out/opesshyptenwotelheaDf/")*/
     //</editor-fold>
 
     //<editor-fold desc="Telephone visits">
@@ -307,11 +317,11 @@ object NcqaCBP {
     val telephoneEssentialHypDf = UtilFunctions.joinWithRefHedisFunction(spark, telephoneessargMap, essHypTenValList,essCodeSsytem)
                                                .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName).cache()
 
-    telephoneEssentialHypDf.coalesce(1)
+  /*  telephoneEssentialHypDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/telephoneEssentialHypDf/")
+      .csv("/home/hbase/ncqa/cbp_test_out/telephoneEssentialHypDf/")*/
     //</editor-fold>
 
     //<editor-fold desc="Online Assesment">
@@ -331,11 +341,11 @@ object NcqaCBP {
     val onlineEssentialHypDf = UtilFunctions.joinWithRefHedisFunction(spark, onlineessargMap, essHypTenValList,essCodeSsytem)
                                                .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName).cache()
 
-    onlineEssentialHypDf.coalesce(1)
+   /* onlineEssentialHypDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/onlineEssentialHypDf/")
+      .csv("/home/hbase/ncqa/cbp_test_out/onlineEssentialHypDf/")*/
     //</editor-fold>
 
 
@@ -349,11 +359,11 @@ object NcqaCBP {
                                                          .select(s"df1.${KpiConstants.memberidColName}",KpiConstants.secondDiagColName)
 
 
-    event1Df.coalesce(1)
+   /* event1Df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/event1Df/")
+      .csv("/home/hbase/ncqa/cbp_test_out/event1Df/")*/
 
     //</editor-fold>
 
@@ -365,11 +375,11 @@ object NcqaCBP {
                                                                                           .otherwise($"df2.service_date1"))
                                               .select(KpiConstants.memberidColName,KpiConstants.secondDiagColName)
 
-    event2df.coalesce(1)
+    /*event2df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/event2df/")
+      .csv("/home/hbase/ncqa/cbp_test_out/event2df/")*/
 
     //</editor-fold>
 
@@ -382,11 +392,11 @@ object NcqaCBP {
                                                .select(KpiConstants.memberidColName,KpiConstants.secondDiagColName)
 
 
-    event3Df.coalesce(1)
+   /* event3Df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/event3Df/")
+      .csv("/home/hbase/ncqa/cbp_test_out/event3Df/")*/
     //</editor-fold>
 
     //<editor-fold desc="Event4">
@@ -398,22 +408,22 @@ object NcqaCBP {
                                               .select(KpiConstants.memberidColName,KpiConstants.secondDiagColName)
 
 
-    event4Df.coalesce(1)
+   /* event4Df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/event4Df/")
+      .csv("/home/hbase/ncqa/cbp_test_out/event4Df/")*/
     //</editor-fold>
 
     val eventInDf = event1Df.union(event2df).union(event3Df).union(event4Df).dropDuplicates()
 
     val eventDf = eventInDf.groupBy(KpiConstants.memberidColName).agg(min(KpiConstants.secondDiagColName).alias(KpiConstants.secondDiagColName))
 
-    eventDf.coalesce(1)
+   /* eventDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/cbp_test_out/eventDf/")
+      .csv("/home/hbase/ncqa/cbp_test_out/eventDf/")*/
     val totalPopulationClaimsDf = visitJoinedDf.as("df1").join(eventDf.as("df2"), KpiConstants.memberidColName)
                                                          .select(s"df1.*", s"df2.${KpiConstants.secondDiagColName}")
 
@@ -437,7 +447,6 @@ object NcqaCBP {
     visitNonSupplDf.unpersist()
 
     //</editor-fold>
-
 
     //<editor-fold desc="Mandatory Exclusion Calculation">
 
@@ -551,7 +560,7 @@ object NcqaCBP {
                                               .select(KpiConstants.memberidColName)
 
 
-    val mandatoryExcl3Df = fralityAndAgeGt66Df.intersect((mandatoryExcl3_2Df.union(acuteInpatAdvIllDf)/*.union(dementiaMedDf)*/))
+    val mandatoryExcl3Df = fralityAndAgeGt66Df.intersect((mandatoryExcl3_2Df.union(acuteInpatAdvIllDf).union(dementiaMedDf)))
     //</editor-fold>
 
 
@@ -561,11 +570,11 @@ object NcqaCBP {
 
      val eligiblePopDf = totalPopMemIdDf.except(mandatoryExclDf.select(KpiConstants.memberidColName))
      val eligibleClaimsDf =  inputForMandCalDf.as("df1").join(eligiblePopDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
-                                                         .select("df1.*")
+                                                         .select("df1.*").cache()
 
     eligibleClaimsDf.count()
     inputForMandCalDf.unpersist()
-    eligiblePopDf.select(KpiConstants.memberidColName)
+    eligiblePopDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -573,18 +582,14 @@ object NcqaCBP {
 
     //</editor-fold>
 
-
-/*
-
     //<editor-fold desc="Denominator Calculation">
 
-    val denominatorDf = eligibleDf
+    val denominatorDf = eligiblePopDf
     //</editor-fold>
 
     //<editor-fold desc="Optional Exclusion Calculation">
 
-    val inputForOptExclAndNumDf = contEnrollDf.as("df1").join(eligibleDf.as("df2"), KpiConstants.memberidColName)
-                                        .select("df1.*")
+    val inputForOptExclAndNumDf = eligibleClaimsDf
 
     val argmapForOptExclusion = mutable.Map(KpiConstants.eligibleDfName -> inputForOptExclAndNumDf, KpiConstants.refHedisTblName -> refHedisDf,
                                             KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
@@ -598,7 +603,7 @@ object NcqaCBP {
 
     val joinForesrdobsKidneyTrDf = UtilFunctions.joinWithRefHedisFunction(spark, argmapForOptExclusion, esrdobsKidneyTrValList, esrdobsKidneyTrCodeSsytem)
     val esrdobsKidneyTrDf = UtilFunctions.measurementYearFilter(joinForesrdobsKidneyTrDf, KpiConstants.serviceDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement0Val)
-                                                  .select(KpiConstants.memberidColName)
+                                         .select(KpiConstants.memberidColName)
     //</editor-fold>
 
     //<editor-fold desc="Optional exclusion2(pregnancy Exclusion)">
@@ -632,10 +637,9 @@ object NcqaCBP {
 
     //</editor-fold>
 
-
     //</editor-fold>
 
-    val optionalExclDf = 	esrdobsKidneyTrDf.union(pregnancyDf).union(nonAcuteInPatDf)
+    val optionalExclDf = 	esrdobsKidneyTrDf.union(pregnancyDf).union(nonAcuteInPatDf).dropDuplicates()
     optionalExclDf.cache()
     //</editor-fold>
 
@@ -644,8 +648,7 @@ object NcqaCBP {
     //<editor-fold desc="Numerator Calculation for Non Supplemental Data ">
 
 
-    val eligNumsuppNDf = inputForOptExclAndNumDf.filter(($"${KpiConstants.supplflagColName}".===("N"))
-                                                     && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList)))
+    val eligNumsuppNDf = inputForOptExclAndNumDf.filter($"${KpiConstants.supplflagColName}".===("N"))
     val argmapNumSuppNdata = mutable.Map(KpiConstants.eligibleDfName -> eligNumsuppNDf, KpiConstants.refHedisTblName -> refHedisDf,
                                          KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
 
@@ -731,6 +734,9 @@ object NcqaCBP {
     val numeratorDf = numeratorNsnDf.union(numeratorsDf)
     //</editor-fold>
 
+
+    /*
+
     //<editor-fold desc="Ncqa Output Creation Code">
 
     val dfMapForNcqaOut = mutable.Map(KpiConstants.totalPopDfName -> totalPopulationDf , KpiConstants.eligibleDfName -> eligibleDf.select(KpiConstants.memberidColName),
@@ -738,55 +744,7 @@ object NcqaCBP {
                                       KpiConstants.numeratorDfName -> numeratorNsnDf)
     //</editor-fold>
 
-
 */
-
-
-    /*commented numerator code*/
-   /* val outpatnonacuterebpValList = List(KpiConstants.outpatwoUbrevVal, KpiConstants.nonAcuteInPatientVal,KpiConstants.remotebpmVal)
-    val outpatnonacuterebpCodeSystem = List(KpiConstants.cptCodeVal, KpiConstants.hcpsCodeVal, KpiConstants.ubrevCodeVal)
-    val joinForoutpatnonacuterebpDf = UtilFunctions.joinWithRefHedisFunction(spark, argmapForNumSuppNDf,outpatnonacuterebpValList, outpatnonacuterebpCodeSystem)
-    val outpatnonacuterebpDf = UtilFunctions.measurementYearFilter(joinForoutpatnonacuterebpDf, KpiConstants.serviceDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement0Val)
-      .filter($"${KpiConstants.claimstatusColName}".isin(claimStatusList))
-      .groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.serviceDateColName}").alias(KpiConstants.maxserviceDateColName),
-      first($"${KpiConstants.secondDiagColName}").alias(KpiConstants.secondDiagColName))
-      .filter($"${KpiConstants.maxserviceDateColName}".>=($"${KpiConstants.secondDiagColName}"))
-      .select(KpiConstants.memberskColName)
-
-
-
-
-      val sysbpReadingValList = List(KpiConstants.systolicLt140Val)
-    val sysbpReadingCodeSystem = List(KpiConstants.cptCatIIVal)
-    val joinForsysbpReadingDf = UtilFunctions.joinWithRefHedisFunction(spark, argmapNumSuppNsysdata, KpiConstants.proceedureCodeColName, KpiConstants.innerJoinType, KpiConstants.cbpMeasureId, sysbpReadingValList, sysbpReadingCodeSystem)
-    val sysbpReadingDf = UtilFunctions.measurementYearFilter(joinForsysbpReadingDf, KpiConstants.serviceDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val)
-                                            .filter($"${KpiConstants.claimstatusColName}".isin(claimStatusList))
-                                            .groupBy(KpiConstants.memberskColName).agg(max($"${KpiConstants.serviceDateColName}").alias(KpiConstants.maxserviceDateColName),
-                                                                                       first($"${KpiConstants.secondDiagColName}").alias(KpiConstants.secondDiagColName))
-                                            .filter($"${KpiConstants.maxserviceDateColName}".>=($"${KpiConstants.secondDiagColName}"))
-                                            .select(KpiConstants.memberskColName)
-
-
-
-                                            */
-    /*
-    //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
-
-    val numeratorValueSet = outpatnonacuterebpValList
-    val dinominatorExclValueSet = KpiConstants.emptyList
-    val numExclValueSet = KpiConstants.emptyList
-    val outValueSetForOutput = List(numeratorValueSet, dinominatorExclValueSet, numExclValueSet)
-    val sourceAndMsrList = List(data_source,measureId)
-
-
-    val numExclDf = spark.emptyDataFrame
-
-
-    val outFormatDf = UtilFunctions.commonOutputDfCreation(spark, dinominatorDf, dinominatorExclDf, numeratorDf, numExclDf, outValueSetForOutput, sourceAndMsrList)
-    outFormatDf.write.saveAsTable(KpiConstants.dbName+"."+KpiConstants.outFactHedisGapsInTblName)
-    //</editor-fold>
-*/
-
 
 
     spark.sparkContext.stop()
