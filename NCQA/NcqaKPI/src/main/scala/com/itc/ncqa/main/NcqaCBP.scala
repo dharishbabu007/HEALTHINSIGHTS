@@ -2,6 +2,7 @@ package com.itc.ncqa.main
 
 import com.itc.ncqa.Constants
 import com.itc.ncqa.Constants.KpiConstants
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions.year
 //import com.itc.ncqa.Functions.SparkObject.spark
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
@@ -67,6 +68,7 @@ object NcqaCBP {
                                         .withColumn(KpiConstants.dateofbirthColName, to_date($"${KpiConstants.dateofbirthColName}", KpiConstants.dateFormatString))
 
 
+
     val claimStatusList = List(KpiConstants.paidVal, KpiConstants.suspendedVal, KpiConstants.pendingVal, KpiConstants.deniedVal)
     val visitsDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.visitTblName,aLiat)
                                    .filter(($"${KpiConstants.serviceDateColName}".isNotNull)
@@ -74,10 +76,10 @@ object NcqaCBP {
                                             || ($"${KpiConstants.admitDateColName}".isNull && $"${KpiConstants.dischargeDateColName}".isNull))
                                        && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
                                    .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
-                                   .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", "yyyy-mm-dd"))
-                                   .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}", "yyyy-mm-dd")))
-                                   .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}", "yyyy-mm-dd")))
-                                   .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}", "yyyy-mm-dd")))
+                                   .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", KpiConstants.dateFormatString))
+                                   .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}",  KpiConstants.dateFormatString)))
+                                   .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}",  KpiConstants.dateFormatString)))
+                                   .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}",  KpiConstants.dateFormatString)))
 
 
 
@@ -127,12 +129,12 @@ object NcqaCBP {
 
     /*step1 (find out the members whoose either mem_start_date or mem_end_date should be in continuous enrollment period)*/
     val contEnrollStep1Df = contEnrollInDf.filter((($"${KpiConstants.memStartDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
-                                                || (($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
-                                                ||($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}") && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}"))))
-                                          .withColumn(KpiConstants.anchorflagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.anchorDateColName}"))
-                                                  && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}")), lit(1)).otherwise(lit(0)))
-                                          .withColumn(KpiConstants.contEdFlagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))
-                                                                                         && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}")), lit(1)).otherwise(lit(0)))
+      || (($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
+      ||($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}") && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}"))))
+      .withColumn(KpiConstants.anchorflagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.anchorDateColName}"))
+        && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}")), lit(1)).otherwise(lit(0)))
+      .withColumn(KpiConstants.contEdFlagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))
+        && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}")), lit(1)).otherwise(lit(0)))
 
 
 
@@ -143,13 +145,13 @@ object NcqaCBP {
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName),
         sum($"${KpiConstants.anchorflagColName}").alias(KpiConstants.anchorflagColName))
-      .filter((date_add($"max_mem_end_date",KpiConstants.days45+1).>=($"${KpiConstants.contenrollUppCoName}"))
-        && (date_sub($"min_mem_start_date",KpiConstants.days45 +1).<=($"${KpiConstants.contenrollLowCoName}"))
+      .filter((date_add($"max_mem_end_date",KpiConstants.days45).>=($"${KpiConstants.contenrollUppCoName}"))
+        && (date_sub($"min_mem_start_date",KpiConstants.days45).<=($"${KpiConstants.contenrollLowCoName}"))
         &&($"${KpiConstants.anchorflagColName}").>(0))
       .select($"${KpiConstants.memberidColName}")
 
     val contEnrollStep2Df = contEnrollStep1Df.as("df1").join(listDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
-                                                              .select("df1.*")
+      .select("df1.*")
 
 
     // contEnrollStep3Df.printSchema()
@@ -161,19 +163,19 @@ object NcqaCBP {
      anchorflag(if member is continuously enrolled on anchor date 1, otherwise 0)
      count(if date_diff>1 1, otherwise 0) over window*/
     val contEnrollStep3Df = contEnrollStep2Df.withColumn(KpiConstants.overlapFlagColName, when(($"${KpiConstants.memStartDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)) && $"${KpiConstants.memStartDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal))
-                                                                                            && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal))))
-                                                                                              ,lit(1))
-                                                                                         .when(($"${KpiConstants.memStartDateColName}".<(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)))
-                                                                                            && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1 ).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal)))
-                                                                                              ,lit(2)).otherwise(lit(0)))
-                                              .withColumn(KpiConstants.coverageDaysColName,when($"${KpiConstants.overlapFlagColName}".===(0) ,datediff(when($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}"), $"${KpiConstants.memEndDateColName}").otherwise($"${KpiConstants.contenrollUppCoName}")
-                                                                                          ,when($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}"), $"${KpiConstants.memStartDateColName}").otherwise($"${KpiConstants.contenrollLowCoName}"))+ 1 )
-                                                                                          .when($"${KpiConstants.overlapFlagColName}".===(2), datediff( when($"${KpiConstants.contenrollLowCoName}".<=(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal)), $"${KpiConstants.memEndDateColName}").otherwise(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal))
-                                                                                        ,$"${KpiConstants.memStartDateColName}")+1 )
-                                                                                          .otherwise(0))
-                                              .withColumn(KpiConstants.countColName, when(when($"${KpiConstants.overlapFlagColName}".===(0), datediff(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal), $"${KpiConstants.memEndDateColName}"))
-                                                                                                  .otherwise(0).>(1),lit(1))
-                                                                                          .otherwise(lit(0)) )
+      && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal))))
+      ,lit(1))
+      .when(($"${KpiConstants.memStartDateColName}".<(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)))
+        && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1 ).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal)))
+        ,lit(2)).otherwise(lit(0)))
+      .withColumn(KpiConstants.coverageDaysColName,when($"${KpiConstants.overlapFlagColName}".===(0) ,datediff(when($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}"), $"${KpiConstants.memEndDateColName}").otherwise($"${KpiConstants.contenrollUppCoName}")
+        ,when($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}"), $"${KpiConstants.memStartDateColName}").otherwise($"${KpiConstants.contenrollLowCoName}"))+ 1 )
+        .when($"${KpiConstants.overlapFlagColName}".===(2), datediff( when($"${KpiConstants.contenrollLowCoName}".<=(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal)), $"${KpiConstants.memEndDateColName}").otherwise(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal))
+          ,$"${KpiConstants.memStartDateColName}")+1 )
+        .otherwise(0))
+      .withColumn(KpiConstants.countColName, when(when($"${KpiConstants.overlapFlagColName}".===(0), datediff(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal), $"${KpiConstants.memEndDateColName}"))
+        .otherwise(0).>(1),lit(1))
+        .otherwise(lit(0)) )
 
 
 
@@ -187,8 +189,8 @@ object NcqaCBP {
 
 
 
-    val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
-      + (when(date_add($"max_mem_end_date", 1).<($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
+    val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>=($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
+      + (when(date_add($"max_mem_end_date", 1).<=($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
       && ($"${KpiConstants.coverageDaysColName}".>=(320)))
       .select(KpiConstants.memberidColName).distinct()
 
@@ -197,21 +199,40 @@ object NcqaCBP {
     //val contEnrollmemDf = UtilFunctions.contEnrollAndAllowableGapFilter(spark,inputForContEnrolldf,KpiConstants.commondateformatName,argMap)
 
     val contEnrollDf = contEnrollStep1Df.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
-                                                         .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
-                                                         .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}")
+      .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
+      .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}")
+
+
+    contEnrollDf.select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName)
+      .coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/contEnrolldetail/")
 
     //</editor-fold>
+
+
+
+
+
+    /*
 
     //<editor-fold desc="Hospice Removal">
 
     val argmapforHospice = mutable.Map(KpiConstants.eligibleDfName -> visitsDf , KpiConstants.refHedisTblName -> refHedisDf)
-
+    val visitSchema = visitsDf.schema
     val hospiceValList = List(KpiConstants.hospiceVal)
     val hospiceCodeSystem = KpiConstants.codeSystemList
     val hospiceClaimsDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapforHospice,hospiceValList,hospiceCodeSystem)
     val hospiceincurryearDf = UtilFunctions.measurementYearFilter(hospiceClaimsDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val, KpiConstants.measurement0Val)
                                            .select(KpiConstants.memberidColName).distinct()
 
+ /*   hospiceincurryearDf.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/hospiceincurryearDf/")*/
     val contEnrollMemDf = contEnrollDf.select(KpiConstants.memberidColName).distinct()
     val hosremMemidDf = contEnrollMemDf.except(hospiceincurryearDf)
 
@@ -293,7 +314,7 @@ object NcqaCBP {
     val opesshyptenwotelheaDf = (outpatwessentialHyptensDf.select(KpiConstants.memberidColName,KpiConstants.serviceDateColName)).except(optesshyptentelheaModDf.withColumnRenamed(KpiConstants.memberidColName, "member_id1").withColumnRenamed(KpiConstants.serviceDateColName,"service_date1"))
       .cache()
 
-  /*  opesshyptenwotelheaDf.coalesce(1)
+   /* opesshyptenwotelheaDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -317,7 +338,7 @@ object NcqaCBP {
     val telephoneEssentialHypDf = UtilFunctions.joinWithRefHedisFunction(spark, telephoneessargMap, essHypTenValList,essCodeSsytem)
                                                .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName).cache()
 
-  /*  telephoneEssentialHypDf.coalesce(1)
+   /* telephoneEssentialHypDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -341,7 +362,7 @@ object NcqaCBP {
     val onlineEssentialHypDf = UtilFunctions.joinWithRefHedisFunction(spark, onlineessargMap, essHypTenValList,essCodeSsytem)
                                                .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName).cache()
 
-   /* onlineEssentialHypDf.coalesce(1)
+  /*  onlineEssentialHypDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -359,7 +380,7 @@ object NcqaCBP {
                                                          .select(s"df1.${KpiConstants.memberidColName}",KpiConstants.secondDiagColName)
 
 
-   /* event1Df.coalesce(1)
+    /*event1Df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -375,7 +396,7 @@ object NcqaCBP {
                                                                                           .otherwise($"df2.service_date1"))
                                               .select(KpiConstants.memberidColName,KpiConstants.secondDiagColName)
 
-    /*event2df.coalesce(1)
+   /* event2df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -419,7 +440,7 @@ object NcqaCBP {
 
     val eventDf = eventInDf.groupBy(KpiConstants.memberidColName).agg(min(KpiConstants.secondDiagColName).alias(KpiConstants.secondDiagColName))
 
-   /* eventDf.coalesce(1)
+  /*  eventDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -436,7 +457,7 @@ object NcqaCBP {
                                                         .select(s"df1.${KpiConstants.memberidColName}", s"df2.${KpiConstants.lobProductColName}", s"df2.${KpiConstants.payerColName}")
                                                         .cache()
 
-  /*  totalpopOutDf.coalesce(1)
+    /*totalpopOutDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -445,6 +466,7 @@ object NcqaCBP {
     inputForMandCalDf.count()
     visitJoinedDf.unpersist()
     visitNonSupplDf.unpersist()
+    hospiceRemovedMemsDf.unpersist()
 
     //</editor-fold>
 
@@ -461,11 +483,24 @@ object NcqaCBP {
                                                         .filter(($"df1.${KpiConstants.lobColName}".===(KpiConstants.medicareLobName)) && (add_months($"df1.${KpiConstants.dobColName}",KpiConstants.months792).<=(ageCheckDate))
                                                             && ((($"df2.${KpiConstants.ltiFlagColName}".===(KpiConstants.boolTrueVal))) || ($"df1.${KpiConstants.lobProductColName}".===(KpiConstants.lobProductNameConVal))))
                                                         .select(s"df1.${KpiConstants.memberidColName}").cache()
+
+   /* mandatoryExcl1Df.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/mandatoryExcl1Df/")*/
     //</editor-fold>
 
     //<editor-fold desc="Mandatory Exclusion2">
 
     val mandatoryExcl2Df = UtilFunctions.findFralityMembers(spark,argmapForMandExcl,year,KpiConstants.age81Val, KpiConstants.age120Val)
+
+  /*  mandatoryExcl2Df.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/mandatoryExcl2Df/")*/
+
     //</editor-fold>
 
     //<editor-fold desc="Mandatory Exclusion3">
@@ -536,17 +571,18 @@ object NcqaCBP {
 
     val dementiaValList = List(KpiConstants.dementiaVal)
     val dementiaCodeSystem = KpiConstants.codeSystemList
+    val inputForMandCalschema = inputForMandCalDf.schema
     val joinedForDemMed1Df = UtilFunctions.joinWithRefHedisFunction(spark,argmapForMandExcl,dementiaValList,dementiaCodeSystem)
     val dementiaMed1Df = if(joinedForDemMed1Df.count()> 0) { UtilFunctions.mesurementYearFilter(joinedForDemMed1Df, KpiConstants.serviceDateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val)
-                                                                          .select(KpiConstants.memberidColName)}else {spark.emptyDataFrame}
+                                                                          .select(KpiConstants.memberidColName)}else {spark.createDataFrame(spark.sparkContext.emptyRDD[Row], inputForMandCalschema)}
 
 
     val dementiaMedValList = List(KpiConstants.dementiaMedicationVal)
     val joinedForDemMed2Df = UtilFunctions.joinWithRefMedFunction(spark,argmapForMandExcl,dementiaMedValList)
     val dementiaMed2Df = if(joinedForDemMed1Df.count()> 0) { UtilFunctions.mesurementYearFilter(joinedForDemMed2Df, KpiConstants.medstartdateColName, year, KpiConstants.measurement0Val, KpiConstants.measurement1Val)
-                                                                          .select(KpiConstants.memberidColName)}else {spark.emptyDataFrame}
+                                                                          .select(KpiConstants.memberidColName)}else {spark.createDataFrame(spark.sparkContext.emptyRDD[Row], inputForMandCalschema)}
 
-    val dementiaMedDf = dementiaMed1Df.union(dementiaMed2Df)
+    val dementiaMedDf = dementiaMed1Df.select(KpiConstants.memberidColName).union(dementiaMed2Df.select(KpiConstants.memberidColName))
     //</editor-fold>
 
 
@@ -561,10 +597,23 @@ object NcqaCBP {
 
 
     val mandatoryExcl3Df = fralityAndAgeGt66Df.intersect((mandatoryExcl3_2Df.union(acuteInpatAdvIllDf).union(dementiaMedDf)))
+
+    mandatoryExcl3Df.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/mandatoryExcl3Df/")
+
     //</editor-fold>
 
 
     val mandatoryExclDf = mandatoryExcl1Df.union(mandatoryExcl2Df).union(mandatoryExcl3Df).dropDuplicates()
+
+    mandatoryExclDf.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/mandatoryExclDf/")
 
     //</editor-fold>
 
@@ -574,7 +623,7 @@ object NcqaCBP {
 
     eligibleClaimsDf.count()
     inputForMandCalDf.unpersist()
-    eligiblePopDf.select(KpiConstants.memberidColName).coalesce(1)
+    eligiblePopDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -735,7 +784,7 @@ object NcqaCBP {
     //</editor-fold>
 
 
-    /*
+
 
     //<editor-fold desc="Ncqa Output Creation Code">
 
