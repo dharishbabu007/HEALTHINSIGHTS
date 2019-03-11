@@ -1,7 +1,8 @@
 package com.itc.ncqa.Functions
 
+import java.sql.Date
+
 import com.itc.ncqa.Constants.KpiConstants
-import com.itc.ncqa.Functions.SparkObject.spark
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{Column, DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions._
@@ -12,6 +13,9 @@ import scala.collection.JavaConversions._
 import collection.mutable._
 import scala.collection.mutable
 
+
+case class Member(member_id:String, service_date:Date)
+case class DualMember(member_id:String, lob:String, lob_product:String, payer:String, primary_plan_flag: String)
 
 object UtilFunctions {
 
@@ -203,66 +207,6 @@ object UtilFunctions {
     resultantDf
   }
 
-/*
-  def initialJoinFunction(spark:SparkSession, dfMap:mutable.Map[String, DataFrame]):DataFrame ={
-
-
-    import spark.implicits._
-
-    val dimMemberDf = dfMap.get(KpiConstants.dimMemberTblName).getOrElse(spark.emptyDataFrame)
-    val factMembershipDf = dfMap.get(KpiConstants.factMembershipTblName).getOrElse(spark.emptyDataFrame)
-    val dimProductPlanDf = dfMap.get(KpiConstants.dimProductTblName).getOrElse(spark.emptyDataFrame)
-    val refLobDf = dfMap.get(KpiConstants.refLobTblName).getOrElse(spark.emptyDataFrame)
-    val factMemAttrDf = dfMap.get(KpiConstants.factMemAttrTblName).getOrElse(spark.emptyDataFrame)
-    val factMonMemDf = dfMap.get(KpiConstants.factMonMembershipTblName).getOrElse(spark.emptyDataFrame)
-    val dimDateDf = dfMap.get(KpiConstants.dimDateTblName).getOrElse(spark.emptyDataFrame)
-
-    /*join dim_member,fact_membership,dim_product_plan,refLob,fact_mem_attribution*/
-    val joinedDf = dimMemberDf.as("df1").join(factMembershipDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
-                                               .join(dimProductPlanDf.as("df3"), $"df2.${KpiConstants.productplanSkColName}" === $"df3.${KpiConstants.productplanSkColName}", KpiConstants.innerJoinType)
-                                               .join(refLobDf.as("df4"), $"df3.${KpiConstants.lobIdColName}" === $"df4.${KpiConstants.lobIdColName}", KpiConstants.innerJoinType)
-                                               .join(factMemAttrDf.as("df5"), $"df1.${KpiConstants.memberskColName}" === $"df5.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
-                                               .join(factMonMemDf.as("df6"), $"df1.${KpiConstants.memberskColName}" === $"df6.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
-                                               .filter((factMembershipDf.col(KpiConstants.considerationsColName).===(KpiConstants.yesVal))
-                                                    && (factMembershipDf.col(KpiConstants.memPlanStartDateSkColName).isNotNull)
-                                                    && (factMembershipDf.col(KpiConstants.memPlanEndDateSkColName).isNotNull))
-                                               .select(s"df1.${KpiConstants.memberskColName}",s"df1.${KpiConstants.dobskColame}", s"df1.${KpiConstants.genderColName}", s"df2.${KpiConstants.productplanSkColName}",
-                                                             s"df2.${KpiConstants.memPlanStartDateSkColName}",s"df2.${KpiConstants.memPlanEndDateSkColName}", s"df2.${KpiConstants.benefitMedicalColname}",s"df3.${KpiConstants.lobProductColName}",
-                                                             s"df4.${KpiConstants.lobColName}", s"df4.${KpiConstants.lobNameColName}", s"df5.${KpiConstants.providerSkColName}", s"df6.${KpiConstants.ltiFlagColName}",
-                                                             s"df6.${KpiConstants.lisPremiumSubColName}", s"df6.${KpiConstants.orgreasentcodeColName}")
-
-
-
-
-
-
-    /*join the data with dim_date for getting calender date of dateofbirthsk,member_plan_start_date_sk,member_plan_end_date_sk*/
-    val dobDateValAddedDf = joinedDf.as("df1").join(dimDateDf.as("df2"), joinedDf.col(KpiConstants.dobskColame) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType)
-                                                     .select($"df1.*", $"df2.calendar_date")
-                                                     .withColumnRenamed(KpiConstants.calenderDateColName, "dob_temp")
-                                                     .drop(KpiConstants.dobskColame)
-
-    //dobDateValAddedDf.show(50)
-    val memStartDateAddedDf = dobDateValAddedDf.as("df1").join(dimDateDf.as("df2"), dobDateValAddedDf.col(KpiConstants.memPlanStartDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType)
-                                                                .select($"df1.*", $"df2.calendar_date")
-                                                                .withColumnRenamed(KpiConstants.calenderDateColName, "mem_start_temp")
-                                                                .drop(KpiConstants.memPlanStartDateSkColName)
-
-
-    val memEndDateAddedDf = memStartDateAddedDf.as("df1").join(dimDateDf.as("df2"), memStartDateAddedDf.col(KpiConstants.memPlanEndDateSkColName) === dimDateDf.col(KpiConstants.dateSkColName), KpiConstants.innerJoinType)
-                                                                .select($"df1.*", $"df2.calendar_date")
-                                                                .withColumnRenamed(KpiConstants.calenderDateColName, "mem_end_temp")
-                                                                .drop(KpiConstants.memPlanEndDateSkColName)
-
-    /*convert the dob column to date format (dd-MMM-yyyy)*/
-    val resultantDf = memEndDateAddedDf.withColumn(KpiConstants.dobColName, to_date($"dob_temp", "dd-MMM-yyyy"))
-                                       .withColumn(KpiConstants.memStartDateColName, to_date($"mem_start_temp", "dd-MMM-yyyy"))
-                                       .withColumn(KpiConstants.memEndDateColName, to_date($"mem_end_temp", "dd-MMM-yyyy")).drop("dob_temp","mem_start_temp","mem_end_temp")
-
-
-    resultantDf
-  }
-*/
   def joinForCommonFilterFunctionForClinical(spark: SparkSession, dimMemberDf: DataFrame, dimPatDf:DataFrame, factImmDf: DataFrame, factMembershipDf: DataFrame, factpatmemDf: DataFrame, dimProductDf:DataFrame, dimLocationDf: DataFrame, refLobDf: DataFrame, facilityDf: DataFrame, lobName: String, measureTitle: String): DataFrame = {
 
     import spark.implicits._
@@ -307,127 +251,6 @@ object UtilFunctions {
     finalResultantDf
   }
 
-
-  /**
-    *
-    * @param spark
-    * @param inputDf
-    * @param startDate
-    * @param endDate
-    * @param lob_name
-    * @return
-    */
-  def contEnrollAndAllowableGapFilter(spark:SparkSession, inputDf:DataFrame, formatName:String, argMap:Map[String, String] /*,startDate:String, endDate:String,anchDate:String,benefitColName:String,lob_name:String*/):DataFrame ={
-
-    import spark.implicits._
-
-
-    /*deciding allowable length based on the lob name*/
-    val lobName = argMap.get(KpiConstants.lobNameKeyName).getOrElse("")
-
-    val allowableGapDays = lobName match {
-
-      case KpiConstants.commercialLobName => KpiConstants.days45
-
-      case KpiConstants.medicareLobName => KpiConstants.days45
-
-      case KpiConstants.medicaidLobName => KpiConstants.days45
-
-    }
-
-    /*input df creation for Continuos Enrollment and Allowable gap Check based on the format*/
-    val contEnrollInDf = formatName match {
-
-      case KpiConstants.commondateformatName => {
-                                                  val contEnrollStartDate = argMap.get(KpiConstants.dateStartKeyName).getOrElse("")
-                                                  val contEnrollEndDate = argMap.get(KpiConstants.dateEndKeyName).getOrElse("")
-                                                  val anchorDate = argMap.get(KpiConstants.dateAnchorKeyName).getOrElse("")
-                                                  inputDf.withColumn(KpiConstants.contenrollLowCoName, lit(contEnrollStartDate).cast(DateType))
-                                                         .withColumn(KpiConstants.contenrollUppCoName, lit(contEnrollEndDate).cast(DateType))
-                                                         .withColumn(KpiConstants.anchorDateColName, lit(anchorDate).cast(DateType))
-
-                                       }
-
-      case KpiConstants.ageformatName => {
-                                                  val ageContStart = argMap.get(KpiConstants.ageStartKeyName).getOrElse("")
-                                                  val ageContEnd = argMap.get(KpiConstants.ageEndKeyName).getOrElse("")
-                                                  val ageAnchor = argMap.get(KpiConstants.ageAnchorKeyName).getOrElse("")
-                                                  inputDf.withColumn(KpiConstants.contenrollLowCoName, add_months($"${KpiConstants.dobColName}", (ageContStart.toInt * 12)))
-                                                         .withColumn(KpiConstants.contenrollUppCoName, add_months($"${KpiConstants.dobColName}", (ageContEnd.toInt * 12)))
-                                                         .withColumn(KpiConstants.anchorDateColName, add_months($"${KpiConstants.dobColName}", (ageAnchor.toInt * 12)))
-
-                                        }
-
-
-    }
-
-      /*step1 (find out the members whoose either mem_start_date or mem_end_date should be in continuous enrollment period)*/
-      val contEnrollStep1Df = contEnrollInDf.filter((($"${KpiConstants.memStartDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
-                                                   || (($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))))
-
-      //contEnrollStep1Df.show(50)
-      /*Step2(select only the entries whoose benefit is the one that required) */
-      val benefitColName = argMap.get(KpiConstants.benefitKeyName).getOrElse("")
-     /* val noBenefitDf = contEnrollStep1Df.filter($"$benefitColName".===("N")).select(KpiConstants.memberskColName)
-      val contEnrollStep2Df = contEnrollStep1Df.as("df1").join(noBenefitDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.leftOuterJoinType)
-                                                                .filter($"df2.${KpiConstants.memberskColName}".isNull)
-                                                                .select("df1.*")*/
-
-
-      val contEnrollStep2Df = contEnrollStep1Df.withColumn(benefitColName, when($"$benefitColName".===(KpiConstants.yesVal), 1).otherwise(0))
-      //contEnrollStep2Df.show(50)
-
-      /*Step3(select the members who satisfy both (min_start_date- ces and cee- max_end_date <= allowable gap) conditions)*/
-      val listDf = contEnrollStep2Df.groupBy($"${KpiConstants.memberskColName}")
-                                    .agg(max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName), min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
-                                    first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
-                                   .filter(((date_add($"max_mem_end_date",allowableGapDays+1).>=($"${KpiConstants.contenrollUppCoName}")) && (date_sub($"min_mem_start_date",allowableGapDays+1).<=($"${KpiConstants.contenrollLowCoName}"))))
-                                   .select($"${KpiConstants.memberskColName}")
-      val contEnrollStep3Df = contEnrollStep2Df.as("df1").join(listDf.as("df2"), $"df1.${KpiConstants.memberskColName}" === $"df2.${KpiConstants.memberskColName}", KpiConstants.innerJoinType)
-                                                                .select("df1.*")
-      //contEnrollStep3Df.show(50)
-
-      /*step4()*/
-      /*window function creation based on partioned by member_sk and order by mem_start_date*/
-      val contWindowVal = Window.partitionBy(s"${KpiConstants.memberskColName}").orderBy(s"${KpiConstants.memStartDateColName}")
-
-
-      /* added 3 columns (date_diff(datediff b/w next start_date and current end_date for each memeber),
-       anchorflag(if member is continuously enrolled on anchor date 1, otherwise 0)
-       count(if date_diff>1 1, otherwise 0) over window*/
-      val contEnrollStep4Df = contEnrollStep3Df.withColumn(KpiConstants.datediffColName, datediff(lead($"${KpiConstants.memStartDateColName}",1).over(contWindowVal), $"${KpiConstants.memEndDateColName}"))
-                                               .withColumn(KpiConstants.anchorflagColName,when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.anchorDateColName}"))
-                                                                                                && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}"))
-                                                                                                && $"${KpiConstants.lobColName}".===(lobName), lit(1)).otherwise(lit(0)))
-                                               .withColumn(KpiConstants.countColName, when($"${KpiConstants.datediffColName}".>(1),lit(1)).otherwise(lit(0)) )
-
-     // contEnrollStep4Df.show(50)
-
-      val contEnrollStep5Df = contEnrollStep4Df.groupBy(KpiConstants.memberskColName).agg(min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
-                                                                                      max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
-                                                                                      max($"${KpiConstants.datediffColName}").alias(KpiConstants.maxDateDiffColName),
-                                                                                      sum($"${KpiConstants.countColName}").alias(KpiConstants.countColName),
-                                                                                      sum($"${KpiConstants.anchorflagColName}").alias(KpiConstants.anchorflagColName),
-                                                                                      first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
-                                                                                      first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName),
-                                                                                      sum($"$benefitColName").alias(KpiConstants.sumBenefitColName),
-                                                                                      count($"$benefitColName").alias(KpiConstants.countBenefitColName))
-    //contEnrollStep5Df.show(50)
-      //contEnrollStep5Df.withColumn("value", lit((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>(startDate),lit(1)).otherwise(lit(0))) + (when(date_add($"max_mem_end_date", 1).<(endDate),lit(1)).otherwise(lit(0)))))).show(50)
-      val contEnrollDf = contEnrollStep5Df.filter((($"${KpiConstants.maxDateDiffColName}" - 1).<=(allowableGapDays) || ($"${KpiConstants.maxDateDiffColName}" - 1).isNull)
-                                                 && ($"${KpiConstants.anchorflagColName}".>(0))
-                                                 && ((($"${KpiConstants.countColName}")
-                                                        + (when(date_sub($"min_mem_start_date", 1).>($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
-                                                        + (when(date_add($"max_mem_end_date", 1).<($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
-                                                 && ($"${KpiConstants.sumBenefitColName}".===($"${KpiConstants.countBenefitColName}")))
-                                          .select(KpiConstants.memberskColName)
-
-      //contEnrollDf.show(50)
-      contEnrollDf
-   /* }
-   */
-
-  }
 
 
 
@@ -946,32 +769,133 @@ object UtilFunctions {
   }
 
 
-  def findFralityMembers(spark:SparkSession,argMap:mutable.Map[String,DataFrame], year:String, lowerAge:String,upperAge:String):DataFrame ={
 
 
-    import spark.implicits._
-
-
-    val eligibleDf = argMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
-    val refHedisDf   = argMap.get(KpiConstants.refHedisTblName).getOrElse(spark.emptyDataFrame)
-
-
-    val ageMoreThanDf = UtilFunctions.ageFilter(eligibleDf,KpiConstants.dobColName,year,lowerAge, upperAge,KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
-
-    val argmapForFralityExclusion = mutable.Map(KpiConstants.eligibleDfName -> ageMoreThanDf, KpiConstants.refHedisTblName -> refHedisDf)
-
-    val fralityValList = List(KpiConstants.fralityVal)
-    val fralityCodeSystem = KpiConstants.codeSystemList
-    val joinedForFralityAsDiagDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapForFralityExclusion,fralityValList,fralityCodeSystem)
-    val fralityDf = UtilFunctions.measurementYearFilter(joinedForFralityAsDiagDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement0Val)
-                                 .select(KpiConstants.memberidColName).distinct()
-
-    fralityDf
-  }
 
 
 
   /*New Functions that will be used in measures*/
+
+
+  /**
+    *
+    * @param spark
+    * @param inputDf
+    * @param startDate
+    * @param endDate
+    * @param lob_name
+    * @return
+    */
+  def contEnrollAndAllowableGapFilter(spark:SparkSession, inputDf:DataFrame, formatName:String, argMap:Map[String, String]):DataFrame ={
+
+    import spark.implicits._
+
+
+    val allowableGapDays = KpiConstants.days45
+
+    /*input df creation for Continuos Enrollment and Allowable gap Check based on the format*/
+    val contEnrollInDf = formatName match {
+
+      case KpiConstants.commondateformatName => {
+                                                val contEnrollStartDate = argMap.get(KpiConstants.dateStartKeyName).getOrElse("")
+                                                val contEnrollEndDate = argMap.get(KpiConstants.dateEndKeyName).getOrElse("")
+                                                val anchorDate = argMap.get(KpiConstants.dateAnchorKeyName).getOrElse("")
+
+                                        inputDf.withColumn(KpiConstants.contenrollLowCoName, lit(contEnrollStartDate).cast(DateType))
+                                               .withColumn(KpiConstants.contenrollUppCoName, lit(contEnrollEndDate).cast(DateType))
+                                               .withColumn(KpiConstants.anchorDateColName, lit(anchorDate).cast(DateType))
+
+      }
+
+      case KpiConstants.ageformatName => {
+                                              val ageContStart = argMap.get(KpiConstants.ageStartKeyName).getOrElse("")
+                                              val ageContEnd = argMap.get(KpiConstants.ageEndKeyName).getOrElse("")
+                                              val ageAnchor = argMap.get(KpiConstants.ageAnchorKeyName).getOrElse("")
+                                      inputDf.withColumn(KpiConstants.contenrollLowCoName, add_months($"${KpiConstants.dateofbirthColName}", (ageContStart.toInt * KpiConstants.months12)))
+                                             .withColumn(KpiConstants.contenrollUppCoName, add_months($"${KpiConstants.dateofbirthColName}", (ageContEnd.toInt * KpiConstants.months12)))
+               .withColumn(KpiConstants.anchorDateColName, add_months($"${KpiConstants.dateofbirthColName}", (ageAnchor.toInt * KpiConstants.months12)))
+
+      }
+
+
+    }
+
+    /*step1 (find out the members whoose either mem_start_date or mem_end_date should be in continuous enrollment period)*/
+    val contEnrollStep1Df = contEnrollInDf.filter((($"${KpiConstants.memStartDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
+      || (($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollLowCoName}")) && ($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}")))
+      ||($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}") && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}"))))
+      .withColumn(KpiConstants.anchorflagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.anchorDateColName}"))
+        && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}")), lit(KpiConstants.oneVal.toInt)).otherwise(lit(0)))
+      .withColumn(KpiConstants.contEdFlagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))
+        && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}")), lit(1)).otherwise(lit(0)))
+
+
+    /*Step3(select the members who satisfy both (min_start_date- ces and cee- max_end_date <= allowable gap) conditions)*/
+    val listDf = contEnrollStep1Df.groupBy($"${KpiConstants.memberidColName}")
+      .agg(max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
+        min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
+        first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
+        first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName),
+        sum($"${KpiConstants.anchorflagColName}").alias(KpiConstants.anchorflagColName))
+      .filter((date_add($"max_mem_end_date",KpiConstants.days45+1).>=($"${KpiConstants.contenrollUppCoName}"))
+        && (date_sub($"min_mem_start_date",KpiConstants.days45 +1).<=($"${KpiConstants.contenrollLowCoName}"))
+        &&($"${KpiConstants.anchorflagColName}").>(0))
+      .select($"${KpiConstants.memberidColName}")
+
+    val contEnrollStep2Df = contEnrollStep1Df.as("df1").join(listDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+      .select("df1.*")
+
+    /*window function creation based on partioned by member_sk and order by mem_start_date*/
+    val contWindowVal = Window.partitionBy(s"${KpiConstants.memberidColName}").orderBy(org.apache.spark.sql.functions.col(s"${KpiConstants.memEndDateColName}").desc,org.apache.spark.sql.functions.col(s"${KpiConstants.memStartDateColName}"))
+
+
+    /* added 3 columns (date_diff(datediff b/w next start_date and current end_date for each memeber),
+     anchorflag(if member is continuously enrolled on anchor date 1, otherwise 0)
+     count(if date_diff>1 1, otherwise 0) over window*/
+    val contEnrollStep3Df = contEnrollStep2Df.withColumn(KpiConstants.overlapFlagColName, when(($"${KpiConstants.memStartDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)) && $"${KpiConstants.memStartDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal))
+      && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal))))
+      ,lit(1))
+      .when(($"${KpiConstants.memStartDateColName}".<(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal)))
+        && ($"${KpiConstants.memEndDateColName}".>=(lag($"${KpiConstants.memStartDateColName}",1 ).over(contWindowVal)) && $"${KpiConstants.memEndDateColName}".<=(lag($"${KpiConstants.memEndDateColName}",1).over(contWindowVal)))
+        ,lit(2)).otherwise(lit(0)))
+      .withColumn(KpiConstants.coverageDaysColName,when($"${KpiConstants.overlapFlagColName}".===(0) ,datediff(when($"${KpiConstants.memEndDateColName}".<=($"${KpiConstants.contenrollUppCoName}"), $"${KpiConstants.memEndDateColName}").otherwise($"${KpiConstants.contenrollUppCoName}")
+        ,when($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollLowCoName}"), $"${KpiConstants.memStartDateColName}").otherwise($"${KpiConstants.contenrollLowCoName}"))+ 1 )
+        .when($"${KpiConstants.overlapFlagColName}".===(2), datediff( when($"${KpiConstants.contenrollLowCoName}".<=(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal)), $"${KpiConstants.memEndDateColName}").otherwise(lag( $"${KpiConstants.contenrollUppCoName}",1).over(contWindowVal))
+          ,$"${KpiConstants.memStartDateColName}")+1 )
+        .otherwise(0))
+      .withColumn(KpiConstants.countColName, when(when($"${KpiConstants.overlapFlagColName}".===(0), datediff(lag($"${KpiConstants.memStartDateColName}",1).over(contWindowVal), $"${KpiConstants.memEndDateColName}"))
+        .otherwise(0).>(1),lit(1))
+        .otherwise(lit(0)) )
+
+
+
+    val contEnrollStep5Df = contEnrollStep3Df.groupBy(KpiConstants.memberidColName)
+      .agg(min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
+        max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
+        sum($"${KpiConstants.countColName}").alias(KpiConstants.countColName),
+        sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
+        first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
+        first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
+
+
+
+    val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
+      + (when(date_add($"max_mem_end_date", 1).<($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
+      && ($"${KpiConstants.coverageDaysColName}".>=(320)))
+      .select(KpiConstants.memberidColName).distinct()
+
+
+
+    //val contEnrollmemDf = UtilFunctions.contEnrollAndAllowableGapFilter(spark,inputForContEnrolldf,KpiConstants.commondateformatName,argMap)
+
+    val contEnrollDf = contEnrollStep1Df.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+      .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
+      .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}")
+
+    contEnrollDf
+
+  }
+
 
   /**
     *
@@ -983,7 +907,7 @@ object UtilFunctions {
 
     var a,b,c, counter = 0
 
-    for(i <- 0 to dates.length){
+    for(i <- 0 to dates.length-1){
       if(i == 0) a= i else a = c
 
       b = i+1
@@ -1209,13 +1133,44 @@ object UtilFunctions {
   /**
     *
     * @param spark
+    * @param argMap
+    * @param year
+    * @param lowerAge
+    * @param upperAge
+    * @return
+    */
+  def findFralityMembers(spark:SparkSession,argMap:mutable.Map[String,DataFrame], year:String, lowerAge:String,upperAge:String):DataFrame ={
+
+
+    import spark.implicits._
+
+
+    val eligibleDf = argMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
+    val refHedisDf   = argMap.get(KpiConstants.refHedisTblName).getOrElse(spark.emptyDataFrame)
+
+
+    val ageMoreThanDf = UtilFunctions.ageFilter(eligibleDf,KpiConstants.dobColName,year,lowerAge, upperAge,KpiConstants.boolTrueVal, KpiConstants.boolTrueVal)
+
+    val argmapForFralityExclusion = mutable.Map(KpiConstants.eligibleDfName -> ageMoreThanDf, KpiConstants.refHedisTblName -> refHedisDf)
+
+    val fralityValList = List(KpiConstants.fralityVal)
+    val fralityCodeSystem = KpiConstants.codeSystemList
+    val joinedForFralityAsDiagDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapForFralityExclusion,fralityValList,fralityCodeSystem)
+    val fralityDf = UtilFunctions.measurementYearFilter(joinedForFralityAsDiagDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val,KpiConstants.measurement0Val)
+      .select(KpiConstants.memberidColName).distinct()
+
+    fralityDf
+  }
+
+
+  /**
+    *
+    * @param spark
     * @param dfMap - Map that contains all the required Dataframes
     * @param measureId - Measureid value for which the o/p format is creating
     * @return - Dataframe in the NCQA o/p format
     */
   def ncqaOutputDfCreation(spark: SparkSession, dfMap:mutable.Map[String, DataFrame],measureId: String): DataFrame = {
-
-
 
 
     import spark.implicits._
@@ -1225,7 +1180,7 @@ object UtilFunctions {
     val mandatoryExclDf = dfMap.get(KpiConstants.mandatoryExclDfname).getOrElse(spark.emptyDataFrame)
     val optionalExclDf = dfMap.get(KpiConstants.optionalExclDfName).getOrElse(spark.emptyDataFrame)
     val numeratorPopDf = dfMap.get(KpiConstants.numeratorDfName).getOrElse(spark.emptyDataFrame)
-    val productPlanDf = dfMap.get(KpiConstants.productPlanTblName).getOrElse(spark.emptyDataFrame)
+   // val productPlanDf = dfMap.get(KpiConstants.productPlanTblName).getOrElse(spark.emptyDataFrame)
 
 
     val eligiblePopList = if(eligiblePopDf.count() > 0) eligiblePopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
@@ -1258,17 +1213,190 @@ object UtilFunctions {
 
 
     val measAddedDf = numColAddedDf.withColumnRenamed(KpiConstants.memberidColName, KpiConstants.ncqaOutmemberIdCol)
+                                   .withColumnRenamed(KpiConstants.payerColName, KpiConstants.ncqaOutPayerCol)
                                    .withColumn(KpiConstants.ncqaOutMeasureCol,lit(measureId))
                                    .withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
 
-    val prodplanAddedDf = measAddedDf.as("df1").join(productPlanDf.as("df2"), $"df1.${KpiConstants.lobProductColName}" === $"df2.${KpiConstants.lobProductColName}", KpiConstants.innerJoinType)
-                                                      .select("df1.*", s"df2.${KpiConstants.codeColName}")
-                                                      .withColumnRenamed(KpiConstants.codeColName, KpiConstants.ncqaOutPayerCol)
 
-    val resultDf = prodplanAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
+
+    val resultDf = measAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
     resultDf
 
   }
+
+  def imaNumeratorCalculationFunction(spark: SparkSession,dfMap:mutable.Map[String,DataFrame]):DataFrame ={
+
+
+    import spark.implicits._
+
+    /*Numerator3 Calculation (IMAHPV screening or monitoring test)*/
+    val imaHpvValueSet = List(KpiConstants.hpvVal)
+    val imaHpvCodeSystem = List(KpiConstants.cptCodeVal,KpiConstants.cvxCodeVal)
+    val imaHpvAgeFilterDf = UtilFunctions.joinWithRefHedisFunction(spark, dfMap, imaHpvValueSet, imaHpvCodeSystem)
+      .filter(($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months108)))
+        && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months156))))
+      .select(s"${KpiConstants.memberidColName}", s"${KpiConstants.serviceDateColName}")
+
+
+    val atleast2HPVoccurMemDf = imaHpvAgeFilterDf.groupBy(KpiConstants.memberidColName).agg(countDistinct(KpiConstants.serviceDateColName).alias("count"))
+                                                 .filter($"count".>=(2))
+                                                 .select(KpiConstants.memberidColName)
+    val imaHpvInDf = imaHpvAgeFilterDf.as("df1").join(atleast2HPVoccurMemDf.as("df2"), KpiConstants.memberidColName)
+                                                       .select("df1.*")
+
+    /*HPV First Condition(atleast 2 date of service with 146 days gap)*/
+    val imaHpv1Df = imaHpvInDf.groupBy(KpiConstants.memberidColName).agg(max($"${KpiConstants.serviceDateColName}").alias("max_date"), min($"${KpiConstants.serviceDateColName}").alias("min_date"))
+                                     .filter(datediff($"max_date", $"min_date").>=(146))
+                                     .select(KpiConstants.memberidColName)
+
+
+
+    val imaHpv2InDf = imaHpvInDf.as("df1").join(imaHpv1Df.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.leftOuterJoinType)
+      .filter($"df2.${KpiConstants.memberidColName}".isNull)
+      .select("df1.*")
+
+    val inDs = imaHpv2InDf.as[Member]
+
+    val groupedDs = inDs.groupByKey(inDs => (inDs.member_id))
+      .mapGroups((k,itr) => (k,itr.map(f=> f.service_date.getTime).toArray.sorted))
+
+
+    val imaHpv2Df = groupedDs.map(f=> UtilFunctions.getMembers(f._1,f._2))
+      .filter(f=> f._2.equals("Y")).select("_1").toDF("member_id")
+
+
+    val imaHpvDf = imaHpv1Df.union(imaHpv2Df).dropDuplicates()
+    imaHpvDf
+  }
+
+  def memberSelection(dualMem1:DualMember, dualMem2:DualMember):DualMember ={
+
+
+    val lobAddedString = dualMem1.lob + dualMem2.lob
+    println( "data is :"+ lobAddedString)
+
+    val resultMember = lobAddedString match {
+
+
+      case "CommercialMedicaid" =>  dualMem1
+
+      case "MedicaidCommercial"=>  dualMem2
+
+      case "MedicaidMedicare" => dualMem2
+
+      case "MedicareMedicaid" => dualMem1
+
+      case "MedicaidMedicaid" => if(dualMem1.primary_plan_flag.equalsIgnoreCase(KpiConstants.yesVal)){dualMem1} else {dualMem2}
+
+      case "CommercialMedicare"  => if(dualMem1.primary_plan_flag.equalsIgnoreCase(KpiConstants.yesVal)){dualMem1}
+      else if(dualMem2.primary_plan_flag.equalsIgnoreCase(KpiConstants.yesVal)){dualMem2}
+      else {dualMem2}
+
+      case "MedicareCommercial"  => if(dualMem1.primary_plan_flag.equalsIgnoreCase(KpiConstants.yesVal)){dualMem1}
+      else if(dualMem2.primary_plan_flag.equalsIgnoreCase(KpiConstants.yesVal)){dualMem2}
+      else {dualMem1}
+
+      case "CommercialCommercial" => dualMem1
+    }
+    resultMember
+  }
+
+  def baseOutDataframeCreation(spark:SparkSession, dataframe:DataFrame, validLobList:List[String]):DataFrame ={
+
+
+    import spark.implicits._
+
+    val outSchema = dataframe.schema
+
+    val outDf = spark.emptyDataFrame
+
+    //dataframe.show()
+
+    val singleEnrolledMemIdDf = dataframe.groupBy($"${KpiConstants.memberidColName}").agg(count(KpiConstants.lobColName).alias("count"))
+      .filter($"count".===(1))
+      .select(KpiConstants.memberidColName)
+
+    val singleEnrollMemDf = dataframe.as("df1").join(singleEnrolledMemIdDf.as("df2"), KpiConstants.memberidColName)
+      .select("df1.*")
+    //singleEnrollMemDf.show()
+
+
+    val multipleEnrollMemDf = dataframe.as("df1").join(singleEnrolledMemIdDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.leftOuterJoinType)
+      .filter($"df2.${KpiConstants.memberidColName}".isNull)
+      .select("df1.*")
+
+    //multipleEnrollMemDf.show()
+
+    val comercialEnrollMemDf = multipleEnrollMemDf.filter($"${KpiConstants.lobColName}".===(KpiConstants.commercialLobName))
+      .groupBy(KpiConstants.memberidColName).agg(count(KpiConstants.payerColName).alias("count1"),
+      countDistinct(KpiConstants.payerColName).alias("count2"))
+      .filter($"count1".===($"count2") && $"count1".>(1))
+      .select(KpiConstants.memberidColName)
+
+
+    val distCommEnrollDf = multipleEnrollMemDf.as("df1").join(comercialEnrollMemDf.as("df2"), KpiConstants.memberidColName)
+      .select("df1.*")
+
+    val validMultipleEnrolleedDf = multipleEnrollMemDf.as("df1").join(comercialEnrollMemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.leftOuterJoinType)
+      .filter($"df2.${KpiConstants.memberidColName}".isNull)
+      .select("df1.*")
+
+
+    val multipleEnrollDs = validMultipleEnrolleedDf.as[DualMember]
+    //multipleEnrollDs.show()
+    val data = multipleEnrollDs.groupByKey(inDs => (inDs.member_id)).reduceGroups(memberSelection(_,_))
+      .map(f=> f._2)
+
+    val dualAndSingleEnrolledDf = singleEnrollMemDf.union(data.toDF()).union(distCommEnrollDf)
+    dualAndSingleEnrolledDf.show()
+
+
+    var mmpLobDf = spark.emptyDataFrame
+
+    if(validLobList.contains(KpiConstants.medicareLobName) && validLobList.contains(KpiConstants.medicaidLobName)) {
+
+      val mmpMedicareDf = dualAndSingleEnrolledDf.filter($"${KpiConstants.lobColName}".===(KpiConstants.mmdLobName))
+        .withColumn(KpiConstants.lobColName, lit(KpiConstants.medicareLobName))
+
+      val mmpMedicaidDf = dualAndSingleEnrolledDf.filter($"${KpiConstants.lobColName}".===(KpiConstants.mmdLobName))
+        .withColumn(KpiConstants.lobColName, lit(KpiConstants.medicaidLobName))
+
+
+      mmpLobDf = dualAndSingleEnrolledDf.union(mmpMedicareDf).union(mmpMedicaidDf)
+    }
+    else if(validLobList.contains(KpiConstants.medicareLobName) &&  !(validLobList.contains(KpiConstants.medicaidLobName))){
+
+      mmpLobDf = dualAndSingleEnrolledDf.withColumn(KpiConstants.lobColName, when($"${KpiConstants.lobColName}".===(KpiConstants.mmdLobName), lit(KpiConstants.medicareLobName)).otherwise($"${KpiConstants.lobColName}"))
+
+    }
+
+    else if(validLobList.contains(KpiConstants.medicaidLobName) &&  !(validLobList.contains(KpiConstants.medicareLobName))){
+
+      mmpLobDf = dualAndSingleEnrolledDf.withColumn(KpiConstants.lobColName, when($"${KpiConstants.lobColName}".===(KpiConstants.mmdLobName), lit(KpiConstants.medicaidLobName)).otherwise($"${KpiConstants.lobColName}"))
+
+    }
+    else{
+      mmpLobDf = dualAndSingleEnrolledDf
+    }
+
+
+
+    var marketPlaceLobAddedDf = spark.emptyDataFrame
+
+    if(!validLobList.contains(KpiConstants.commercialLobName)) {
+
+      marketPlaceLobAddedDf =  mmpLobDf.except(mmpLobDf.filter($"${KpiConstants.lobColName}".===(KpiConstants.marketplaceLobName)))
+
+    }
+    else {
+
+      marketPlaceLobAddedDf =  mmpLobDf
+
+    }
+
+    marketPlaceLobAddedDf
+  }
+
 
 
 }

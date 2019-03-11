@@ -1,5 +1,7 @@
 package com.itc.ncqa.Constants
 
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
+
 object KpiConstants {
 
 
@@ -16,6 +18,7 @@ object KpiConstants {
   val arrayOfColumn = List("member_id", "date_of_birth_sk", "gender", "lob",/*"location_sk",*/"product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk" /*,"primary_diagnosis", "procedure_code","start_date_sk", "PROCEDURE_CODE_MODIFIER1", "PROCEDURE_CODE_MODIFIER2", "PROCEDURE_HCPCS_CODE", "CPT_II", "CPT_II_MODIFIER", "DIAGNOSIS_CODE_2", "DIAGNOSIS_CODE_3", "DIAGNOSIS_CODE_4", "DIAGNOSIS_CODE_5", "DIAGNOSIS_CODE_6", "DIAGNOSIS_CODE_7", "DIAGNOSIS_CODE_8", "DIAGNOSIS_CODE_9", "DIAGNOSIS_CODE_10"*/)
   val arrayofColumn1 = List("member_id" , "state" , "city" , "member_plan_start_date_sk" , "member_plan_end_date_sk","lob_id")
   val arrayOfColumn2 = List("member_id", "patient_sk", "date_of_birth_sk", "gender", "lob","location_sk","product_plan_sk","member_plan_start_date_sk","member_plan_end_date_sk")
+  val avoidCodeList = List("1P", "2P", "3P", "8P")
   var dbName = ""
   val yesVal =  "Y"
   val noVal  =  "N"
@@ -31,7 +34,9 @@ object KpiConstants {
   val commercialLobName = "Commercial"
   val medicareLobName = "Medicare"
   val medicaidLobName = "Medicaid"
-  val dateFormatString = "yyyy-mm-dd"
+  val marketplaceLobName = "Marketplace"
+  val mmdLobName = "Medicare-Medicaid Plans"
+  val dateFormatString = "yyyy-MM-dd"
 
 
   val lobProductNameConVal = "Special Needs Plan-Institutionalized"
@@ -135,6 +140,7 @@ object KpiConstants {
   val months24 = 24
   val months12 = 12
   val months156 = 156
+  val months168 = 168
   val months144 = 144
   val months132 = 132
   val months120 = 120
@@ -341,6 +347,7 @@ object KpiConstants {
   val lobColName = "lob"
   val lobproductColName = "lob_product"
   val plannameColName = "plan_name"
+  val primaryPlanFlagColName = "primary_plan_flag"
   val memStartDateColName = "member_plan_start_date"
   val memEndDateColName = "member_plan_end_date"
   val benefitdentalColName = "benefit_dental"
@@ -460,16 +467,12 @@ object KpiConstants {
   val lobProductColName = "lob_product"
   val planColName = "plan"
   val supplflagColName = "supplement_flag"
-
-
-
-
-
-
-
-
-
   val labCodeColName = "lab_code"
+
+
+
+  /*Common Schema Constants*/
+  val memberIdSchema = StructType(Array(StructField(memberidColName, StringType)))
 
 
 
@@ -914,6 +917,7 @@ object KpiConstants {
   val transitionalCareMgtSerVal = "Transitional Care Management Services"
   val functionalStatusVal = "Functional Status Assessment"
   val painAssessmentVal = "Pain Assessment"
+  val independentLabVal = "Independent Laboratory"
 
 
 
