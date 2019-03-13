@@ -22,13 +22,13 @@
                                         <b>Name : </b>{{gaps?.name}}
                                 </span>
                                 <span class="col-lg-2 no-padding-class">
-                                        <b>Age : </b>
+                                        <b>Age : </b>{{personaData?.age}}
                                 </span>
                                 <span class="col-lg-3 no-padding-class">
                                         <b>Gender : </b>{{gaps?.gender}}
                                 </span>
                                 <span class="col-lg-2 no-padding-class">
-                                        <b>Weight : </b>
+                                        <b>Weight : </b>{{personaData?.weight}}
                                 </span>
                         </div>
                         <br><br>
@@ -63,10 +63,10 @@
                                                 <div class="row">
                                                         <span class="col-lg-3 col-form-label font-weight-bold">Physical Activity</span>
                                                         <span class="col-lg-3">
-                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityGoal" [options]="physicalActivityGoalList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityGoal" [options]="physicalActivityGoalList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="physicalActivitySelection($event)"></p-dropdown>
                                                         </span>
                                                         <span class="col-lg-3">
-                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityFrequency" [options]="physicalActivityFrequencyList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityFrequency" [options]="physicalActivityFrequencyList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="pAFrequencySelection($event)"></p-dropdown>
                                                         </span>
                                                         <span class="col-lg-3">
                                                                 <p-calendar formControlName="physicalActivityDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
@@ -76,10 +76,10 @@
                                                 <div class="row">
                                                         <span class="col-lg-3 col-form-label font-weight-bold">Calorie Intake</span>
                                                         <span class="col-lg-3">
-                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeGoal" [options]="calorieIntakeGoalList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeGoal" [options]="calorieIntakeGoalList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="cIGoalSelection($event)"></p-dropdown>
                                                         </span>
                                                         <span class="col-lg-3">
-                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeFrequency" [options]="calorieIntakeFrequencyList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeFrequency" [options]="calorieIntakeFrequencyList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="cIFrequencySelection($event)"></p-dropdown>
                                                         </span>
                                                         <span class="col-lg-3">
                                                                 <p-calendar formControlName="calorieIntakeDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
@@ -89,7 +89,7 @@
                                                 <div class="row">
                                                         <span class="col-lg-3 col-form-label font-weight-bold">Care Gap</span>
                                                         <span class="col-lg-3">
-                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="careGap" [options]="careGapList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                                                <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="careGap" [options]="careGapList"  [style]="{'width':'70%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="careGapSelection($event)"></p-dropdown>
                                                         </span>
                                                         <span class="col-lg-3">
                                                         </span>
@@ -102,7 +102,9 @@
                         </div>
                         </div>
                         <div class="card-footer text-right">
+                                <button class="btn btn-primary" [routerLink]="['/health/goals-member-list']" style="margin-right: 10px">View Member List</button>
                                 <button type="submit" class="btn btn-primary" (click)="onSubmit(myForm.value)" ><i class="fa fa-dot-circle-o"></i> Submit</button>
+                              
                         </div>
 
                 </div>

@@ -171,6 +171,12 @@ export const navItems = [
         ]
       },
       {
+        name: 'Health plan Employer portal',
+        url: 'http://i3lbfsiserver:93/',
+        icon: 'fa fa-line-chart',
+
+      },
+      {
         name: 'Member Engagement',
         url: '#',
         icon: 'fa fa-line-chart',

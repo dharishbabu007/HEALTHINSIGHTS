@@ -1,0 +1,157 @@
+<div> 
+    <div class="col-lg-12" style="padding: 0px">
+        <h2 [ngStyle]="{ 'background-color': '#F26363',
+            'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i>Goals Member List</h2>
+   </div>
+   <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
+    <div class="card">
+        <div class="col col-lg-12">
+            <br>
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="goalsData" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="Member_Details" dataKey="memberId">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                                <th style="width: 3em"></th>
+                            <th  style="width: 14vw;">Member Details</th>
+                            <th style="width: 19vw;color: #0275D8;">Action</th>
+                                <!-- <p-sortIcon [field]="col.field"></p-sortIcon> --> 
+                                <th>Recommendations</th>
+                                <th>Goals Set</th>
+                               
+                        </tr>
+                        <tr>
+                                <th></th>   
+                            <th *ngFor="let col of cols" >
+                               <input pInputText type="text" (input)="dt.filter($event.target.value, col.field[1], 'contains')">
+                            </th>  
+                            
+                        </tr>
+
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                        <tr>
+                                <td>
+                                        <a href="#" [pRowToggler]="rowData">
+                                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                        </a>
+                                    </td>
+                            <td *ngFor="let col of columns"  [ngSwitch]="col.header">
+                                <span  *ngSwitchCase="'Member Details'">
+                                    {{rowData[col.field[0]]}} <span class="vl"></span>
+                                    {{rowData[col.field[2]]}} <span class="vl"></span>
+                                    {{rowData[col.field[3]]}} <span class="vl"></span><br>
+                                    <span style="font-size: 13px;"><b style="color: #1876C6">MemberId: </b><b style="font-weight: 400;opacity: 0.5;"><a [routerLink]="['/health/smv/',rowData[col.field[1]]]">{{rowData[col.field[1]]}} </a> </b></span>
+                                </span>
+                                <span *ngSwitchCase="'Action'">
+                                    <div class="col-lg-12 row no-padding-class" style="text-align: right">
+                                        <span class="col-lg-12 no-padding-class">Physical Activity Goal</span>
+                                        <span class="col-lg-12 no-padding-class">Physical Activity Frequency</span>
+                                        <span class="col-lg-12 no-padding-class">Physical Activity Date</span>
+                                    </div>
+                                </span>
+                                <span  *ngSwitchCase="'Goals Set'">
+                                    <!-- <div class="col-lg-12 row">
+                                        <span class="col-lg-12">Physical Activity Goal</span>
+                                        <span class="col-lg-12">Physical Activity Frequency</span>
+                                        <span class="col-lg-12">Physical Activity Date</span>
+                                    </div> -->
+                                    <div class="col-lg-12 row">
+                                            <span class="col-lg-12"> {{rowData[col.field[0]]}} </span>
+                                            <span class="col-lg-12"> {{rowData[col.field[1]]}} </span>
+                                            <span class="col-lg-12"> {{rowData[col.field[2]]  | date}} </span>
+                                    </div>
+                                    
+                                </span>
+                                <span  *ngSwitchCase="'Reccomendations'">
+                                        <!-- <div class="col-lg-12 row">
+                                        <span class="col-lg-12">Physical Activity Goal</span>
+                                        <span class="col-lg-12">Physical Activity Frequency</span>
+                                        <span class="col-lg-12">Physical Activity Date</span>
+                                        </div> -->
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12"> {{rowData[col.field[0]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[1]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[2]]}} </span>
+                                        </div>
+                                        <!-- <div class="col-lg-12 row">
+                                                <span class="col-lg-12">Calorie Intake Goal></span>
+                                                <span class="col-lg-12">Calorie Intake Frequency></span>
+                                                <span class="col-lg-12">Calorie IntakeDate></span>
+                                        </div>
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12"> {{rowData[col.field[3]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[4]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[5]]}} </span>
+                                        </div>
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12">CareGap></span>
+                                                <span class="col-lg-12"></span>
+                                                <span class="col-lg-12">CareGap Date></span>
+                                        </div>
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12"> {{rowData[col.field[6]]}} </span>
+                                                <span class="col-lg-12"></span>
+                                                <span class="col-lg-12"> {{rowData[col.field[7]]}} </span>
+                                        </div> -->
+                                </span>
+                            </td>
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                            <tr >
+                                <td></td>
+                                <td></td>
+                                <td>
+                                   <div class="col-lg-12 row no-padding-class" style="text-align: right">
+                                        <span class="col-lg-12 no-padding-class">Calorie Intake Goal</span>
+                                        <span class="col-lg-12 no-padding-class">Calorie Intake Frequency</span>
+                                        <span class="col-lg-12 no-padding-class">Calorie IntakeDate</span>
+                                    </div>
+                                </td>
+                                <td style="background-color:  #DEF5DF">
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeGoal1}} </span>
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeFrequency1}} </span>
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeDate1}} </span>
+                                        </div>
+                                </td>
+                                <td style="background-color: aliceblue;">
+                                        <div class="col-lg-12 row">
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeGoal}} </span>
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeFrequency}} </span>
+                                                <span class="col-lg-12"> {{rowData.calorieIntakeDate   | date}} </span>
+                                        </div>          
+                                </td>
+                            </tr>
+                            <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                       <div class="col-lg-12 row no-padding-class" style="text-align: right">
+                                                        <span class="col-lg-12 no-padding-class">CareGap</span>
+                                                        <span class="col-lg-12 no-padding-class"></span>
+                                                        <span class="col-lg-12 no-padding-class">CareGap Date</span>
+                                                </div>
+                                    </td>
+                                    <td  style="background-color:  #DEF5DF">
+                                            <div class="col-lg-12 row">
+                                                    <span class="col-lg-12"> {{rowData.careGap1}} </span>
+                                                    <span class="col-lg-12"></span>
+                                                    <span class="col-lg-12"> {{rowData.careGapDate1}} </span>
+                                            </div>
+                                    </td>
+                                    <td  style="background-color:aliceblue;">
+                                            <div class="col-lg-12 row">
+                                                    <span class="col-lg-12"> {{rowData.careGap}} </span>
+                                                    <span class="col-lg-12"></span>
+                                                    <span class="col-lg-12"> {{rowData.careGapDate   | date}} </span>
+                                            </div>         
+                                    </td>
+                                </tr>
+                    </ng-template>
+                </p-table>
+        </div>       
+    </div>
+    </div>
+</div>

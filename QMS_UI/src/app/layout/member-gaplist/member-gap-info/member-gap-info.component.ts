@@ -175,6 +175,7 @@ export class MemberGapInfoComponent implements OnInit {
       // console.log(event)
        console.log(this.fd)
     }
+    type:any;
     onSubmit(formModel) {
        // console.log(formModel);
         this.gapsService.updateCloseGaps(formModel,this.targetDate,this.closeGaps,this.gapId,this.headers).subscribe((res: any) => {
@@ -184,7 +185,8 @@ export class MemberGapInfoComponent implements OnInit {
                         this.msgService.error(res.message);
                       }
                 }); 
-                this.MemberGapService.uploadCloseGapFiles(this.fd).subscribe((res1:any)=>
+                this.type = "close_gap";
+                this.MemberGapService.commonfileupload(this.type,this.fd).subscribe((res1:any)=>
                 {
                      if(res1.status === 'SUCCESS'){
                          this.fileUploadStatus = true;

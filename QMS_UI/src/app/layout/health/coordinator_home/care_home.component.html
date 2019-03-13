@@ -16,7 +16,7 @@
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
               <h4>ENROLLMENTS</h4></div>
-            <div class="col-lg-12 row" *ngFor="let data of Enrollments" style="color: #6D6B6B">
+            <div class="col-lg-12 row" *ngFor="let data of Enrollments" style="color: black">
               <div class="col-lg-10">
                   {{data?.title}} 
               </div>
@@ -30,7 +30,7 @@
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
                 <h4>GOALS</h4></div>
-              <div class="col-lg-12 row" *ngFor="let data of Goals" style="color: #6D6B6B">
+              <div class="col-lg-12 row" *ngFor="let data of Goals" style="color: black">
                 <div class="col-lg-10">
                     {{data?.title}} 
                 </div>
@@ -44,7 +44,7 @@
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
                 <h4>REWARDS</h4></div>
-              <div class="col-lg-12 row" *ngFor="let data of Rewards" style="color: #6D6B6B">
+              <div class="col-lg-12 row" *ngFor="let data of Rewards" style="color: black">
                 <div class="col-lg-10">
                     {{data?.title}} 
                 </div>
@@ -52,7 +52,7 @@
                   {{data?.value}}  
                 </div>
             </div>
-          <button type="submit" class="btn btn-primary btn-style">Manage</button>
+            <a [routerLink]="['/health/rewards']"> <button type="submit" class="btn btn-primary btn-style">Manage</button></a>
         </div>
       </div>
         <br>
@@ -61,7 +61,7 @@
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
                 <h4>PROGRESS</h4></div>
-              <div class="col-lg-12 row" *ngFor="let data of Progress" style="color: #6D6B6B">
+              <div class="col-lg-12 row" *ngFor="let data of Progress" style="color: black">
                 <div class="col-lg-10">
                     {{data?.title}} 
                 </div>
@@ -75,7 +75,7 @@
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
                 <h4>INTERVENTIONS</h4></div>
-              <div class="col-lg-12 row" *ngFor="let data of Interventions" style="color: #6D6B6B">
+              <div class="col-lg-12 row" *ngFor="let data of Interventions" style="color: black">
                 <div class="col-lg-10">
                     {{data?.title}} 
                 </div>
@@ -83,13 +83,13 @@
                   {{data?.value}}  
                 </div>
               </div>
-            <button type="submit" class="btn btn-primary btn-style">Manage</button>
+              <a [routerLink]="['/health/intervention']"> <button type="submit" class="btn btn-primary btn-style">Manage</button></a>
           </div>
           <div class="col-lg-4 images-heightClass" style="background-image: url('assets/images/HealthyMe_DesignAssets_V2/SatisfactionCard.png'); background-repeat: no-repeat;background-size: cover;height: 35vh;">
             <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
             <div class="col-lg-12" style="margin-top: 34px;color: black;">
                 <h4>SATISFACTION</h4></div>
-              <div class="col-lg-12 row" *ngFor="let data of Satisfaction" style="color: #6D6B6B">
+              <div class="col-lg-12 row" *ngFor="let data of Satisfaction" style="color: black">
                 <div class="col-lg-10">
                     {{data?.title}} 
                 </div>

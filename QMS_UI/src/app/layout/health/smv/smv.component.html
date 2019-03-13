@@ -1,0 +1,260 @@
+<div class="col-lg-12" style="padding: 0px">
+    <h2 [ngStyle]="{ 'background-color': '#2B9CFF','height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-user"></i>&nbsp;Single Member View</h2>
+</div>
+<div class="card" style="margin: 20px">
+    <div class="col-lg-12 row row-class" style="background-color: #EBFAFE;">
+        <div class="col-lg-1" style="margin-top: 10px"><i class="fa fa-5x fa-user-circle-o "></i></div>
+        <div class="col-lg-8"  style="margin-top: 10px">
+            <span class="font-weight-bold" style="font-size: x-large;">{{generalData[0]?.name}}</span><br>
+            <b style="color: #1876C6">{{generalData[0]?.memberId}}</b> <span class="vl"></span> {{generalData[0]?.age}} <span class="vl"></span> {{generalData[0]?.gender}}
+        </div>
+    </div>
+    <p-tabView>
+        <p-tabPanel header="General" >
+            <div class="col-lg-12 p-3">
+                <span class="font-weight-bold">Personal Details</span><br>
+                <hr class="lineClass"><br>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-2"><span class="font-weight-bold">Address</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Phone</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Email</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Ethnicity</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Occupation</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Income/Annum</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-2"><span>{{generalData[0]?.address}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.phone}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.emailAddress}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.ethnicity}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.occupation}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.income}}</span></div>
+                </div>
+                <br>
+                <span class="font-weight-bold">PCP Details</span><br>
+                <hr class="lineClass"><br>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-2"><span class="font-weight-bold">Name</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">NPI</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Speciality</span></div>
+                    <div class="col-lg-2"><span class="font-weight-bold">Address</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-2"><span>{{generalData[0]?.pcpName}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.pcpNpi}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.pcpSpeciality}}</span></div>
+                    <div class="col-lg-2"><span>{{generalData[0]?.pcpAddress}}</span></div>
+                </div>
+                <br>
+                <span class="font-weight-bold">Next Appointment Details</span><br>
+                <hr class="lineClass"><br>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-3"><span class="font-weight-bold">Next Appointment Date</span></div>
+                    <div class="col-lg-3"><span>{{generalData[0]?.nextAppointmentDate}}</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-3"><span class="font-weight-bold">Physician Name</span></div>
+                    <div class="col-lg-3"><span>{{generalData[0]?.physicianName}}</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-3"><span class="font-weight-bold">Department</span></div>
+                    <div class="col-lg-3"><span>{{generalData[0]?.departmentName}}</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-3"><span class="font-weight-bold">No-show Likelihood</span></div>
+                    <div class="col-lg-3"><span>{{generalData[0]?.noShowLikelihood * 100 | number: '1.0-0' }} %</span></div>
+                </div>
+
+
+            </div>
+
+        </p-tabPanel>
+        <p-tabPanel header="Care" >
+            <div class="col-lg-12 p-3">
+                <div class="col-lg-12 row no-padding">
+                    <div class="col-lg-3"><span class="font-weight-bold">Last Date of Service :</span>
+                  {{generalData[0]?.lastDateService}}</div>
+                    <div class="col-lg-3"><span class="font-weight-bold">Risk :</span>{{generalData[0]?.risk}}</div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                    <!-- <div class="col-lg-5"><span class="font-weight-bold">Care Gaps</span><br><hr class="lineClass"></div> -->
+                    <div class="col-lg-3"><br>
+                        <span class="font-weight-bold">Comorbidities</span>&nbsp;
+    
+                        <span class="bg-primary rounded p-1 counts">{{generalData[0]?.comorbiditiesCount}}</span>
+                        <br><hr class="lineClass"><br>
+                        <div class="careGaps">
+                        <div *ngFor="let member of generalData[0]?.comorbidities" >{{member}}</div>
+                        </div>
+                      </div>
+                    <!-- <div class="col-lg-5"><span class="font-weight-bold">Comorbidities</span><br><hr class="lineClass"></div> -->
+                    <div class="col-lg-5">
+                            <br>
+                          <span  class="font-weight-bold" style="cursor: pointer;">Care Gaps</span>&nbsp;
+                          <span class="bg-primary rounded p-1 counts">{{generalData[0]?.careGapsCount}}</span>
+                          <br><hr class="lineClass"><br>
+                          <div class="careGaps">
+                              <table>
+                                <tr *ngFor="let member2 of  generalData[0]?.careGaps ; let myIndex = index" >
+                                  <td>
+                                      <span *ngIf="generalData[0]?.careGaps[myIndex].alerts==1" pTooltip="No Appointment Scheduled"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                                      <span *ngIf="generalData[0]?.careGaps[myIndex].alerts==0" pTooltip="Appointment Scheduled"> <i class="fa fa-bell" aria-hidden="true"></i></span>
+                                  </td>
+                                  <td>
+                                     {{member2[0]}}
+                                  </td>
+                                  <td  pTooltip="Non-compliance potential"> &nbsp; {{member2[1]}} %  </td>
+                                </tr>
+                              </table>
+                           
+                          </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <br>
+                    <span class="font-weight-bold align-items-center">Prescriptions & Immunizations</span>
+                    <br><hr class="lineClass"><br>
+                    <div class="col-lg-12 row no-padding">
+                        <div class="col-lg-3">
+                            <span class="font-weight-bold">Last prescribed medications</span>
+                        </div>
+                        <div class="col-lg-3">
+                            <span class="font-weight-bold">Last prescribed Procedures</span>
+                        </div>
+                        <div class="col-lg-3">
+                            <span class="font-weight-bold">Active Immunizations</span>
+                        </div>
+                        <div class="col-lg-3">
+                            <span class="font-weight-bold">Pending Immunizations</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 row no-padding">
+                        <div class="col-lg-2">
+                            <span></span>
+                        </div>
+                        <div class="col-lg-2">
+                            <span></span>
+                        </div>
+                        <div class="col-lg-2">
+                           <span></span>
+                        </div>
+                        <div class="col-lg-2">
+                            <span></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-12 no-padding">
+                            <br>
+                    <span class="font-weight-bold align-items-center">Visit Counts</span>
+                    <br><hr class="lineClass"><br>
+                      <p-chart type="bar" [options]="options" [data]="data" width="267px" height="124px"></p-chart>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Insurance" >
+            <br>
+                <div class="col-lg-12 p-3">
+                    <div class="col-lg-12 row no-padding">
+                            <br><br>
+                        <div class="col-lg-4"><span class="font-weight-bold">Beneficiary ID :</span>&nbsp;{{PersonaData[0]?.memberId}}</div>
+                        <div class="col-lg-4"><span class="font-weight-bold">Primary Payer :</span>&nbsp;</div>
+                    </div>
+                    <div class="col-lg-12 row no-padding">
+                        <br><br>
+                        <div class="col-lg-3"><span class="font-weight-bold">LOB :</span>&nbsp;{{PersonaData[0]?.lob}}</div>
+                        <div class="col-lg-3"><span class="font-weight-bold">Product :</span>&nbsp;{{PersonaData[0]?.code}}</div>
+                        <div class="col-lg-3"><span class="font-weight-bold">Plan :</span>&nbsp;{{PersonaData[0]?.planName}}</div>
+                        <div class="col-lg-3"><span class="font-weight-bold">Plan Type :</span>&nbsp;{{PersonaData[0]?.planCategory}}</div>
+                    </div>
+                    <div class="col-lg-12 row no-padding">
+                            <br><br>
+                        <div class="col-lg-4"><span class="font-weight-bold">Enrollment StartDate :</span>&nbsp;{{PersonaData[0]?.memberPlanStartDateSk}}</div>
+                        <div class="col-lg-4"><span class="font-weight-bold">Enrollment EndDate :</span>&nbsp;{{PersonaData[0]?.memberPlanEndDateSk}}</div>
+                    </div>
+                    <div class="col-lg-12 row no-padding">
+                            <br><br>
+                        <div class="col-lg-4"><span class="font-weight-bold">Number of Pending Claims :</span>&nbsp;{{PersonaData[0]?.noOfPendingClaimsYtd}}</div>
+                        <div class="col-lg-4"><span class="font-weight-bold">Number of Denied Claims :</span>&nbsp;{{PersonaData[0]?.noOfDeniedClaimsYtd}}</div>
+                    </div>
+                    <div class="col-lg-12 row no-padding">
+                            <br><br>
+                        <div class="col-lg-4"><span class="font-weight-bold">Total Amount Spend :</span>&nbsp;{{PersonaData[0]?.amountSpentYtd}}</div>
+                    </div>
+                    
+                </div>
+        </p-tabPanel>
+        <p-tabPanel header="Engagement" >
+            <br>
+            <div class="col-lg-12 p-3">
+                <div class="col-lg-12 row no-padding">
+                        <br><br>
+                    <div class="col-lg-4"><span class="font-weight-bold">Persona :</span>&nbsp;{{PersonaData[0]?.personaName}}</div>
+                    <div class="col-lg-4"><span class="font-weight-bold">Predictions Corner :</span></div>
+                    <div class="col-lg-4"><span class="font-weight-bold">Channel of Preference :</span>&nbsp;{{PersonaData[0]?.channel}}</div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                        <br><br>
+                    <div class="col-lg-4"><span class="font-weight-bold">Likelihood to Enroll :</span>&nbsp;{{PersonaData[0]?.likelihoodEnrollment}}</div>
+                    <div class="col-lg-4"><span class="font-weight-bold">Reason to not Enroll :</span>&nbsp;{{PersonaData[0]?.reasonToNotEnroll}}</div>
+                    <div class="col-lg-4"><span class="font-weight-bold">Likelihood to Churn :</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                        <br><br>
+                    <div class="col-lg-4"><span class="font-weight-bold">Likelihood to Recommend :</span></div>
+                    <div class="col-lg-4"><span class="font-weight-bold">Member Satisfaction :</span></div>
+                </div>
+                <div class="col-lg-12 row no-padding">
+                        <br><br>
+                    <!-- <p-table #dt class="table table-bordered table-hover" [value]="PersonaData" [columns]="cols" selectionMode="single"  datakey="memberId">
+                        <ng-template pTemplate="header" let-columns>
+                                        <tr class="header-class">
+                                            <th>Goals</th>
+                                            <th>Rewards</th>
+                                            <th>Performance</th>
+                                            <th>Interventions</th>
+                                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td *ngFor="let col of columns" [ngSwitch]="col.header">
+                                    <span *ngSwitchCase="'Goals'">
+                                        {{rowData[col.field[0]]}} {{rowData[col.field[1]]}} {{rowData[col.field[2]]}}
+                                    </span>
+                                    <span *ngSwitchDefault>
+                                        {{rowData[col.field]}}
+                                    </span>
+
+                                </td>
+                            </tr>
+
+                        </ng-template>
+                        
+                        
+                    </p-table> -->
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                                <tr class="header-class">
+                                        <th>Goals</th>
+                                        <th>Rewards</th>
+                                        <th>Performance</th>
+                                        <th>Interventions</th>
+                                    </tr>
+                        </thead>
+                        <tbody>
+                                <tr *ngFor="let col of PersonaData">
+                                <td><span class="font-weight-bold">Goal :</span>&nbsp;{{col.goal}}<br>
+                                    <span class="font-weight-bold">Frequency :</span>&nbsp;{{col.frequency}}<br>
+                                    <span class="font-weight-bold">Goal Date :</span>&nbsp;{{col.goalDate | date}}</td>       
+                                <td>{{col.reward}}</td>
+                                <td>View Performance</td>
+                                <td></td>
+                                </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </p-tabPanel>
+   </p-tabView>
+</div>

@@ -34,7 +34,7 @@
                                 <u><label class="font-weight-bold" (click)="smallCardClick(1)">cluster 1</label></u> 
                             </span>
                             <span class="col-lg-12">
-                                <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
+                                <a [routerLink]="['/health/view-persona',1]">  <button  class="btn btn-primary" >View Persona</button></a>  
                             </span>
                         </div>
                 </div>
@@ -48,7 +48,8 @@
                                     <label class="font-weight-bold"></label>
                                 </span>
                                 <span class="col-lg-12">
-                                        <label class="font-weight-bold">{{personaFormData[i]?.demoAgeGroup}}</label>
+                                        <label class="font-weight-bold"></label>
+                                        <!-- {{personaFormData[i]?.demoAgeGroup}} -->
                                 </span>
                             </div>             
                         </div>
@@ -58,10 +59,10 @@
                                 <label class="font-weight-bold">Cluster Associated</label>
                             </span>
                             <span class="col-lg-12" style="color: #0275D8">
-                                <u><label class="font-weight-bold" (click)="smallCardClick(personaFormData[i]?.clusterId)">cluster {{personaFormData[i]?.clusterId}}</label></u> 
+                                <u><label class="font-weight-bold" (click)="smallCardClick(clusterLength[i]?.value)">cluster {{clusterLength[i]?.value}}</label></u> 
                             </span>
                             <span class="col-lg-12">
-                                <a [routerLink]="['/health/view-persona']">  <button  class="btn btn-primary" >View Persona</button></a>  
+                                <a [routerLink]="['/health/view-persona',clusterLength[i]?.value || 'all']">  <button  class="btn btn-primary" >View Persona</button></a>  
                             </span>
                         </div>
                 </div>
@@ -137,7 +138,7 @@
                                                 <td>
                                                         {{cols1[i][0].maxFrequency}}
                                                 </td>
-                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols1[i][0])"></i></td>
+                                                <td>View Histogram &nbsp;<i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols1[i][0])"></i></td>
                                                
                                                
                                     </tr>
@@ -176,7 +177,7 @@
                                                 <td>
                                                         {{cols[i][0].maxFrequency}}
                                                 </td>
-                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols[i][0])"></i></td>
+                                                <td>View Histogram &nbsp;<i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols[i][0])"></i></td>
                                                
                                                
                                     </tr>
@@ -187,6 +188,7 @@
                 </div> 
             </div>
             <div class="col-lg-6" style="background-color: #D4F6FF;">
+                <br>
                    <div class="text-black pb-2">
                             <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
                                
@@ -333,7 +335,7 @@
                             <tr> 
                                <td>{{rowData.featureName}}</td>
                                <td>{{rowData.maxFrequency}}</td>
-                               <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialogModal(rowData)"></i></td>
+                               <td>View Histogram &nbsp;<i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialogModal(rowData)"></i></td>
 
                           
                                   <!--<td>  <button class="btn btn-primary">Histogram</button></td>-->

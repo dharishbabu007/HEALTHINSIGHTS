@@ -12,11 +12,11 @@
                     <p-table #dt  class="table table-bordered table-hover table-style" [scrollable]="false" [value]="confusionmatrix"   [columns]="cols" [paginator]="true" [rows]="10" selectionMode="single" [(selection)]="selectedrow" dataKey="memberId">
                 <!-- <p-table #dt1  class="table table-bordered table-hover"  [scrollable]="false" [value]="confusionmatrix"   [columns]="cols"  [paginator]="true" [rows]="20" [(selection)]="selectedcar" dataKey="memberId" > -->
                     <ng-template pTemplate="header" let-columns>
-                        <tr class="header-row text-center align-middle"> 
+                        <tr class="header-row "> 
                             <th style="width: 3em;    vertical-align: middle;">
                                 <p-tableHeaderCheckbox ></p-tableHeaderCheckbox>
                             </th>
-                            <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class="text-center align-middle header-class">
+                            <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class=" header-class">
                                 <span  *ngSwitchCase="'Preferred Channel'" >
                                         {{col.header}} 
                                 </span>
@@ -32,9 +32,9 @@
                              
                             </th> -->
                             <th>Member Details</th>
-                            <th style="width: 12em">Preferred Channel <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                            <th style="width: 12em">Preferred Channel <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ChannelAnalysisDashboard/ChannelDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                             <th style="width: 14em">Recommended Rewards <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
-                            <th style="width: 12em">Likelihood %<i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                            <th style="width: 12em">Likelihood % <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                             <th style="width: 10em">Remarks</th>
                             <th style="width: 3em"></th>
                         </tr>
@@ -42,9 +42,9 @@
                     <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
                         <tr>
                             <td>
-                                <p-tableCheckbox [value]="rowData" onse></p-tableCheckbox>
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                             </td>
-                            <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="text-center align-middle">
+                            <td *ngFor="let col of columns"  [ngSwitch]="col.header">
                                     <span  *ngSwitchCase="'Member Details'" style="text-align: left !important;" >
                                             {{rowData[col.field[0]]}} <span class="vl"></span>
                                             {{rowData[col.field[2]]}} <span class="vl"></span>
@@ -178,10 +178,10 @@
                                     </span>
                                     <span *ngSwitchCase="'Remarks'">
                                         <span *ngIf="rowData[col.field]">
-                                            <i class=" fa fa-comments-o" style="color: #1876C6;" pTooltip="Remarks"></i>
+                                            <i class=" fa fa-comments-o" style="color: #1876C6;font-size: 23px;" pTooltip="Remarks"></i>
                                         </span> 
                                         <span *ngIf="!rowData[col.field]">
-                                                <i class=" fa fa-comments-o"  pTooltip="Remarks"></i>
+                                                <i class=" fa fa-comments-o" style="font-size: 23px;" pTooltip="Remarks"></i>
                                         </span> 
                                        
                                     </span>
@@ -253,8 +253,8 @@
                 <p-table #dt  class="table table-bordered table-hover table-style" [scrollable]="false" [value]="crmData"   [columns]="cols1" [paginator]="true" [rows]="10" selectionMode="single" [(selection)]="selectedrow" dataKey="memberId">
                         <!-- <p-table #dt1  class="table table-bordered table-hover"  [scrollable]="false" [value]="confusionmatrix"   [columns]="cols"  [paginator]="true" [rows]="20" [(selection)]="selectedcar" dataKey="memberId" > -->
                             <ng-template pTemplate="header" let-columns>
-                                <tr class="header-row text-center align-middle"> 
-                                    <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class="text-center align-middle header-class">
+                                <tr class="header-row "> 
+                                    <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class=" header-class">
                                         <span  *ngSwitchCase="'Preferred Channel'" >
                                                 {{col.header}} 
                                         </span>
@@ -270,16 +270,16 @@
                                      
                                     </th> -->
                                     <th>Member Details</th>
-                                    <th style="width: 12em">Preferred Channel <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                                    <th style="width: 12em">Preferred Channel <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ChannelAnalysisDashboard/ChannelDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                                     <th style="width: 14em">Recommended Rewards <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
-                                    <th style="width: 12em">Likelihood %<i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                                    <th style="width: 12em">Likelihood % <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                                     <th style="width: 10em">Remarks</th>
                                     <th style="width: 3em"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
                                 <tr>
-                                    <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="text-center align-middle">
+                                    <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="">
                                             <span  *ngSwitchCase="'Member Details'" style="text-align: left !important;" >
                                                     {{rowData[col.field[0]]}} <span class="vl"></span>
                                                     {{rowData[col.field[2]]}} <span class="vl"></span>
@@ -412,10 +412,10 @@
                                             </span>
                                             <span *ngSwitchCase="'Remarks'">
                                                 <span *ngIf="rowData[col.field]">
-                                                    <i class=" fa fa-comments-o" style="color: #1876C6;" pTooltip="Remarks"></i>
+                                                    <i class=" fa fa-comments-o" style="color: #1876C6;font-size: 23px;" pTooltip="Remarks"></i>
                                                 </span> 
                                                 <span *ngIf="!rowData[col.field]">
-                                                        <i class=" fa fa-comments-o"  pTooltip="Remarks"></i>
+                                                        <i class=" fa fa-comments-o" style="font-size: 23px;" pTooltip="Remarks"></i>
                                                 </span> 
                                                
                                             </span>
@@ -434,7 +434,7 @@
                             </ng-template>
                             <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                                     <tr style="background-color: rgb(235, 249, 253);">
-                                        <td [attr.colspan]="columns.length + 2" pEditableColumn>
+                                        <td [attr.colspan]="columns.length + 1" pEditableColumn>
                                             <div class="ui-g ui-fluid" style="font-size:14px;">
                                                 <div class="ui-g-12 ui-md-12">
                                                     <div class="ui-g" style="padding-left: 25px">
@@ -470,8 +470,8 @@
                 <p-table #dt  class="table table-bordered table-hover table-style" [scrollable]="false" [value]="verifiedData"   [columns]="cols2" [paginator]="true" [rows]="10" selectionMode="single" [(selection)]="selectedrow" dataKey="memberId">
                         <!-- <p-table #dt1  class="table table-bordered table-hover"  [scrollable]="false" [value]="confusionmatrix"   [columns]="cols"  [paginator]="true" [rows]="20" [(selection)]="selectedcar" dataKey="memberId" > -->
                             <ng-template pTemplate="header" let-columns>
-                                <tr class="header-row text-center align-middle"> 
-                                    <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class="text-center align-middle header-class">
+                                <tr class="header-row "> 
+                                    <!-- <th *ngFor="let col of columns" [ngSwitch]="col.header" class=" header-class">
                                         <span  *ngSwitchCase="'Preferred Channel'" >
                                                 {{col.header}} 
                                         </span>
@@ -487,16 +487,16 @@
                                      
                                     </th> -->
                                     <th>Member Details</th>
-                                    <th style="width: 12em">Preferred Channel <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                                    <th style="width: 12em">Preferred Channel <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ChannelAnalysisDashboard/ChannelDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                                     <th style="width: 14em">Recommended Rewards <i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
-                                    <th style="width: 12em">Likelihood %<i class="fa fa-pie-chart" pTooltip="Dashboard"></i></th>
+                                    <th style="width: 12em">Likelihood % <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></th>
                                     <th style="width: 10em">Remarks</th>
                                     <th style="width: 3em"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
                                 <tr>
-                                    <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="text-center align-middle">
+                                    <td *ngFor="let col of columns"  [ngSwitch]="col.header" class="">
                                             <span  *ngSwitchCase="'Member Details'" style="text-align: left !important;" >
                                                     {{rowData[col.field[0]]}} <span class="vl"></span>
                                                     {{rowData[col.field[2]]}} <span class="vl"></span>
@@ -630,10 +630,10 @@
                                             </span>
                                             <span *ngSwitchCase="'Remarks'">
                                                 <span *ngIf="rowData[col.field]">
-                                                    <i class=" fa fa-comments-o" style="color: #1876C6;" pTooltip="Remarks"></i>
+                                                    <i class=" fa fa-comments-o" style="color: #1876C6;font-size: 23px;" pTooltip="Remarks"></i>
                                                 </span> 
                                                 <span *ngIf="!rowData[col.field]">
-                                                        <i class=" fa fa-comments-o"  pTooltip="Remarks"></i>
+                                                        <i class=" fa fa-comments-o" style="font-size: 23px;"  pTooltip="Remarks"></i>
                                                 </span> 
                                                
                                             </span>
@@ -652,7 +652,7 @@
                             </ng-template>
                             <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
                                     <tr style="background-color: rgb(235, 249, 253);">
-                                        <td [attr.colspan]="columns.length + 2" pEditableColumn>
+                                        <td [attr.colspan]="columns.length + 1" pEditableColumn>
                                             <div class="ui-g ui-fluid" style="font-size:14px;">
                                                 <div class="ui-g-12 ui-md-12">
                                                     <div class="ui-g" style="padding-left: 25px">

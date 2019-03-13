@@ -29,12 +29,17 @@ export class ProgrameditorService {
   programCreatorSubmit(model: ProgramCreator): Observable<ProgramCreator> {
         console.log('ProgramCreator');
 
-        return this.http.post<ProgramCreator>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
+        return this.http.post<ProgramCreator>('http://healthinsight:8082/curis/program/editProgram', model, httpOptions)
         . pipe(
            catchError(this.handleError('programCreatorSubmit', model))
          );
        // this.http.post('http://<hostname>:<port>/curis/qms/createProgram',model);
   }
-
+  getProgramNames(){
+    return this.http.get(`http://healthinsight:8082/curis/qms/dropdown_list/QMS_QUALITY_PROGRAM/PROGRAM_NAME`);
+  }
+  getProgramDetails(name){
+    return this.http.get(`http://healthinsight:8082/curis/program/getProgramByName/${name}`)
+  }
 
 }

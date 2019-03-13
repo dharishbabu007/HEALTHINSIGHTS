@@ -21,9 +21,16 @@ export class RewardsComponent implements OnInit {
   othersList: any;
   rewardsData: any;
   cols: any;
+  rewardTable:any;
   constructor(private GapsService:GapsService,private _fb: FormBuilder,private msgService:MessageService) { }
 
   ngOnInit() {  
+    this.GapsService.getRewardsList().subscribe((res:any)=>{
+     this.othersList =[];
+     res.forEach(element => {
+      this.othersList.push({label:element,value:element})
+     });
+    });
   }
   formatDate(dateString) {
     if (dateString) {
@@ -35,6 +42,7 @@ export class RewardsComponent implements OnInit {
   }
   onSubmit(){
     
+  
   }
   search(event) {
     this.GapsService.getMemberList(event.query).subscribe((data: any) => {
@@ -55,7 +63,22 @@ loadMemberInfo(memberString) {
         });
         this.GapsService.getGoalsPersonaData(this.memberID).subscribe((data : any)=>{
           this.personaData = data;
-        })
+        });
+        this.GapsService.getRewardData(this.memberID).subscribe((res:any)=>{
+          this.rewardTable =[];
+          this.rewardTable = res;
+         // console.log(this.rewardTable)
+        });
+        this.cols =[
+          {field:'goal',header:'Goal'},
+          {field:'frequency',header:'Frequency'},
+          {field:'goalDate',header:'Goal Date'},
+          {field:'reward1',header:'Reward1'},
+          {field:'reward2',header:'Reward2'},
+          {field:'reward3',header:'Reward3'},
+          {field:'recommendedReward',header:'Others'}
+
+        ]
 
 }
 

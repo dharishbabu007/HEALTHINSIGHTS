@@ -31,7 +31,7 @@ export const navItems = [
     },
     {
       name: 'Progress',
-      url: '/health/home',
+      url: 'http://i3lbfsiserver:93/',
       icon: 'fa fa-line-chart',
     }
 ];
@@ -102,7 +102,7 @@ export const demoRole = [
     icon: 'fa fa-home',
   },
   {
-    name: 'Quality Director',
+    name: 'Director',
     url: '/health/director_home',
     icon: 'fa fa-home',
   },
