@@ -26,6 +26,8 @@ export class EnrollmentsComponent implements OnInit {
   memberId: any;
   crmButtonClick:any;
   verifyButtonClick:any;
+  temp:any;
+  keepGoing:boolean = true
   constructor(private gaps:GapsService,private msgService:MessageService,  private router: Router,) { 
     this.gaps.getEnrollmentData().subscribe((data: any[]) => {
       this.confusionmatrix = data;
@@ -65,15 +67,7 @@ this.cols2 = [
   { field: 'likelihoodEnrollment', header: 'Likelihood' },
   { field: 'remarks', header: 'Remarks' },
 ];
-this.gaps.getRewardsList().subscribe((res:any)=>{
-  this.sourceRewards =[];
-  res.forEach(element => {
-   this.sourceRewards.push({label:element,value:element})
-  });
-  //console.log(res)
-  //console.log(this.sourceRewards)
- 
-});
+
 
 //console.log(this.cols)
   }
@@ -92,8 +86,32 @@ this.gaps.getRewardsList().subscribe((res:any)=>{
     this.some1.push({label: event.reward3,value:event.reward3});
     this.targetRewards = this.some1;
    // console.log(this.targetRewards)
- 
+   this.gaps.getRewardsList().subscribe((res:any)=>{
+     this.temp = [];
+    this.sourceRewards =[];
+    res.forEach(element => {
+     this.sourceRewards.push({label:element,value:element})
+    });
+    // var res =  this.sourceRewards.filter(element =>{
+    //   return   this.targetRewards.includes(element)
+    // })
+    // console.log(res)
 
+    // const intersection = this.sourceRewards.filter(element => {
+    //   this.keepGoing = true;
+    //   this.targetRewards.filter(element1 => {
+    //     if(element.value != element1.value && this.keepGoing){
+    //       console.log("came here",element)
+    //       this.keepGoing = false;
+    //       return element.label
+    //     }
+
+    //   })
+    // });
+    // console.log(intersection)
+   
+  });
+  
   }
   saveChanges(data){
     console.log(data)

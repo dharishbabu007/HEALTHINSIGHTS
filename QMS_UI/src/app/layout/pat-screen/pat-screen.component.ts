@@ -23,7 +23,7 @@ export class PatComponent implements OnInit {
   codeTypeList: any;
   valueList: any;
   codesList: any;
-  patientStatusList= [{label: "Numerator"},{label: "Denominator"},{label: "Exclusion"}];
+  patientStatusList= [{label: "Numerator",value:"numerator"},{label: "Denominator",value:"denominator"},{label: "Exclusion",value:"exclusion"}];
   memberList: any;
   selectedMeasuresk: any;
   SelectedFile: File = null;
@@ -65,14 +65,15 @@ private GapsService: GapsService) {
 
     this.GapsService.getPopulation().then((res:any)=>
     {
-      console.log("came here1");
       this.populationList =[];
+     // console.log(res)
       res.forEach(element =>{
       this.populationList.push({label: element,value:element})
     })});
       this.GapsService.getPatMeasure().then((res:any)=>
         {
       this.measureList =[];
+     // console.log(res)
       res.forEach(element =>{
         this.measureList.push({label: element.name,value:element.value})
       })});
@@ -81,11 +82,10 @@ private GapsService: GapsService) {
       // });
 
       if(this.memberId){
-         console.log(this.memberId)
          this.GapsService.getPatHistory(this.memberId,this.measureSk).subscribe((res: any)=>{
            this.patData =[];
            this.patData = res;
-           //this.firstData = res[0];
+             //this.firstData = res[0];
            this.setMeasureInfo(res[0]);
             
          });
@@ -106,7 +106,6 @@ private GapsService: GapsService) {
      
   }
   setMeasureInfo(data){
-    console.log("came here");
             this.myForm.controls['population'].setValue("hey");
             this.myForm.controls['measure'].setValue(data.measureSk);
             this.myForm.controls['patientStatus'].setValue(data.memberStatus);
@@ -148,6 +147,7 @@ this.SelectedFile= <File>event.target.files[0];
 }
 patientDateRate: boolean = false;
 filterPatientStatus(event){
+ // console.log(event)
   if(event.value == "Exclusion"){
     this.patientDateRate = true;
   }
@@ -216,9 +216,12 @@ onSubmit() {
     this.validateAllFormFields(this.myForm);
   }
 }
+type:any;
   submitPc(model, isValid: boolean) {
-  //  console.log(this.gaps)
+ //console.log(model,this.gaps)
+ 
   this.GapsService.createPat(model,this.gaps,this.mrn).subscribe((res:any)=>{
+ // console.log(model.patientStatus)
     if (res.status === 'SUCCESS') {
       this.msgService.success('Measure created Successfully');
      // this.router.navigateByUrl('/measureworklist?fetch');
@@ -226,7 +229,8 @@ onSubmit() {
       this.msgService.error(res.message);
     }
   });
-  this.GapsService.uploadPatFile(this.fd).subscribe((res:any)=>{
+this.type ="mit";
+  this.GapsService.commonfileupload(this.type,this.fd).subscribe((res:any)=>{
     if(res.status === 'SUCCESS'){ this.msgService.success('File Upload Sucess');
     } else {
       this.msgService.error(res.message);

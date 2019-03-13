@@ -44,5 +44,11 @@ export class MemberGapService {
 
        // this.http.post('http://<hostname>:<port>/curis/qms/createProgram',model);
   }
+  commonfileupload(type,model: MemberGap): Observable<MemberGap> {
+    return this.http.post<MemberGap>(`http://healthinsight:8082/curis/closeGaps/file_upload/${type}`,model).
+    pipe(
+      catchError(this.handleError('Upload', model))
+    );
+}
 
 }

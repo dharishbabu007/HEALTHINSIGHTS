@@ -136,7 +136,7 @@ export class GapsService {
 
 
       getDate(event){
-          return this.http.get(`http://healthinsight:8082/curis/qms/program/${event}`)
+          return this.http.get(`http://healthinsight:8082/curis/program/program/${event}`)
       }
       getRoleList(){
           return this.http.get('http://healthinsight:8082/curis/qms/dropdown_namevalue_list/QMS_ROLE/ROLE_ID/ROLE_NAME');
@@ -201,7 +201,7 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/persona_cluster_features_data/${value}`);
     }
     getClusterFormData(value){
-        return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterData/${value}`);
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/clusterData/${value}`).toPromise();
     }
     createPersona(model,clusterId){
         return this.http.post(`http://healthinsight:8082/curis/member_engagement/update_persona`,{ "clusterId": clusterId,
@@ -308,13 +308,13 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/enrollment/get_objectives_list/Brand Loyalty`);
     }
     getGoalsMemberDetails(id){
-        return this.http.get(`http://healthinsight:8082/curis/pat/member/${id}`);
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getFactGoalInterventions/${id}`);
     }
     getPhysicalActivityGoal(){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/GOAL`)
     }
-    getPhysicalActivityFrequency(){
-        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/FREQUENCY`)
+    getPhysicalActivityFrequency(value){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getRefPhysicalActivityFrequency/${value}`)
     }
     getCalorieIntakeGoal(){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_CALORIE_INTAKE/GOAL`)
@@ -323,13 +323,13 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_CALORIE_INTAKE/FREQUENCY`)
     }
     getGoalsCareGap(id){
-        return this.http.get(`http://healthinsight:8082/curis/enrollment/getCearGapList/${id}`)
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getQmsQualityMeasureId/${id}`)
     }
     getGoalsPersonaData(id){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/get_Persona_Member_list/${id}`)
     }
     createGoals(model){
-        return this.http.post(`http://healthinsight:8082/curis/enrollment//Fact_Goal_Recommendations_create`,model);
+        return this.http.post(`http://healthinsight:8082/curis/enrollment/Fact_Goal_Recommendations_create`,model);
     }
     
     getModelValidationData(){
@@ -349,5 +349,47 @@ export class GapsService {
     }
     updateEnrollmentrow(button,data){
         return this.http.post(`http://healthinsight:8082/curis/enrollment/update_enrollment_file_output/${button}`,data)
+    }
+    getPersonaNames(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/PERSONA_MEMBERLIST_VIEW/PERSONA_NAME`)
+    }
+    getPersonaMemberList(filterType,filterValue){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/filter_Persona_Member_list/${filterType}/${filterValue}`)
+    }
+    getGoalsMemberList(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getGoalRecommendationsSetMemberList`)
+    }
+    getRewardssMemberList(){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getRewardRecommendationsSetMemberList`)
+    }
+    getGoalsRecommendationData(id){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/Fact_Goal_Recommendations_get/${id}`)
+    }
+    getRewardData(id){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/get_Rewards_File_Output_list/${id}`)
+    }
+    getSmvDataGeneral(id){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getSMVMemberDetails/${id}`)
+    }
+    getSmvDataCare(id){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getSMVMemberPayerClustering/${id}`)
+    }
+    getSmvInsuranceData(id){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getSmvMemberClinical/${id}`)
+    }
+    commonfileupload(type,file){
+        return this.http.post(`http://healthinsight:8082/curis/closeGaps/file_upload/${type}`,file)
+    }
+    getPhysicalActivityFrequencyId(goal,frequency){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getRefPhysicalActivity/${goal}/${frequency}`)
+    }
+    getCalorieIntakeFrequencyId(goal,frequency){
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getRefCalorieIntake/${goal}/${frequency}`)
+    }
+    getLikelihoodToRecommendList(){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getLhrMemberListView`);
+    }
+    getLikelihoodToClurnList(){
+        return this.http.get(`http://healthinsight:8082/curis/smv/lhcMemberlistView`);
     }
 }

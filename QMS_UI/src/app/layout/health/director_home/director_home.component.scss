@@ -21,3 +21,36 @@ padding: 0px;
 /deep/ ::-webkit-scrollbar {
     width: 3px;
 }
+
+p-tabview {
+    width: 100%;
+    background-color: #E4E5E6;
+    /deep/ {
+    .ui-tabview .ui-tabview-nav li {
+        background-color: rgb(182, 181, 181);
+    }
+    body .ui-widget-content {
+        background-color: #E4E5E6
+        }
+    
+  .ui-tabview.ui-tabview-top .ui-tabview-nav{
+    background: #E4E5E6;
+    border-radius: 0;
+    border-bottom: none;
+  }
+  .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active{
+    background-color: white;
+    border-color: white;
+  }
+  .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a{
+      color: black
+  }
+    }
+    }
+.card{
+    background-color: #F9F9F9
+}
+.header-class{
+    background-color: #0275D8;
+    color: white
+}

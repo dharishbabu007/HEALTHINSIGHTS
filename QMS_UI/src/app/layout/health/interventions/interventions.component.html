@@ -1,0 +1,101 @@
+<div class="col-lg-12" style="padding: 0px">
+        <h3 [ngStyle]="{ 'background-color': '#FC93A4','height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-flag-checkered"></i> Interventions</h3>
+</div>
+<div class="row p-3 align-items-center">
+        <div class="row col-lg-12"   style=" margin-left: 13px;">
+                <div class="col-lg-12" style="margin-bottom: 12px">
+                        <h2>Interventions</h2>
+                        <hr class="lineClass">
+                </div>
+                <div class="card" style="    width: 100%;">
+                        <div class="row col-lg-12 card-body" style=" padding: 40px;">
+                                <div class="row col-lg-12">
+                                        <span class="col-lg-12">
+                                                <b>Select MID &nbsp;</b> 
+                                                <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true"   [suggestions]="memberList" (onSelect)="loadMemberInfo($event)"  (completeMethod)="search($event)" placeholder="Enter MID"></p-autoComplete>
+                                        </span>
+                                </div>  
+                                <br><br><br><br>
+                        <div class="col-lg-12">
+                                <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+                                        <div class="form-group">
+                                                <div class="row">
+                                                    <span class="col-lg-2"></span>
+                                                        <span class="col-lg-2 col-form-label font-weight-bold headings">Goals</span>
+                                                        <span class="col-lg-2 col-form-label font-weight-bold headings">Frequency</span>
+                                                        <span class="col-lg-2 col-form-label font-weight-bold headings">Date</span> 
+                                                        <span class="col-lg-2 col-form-label font-weight-bold headings">Interventions</span> 
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                        <span class="col-lg-2 col-form-label font-weight-bold">Physical Activity</span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="physicalActivityGoal" class="form-control"/>
+                                                                <!-- <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityGoal" [options]="physicalActivityGoalList"  [style]="{'width':'90%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="physicalActivityFrequency" class="form-control"/>
+                                                                <!-- <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="physicalActivityFrequency" [options]="physicalActivityFrequencyList"  [style]="{'width':'90%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="physicalActivityDate" class="form-control"/>
+                                                                <!-- <p-calendar formControlName="physicalActivityDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar> &nbsp;&nbsp; -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <textarea formControlName="physicalIntervention" [rows]="2" [cols]="20" pInputTextarea autoResize="autoResize" class="form-control"></textarea>
+                                                        </span>
+
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                        <span class="col-lg-2 col-form-label font-weight-bold">Calorie Intake</span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="calorieIntakeGoal" class="form-control"/>
+                                                                <!-- <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeGoal" [options]="calorieIntakeGoalList"  [style]="{'width':'90%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="calorieIntakeFrequency" class="form-control"/>
+                                                                <!-- <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="calorieIntakeFrequency" [options]="calorieIntakeFrequencyList"  [style]="{'width':'90%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                 <input type="text" pInputText formControlName="calorieIntakeDate" class="form-control"/>
+                                                                <!-- <p-calendar formControlName="calorieIntakeDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>&nbsp;&nbsp; -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <textarea formControlName="calorieIntervention" [rows]="2" [cols]="20" pInputTextarea autoResize="autoResize" class="form-control"></textarea>
+                                                        </span>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                        <span class="col-lg-2 col-form-label font-weight-bold">Care Gap</span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="careGap" class="form-control"/>
+                                                                <!-- <p-dropdown placeholder="select" [autoDisplayFirst]="false"  styleClass="form-control" formControlName="careGap" [options]="careGapList"  [style]="{'width':'90%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown> -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <input type="text" pInputText formControlName="careGapDate" class="form-control"/>
+                                                                <!-- <p-calendar formControlName="careGapDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>&nbsp;&nbsp; -->
+                                                        </span>
+                                                        <span class="col-lg-2">
+                                                                <textarea formControlName="careIntervention" [rows]="2" [cols]="20" pInputTextarea autoResize="autoResize" class="form-control"></textarea>
+                                                        </span>
+                                                </div>
+                                        </div>
+                                </form>
+                        </div>
+                        </div>
+                        <div class="card-footer text-right">
+                                <button class="btn btn-primary"  style="margin-right: 10px">Close Gap</button>
+                                <button type="submit" class="btn btn-primary" (click)="onSubmit(myForm.value)" ><i class="fa fa-dot-circle-o"></i> Submit</button>
+                        </div>
+
+                </div>
+
+        </div>     
+</div>
+<!-- 
+<span class="position-test">hey</span>
+<span class="position-test">hey1</span>
+<span class="position-test">hey2</span> -->

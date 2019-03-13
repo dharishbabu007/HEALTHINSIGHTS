@@ -173,7 +173,7 @@ this.cols.push(data.filter(item => item.featureName =="What are your motivations
  //console.log(this.cols1[1][0].featureName)
 });
 
-this.gapsService.getClusterFormData(event.value).subscribe((data : any)=>{
+this.gapsService.getClusterFormData(event.value).then((data : any)=>{
   this.clusterData = data;
  this.myForm.controls['personaName'].setValue(this.clusterData.clusterPersona.personaName);
  //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);

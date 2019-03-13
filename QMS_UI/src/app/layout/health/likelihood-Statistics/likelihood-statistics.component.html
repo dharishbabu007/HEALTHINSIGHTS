@@ -125,6 +125,7 @@
                                                     </tr>
                                                 <tr *ngFor="let col of cols1;let i=index">
                                                     <td  *ngFor="let col of cols1[i+1] ">
+                                                        <span *ngIf="col == ''"></span>
                                                         {{col}}
                                                     </td>
                                                 </tr>

@@ -127,6 +127,7 @@ export class CreateRoleComponent implements OnInit {
             //control.removeAt(this.i);
             this.removeCategory(this.i) 
           }
+         this.removeCategory(1)
       }
 
         const roleId1 = this.Repositry.filter(item => item.name === event.value);

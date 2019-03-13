@@ -8,14 +8,14 @@
         <div class="col col-lg-12">
             <div class="col-lg-12" style="padding: 0px">
                 <br>
-                <p-dropdown placeholder="cluster/persona" [autoDisplayFirst]="false"  styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)"></p-dropdown> &nbsp; &nbsp;
+                <p-dropdown placeholder="cluster/persona" [autoDisplayFirst]="false"  styleClass="form-control" [options]="selectList" (onChange)="SelectionList($event)"></p-dropdown> &nbsp; &nbsp;
                 <p-dropdown placeholder="ID/Name" [autoDisplayFirst]="false"  styleClass="form-control" [options]="nameList" (onChange)="nameSelection($event)"></p-dropdown>  &nbsp; &nbsp;
-                <br><br>
+                <br>
             </div>
-            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()"></button>
-                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Details">
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="Member_Details">
                     <ng-template pTemplate="header">
-                        <tr>
+                        <tr class="header-class">
                             <th *ngFor="let col of cols" [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>

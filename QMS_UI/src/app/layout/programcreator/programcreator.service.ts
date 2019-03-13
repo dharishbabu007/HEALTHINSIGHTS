@@ -29,7 +29,7 @@ export class ProgramcreatorService {
   programCreatorSubmit(model: ProgramCreator): Observable<ProgramCreator> {
         console.log('ProgramCreator');
 
-        return this.http.post<ProgramCreator>('http://healthinsight:8082/curis/qms/createProgram', model, httpOptions)
+        return this.http.post<ProgramCreator>('http://healthinsight:8082/curis/program/createProgram', model, httpOptions)
         . pipe(
            catchError(this.handleError('programCreatorSubmit', model))
          );

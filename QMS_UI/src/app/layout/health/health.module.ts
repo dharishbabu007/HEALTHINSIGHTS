@@ -43,6 +43,15 @@ import {LikelihoodStatisticsComponent} from './likelihood-Statistics/likelihood-
 import { CoordinatorHomeComponent } from './coordinator_home/care_home.component';
 import { AnalystHomeComponent } from './analyst_home/analyst_home.component';
 import { DirectorHomeComponent } from './director_home/director_home.component';
+import { PersonaMemberListComponent } from './persona-member-list/member-list.component';
+import { SliderModule } from 'primeng/slider';
+import { GoalsMemberListComponent } from './goals-member-list/goals-member-list.component';
+import { RewardsMemberListComponent } from './rewards-member-list/rewards-member-list.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import {  SmvComponent } from './smv/smv.component';
+import { InterventionComponent } from './interventions/interventions.component';
+import { ChurnMemberListComponent } from './likelihood-churn-list/churn-member-list.component';
+import { RecommendMemberListComponent } from './likelihood-to-recommend-list/recommend-member-list.component';
 
 
 @NgModule({
@@ -65,8 +74,9 @@ import { DirectorHomeComponent } from './director_home/director_home.component';
      FileUploadModule,
      CalendarModule,
      AutoCompleteModule,
-     RadioButtonModule
-    
+     RadioButtonModule,
+SliderModule,
+MultiSelectModule
   ],
   declarations: [HealthComponent,
     SidebarComponent,
@@ -85,7 +95,14 @@ import { DirectorHomeComponent } from './director_home/director_home.component';
         LikelihoodStatisticsComponent,
         CoordinatorHomeComponent,
         AnalystHomeComponent,
-        DirectorHomeComponent
+        DirectorHomeComponent,
+        PersonaMemberListComponent,
+        GoalsMemberListComponent,
+        RewardsMemberListComponent,
+        SmvComponent,
+        InterventionComponent,
+        ChurnMemberListComponent,
+        RecommendMemberListComponent
   ]
 })
 export class HealthModule { }

@@ -15,10 +15,11 @@ import { MessageService } from '../../shared/services/message.service';
 export class ProgrameditorComponent implements OnInit {
 
   public myForm: FormGroup;
-
+  programNames:any;
   type: string;
   title: string;
   measureId: string;
+  categoryLength:any;
   constructor(private _fb: FormBuilder,
     private ProgrameditorService: ProgrameditorService,
     private router: Router,
@@ -40,6 +41,13 @@ export class ProgrameditorComponent implements OnInit {
               this.initProgramCategorys(),
           ])
       });
+      this.ProgrameditorService.getProgramNames().subscribe((res:any)=>{
+      //  console.log(res)
+        this.programNames =[];
+        res.forEach((element)=>{
+          this.programNames.push({label:element,value:element})
+        })
+      })
   }
 
 formatDate(dateString) {
@@ -87,31 +95,59 @@ onSubmit() {
   }
 }
   submitPc(modelPC: ProgramCreator, isValid: boolean) {
-
- 
-       modelPC.startDate = this.formatDate(modelPC.startDate);
+     modelPC.startDate = this.formatDate(modelPC.startDate);
       modelPC.endDate = this.formatDate(modelPC.endDate);
-  
-      console.log( 'Model' + JSON.stringify(modelPC));
     this.ProgrameditorService.programCreatorSubmit(modelPC).subscribe((res: any) => {
-
-      console.log(res)
       if (res.status == 'SUCCESS') {
-        this.msgService.success('Program created Successfully');
+        this.msgService.success('Program Edited Successfully');
+        if((<FormArray>this.myForm.controls['programCategorys']).length >1){
+          this.myForm.controls['programCategorys'].reset();
+          let araylenght = (<FormArray>this.myForm.controls['programCategorys']).length;
+          for(let i=0; i<=araylenght+1 ;  i++){
+            this.removeCategory(i) 
+          }
+          this.removeCategory(1)
+        }
         this.myForm.reset();
       }
        else {
-        console.log(res.status)
         this.msgService.error("Program already exist for ProgramName, Start Date and End Date");
       }
     } );
-  
-   
-    
   }
 
 cancelPc() {
   this.myForm.reset();
+}
+programSelected(event){
+  this.ProgrameditorService.getProgramDetails(event.value).subscribe((res:any)=>{
+      if(res.startDate){
+        this.myForm.controls['startDate'].setValue(new Date(res.startDate));
+      }
+      if(res.endDate){
+        this.myForm.controls['endDate'].setValue(new Date(res.endDate));
+      }
+      this.categoryLength = res.programCategorys.length;
+      if((<FormArray>this.myForm.controls['programCategorys']).length >1){
+        this.myForm.controls['programCategorys'].reset();
+        let araylenght = (<FormArray>this.myForm.controls['programCategorys']).length;
+        for(let i=0; i<=araylenght+1 ;  i++){
+          this.removeCategory(i) 
+        }
+        this.removeCategory(1)
+      }
+     // console.log(this.categoryLength);
+        (<FormArray>this.myForm.controls['programCategorys']).controls[0]['controls']['categoryName'].patchValue(res.programCategorys[0].categoryName);
+        (<FormArray>this.myForm.controls['programCategorys']).controls[0]['controls']['maxPoints'].patchValue(res.programCategorys[0].maxPoints);
+        (<FormArray>this.myForm.controls['programCategorys']).controls[0]['controls']['maxScore'].patchValue(res.programCategorys[0].maxScore);
+      for(let i=1;i<this.categoryLength;i++){
+        this.addCategory();
+        (<FormArray>this.myForm.controls['programCategorys']).controls[i]['controls']['categoryName'].patchValue(res.programCategorys[i].categoryName);
+        (<FormArray>this.myForm.controls['programCategorys']).controls[i]['controls']['maxPoints'].patchValue(res.programCategorys[i].maxPoints);
+        (<FormArray>this.myForm.controls['programCategorys']).controls[i]['controls']['maxScore'].patchValue(res.programCategorys[i].maxScore);
+      }
+  });
+
 }
 
 

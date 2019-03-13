@@ -84,19 +84,19 @@ private gapsService: GapsService) {
               for(let i=1;i<this.clusterList.length;i++){
                 this.clusterLength.push(this.clusterList[i])
               this.personaFormDataFunc(i,this.clusterList[i].value);
-              }
-            }
+              }}
       });
+      let temp = {label:"cluster 1",value:"1"};
+      this.clusterSelection(temp);
      
   }
 personaFormDataFunc(i,value){
+ // console.log(value)
   this.personaFormData =[];
-  this.gapsService.getClusterFormData(value).subscribe((res: any)=>{              
+  this.gapsService.getClusterFormData(value).then((res: any)=>{  
+  //  console.log(res)            
     this.personaFormData.push(res.clusterPersona);
-   // console.log(this.personaFormData)
   });
-
-
 }
 smallCardClick(event){
   //console.log(event);
@@ -144,6 +144,7 @@ onSubmit() {
     this.validateAllFormFields(this.myForm);
   }
 }
+filetype:any;
   submitPc(model,isValid: boolean) {
     if(this.selectedClusterId == null){
  this.msgService.error("please select a cluster")
@@ -156,6 +157,13 @@ onSubmit() {
         this.gapsService.createPersona(model,this.selectedClusterId).subscribe((res: any )=>{
           this.msgService.success(res.message)
            });
+          this.filetype = "persona";
+           this.gapsService.commonfileupload(this.filetype,fd).subscribe((res:any)=>{
+            if(res.status === 'SUCCESS'){ this.msgService.success('File Upload Success');
+            } else {
+              this.msgService.error(res.message);
+            }
+          })
     } 
 
   }
@@ -193,40 +201,17 @@ this.cols.push(data.filter(item => item.featureName =="What are your motivations
  this.cols2= data.filter(item => item);
 
 });
-if(event.value == 1){
-  this.myForm.controls['personaName'].setValue('Lazy Doer');
- //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
- this.myForm.controls['motivations'].setValue('Need a Partner');
- this.myForm.controls['barriers'].setValue('The Frequency of excersice');
- this.myForm.controls['socialMedia'].setValue('Use Frequently');
- this.myForm.controls['healthStatus'].setValue('Email');
- this.myForm.controls['goals'].setValue('To avoid diseases');
- this.myForm.controls['bio'].setValue('Lazy doers are not proactive in nature. These are people who are not intrinsically motivated.');
- //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
- this.myForm.controls['ageGroup'].setValue('30-35');
- console.log(this.myForm.controls['ageGroup'].value)
- this.myForm.controls['education'].setValue('High school, Graduation');
- this.myForm.controls['income'].setValue('$40,000 - $60,000');
- this.myForm.controls['occupation'].setValue('Desk job, Unemployed');
- this.myForm.controls['addiction'].setValue('Drinking, Smoking');
- this.myForm.controls['familySize'].setValue('3-6');
 
-}
-else{
-
-this.gapsService.getClusterFormData(event.value).subscribe((data : any)=>{
+this.gapsService.getClusterFormData(event.value).then((data : any)=>{
   this.clusterData = data;
   this.myForm.controls['personaName'].setValue(this.clusterData.clusterPersona.personaName);
- //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
  this.myForm.controls['motivations'].setValue(this.clusterData.clusterPersona.motivations);
  this.myForm.controls['barriers'].setValue(this.clusterData.clusterPersona.barriers);
  this.myForm.controls['socialMedia'].setValue(this.clusterData.clusterPersona.socialMedia);
  this.myForm.controls['healthStatus'].setValue(this.clusterData.clusterPersona.healthStatus);
  this.myForm.controls['goals'].setValue(this.clusterData.clusterPersona.goals);
  this.myForm.controls['bio'].setValue(this.clusterData.clusterPersona.bio);
- //this.myForm.controls['demographics'].setValue(this.clusterData.clusterPersona.demographics);
  this.myForm.controls['ageGroup'].setValue(this.clusterData.clusterPersona.demoAgeGroup);
- console.log(this.myForm.controls['ageGroup'].value)
  this.myForm.controls['education'].setValue(this.clusterData.clusterPersona.demoEducation);
  this.myForm.controls['income'].setValue(this.clusterData.clusterPersona.demoIncome);
  this.myForm.controls['occupation'].setValue(this.clusterData.clusterPersona.demoOccupation);
@@ -235,7 +220,6 @@ this.gapsService.getClusterFormData(event.value).subscribe((data : any)=>{
 
 
 }); 
-}
 }
 
 
@@ -274,7 +258,7 @@ showDialog(rowData) {
 displayModal: boolean = false;
 showDialogModal(rowData) {
   this.display = true;
- // console.log(rowData.clusterId,rowData.featureName);
+// console.log(rowData.clusterId,rowData.featureName);
   
 this.gapsService.getgraphdata(rowData.clusterId,rowData.featureName).subscribe((res: any)=>
  {

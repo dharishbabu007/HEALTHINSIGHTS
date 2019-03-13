@@ -22,7 +22,8 @@ export class MemberListComponent implements OnInit {
     membergaps1: MemberCareGaps[];
     cols: any[];
     cols1:any[];
-    clusterList: any[];
+    selectionName:any;
+    selectList =[{label:'Cluster',value:'cluster'},{label:'Persona',value:'persona'}]
     nameList: any[];
     loading = true;
      genderTypes =  [
@@ -31,29 +32,52 @@ export class MemberListComponent implements OnInit {
         { label: 'Female', value: 'Female' }
     ];
     ngOnInit() {
-        this.gapsService.getLikelihoodMeasureDetails().subscribe((data: MemberCareGaps[]) => {
-            data.forEach(element => {
-                element.age = parseInt(element.age, 10);
-            });
-            this.membergaps = data;
-            this.loading = false;
-        });
         this.cols = [
-            { field: 'memberId1', header: 'Member Id' },
-            { field: 'memberName1', header: 'Member Name' },
-            { field: 'enrollGaps1', header: 'What form of excercise do you prefer?' },
-            { field: 'outOfPocketExpenses1', header: 'How frequently do you excercise?' },
-            { field: 'utilizerCategory1', header: 'What motivates you for your health goals?' },
-            { field: 'age1', header: 'Why would you abstain from enrolling?' },
-            { field: 'amountSpend1', header: 'Do you set health goals regularly and to try to achieve them?' },
-            { field: 'er1', header: 'How many people are there in your family?' },      
+            { field: 'memberId', header: 'Member ID' },
+            { field: 'personaName', header: 'Persona Name' },
+            { field: 'age', header: 'Age' },
+            { field: 'gender', header: 'Gender' },
+            { field: 'modeOfContact', header: 'How do you like to be contacted?' },
+            { field: 'formOfExercise', header: 'What form of excercise do you prefer?' },
+            { field: 'idealHealthGoal', header: 'What is your ideal goal towards your health?' },
+            { field: 'socialMediaUsage', header: 'Do you actively use social media?' } 
         ];
-       
+
     }
-    clusterSelection(event){
-        console.log(event)
+    SelectionList(event){
+        this.selectionName = event.value;
+        if(event.value=='cluster'){
+            this.gapsService.getclusterlist().subscribe((res: any) =>{
+                this.nameList =[];
+               // console.log(res)
+                res.forEach(item => {
+                    this.nameList.push({label: "cluster "+item,value: item});
+                });
+            });
+        }
+        else{
+            this.gapsService.getPersonaNames().subscribe((res:any)=>{
+                this.nameList=[];
+                res.forEach(element =>{
+                    this.nameList.push({label:element,value:element})
+                })
+            })
+        }
     }
     nameSelection(event){
+        this.gapsService.getPersonaMemberList(this.selectionName,event.value).subscribe((data: MemberCareGaps[]) => {
+            this.membergaps = data;
+        });
+        this.cols = [
+            { field: 'memberId', header: 'Member ID' },
+            { field: 'personaName', header: 'Persona Name' },
+            { field: 'age', header: 'Age' },
+            { field: 'gender', header: 'Gender' },
+            { field: 'modeOfContact', header: 'How do you like to be contacted?' },
+            { field: 'formOfExercise', header: 'What form of excercise do you prefer?' },
+            { field: 'idealHealthGoal', header: 'What is your ideal goal towards your health?' },
+            { field: 'socialMediaUsage', header: 'Do you actively use social media?' } 
+        ];
 
     }
 }
