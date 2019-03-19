@@ -17,6 +17,7 @@ object NcqaABA {
 
   def main(args: Array[String]): Unit = {
 
+    /*
     //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
     val year = args(0)
@@ -330,5 +331,6 @@ object NcqaABA {
 
 
     spark.sparkContext.stop()
+    */
   }
 }

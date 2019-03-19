@@ -53,11 +53,13 @@ object DataLoadFunctions {
     * @param tblName
     * @return
     */
-  def dataLoadFromHiveStageTable(spark:SparkSession,dbName:String,tblName:String,colNames:List[String]):DataFrame ={
+  def dataLoadFromHiveStageTable(spark:SparkSession,dbName:String,tblName:String,measureId:String,colNames:List[String]):DataFrame ={
 
-
-    val query = "select * from "+ dbName+"."+ tblName
-    val resultDf = spark.sql(query)
+   // val querypart=
+   /* val colsStringVal = colNames.mkString(",")
+    val msrVal = "'"+measureId+"'"
+    val query = "select * from "+ dbName+"."+ tblName+s" where measure ="+msrVal*/
+    val resultDf = spark.sql(measureId)
     resultDf
   }
 
