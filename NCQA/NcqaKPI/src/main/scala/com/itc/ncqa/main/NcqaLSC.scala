@@ -16,7 +16,7 @@ object NcqaLSC {
 
   def main(args: Array[String]): Unit = {
 
-
+/*
     //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
     val year = args(0)
@@ -250,7 +250,7 @@ object NcqaLSC {
     //</editor-fold>
 
 
-    /*
+
     //<editor-fold desc="Output creation and Store the o/p to Fact_Gaps_In_Heids Table">
 
     /*Common output format (data to fact_hedis_gaps_in_care)*/

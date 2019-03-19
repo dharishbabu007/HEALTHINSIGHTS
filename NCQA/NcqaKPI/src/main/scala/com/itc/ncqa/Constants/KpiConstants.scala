@@ -41,6 +41,19 @@ object KpiConstants {
 
   val lobProductNameConVal = "Special Needs Plan-Institutionalized"
 
+
+  /*Payer constant values*/
+  val sn1PayerVal = "SN1"
+  val sn2PayerVal = "SN2"
+  val sn3PayerVal = "SN3"
+  val mdePayerVal = "MDE"
+  val mcrPayerVal = "MCR"
+  val mcdPayerVal = "MCD"
+  val mdPayerVal = "MD"
+  val mliPayerVal = "MLI"
+  val mrbPayerVal = "MRB"
+  val mmpPayerVal = "MMP"
+
   /*function for setting the dbName with the value getting as argument */
   def setDbName(dbVal:String):String={
     dbName = dbVal
@@ -468,6 +481,7 @@ object KpiConstants {
   val planColName = "plan"
   val supplflagColName = "supplement_flag"
   val labCodeColName = "lab_code"
+  val dataSourceColName = "data_source"
 
 
 

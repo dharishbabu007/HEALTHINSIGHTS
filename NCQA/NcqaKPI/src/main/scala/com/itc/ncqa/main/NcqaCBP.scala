@@ -21,6 +21,7 @@ object NcqaCBP {
   def main(args: Array[String]): Unit = {
 
 
+
     //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
     val year = args(0)
@@ -51,6 +52,8 @@ object NcqaCBP {
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
     //</editor-fold>
 
+    /*
+
     //<editor-fold desc="Loading Required Tables to memory">
 
     import spark.implicits._
@@ -58,6 +61,7 @@ object NcqaCBP {
 
     val aLiat = List("col1")
 
+    val lobList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName, KpiConstants.marketplaceLobName, KpiConstants.mmdLobName)
     val membershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.membershipTblName,aLiat)
                                         .filter(($"${KpiConstants.considerationsColName}".===(KpiConstants.yesVal))
                                              && ($"${KpiConstants.memStartDateColName}".isNotNull)
@@ -68,38 +72,41 @@ object NcqaCBP {
                                         .withColumn(KpiConstants.dateofbirthColName, to_date($"${KpiConstants.dateofbirthColName}", KpiConstants.dateFormatString))
 
 
-
     val claimStatusList = List(KpiConstants.paidVal, KpiConstants.suspendedVal, KpiConstants.pendingVal, KpiConstants.deniedVal)
     val visitsDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.visitTblName,aLiat)
-                                   .filter(($"${KpiConstants.serviceDateColName}".isNotNull)
-                                       && (($"${KpiConstants.admitDateColName}".isNotNull && $"${KpiConstants.dischargeDateColName}".isNotNull)
-                                            || ($"${KpiConstants.admitDateColName}".isNull && $"${KpiConstants.dischargeDateColName}".isNull))
-                                       && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
-                                   .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
-                                   .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", KpiConstants.dateFormatString))
-                                   .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}",  KpiConstants.dateFormatString)))
-                                   .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}",  KpiConstants.dateFormatString)))
-                                   .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}",  KpiConstants.dateFormatString)))
-
+                                    .filter(($"${KpiConstants.serviceDateColName}".isNotNull)
+                                        && (($"${KpiConstants.admitDateColName}".isNotNull && $"${KpiConstants.dischargeDateColName}".isNotNull)
+                                        || ($"${KpiConstants.admitDateColName}".isNull && $"${KpiConstants.dischargeDateColName}".isNull))
+                                        && ($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
+                                    .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
+                                    .withColumn(KpiConstants.dobColName, to_date($"${KpiConstants.dobColName}", KpiConstants.dateFormatString))
+                                    .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", KpiConstants.dateFormatString))
+                                    .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}",  KpiConstants.dateFormatString)))
+                                    .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}",  KpiConstants.dateFormatString)))
+                                    .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}",  KpiConstants.dateFormatString)))
+                                    .withColumn(KpiConstants.revenuecodeColName, when((length($"${KpiConstants.revenuecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.revenuecodeColName}"))).otherwise($"${KpiConstants.revenuecodeColName}"))
+                                    .withColumn(KpiConstants.billtypecodeColName, when((length($"${KpiConstants.billtypecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.billtypecodeColName}"))).otherwise($"${KpiConstants.billtypecodeColName}"))
+                                    .withColumn(KpiConstants.proccode2ColName, when(($"${KpiConstants.proccode2mod1ColName}".isin(KpiConstants.avoidCodeList:_*)) || ($"${KpiConstants.proccode2mod2ColName}".isin(KpiConstants.avoidCodeList:_*)),lit("NA")).otherwise($"${KpiConstants.proccode2ColName}"))
 
 
     val medmonmemDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.medmonmemTblName,aLiat)
-                                       .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
 
     val productPlanDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.productPlanTblName,aLiat)
-                                         .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
 
 
 
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
-                                      .filter(($"${KpiConstants.measureIdColName}".===(KpiConstants.cbpMeasureId)) || ($"${KpiConstants.measureIdColName}".===(KpiConstants.ggMeasureId)))
-                                      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-                                      .cache()
+      .filter(($"${KpiConstants.measureIdColName}".===(KpiConstants.cbpMeasureId)) || ($"${KpiConstants.measureIdColName}".===(KpiConstants.ggMeasureId)))
+      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .cache()
     refHedisDf.count()
+
     val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refmedValueSetTblName)
-                                             .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.cbpMeasureId))
-                                             .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-                                             .cache()
+      .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.imaMeasureId))
+      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .cache()
     ref_medvaluesetDf.count()
 
     //</editor-fold
@@ -116,9 +123,9 @@ object NcqaCBP {
 
     val contEnrollStartDate = year + "-01-01"
     val contEnrollEndDate = year + "-12-31"
-    val inputForContEnrolldf = ageFilterDf.select(KpiConstants.memberidColName, KpiConstants.benefitMedicalColname,
-      KpiConstants.memStartDateColName,KpiConstants.memEndDateColName,
-      KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName)
+    val inputForContEnrolldf = ageFilterDf.select(KpiConstants.memberidColName, KpiConstants.benefitMedicalColname, KpiConstants.memStartDateColName,
+                                                  KpiConstants.memEndDateColName, KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName,
+                                                  KpiConstants.primaryPlanFlagColName)
 
     val benNonMedRemDf = inputForContEnrolldf.filter($"${KpiConstants.benefitMedicalColname}".===(KpiConstants.yesVal))
 
@@ -200,7 +207,7 @@ object NcqaCBP {
 
     val contEnrollDf = contEnrollStep1Df.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
       .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
-      .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}")
+      .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}",s"df1.${KpiConstants.primaryPlanFlagColName}")
 
 
     contEnrollDf.select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName)
@@ -210,25 +217,67 @@ object NcqaCBP {
       .option("header", "true")
       .csv("/home/hbase/ncqa/cbp_test_out/contEnrolldetail/")
 
+    //</editor-fold
+
+    //<editor-fold desc="Dual eligibility,Dual enrollment, Ima enrollment filter">
+
+    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList)
+    //baseOutDf.show()
+    /*  baseOutDf.coalesce(1)
+        .write
+        .mode(SaveMode.Append)
+        .option("header", "true")
+        .csv("/home/hbase/ncqa/ima_test_out/baseOut/")*/
+
+    val imaContEnrollDf = baseOutDf.filter($"${KpiConstants.lobColName}".isin(lobList:_*)).dropDuplicates().cache()
+    imaContEnrollDf.count()
+    //imaContEnrollDf.show()
+    /* imaContEnrollDf.select(KpiConstants.memberidColName).distinct().coalesce(1)
+       .write
+       .mode(SaveMode.Append)
+       .option("header", "true")
+       .csv("/home/hbase/ncqa/ima_test_out/imaContEnrollDf/")*/
+    //</editor-fold>
+
+    //<editor-fold desc="Initial Join with Ref_Hedis">
+
+    val argmapforRefHedis = mutable.Map(KpiConstants.eligibleDfName -> visitsDf , KpiConstants.refHedisTblName -> refHedisDf)
+    val allValueList = List(KpiConstants.independentLabVal, KpiConstants.hospiceVal,KpiConstants.meningococcalVal, KpiConstants.tdapVacceVal,
+      KpiConstants.hpvVal, KpiConstants.ardvVal, KpiConstants.ardtsVal, KpiConstants.encephalopathyVal, KpiConstants.vaccineAdverseVal)
+
+
+
+    val visitRefHedisDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapforRefHedis,allValueList)
+    //visitRefHedisDf.show()
+    //</editor-fold>
+
+    //<editor-fold desc="Removal of Independent Lab Visits">
+
+    val groupList = visitsDf.schema.fieldNames.toList.dropWhile(p=> p.equalsIgnoreCase(KpiConstants.memberidColName))
+    val visitgroupedDf = visitRefHedisDf.groupBy(KpiConstants.memberidColName, groupList:_*).agg(collect_list(KpiConstants.valuesetColName).alias(KpiConstants.valuesetColName))
+    //visitgroupedDf.show()
+
+    val indLabVisRemDf = visitgroupedDf.filter(!array_contains($"${KpiConstants.valuesetColName}",KpiConstants.independentLabVal)).cache()
+    indLabVisRemDf.count()
+
     //</editor-fold>
 
 
 
 
 
-    /*
 
     //<editor-fold desc="Hospice Removal">
 
-    val argmapforHospice = mutable.Map(KpiConstants.eligibleDfName -> visitsDf , KpiConstants.refHedisTblName -> refHedisDf)
-    val visitSchema = visitsDf.schema
-    val hospiceValList = List(KpiConstants.hospiceVal)
-    val hospiceCodeSystem = KpiConstants.codeSystemList
-    val hospiceClaimsDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapforHospice,hospiceValList,hospiceCodeSystem)
-    val hospiceincurryearDf = UtilFunctions.measurementYearFilter(hospiceClaimsDf,KpiConstants.serviceDateColName,year,KpiConstants.measurement0Val, KpiConstants.measurement0Val)
-                                           .select(KpiConstants.memberidColName).distinct()
+    val yearStartDate = year+"-01-01"
+    val yearEndDate = year+"-12-31"
+    val hospiceInCurrYearMemDf = indLabVisRemDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.hospiceVal))
+      &&($"${KpiConstants.serviceDateColName}".>=(yearStartDate) && $"${KpiConstants.serviceDateColName}".<=(yearEndDate)))
+      .select(KpiConstants.memberidColName)
+      .dropDuplicates().cache()
 
- /*   hospiceincurryearDf.coalesce(1)
+
+    /*   hospiceincurryearDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
@@ -629,7 +678,12 @@ object NcqaCBP {
       .option("header", "true")
       .csv("/home/hbase/ncqa/cbp_test_out/eligiblePop/")
 
+
+      */
+
     //</editor-fold>
+
+/*
 
     //<editor-fold desc="Denominator Calculation">
 
@@ -782,9 +836,6 @@ object NcqaCBP {
 
     val numeratorDf = numeratorNsnDf.union(numeratorsDf)
     //</editor-fold>
-
-
-
 
     //<editor-fold desc="Ncqa Output Creation Code">
 
