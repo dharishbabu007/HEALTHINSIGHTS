@@ -25,7 +25,7 @@ import com.qms.rest.util.QMSConstants;
 import com.qms.rest.util.QMSProperty;
 import com.qms.rest.model.SecurityQuestion;
 
-@Service("userServicePhoenix")
+@Service("userService123")
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 			return restResult;				
 		}		
 		try {						
-			connection = qmsConnection.getOracleConnection();
+			connection = qmsConnection.getPhoenixConnection();
 			
 			if(!getUser.getPassword().equals(resetPassword.getOldPassword())) {
 				restResult = RestResult.getFailRestResult(" Old password is not correct. ");
@@ -75,7 +75,8 @@ public class UserServiceImpl implements UserService {
 				return restResult;				
 			}
 			
-			String sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=? where USER_LOGINID=?";			
+			//String sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=? where USER_LOGINID=?";			
+			String sqlStatementUpdate = "UPSERT INTO QMS.QMS_USER_MASTER(PASSWORD,RESET_PASSWORD,USER_ID) values (?,?,?)";
 			if(getUser.getStatus() != null && getUser.getStatus().equalsIgnoreCase(QMSConstants.USER_STATUS_NEW)) {	
 				
 				//Sending mail to admin for user activation
@@ -86,17 +87,18 @@ public class UserServiceImpl implements UserService {
 				Mail mail = getAdminMail(adminEmail, userDetails);
 				emailService.sendEmail(mail);
 				
-				sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=?,STATUS=? where USER_LOGINID=?";
+				//sqlStatementUpdate = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=?,STATUS=? where USER_LOGINID=?";
+				sqlStatementUpdate = "UPSERT INTO QMS.QMS_USER_MASTER (PASSWORD,RESET_PASSWORD,STATUS,USER_ID) values (?,?,?,?)";
 				prepStatement = connection.prepareStatement(sqlStatementUpdate);
 				prepStatement.setString(1, resetPassword.getNewPassword());
 				prepStatement.setString(2, "N");
 				prepStatement.setString(3, QMSConstants.USER_STATUS_VERIFIED);
-				prepStatement.setString(4, resetPassword.getUserId());
+				prepStatement.setInt(4, Integer.parseInt(getUser.getId()));
 			} else {				
 				prepStatement = connection.prepareStatement(sqlStatementUpdate);
 				prepStatement.setString(1, resetPassword.getNewPassword());
 				prepStatement.setString(2, "N");
-				prepStatement.setString(3, resetPassword.getUserId());
+				prepStatement.setInt(3, Integer.parseInt(getUser.getId()));
 			}
 			prepStatement.executeUpdate();			
 			restResult = RestResult.getSucessRestResult(" Reset password success.");
@@ -276,10 +278,14 @@ public class UserServiceImpl implements UserService {
 				return RestResult.getFailRestResult(" User Login Id and Email Id should be not be null. ");
 			}
 			
-			connection = qmsConnection.getOracleConnection();	
+			if(user.getId() == null) {
+				return RestResult.getFailRestResult(" User Id should not be null. ");
+			}			
+			
+			connection = qmsConnection.getPhoenixConnection();	
 			
 			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+
+			resultSet = statementObj.executeQuery("select * from QMS.QMS_USER_MASTER where USER_EMAIL='"+user.getEmail()+
 					"' AND USER_LOGINID <> '"+user.getLoginId()+"'");
 			if (resultSet.next()) {
 				return RestResult.getFailRestResult("Email id already exists. Please enter another one.");
@@ -287,8 +293,11 @@ public class UserServiceImpl implements UserService {
 			resultSet.close();			
 			
 			
-			String sqlStatementInsert = "update QMS_USER_MASTER set FIRST_NAME=?, LAST_NAME=?, SECURITY_QUESTION=?, "
-					+ "SECURITY_ANSWER=?, PHONE_NO=?, USER_EMAIL=? WHERE USER_LOGINID=?";		
+//			String sqlStatementInsert = "update QMS_USER_MASTER set FIRST_NAME=?, LAST_NAME=?, SECURITY_QUESTION=?, "
+//					+ "SECURITY_ANSWER=?, PHONE_NO=?, USER_EMAIL=? WHERE USER_LOGINID=?";		
+			String sqlStatementInsert = 
+					"UPSERT INTO QMS.QMS_USER_MASTER(FIRST_NAME,LAST_NAME,SECURITY_QUESTION,"
+					+ "SECURITY_ANSWER,PHONE_NO,USER_EMAIL,USER_ID) VALUES (?,?,?,?,?,?,?)";			
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;							
 			statement.setString(++i, user.getFirstName());	
@@ -297,7 +306,7 @@ public class UserServiceImpl implements UserService {
 			statement.setString(++i, user.getSecurityAnswer());
 			statement.setString(++i, user.getPhoneNumber());
 			statement.setString(++i, user.getEmail());
-			statement.setString(++i, user.getLoginId());			
+			statement.setString(++i, user.getId());			
 			statement.executeUpdate();
 			restResult = RestResult.getSucessRestResult("User updated successfully.");
 		} catch (Exception e) {
@@ -329,13 +338,15 @@ public class UserServiceImpl implements UserService {
 		Statement statementObj = null;
 		ResultSet resultSet = null;
 		try {	
-			connection = qmsConnection.getOracleConnection();	
+			connection = qmsConnection.getPhoenixConnection();	
 			
 			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+email+"'");
+			resultSet = statementObj.executeQuery("select * from QMS.QMS_USER_MASTER where USER_EMAIL='"+email+"'");
 			String userLoginId = null;
+			int userId = 0;
 			if (resultSet.next()) {
-				userLoginId = resultSet.getString("USER_LOGINID"); 				
+				userLoginId = resultSet.getString("USER_LOGINID");
+				userId = resultSet.getInt("USER_ID");
 			}						
 			resultSet.close();			
 			if(userLoginId == null) {
@@ -347,13 +358,15 @@ public class UserServiceImpl implements UserService {
 			Date date = new Date();				
 			Timestamp updateTimestamp = new Timestamp(date.getTime());
 			
-			String sqlStatementInsert = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=?,REC_UPDATE_DATE=? WHERE USER_LOGINID=?";		
+			//String sqlStatementInsert = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=?,REC_UPDATE_DATE=? WHERE USER_LOGINID=?";		
+			String sqlStatementInsert = 
+					"UPSERT INTO QMS.QMS_USER_MASTER(PASSWORD,RESET_PASSWORD,REC_UPDATE_DATE,USER_ID) VALUES(?,?,?,?)";
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;							
 			statement.setString(++i, temporaryPassword);			
 			statement.setString(++i, "Y");
 			statement.setTimestamp(++i, updateTimestamp);
-			statement.setString(++i, userLoginId);
+			statement.setInt(++i, userId);
 			statement.executeUpdate();
 			restResult = RestResult.getSucessRestResult("Temporary password sent to your email. "
 					+ "Please reset your password after login. ");
@@ -427,11 +440,12 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		try {						
 			connection = qmsConnection.getPhoenixConnection();
-			
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("select * from QMS.QMS_USER_MASTER where USER_ID="+userId);
 			while (resultSet.next()) {
-				user = new User();
+				System.out.println("resultSet.getString(1)--> "+resultSet.getString(1));
+				user = new User();				
+				System.out.println("resultSet.getString(USER_EMAIL)--> "+resultSet.getString("USER_EMAIL"));
 				user.setEmail(resultSet.getString("USER_EMAIL"));
 				user.setId(resultSet.getString("USER_ID"));
 				user.setLoginId(resultSet.getString("USER_LOGINID"));

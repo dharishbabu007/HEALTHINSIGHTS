@@ -24,4 +24,6 @@ public class RewardRecommendationSet {
 	private String frequency;
 	private String rewardRecommendation;
 	private String rewardSet;	
+	private String rewardId;
+	
 }

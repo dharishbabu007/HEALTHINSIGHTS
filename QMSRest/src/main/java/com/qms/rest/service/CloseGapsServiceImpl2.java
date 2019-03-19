@@ -63,19 +63,19 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			}
 			
 			resultSet.close();
-			String membergplistQry = "SELECT MIN(GIC.GAP_DATE) AS OPENDATE,DQM.MEASURE_TITLE,GIC.TARGET_DATE,GIC.STATUS,GIC.GAP_DATE,"+
-					"(DP.FIRST_NAME||' '||DP.LAST_NAME) AS PCP FROM DIM_QUALITY_MEASURE DQM "+
+			String membergplistQry = "SELECT MIN(GIC.GAP_DATE) AS OPENDATE,DQM.MEASURE_NAME,GIC.TARGET_DATE,GIC.STATUS,GIC.GAP_DATE,"+
+					"(DP.FIRST_NAME||' '||DP.LAST_NAME) AS PCP FROM QMS_QUALITY_MEASURE DQM "+
 					"INNER JOIN QMS_GIC_LIFECYCLE GIC ON GIC.QUALITY_MEASURE_ID = DQM.QUALITY_MEASURE_ID "+
 					"INNER JOIN DIM_MEMBER ENC ON ENC.MEMBER_ID = GIC.MEMBER_ID "+
 					"INNER JOIN FACT_MEM_ATTRIBUTION FMA ON FMA.MEMBER_SK = ENC.MEMBER_SK "+ 
 					"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FMA.PROVIDER_SK "+
 					"WHERE ENC.MEMBER_ID='"+memberId+"' AND GIC.QUALITY_MEASURE_ID='"+measureId+"' "+
-					"GROUP BY DQM.MEASURE_TITLE,GIC.TARGET_DATE,GIC.STATUS,GIC.GAP_DATE,(DP.FIRST_NAME||' '||DP.LAST_NAME) "+
+					"GROUP BY DQM.MEASURE_NAME,GIC.TARGET_DATE,GIC.STATUS,GIC.GAP_DATE,(DP.FIRST_NAME||' '||DP.LAST_NAME) "+
 					"ORDER BY GIC.GAP_DATE DESC";
 			resultSet = statement.executeQuery(membergplistQry);
 			//measure details			
 			if (resultSet.next()) {
-				closeGaps.setCareGap(resultSet.getString("measure_title")); 
+				closeGaps.setCareGap(resultSet.getString("MEASURE_NAME")); 
 				closeGaps.setOpenDate(resultSet.getString("OPENDATE"));
 				closeGaps.setTargetDate(resultSet.getString("TARGET_DATE"));
 				closeGaps.setAssignedTo(resultSet.getString("PCP")); 
@@ -98,12 +98,12 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			
 			resultSet.close();	
 			if(measureId == null || measureId.equalsIgnoreCase("0") || measureId.equalsIgnoreCase("all")) {
-				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
-						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+				resultSet = statement.executeQuery("select qgl.*, dqm.MEASURE_NAME from qms_gic_lifecycle qgl, "
+						+ "QMS_QUALITY_MEASURE dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
 						+ "member_id='"+memberId+"' order by gap_date desc");
 			} else {
-				resultSet = statement.executeQuery("select qgl.*, dqm.measure_title from qms_gic_lifecycle qgl, "
-						+ "dim_quality_measure dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
+				resultSet = statement.executeQuery("select qgl.*, dqm.MEASURE_NAME from qms_gic_lifecycle qgl, "
+						+ "QMS_QUALITY_MEASURE dqm where dqm.quality_measure_id = qgl.quality_measure_id and "
 						+ "qgl.quality_measure_id = '"+measureId+"' and  "
 						+ "member_id='"+memberId+"' order by gap_date desc");				
 			}
@@ -114,7 +114,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 				closeGap = new CloseGap();
 				closeGap.setLifeCycleId(resultSet.getInt("GIC_LIFECYCLE_ID"));
 				lifeCycleIds.add(closeGap.getLifeCycleId());
-				closeGap.setMeasureTitle(resultSet.getString("measure_title"));
+				closeGap.setMeasureTitle(resultSet.getString("MEASURE_NAME"));
 				closeGap.setQualityMeasureId(resultSet.getString("quality_measure_id"));
 				closeGap.setPayerComments(resultSet.getString("payor_comments"));
 				closeGap.setProviderComments(resultSet.getString("provider_comments"));
@@ -220,6 +220,8 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, closeGap.getPayerComments());
 			statement.setString(++i, closeGap.getProviderComments());
 			System.out.println(" User data --> " + userData);
+			if(userData == null)
+				return RestResult.getFailRestResult(" Logged in user data is null ");
 			System.out.println(" User Role Id --> " + userData.getRoleId());
 			String updateStatus = getStatus(userData.getRoleId(), status, closeGap.getCloseGap());
 			if(updateStatus == null) {
@@ -251,7 +253,9 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, memberId);
 			statement.setString(++i, closeGap.getTargetDate());
 			statement.setString(++i, closeGap.getActionCareGap());
+			System.out.println(" Inserting qms_gic_lifecycle with id --> " + lifeCycleId);
 			statement.executeUpdate();
+			System.out.println(" Inserting qms_gic_lifecycle sucess for ID --> " + lifeCycleId);
 			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, lifeCycleId+"");
 			return RestResult.getSucessRestResult(" Close Gaps updation Success. ");
 		} catch (Exception e) {
@@ -303,7 +307,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 	public RestResult importFile(MultipartFile uploadFile, String type) {
 		try {
 			String typeId = (String)httpSession.getAttribute(QMSConstants.SESSION_TYPE_ID);
-			System.out.println(" TypeId from session --> " + typeId);
+			System.out.println(type+" File Import. TypeId from session --> " + typeId);
 			if(typeId != null) {
 				String path = getPath (type); //"D:/import_export/CLOSE_GAP/";
 				GicLifeCycleFileUpload fileUpload = new GicLifeCycleFileUpload();

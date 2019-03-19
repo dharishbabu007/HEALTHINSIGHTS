@@ -190,7 +190,7 @@ public class ProgramService {
 			connection.setAutoCommit(false);
 			
 			List<ProgramCategoryEdit> programCategoryList =  program.getProgramCategorys();
-			if(programCategoryList ==null || programCategoryList.isEmpty()) {
+			if(programCategoryList == null || programCategoryList.isEmpty()) {
 				ProgramCategoryEdit programCategoryEdit = new ProgramCategoryEdit();
 				if(programCategoryList == null) programCategoryList = new ArrayList<>();
 				programCategoryList.add(programCategoryEdit);

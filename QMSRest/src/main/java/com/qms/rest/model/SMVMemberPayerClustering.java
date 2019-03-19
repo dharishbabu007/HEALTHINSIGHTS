@@ -28,19 +28,6 @@ public class SMVMemberPayerClustering {
 	private String preferredReward;
 	private String channel;
 	private String likelihoodEnrollment;
-	private String reasonToNotEnroll;
-	
-	private String physicalActivityFrequency;
-	private String physicalActivityDate;
-	private String calorieIntakeGoal;
-	private String calorieIntakeFrequency;
-	private String calorieIntakeDate;
-	private String careGap;
-	private String careGapDate; 
-	private String category;
-	private String goal;
-	private String frequency;
-	private String goalDate;
-	private String reward;
+	private String reasonToNotEnroll;	
 
 }
