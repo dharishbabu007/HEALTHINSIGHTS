@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qms.rest.model.LhcMemberView;
+import com.qms.rest.model.LhrMemberListView;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
 import com.qms.rest.model.SmvMemberClinical;
@@ -49,5 +51,24 @@ public class SMVController {
 			return new ResponseEntity<Set<SMVMemberPayerClustering>>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<Set<SMVMemberPayerClustering>>(workList, HttpStatus.OK);
-	}	
+	}
+	
+	
+	@RequestMapping(value = "/lhcMemberlistView", method = RequestMethod.GET)
+	public ResponseEntity<Set<LhcMemberView>> lhcMemberlistView() {
+		Set<LhcMemberView> workList = smvService.getLhcMemberViewList();
+		if (workList==null) {
+			return new ResponseEntity<Set<LhcMemberView>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<LhcMemberView>>(workList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/getLhrMemberListView", method = RequestMethod.GET)
+	public ResponseEntity<Set<LhrMemberListView>> getLhrMemberListView() {
+		Set<LhrMemberListView> workList = smvService.getLhrMemberListView();
+		if (workList==null) {
+			return new ResponseEntity<Set<LhrMemberListView>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<LhrMemberListView>>(workList, HttpStatus.OK);
+	}
 }

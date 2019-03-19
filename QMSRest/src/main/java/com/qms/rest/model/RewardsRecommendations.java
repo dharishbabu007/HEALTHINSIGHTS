@@ -36,6 +36,8 @@ public class RewardsRecommendations {
 	private String ingestionDate;
 	private String sourceName;
 	private String userName;
+	private String RewardId;
+;
 	
 
 }

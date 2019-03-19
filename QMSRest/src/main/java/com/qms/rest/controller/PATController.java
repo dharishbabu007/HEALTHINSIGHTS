@@ -50,39 +50,39 @@ public class PATController {
 		return new ResponseEntity<Set<NameValue>>(workList, HttpStatus.OK);
 	}	
 	
-	@RequestMapping(value = "/search_associated_patient_list/{measureSK}/{mrnIdOrName}", method = RequestMethod.GET)
-	public ResponseEntity<Set<SearchAssociatedPatient>> searchAssociatedPatientList(@PathVariable("measureSK") 
-	String measureSK, @PathVariable("mrnIdOrName") String mrnIdOrName) {
-		Set<SearchAssociatedPatient> workList = patService.searchAssociatedPatientList(measureSK, mrnIdOrName);
+	@RequestMapping(value = "/search_associated_patient_list/{measureId}/{mrnIdOrName}", method = RequestMethod.GET)
+	public ResponseEntity<Set<SearchAssociatedPatient>> searchAssociatedPatientList(@PathVariable("measureId") 
+	String measureId, @PathVariable("mrnIdOrName") String mrnIdOrName) {
+		Set<SearchAssociatedPatient> workList = patService.searchAssociatedPatientList(measureId, mrnIdOrName);
 		if (workList.isEmpty()) {
 			return new ResponseEntity<Set<SearchAssociatedPatient>>(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<Set<SearchAssociatedPatient>>(workList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/action_on_caregap_list/{measureSK}", method = RequestMethod.GET)
-	public ResponseEntity<PatActionCareGap> actionOnCareGapList(@PathVariable("measureSK") String measureSK) {
-		PatActionCareGap workList = patService.actionOnCareGapList(measureSK);
+	@RequestMapping(value = "/action_on_caregap_list/{measureId}", method = RequestMethod.GET)
+	public ResponseEntity<PatActionCareGap> actionOnCareGapList(@PathVariable("measureId") String measureId) {
+		PatActionCareGap workList = patService.actionOnCareGapList(measureId);
 		if (workList == null) {
 			return new ResponseEntity<PatActionCareGap>(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<PatActionCareGap>(workList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/get_pat/{memberId}/{measureSK}", method = RequestMethod.GET)
-	public ResponseEntity<List<Pat>> getPatById(@PathVariable("memberId") String memberId, @PathVariable("measureSK") String measureSK) {
-		List<Pat> workList = patService.getPatById(memberId, measureSK);
+	@RequestMapping(value = "/get_pat/{memberId}/{measureId}", method = RequestMethod.GET)
+	public ResponseEntity<List<Pat>> getPatById(@PathVariable("memberId") String memberId, @PathVariable("measureId") String measureId) {
+		List<Pat> workList = patService.getPatById(memberId, measureId);
 		if (workList == null) {
 			return new ResponseEntity<List<Pat>>(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<List<Pat>>(workList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/member/{mid}", method = RequestMethod.GET)
-	public ResponseEntity<DimMemeber> getMemberGapList(@PathVariable("mid") String mid) {
-		DimMemeber dimMemberGaps = patService.findMembergapListByMid(mid);
+	@RequestMapping(value = "/member/{memberId}", method = RequestMethod.GET)
+	public ResponseEntity<DimMemeber> getMemberGapList(@PathVariable("memberId") String memberId) {
+		DimMemeber dimMemberGaps = patService.findMembergapListByMid(memberId);
 		if (dimMemberGaps == null) {
-			return new ResponseEntity(new CustomErrorType("dimMemberGaps with mid " + mid 
+			return new ResponseEntity(new CustomErrorType("dimMemberGaps with mid " + memberId 
 					+ " not found"), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity((DimMemeber) dimMemberGaps, HttpStatus.OK);
@@ -100,24 +100,4 @@ public class PATController {
 		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.CREATED);
 	}	
 
-//	@RequestMapping(value = "/pat_file_import/", method = RequestMethod.POST)
-//	public ResponseEntity<RestResult> importFile(@RequestParam("file") MultipartFile uploadfile) {
-//		
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.add("Access-Control-Allow-Origin", "*");		
-//		headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-//		
-//		if (uploadfile.isEmpty()) {            
-//            return new ResponseEntity<RestResult>(RestResult.getFailRestResult("File is empty. Please select a valid file!"), headers, 
-//            		HttpStatus.BAD_REQUEST);
-//        }
-//		
-//		//storing file data in linux 
-//		RestResult restResult = patService.importFile(uploadfile);				
-//		if(RestResult.isSuccessRestResult(restResult)) {
-//			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.INTERNAL_SERVER_ERROR);	
-//		}
-//	}	
 }

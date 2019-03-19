@@ -12,6 +12,15 @@ public class QMSDateUtil {
 		return simpDate.format(date);
 	}
 	
+	public static String getPhoenixDate(String date) {
+		try {
+		    return getDate(date, "dd-MMM-yy", "yyyy-MM-dd");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
 	public static long getDateInLong (String dateStr, String dateFormat) {
 		if(dateFormat == null) dateFormat =  "dd-MMM-yy";
 		if(dateStr == null) return 0;
@@ -24,5 +33,16 @@ public class QMSDateUtil {
 		}
 		return date;
 	}
+	
+	public static String getDate(String date, String currentFormat, String expectedFormat) 
+			throws ParseException {
+		if (date == null || currentFormat == null || expectedFormat == null) {
+			return null;
+		}
+		SimpleDateFormat sourceDateFormat = new SimpleDateFormat(currentFormat);
+		Date dateObj = sourceDateFormat.parse(date);
+		SimpleDateFormat desiredDateFormat = new SimpleDateFormat(expectedFormat);
+		return desiredDateFormat.format(dateObj).toString();
+	}	
 
 }

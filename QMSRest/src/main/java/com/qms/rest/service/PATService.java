@@ -14,13 +14,11 @@ public interface PATService {
 
 	Set<String> getPopulationList();
 	Set<NameValue> getCareGapList();
-	Set<SearchAssociatedPatient> searchAssociatedPatientList(String measureSK, String mrnIdOrName);
-	PatActionCareGap actionOnCareGapList(String measureSK);	
-	List<Pat> getPatById(String patId, String measureSK);
-	DimMemeber findMembergapListByMid(String mid);
+	Set<SearchAssociatedPatient> searchAssociatedPatientList(String measureId, String mrnIdOrName);
+	PatActionCareGap actionOnCareGapList(String measureId);	
+	List<Pat> getPatById(String patId, String measureId);
+	DimMemeber findMembergapListByMid(String memberId);
 	
 	RestResult insertPatCreator(Pat pat);
-//	RestResult importFile(MultipartFile file);
-//	RestResult saveFileUpload(PatFileUpload fileUpload);	
 	
 }

@@ -75,16 +75,16 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			
 			String membergplistQry = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER, DD.DATE_SK,"
 			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')) AS DATE_OF_BIRTH,"
-			+"GIC1.QUALITY_MEASURE_ID, (GIC1.INTERVENTIONS) AS INTERVENTIONS, GIC1.STATUS AS STATUS, QM.MEASURE_TITLE, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE,"
+			+"GIC1.QUALITY_MEASURE_ID, (GIC1.INTERVENTIONS) AS INTERVENTIONS, GIC1.STATUS AS STATUS, QM.MEASURE_NAME, MIN(GIC1.GAP_DATE) AS START_DATE, MAX(GIC2.GAP_DATE) AS END_DATE,"
 			+"FLOOR(SYSDATE - MAX(CAST(GIC1.GAP_DATE AS DATE))) AS DURATION, GIC1.PRIORITY AS PRIORITY, GIC1.TARGET_DATE " 
 			+"FROM DIM_MEMBER DM "
 			+"INNER JOIN QMS_GIC_LIFECYCLE GIC1 ON GIC1.MEMBER_ID = DM.MEMBER_ID " 
 			+"LEFT OUTER JOIN QMS_GIC_LIFECYCLE GIC2 ON GIC1.QUALITY_MEASURE_ID = GIC2.QUALITY_MEASURE_ID AND GIC1.MEMBER_ID = GIC2.MEMBER_ID " 
-			+"INNER JOIN DIM_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID " 
+			+"INNER JOIN QMS_QUALITY_MEASURE QM ON GIC1.QUALITY_MEASURE_ID=QM.QUALITY_MEASURE_ID " 
 			+"INNER JOIN DIM_DATE DD ON DD.DATE_SK = DM.DATE_OF_BIRTH_SK " 
 			+"WHERE DM.MEMBER_ID='"+mid+"' " 
 			+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER, DD.DATE_SK, GIC1.PRIORITY,GIC1.INTERVENTIONS, GIC1.STATUS,"
-			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')), GIC1.QUALITY_MEASURE_ID, QM.MEASURE_TITLE, GIC1.TARGET_DATE " 
+			+"(TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')), GIC1.QUALITY_MEASURE_ID, QM.MEASURE_NAME, GIC1.TARGET_DATE " 
 			+"order by max(GIC1.GAP_DATE) desc";
 			//String membergplistQry = "SELECT * FROM FINDMEMGAPLISTBYMID WHERE MEMBER_ID = '"+mid+"' ORDER BY START_DATE DESC";
 			
@@ -109,7 +109,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 				qmsGicLifyCycleMap.put(resultSet.getString("QUALITY_MEASURE_ID"), qmsGicLifecycle);
 				
 				FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
-				factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
+				factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_NAME"));
 				factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 			//	factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
 				//factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
@@ -142,7 +142,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 					qmsGicLifyCycleMap.put(resultSet.getString("QUALITY_MEASURE_ID"), qmsGicLifecycle);
 					
 					FactHedisGapsInCare factHedisGapsInCare = new FactHedisGapsInCare();
-					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_TITLE"));
+					factHedisGapsInCare.setMeasureTitle(resultSet.getString("MEASURE_NAME"));
 					factHedisGapsInCare.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 				//	factHedisGapsInCare.setStart_date(resultSet.getString("START_DATE"));
 			//		factHedisGapsInCare.setEnd_date(resultSet.getString("END_DATE"));
@@ -303,6 +303,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 //					"FLOOR(DATEDIFF('2018-12-31',(CONCAT(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2))))/365.25),\n" + 
 //					"DM.GENDER, CONCAT(DP.FIRST_NAME,' ',DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE";
 			
+			/*
 			//oracle query
 			String memberCregapList = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER,"
 			+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) AS AGE,"
@@ -320,6 +321,25 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID,DQM.QUALITY_MEASURE_SK order by GIC.GAP_DATE DESC";
 			
 			//String memberCregapList = "SELECT * FROM FINDMEMGAPLISTFORALL ORDER BY TIME_PERIOD DESC";
+			
+			*/
+			
+			
+			String memberCregapList = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER,"
+					+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) AS AGE,"
+					+"(DP.FIRST_NAME||' '||DP.LAST_NAME) AS PCP, DQM.MEASURE_NAME AS CARE_GAPS, GIC.STATUS,GIC.QUALITY_MEASURE_ID,"
+					+"COUNT(DQM.MEASURE_NAME) AS COUNT_OF_CARE_GAPS, DPP.PLAN_NAME AS PLAN, GIC.GAP_DATE AS TIME_PERIOD, GIC.COMPLIANCE_POTENTIAL,DQM.QUALITY_MEASURE_ID "
+					+"FROM QMS_GIC_LIFECYCLE GIC "
+					+"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_ID = GIC.MEMBER_ID " 
+					+"INNER JOIN FACT_MEM_ATTRIBUTION FMA ON FMA.MEMBER_SK = DM.MEMBER_SK " 
+					+"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FMA.PROVIDER_SK "
+					+"INNER JOIN QMS_QUALITY_MEASURE DQM ON DQM.QUALITY_MEASURE_ID = GIC.QUALITY_MEASURE_ID " 
+					+"INNER JOIN DIM_PRODUCT_PLAN DPP ON DPP.PRODUCT_PLAN_ID = GIC.PRODUCT_PLAN_ID "
+					+"WHERE GIC.GAP_DATE <= SYSDATE "
+					+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER,GIC.COMPLIANCE_POTENTIAL,"
+					+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25),"
+					+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_NAME, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID,DQM.QUALITY_MEASURE_ID order by GIC.GAP_DATE DESC";
+
 			
 			resultSet = statement.executeQuery(memberCregapList);
 			Map<String, Set<Integer>> countCareGapMap = new HashMap<>(); 
@@ -343,7 +363,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 					memberCareGaps.setName(resultSet.getString("NAME"));
 					memberCareGaps.setRiskGrade("LOW");
 					memberCareGaps.setCompliancePotential(resultSet.getString("COMPLIANCE_POTENTIAL"));
-					memberCareGaps.setMeasureSK(resultSet.getString("QUALITY_MEASURE_SK"));
+					memberCareGaps.setMeasureSK(resultSet.getString("QUALITY_MEASURE_ID"));
 					memberCareGaps.setCountOfCareGaps(1);
 					//For care gaps
 					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
@@ -353,7 +373,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
 					memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
 					memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
-					
+		
 					memberCareGaps.setMembers(new ArrayList<MemberCareGaps>());
 					memberCareGaps.getMembers().add(memberCareGaps2);
 					members.put(mapKey, memberCareGaps);

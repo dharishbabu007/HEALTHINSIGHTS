@@ -217,7 +217,27 @@ public class UserRoleServiceImpl implements UserRoleService{
 
 	@Override
 	public String getRole(String roleId) {
-		return null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		String roleName = null;
+		
+		try {						
+			connection = qmsConnection.getPhoenixConnection();
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery("select ROLE_NAME from QMS.QMS_ROLE where ROLE_ID="+roleId);
+			while (resultSet.next()) {
+				roleName = resultSet.getString("ROLE_NAME"); 
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+		return roleName;
 	}
 	
 	//api to return all the pages

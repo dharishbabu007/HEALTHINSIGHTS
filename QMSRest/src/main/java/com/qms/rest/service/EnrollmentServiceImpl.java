@@ -1,5 +1,8 @@
 package com.qms.rest.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,11 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.EnrollmentFileOutput;
+import com.qms.rest.model.FactGoalInterventions;
 import com.qms.rest.model.FactGoalRecommendations;
+import com.qms.rest.model.FileDownload;
 import com.qms.rest.model.GoalRecommendationSet;
 import com.qms.rest.model.GoalRecommendationSetData;
+import com.qms.rest.model.NameValue;
 import com.qms.rest.model.Objectives;
 import com.qms.rest.model.PersonaMemberListView;
+import com.qms.rest.model.RefCalorieIntake;
+import com.qms.rest.model.RefPhysicalActivity;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RewardRecommendationSet;
 import com.qms.rest.model.RewardsFileOutput;
@@ -160,7 +168,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	
 	@Override
 	public Objectives getObjectivesByTitle(String title) {
-
 		Objectives objectivesList = new Objectives();
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -186,8 +193,151 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		}
 		return objectivesList;
 	}
+	
+	//=================================================
+	
+	public Set<NameValue> getQmsRewardId(String reward) {
+		Set<NameValue> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();	
+			resultSet = statement.executeQuery("select distinct * from QMS_REF_REWARD where REWARD = '"+reward+"'");
+			String data = null;
+			NameValue nameValue = null;
+			while (resultSet.next()) {
+				data = resultSet.getString("REWARD");
+				if(data != null && !data.trim().isEmpty() && !data.equalsIgnoreCase("n/a") && !data.equalsIgnoreCase("#n/a")) {
+					nameValue = new NameValue();
+					nameValue.setName(resultSet.getString("REWARD"));
+					nameValue.setValue(resultSet.getString("REWARD_ID"));
+					dataSet.add(nameValue);			
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet;		
+	}
+	
 
-
+	@Override
+	public Set<NameValue> getQmsQualityMeasureId(String memberId) {
+		Set<NameValue> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();	
+			resultSet = statement.executeQuery("select distinct q.quality_measure_id, q.measure_name,l.status"
+					+ " from QMS_QUALITY_MEASURE q"
+					+ " inner join QMS_GIC_LIFECYCLE l on l.QUALITY_MEASURE_ID=q.quality_measure_id"
+					+ " where l.member_id = '"+memberId+"'");
+			String data = null;
+			NameValue nameValue = null;
+			while (resultSet.next()) {
+				data = resultSet.getString("measure_name");
+				if(data != null && !data.trim().isEmpty() && !data.equalsIgnoreCase("n/a") && !data.equalsIgnoreCase("#n/a")) {
+					nameValue = new NameValue();
+					nameValue.setName(resultSet.getString("measure_name"));
+					nameValue.setValue(resultSet.getString("quality_measure_id"));
+					dataSet.add(nameValue);			
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet;		
+	}
+	
+	@Override
+	public Set<RefPhysicalActivity> getQmsRefPhysicalActivityFrequency(String goal) {
+		Set<RefPhysicalActivity> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from QMS_REF_PHYSICAL_ACTIVITY where GOAL='"+goal+"'");
+			RefPhysicalActivity qmsRefPhysicalActivity = null;
+			while (resultSet.next()) {
+					qmsRefPhysicalActivity = new RefPhysicalActivity();
+					qmsRefPhysicalActivity.setFrequency(resultSet.getString("FREQUENCY"));
+					dataSet.add(qmsRefPhysicalActivity);			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet;		
+	}
+	
+	@Override
+	public Set<RefPhysicalActivity> getQmsRefPhysicalActivity(String goal, String frequency) {
+		Set<RefPhysicalActivity> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from QMS_REF_PHYSICAL_ACTIVITY where GOAL='"+goal+"' and FREQUENCY='"+frequency+"'");
+			RefPhysicalActivity qmsRefPhysicalActivity = null;
+			while (resultSet.next()) {
+					qmsRefPhysicalActivity = new RefPhysicalActivity();
+					qmsRefPhysicalActivity.setRefId(resultSet.getString("REF_ID"));
+					qmsRefPhysicalActivity.setGoal(resultSet.getString("GOAL"));
+					qmsRefPhysicalActivity.setFrequency(resultSet.getString("FREQUENCY"));
+					dataSet.add(qmsRefPhysicalActivity);			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet;		
+	}
+	
+	@Override
+	public Set<RefCalorieIntake> getQmsRefCalorieIntake(String goal, String frequency) {
+		Set<RefCalorieIntake> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select * from QMS_REF_CALORIE_INTAKE where GOAL='"+goal+"' and FREQUENCY='"+frequency+"'");
+			RefCalorieIntake qmsRefCalorieIntake = null;
+			while (resultSet.next()) {
+					qmsRefCalorieIntake = new RefCalorieIntake();
+					qmsRefCalorieIntake.setRefId(resultSet.getString("REF_ID"));
+					qmsRefCalorieIntake.setGoal(resultSet.getString("GOAL"));
+					qmsRefCalorieIntake.setFrequency(resultSet.getString("FREQUENCY"));
+					dataSet.add(qmsRefCalorieIntake);			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return dataSet;		
+	}
+	
 	public Set<String> getCareGapListByMemberId(String memberId) {
 		Set<String> dataSet = new HashSet<>();
 
@@ -198,17 +348,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
 
-			resultSet = statement.executeQuery("select distinct q.measure_name,l.status from QMS_QUALITY_MEASURE q"
-					+ " inner join QMS_GIC_LIFECYCLE l on l.QUALITY_MEASURE_ID=q.quality_measure_id"
-					+ " where l.member_id = '" + memberId + "'");
-
-			String data = null;
+			resultSet = statement.executeQuery("select distinct q.quality_measure_id, q.measure_name,l.status"
+											+ " from QMS_QUALITY_MEASURE q"
+											+ " inner join QMS_GIC_LIFECYCLE l on l.QUALITY_MEASURE_ID=q.quality_measure_id"
+											+ " where l.member_id = '"+memberId+"'");
+			String measureName = null;
 			String status = null;
 			while (resultSet.next()) {
 				status = resultSet.getString("status");
 				if(status != null && !status.equalsIgnoreCase("Close by Payer")) {
-					data = resultSet.getString("measure_name");
-					dataSet.add(data);
+					measureName=resultSet.getString("measure_name");				
+					dataSet.add(measureName);
 				}
 			}
 		} catch (Exception e) {
@@ -219,6 +369,126 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		return dataSet;
 	}
 	
+	
+	@Override
+	public FactGoalInterventions getFactGoalInterventions(String memberId) {
+		FactGoalInterventions factGoalInterventions = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String query = "select * from QMS_FACT_GOAL_INTERVENTIONS where MEMBER_ID='"+memberId+"' ";
+			resultSet = statement.executeQuery(query);		
+			while (resultSet.next()) {
+				factGoalInterventions = new FactGoalInterventions();	
+				factGoalInterventions.setGoalSetId(resultSet.getString("GOAL_SET_ID"));
+				factGoalInterventions.setMemberId(resultSet.getString("MEMBER_ID"));
+				factGoalInterventions.setName(resultSet.getString("NAME"));
+				factGoalInterventions.setAge(resultSet.getString("AGE"));
+				factGoalInterventions.setGender(resultSet.getString("GENDER"));
+				factGoalInterventions.setPersona(resultSet.getString("PERSONA"));
+				factGoalInterventions.setPreferredGoal(resultSet.getString("PREFERRED_GOAL"));
+				factGoalInterventions.setWeight(resultSet.getString("WEIGHT"));
+				factGoalInterventions.setCurrentCalorieIntake(resultSet.getString("CURRENT_CALORIE_INTAKE"));
+				factGoalInterventions.setNumberOfChronicDiseases(resultSet.getString("NUMBER_OF_CHRONIC_DISEASES"));
+				factGoalInterventions.setAddictions(resultSet.getString("ADDICTIONS"));
+				factGoalInterventions.setPhysicalActivityId(resultSet.getString("PHYSICAL_ACTIVITY_ID"));
+				factGoalInterventions.setPhysicalActivityGoal(resultSet.getString("PHYSICAL_ACTIVITY_GOAL"));
+				factGoalInterventions.setPhysicalActivityFrequency(resultSet.getString("PHYSICAL_ACTIVITY_FREQUENCY"));
+				factGoalInterventions.setPhysicalActivityDate(resultSet.getString("PHYSICAL_ACTIVITY_DATE"));
+				factGoalInterventions.setCalorieIntakeId(resultSet.getString("CALORIE_INTAKE_ID"));
+				factGoalInterventions.setCalorieIntakeGoal(resultSet.getString("CALORIE_INTAKE_GOAL"));
+				factGoalInterventions.setCalorieIntakeFrequency(resultSet.getString("CALORIE_INTAKE_FREQUENCY"));
+				factGoalInterventions.setCalorieIntakeDate(resultSet.getString("CALORIE_INTAKE_DATE"));
+				factGoalInterventions.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+				factGoalInterventions.setCareGap(resultSet.getString("CARE_GAP"));
+				factGoalInterventions.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));
+				factGoalInterventions.setInterventions(resultSet.getString("INTERVENTIONS"));
+				factGoalInterventions.setCurrFlag(resultSet.getString("CURR_FLAG"));
+				factGoalInterventions.setRecCreateDate(resultSet.getString("REC_CREATE_DATE"));
+				factGoalInterventions.setRecUpdateDate(resultSet.getString("REC_UPDATE_DATE"));
+				factGoalInterventions.setLatestFlag(resultSet.getString("LATEST_FLAG"));
+				factGoalInterventions.setActiveFlag(resultSet.getString("ACTIVE_FLAG"));
+				factGoalInterventions.setIngestionDate(resultSet.getString("INGESTION_DATE"));
+				factGoalInterventions.setSourceName(resultSet.getString("SOURCE_NAME"));
+				factGoalInterventions.setUserName(resultSet.getString("USER_NAME"));
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		return factGoalInterventions;
+	}
+	
+
+	@Override
+	public RestResult updateFactGoalInterventions(FactGoalInterventions factGoalInterventions) {
+		String sqlStatement = 			
+				"update QMS_FACT_GOAL_INTERVENTIONS set"
+				+"GOAL_SET_ID=?,MEMBER_ID=?,NAME=?,AGE=?,GENDER=?,PERSONA=?,"
+				+"PREFERRED_GOAL=?,WEIGHT=?,CURRENT_CALORIE_INTAKE=?,"
+				+"NUMBER_OF_CHRONIC_DISEASES=?,ADDICTIONS=?,PHYSICAL_ACTIVITY_ID=?,"
+				+"PHYSICAL_ACTIVITY_GOAL=?,PHYSICAL_ACTIVITY_FREQUENCY=?,"
+				+"PHYSICAL_ACTIVITY_DATE=?,CALORIE_INTAKE_ID=?,CALORIE_INTAKE_GOAL=?,"
+				+"CALORIE_INTAKE_FREQUENCY=?,CALORIE_INTAKE_DATE=?,QUALITY_MEASURE_ID=?,"
+				+"CARE_GAP=?,CARE_GAP_DATE=?,INTERVENTIONS=?";
+					
+		PreparedStatement statement = null;
+		Connection connection = null;
+		User userData1 = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
+
+		try {
+			connection = qmsConnection.getOracleConnection();
+			int i = 0;
+			Date date = new Date();
+			Timestamp timestamp = new Timestamp(date.getTime());
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(++i, factGoalInterventions.getGoalSetId());
+			statement.setString(++i, factGoalInterventions.getMemberId());
+			statement.setString(++i, factGoalInterventions.getName());
+			statement.setString(++i, factGoalInterventions.getAge());
+			statement.setString(++i, factGoalInterventions.getGender());
+			statement.setString(++i, factGoalInterventions.getPersona());
+			statement.setString(++i, factGoalInterventions.getPreferredGoal());
+			statement.setString(++i, factGoalInterventions.getWeight());
+			statement.setString(++i, factGoalInterventions.getCurrentCalorieIntake());
+			statement.setString(++i, factGoalInterventions.getNumberOfChronicDiseases());
+			statement.setString(++i, factGoalInterventions.getAddictions());
+			statement.setString(++i, factGoalInterventions.getPhysicalActivityId());
+			statement.setString(++i, factGoalInterventions.getPhysicalActivityGoal());
+			statement.setString(++i, factGoalInterventions.getPhysicalActivityFrequency());
+			statement.setString(++i, factGoalInterventions.getPhysicalActivityDate());
+			statement.setString(++i, factGoalInterventions.getCalorieIntakeId());
+			statement.setString(++i, factGoalInterventions.getCalorieIntakeGoal());
+			statement.setString(++i, factGoalInterventions.getCalorieIntakeFrequency());
+			statement.setString(++i, factGoalInterventions.getCalorieIntakeDate());
+			statement.setString(++i, factGoalInterventions.getQualityMeasureId());
+			statement.setString(++i, factGoalInterventions.getCareGapDate());
+			statement.setString(++i, factGoalInterventions.getInterventions());
+			statement.setString(++i, "Y");
+			statement.setTimestamp(++i, timestamp);
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i,"Y");
+			statement.setString(++i,"A");
+			statement.setTimestamp(++i, timestamp);
+			statement.setString(++i, "UI");
+			if (userData1 != null && userData1.getName() != null)
+				statement.setString(++i, userData1.getName());
+			else
+				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+			statement.executeUpdate();
+			return RestResult.getSucessRestResult("Fact Goal Interventions update sucess. ");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestResult.getFailRestResult(e.getMessage());
+		} finally {
+			qmsConnection.closeJDBCResources(null, statement, connection);
+		}
+	}	
+
 	@Override
 	public FactGoalRecommendations getFactGoalRecommendations(String memberId) {
 		FactGoalRecommendations factGoalRecommendations = null;
@@ -250,6 +520,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				factGoalRecommendations.setCurrentCalorieIntake(resultSet.getString("CURRENT_CALORIE_INTAKE"));
 				factGoalRecommendations.setNumberOfChronicDiseases(resultSet.getString("NUMBER_OF_CHRONIC_DISEASES"));
 				factGoalRecommendations.setAddictions(resultSet.getString("ADDICTIONS"));
+				factGoalRecommendations.setPhysicalActivityId(resultSet.getString("PHYSICAL_ACTIVITY_ID"));
+				factGoalRecommendations.setCalorieIntakeId(resultSet.getString("CALORIE_INTAKE_ID"));
+				factGoalRecommendations.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -266,8 +539,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				"update QMS_FACT_GOAL_RECOMMENDATIONS set "
 				+ "PHYSICAL_ACTIVITY_GOAL=?,PHYSICAL_ACTIVITY_FREQUENCY=?,PHYSICAL_ACTIVITY_DATE=?,"
 				+ "CALORIE_INTAKE_GOAL=?,CALORIE_INTAKE_FREQUENCY=?,CALORIE_INTAKE_DATE=?,"
-				+ "CARE_GAP=?,CARE_GAP_DATE=? where MEMBER_ID=?";
-				
+				+ "CARE_GAP=?,CARE_GAP_DATE=?,,PHYSICAL_ACTIVITY_ID=?,CALORIE_INTAKE_ID=?,"
+				+ "QUALITY_MEASURE_ID=? where MEMBER_ID=?";				
 		PreparedStatement statement = null;
 		Connection connection = null;
 		try {
@@ -283,6 +556,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 			statement.setString(++i, factGoalRecommendations.getCareGap());
 			statement.setString(++i, factGoalRecommendations.getCareGapDate());
 			statement.setString(++i, factGoalRecommendations.getMemberId());
+			statement.setString(++i, factGoalRecommendations.getPhysicalActivityId());
+			statement.setString(++i, factGoalRecommendations.getCalorieIntakeId());
+			statement.setString(++i, factGoalRecommendations.getQualityMeasureId());
 			statement.executeUpdate();
 			
 			return RestResult.getSucessRestResult("Fact Goal Recommendations update sucess. ");
@@ -302,8 +578,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				+ ",PERSONA,PREFERRED_GOAL,CURRENT_CALORIE_INTAKE,NUMBER_OF_CHRONIC_DISEASES"
 				+ ",ADDICTIONS,PHYSICAL_ACTIVITY_GOAL,PHYSICAL_ACTIVITY_FREQUENCY,PHYSICAL_ACTIVITY_DATE"
 				+ ",CALORIE_INTAKE_GOAL,CALORIE_INTAKE_FREQUENCY,CALORIE_INTAKE_DATE,CARE_GAP,CARE_GAP_DATE"
-				+ ",CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) "
-				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ ",CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,ACTIVE_FLAG,INGESTION_DATE,"
+				+ "SOURCE_NAME,USER_NAME,PHYSICAL_ACTIVITY_ID,CALORIE_INTAKE_ID,QUALITY_MEASURE_ID)"
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 				
 		PreparedStatement statement = null;
 		Connection connection = null;
@@ -345,7 +622,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 			statement.setString(++i, factGoalRecommendations.getCurrentCalorieIntake());
 			statement.setString(++i, factGoalRecommendations.getNumberOfChronicDiseases());
 			statement.setString(++i, factGoalRecommendations.getAddictions());
-			
+			statement.setString(++i, factGoalRecommendations.getPhysicalActivityId());
+			statement.setString(++i, factGoalRecommendations.getCalorieIntakeId());
+			statement.setString(++i, factGoalRecommendations.getQualityMeasureId());
 			statement.setString(++i, "Y");
 			statement.setTimestamp(++i, timestamp);
 			statement.setTimestamp(++i, timestamp);
@@ -612,8 +891,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		String sqlStatementInsert = "insert into QMS_REWARDS_RECOMMENDATIONS"
 									+ "(REWARD_REC_ID,MEMBER_ID,NAME,AGE,GENDER,WEIGHT," 
 									+ "PERSONA,PREFERRED_REWARD,MOTIVATIONS,CATEGORY,"
-									+ "GOAL,FREQUENC,GOAL_DATE,REWARD) "
-									+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+									+ "GOAL,FREQUENC,GOAL_DATE,REWARD,REWARD_ID) "
+									+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		PreparedStatement statement = null;
 		Connection connection = null;
@@ -662,6 +941,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				statement.setString(++i, userData1.getName());
 			else
 				statement.setString(++i, QMSConstants.MEASURE_USER_NAME);
+			statement.setString(++i, rewardsRecommendations.getRewardId());			
 			statement.executeUpdate();
 			// httpSession.setAttribute(QMSConstants.SESSION_PAT_ID,
 			// factGoalRecId + "");
@@ -751,7 +1031,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				goalRecommendationSet.setAge(resultSet.getString("AGE"));
 				goalRecommendationSet.setGender(resultSet.getString("GENDER"));
 				goalRecommendationSet.setPersona(resultSet.getString("PERSONA"));
-				
 				goalRecommendationSetData.setPhysicalActivityGoal(resultSet.getString("PHYSICAL_ACTIVITY_GOAL"));
 				goalRecommendationSetData.setPhysicalActivityFrequency(resultSet.getString("PHYSICAL_ACTIVITY_FREQUENCY"));
 				goalRecommendationSetData.setPhysicalActivityDate(resultSet.getString("PHYSICAL_ACTIVITY_DATE"));
@@ -761,9 +1040,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				goalRecommendationSetData.setCareGap(resultSet.getString("CARE_GAP"));
 				goalRecommendationSetData.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));				
 			}
-			
 			resultSet.close();
-			query = "select * from Qms_Fact_Goal_Set";
+			
+			query = "select * from QMS_FACT_GOAL_INTERVENTIONS";
 			resultSet = statement.executeQuery(query);			
 			while (resultSet.next()) {
 				memberId = resultSet.getString("MEMBER_ID");
@@ -771,7 +1050,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				if(goalRecommendationSet == null) {
 					goalRecommendationSet = new GoalRecommendationSet();
 					goalRecommendationSetMap.put(memberId, goalRecommendationSet);
-					
 					goalRecommendationSet.setMemberId(resultSet.getString("MEMBER_ID"));
 					goalRecommendationSet.setName(resultSet.getString("NAME"));
 					goalRecommendationSet.setAge(resultSet.getString("AGE"));
@@ -788,8 +1066,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				goalRecommendationSetData.setCalorieIntakeDate(resultSet.getString("CALORIE_INTAKE_DATE"));
 				goalRecommendationSetData.setCareGap(resultSet.getString("CARE_GAP"));
 				goalRecommendationSetData.setCareGapDate(resultSet.getString("CARE_GAP_DATE"));
-			}			
-			
+			}					
 			goalRecommendationListSet.addAll(goalRecommendationSetMap.values());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -832,6 +1109,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 				rewardRecommendationSet.setGoal(resultSet.getString("GOAL"));
 				rewardRecommendationSet.setFrequency(resultSet.getString("FREQUENCY"));
 				rewardRecommendationSet.setRewardRecommendation(resultSet.getString("REWARD"));
+				rewardRecommendationSet.setRewardId(resultSet.getString("REWARD_ID"));
+				
 			}
 			
 			resultSet.close();
@@ -855,9 +1134,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 					rewardRecommendationSet.setMotivations(resultSet.getString("MOTIVATIONS"));
 					rewardRecommendationSet.setCategory(resultSet.getString("CATEGORY"));
 					rewardRecommendationSet.setGoal(resultSet.getString("GOAL"));
-					rewardRecommendationSet.setFrequency(resultSet.getString("FREQUENCY"));								
+					rewardRecommendationSet.setFrequency(resultSet.getString("FREQUENCY"));
+					rewardRecommendationSet.setRewardId(resultSet.getString("REWARD_ID"));
 				} 
-				rewardRecommendationSet.setRewardSet(resultSet.getString("REWARD"));	
+				rewardRecommendationSet.setRewardSet(resultSet.getString("REWARD"));
+				rewardRecommendationSet.setRewardId(resultSet.getString("REWARD_ID"));
 			}						
 			rewardRecommendationListSet.addAll(rewardRecommendationSetMap.values());
 		} catch (Exception e) {
@@ -868,4 +1149,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 		return rewardRecommendationListSet;
 	}
 
+	@Override
+	public Set<NameValue> getCareGapMemberId1(String memberId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

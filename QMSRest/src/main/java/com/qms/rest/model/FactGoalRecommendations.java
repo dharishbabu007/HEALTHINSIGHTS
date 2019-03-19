@@ -34,5 +34,8 @@ public class FactGoalRecommendations {
 	private String currentCalorieIntake;
 	private String numberOfChronicDiseases;
 	private String addictions;
-	
+	private String physicalActivityId;
+	private String calorieIntakeId;
+	private String qualityMeasureId;
+
 }
