@@ -228,6 +228,10 @@ object KpiConstants {
   val mandatoryExclDfname = "mandatoryExcl_df"
   val optionalExclDfName = "optionalExcl_df"
   val numeratorDfName = "numerator_df"
+  val numerator2DfName = "numerator2_df"
+  val numerator3DfName = "numerator3_df"
+  val numerator4DfName = "numerator4_df"
+  val numerator5DfName = "numerator5_df"
 
 
   /*Measure Title constants*/
