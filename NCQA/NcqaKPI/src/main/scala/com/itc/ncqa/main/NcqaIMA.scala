@@ -6,6 +6,8 @@ import com.itc.ncqa.Constants
 import com.itc.ncqa.Constants.KpiConstants
 import com.itc.ncqa.Functions.{DataLoadFunctions, UtilFunctions}
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.storage.StorageLevel
 //import com.itc.ncqa.Functions.SparkObject._
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Row, SaveMode}
@@ -47,11 +49,12 @@ object NcqaIMA {
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .set("hive.exec.dynamic.partition.mode", "nonstrict")
     val spark = SparkSession.builder().config(conf).enableHiveSupport().getOrCreate()
+    import spark.implicits._
     //</editor-fold>
 
     //<editor-fold desc="Loading Required Tables to memory">
 
-    import spark.implicits._
+
 
 
     val aLiat = List("col1")
@@ -99,15 +102,17 @@ object NcqaIMA {
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
                                       .filter(($"${KpiConstants.measureIdColName}".===(KpiConstants.imaMeasureId)) || ($"${KpiConstants.measureIdColName}".===(KpiConstants.ggMeasureId)))
                                       .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-                                      .cache()
-    refHedisDf.count()
+
+
+    broadcast(refHedisDf)
+    //refHedisDf.count()
 
     val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refmedValueSetTblName)
                                              .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.imaMeasureId))
                                              .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-                                             .cache()
 
-    ref_medvaluesetDf.count()
+
+    broadcast(ref_medvaluesetDf)
 
    // println("counts of the dataframe:"+membershipDf.count()+","+ visitsDf.count())
    /* val argMapForValidVisits = mutable.Map(KpiConstants.eligibleDfName -> visitsDf, KpiConstants.refHedisTblName -> refHedisDf)
@@ -124,7 +129,7 @@ object NcqaIMA {
     val ageEndDate = year + "-12-31"
     val ageStartDate = year + "-01-01"
 
-    val ageFilterDf = membershipDf.filter((add_months($"${KpiConstants.dateofbirthColName}",KpiConstants.months156).>=(ageStartDate)) && (add_months($"${KpiConstants.dateofbirthColName}",KpiConstants.months156).<=(ageEndDate)))
+    val ageFilterDf = membershipDf.filter((UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}",KpiConstants.months156).>=(ageStartDate)) && (UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}",KpiConstants.months156).<=(ageEndDate)))
 
     /*  ageFilterDf.select(KpiConstants.memberidColName).coalesce(1)
         .write
@@ -141,9 +146,9 @@ object NcqaIMA {
 
     val benNonMedRemDf = inputForContEnrolldf.filter($"${KpiConstants.benefitMedicalColname}".===(KpiConstants.yesVal))
     // val argMapForContEnrollFunction = mutable.Map(KpiConstants.ageStartKeyName -> "12", )
-    val contEnrollInDf = benNonMedRemDf.withColumn(KpiConstants.contenrollLowCoName, add_months($"${KpiConstants.dateofbirthColName}", KpiConstants.months144))
-      .withColumn(KpiConstants.contenrollUppCoName, add_months($"${KpiConstants.dateofbirthColName}", KpiConstants.months156))
-      .withColumn(KpiConstants.anchorDateColName, add_months($"${KpiConstants.dateofbirthColName}", KpiConstants.months156))
+    val contEnrollInDf = benNonMedRemDf.withColumn(KpiConstants.contenrollLowCoName,UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}", KpiConstants.months144))
+      .withColumn(KpiConstants.contenrollUppCoName,UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}", KpiConstants.months156))
+      .withColumn(KpiConstants.anchorDateColName, UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}", KpiConstants.months156))
 
 
 
@@ -274,7 +279,7 @@ object NcqaIMA {
                                         .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName, KpiConstants.admitDateColName, KpiConstants.dischargeDateColName,
                                                 KpiConstants.dobColName,KpiConstants.supplflagColName, KpiConstants.valuesetColName)
 
-    val indLabVisRemDf = visitgroupedDf.filter(!array_contains($"${KpiConstants.valuesetColName}",KpiConstants.independentLabVal)).cache()
+    val indLabVisRemDf = visitgroupedDf.filter(!array_contains($"${KpiConstants.valuesetColName}",KpiConstants.independentLabVal)).repartition(90).cache()
     indLabVisRemDf.count()
 
     //</editor-fold>
@@ -305,49 +310,68 @@ object NcqaIMA {
 
     //val eligibleMemDf = hospiceRemovedMemsDf.select(KpiConstants.memberidColName).distinct().intersect(validVisitsDf.select(KpiConstants.memberidColName)).dropDuplicates()
     val totalPopOutDf = imaContEnrollDf.filter($"${KpiConstants.memberidColName}".isin(totalPopmemidDf:_*))
-      .select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName).dropDuplicates().cache()
-    totalPopOutDf.count()
+      .select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.payerColName).dropDuplicates()
 
+    val msrList = List(KpiConstants.imahpvMeasureId, KpiConstants.imamenMeasureId, KpiConstants.imatdMeasureId,
+                       KpiConstants.imacmb1MeasureId, KpiConstants.imacmb2MeasureId)
 
-    totalPopOutDf.coalesce(1)
+    val lobNameList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName)
+    val remMsrlist = List(KpiConstants.imacmb1MeasureId)
+    val toutStrDf = UtilFunctions.toutOutputCreation(spark,totalPopOutDf,msrList,lobNameList,remMsrlist)
+                                 .select(KpiConstants.memberidColName, KpiConstants.ncqaOutPayerCol, KpiConstants.ncqaOutMeasureCol)
+                                 .repartition(20)
+
+    toutStrDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
-      .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/tout/")
+      .parquet("/home/hbase/ncqa/ima_test_out/tout/")
 
-    val eligiblePopDf = totalPopOutDf.select(KpiConstants.memberidColName).distinct()
-
+    val eligiblePopDf = totalPopOutDf.select(KpiConstants.memberidColName).distinct().repartition(90).cache()
+    eligiblePopDf.count()
     //</editor-fold>
 
     //<editor-fold desc="Dinominator calculation">
 
-    val denominatorPopDf = eligiblePopDf
-    denominatorPopDf.cache()
-    denominatorPopDf.count()
+    val denominatorDf = eligiblePopDf
+    denominatorDf.repartition(10).cache()
+    denominatorDf.count()
     //</editor-fold>
 
     //<editor-fold desc="Initial join function">
 
-    val argmapForVisittJoin = mutable.Map(KpiConstants.membershipTblName -> denominatorPopDf , KpiConstants.visitTblName -> indLabVisRemDf)
-    val visitJoinedDf = UtilFunctions.initialJoinFunction(spark,argmapForVisittJoin).cache()
-    visitJoinedDf.count()
+    val argmapForVisittJoin = mutable.Map(KpiConstants.membershipTblName -> denominatorDf , KpiConstants.visitTblName -> indLabVisRemDf)
+    val visitJoinedOutDf = UtilFunctions.initialJoinFunction(spark,argmapForVisittJoin)
+    visitJoinedOutDf.count()
+    visitJoinedOutDf.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .parquet("/home/hbase/ncqa/ima_test_out/visitJoinedDf/")
+
+    refHedisDf.unpersist()
+    ref_medvaluesetDf.unpersist()
+    imaContEnrollDf.unpersist()
     indLabVisRemDf.unpersist()
+    eligiblePopDf.unpersist()
+    denominatorDf.unpersist()
     //</editor-fold>
 
     //<editor-fold desc="IMA tmp Numerator Calculation">
 
+    val visitJoinedDf = spark.read.parquet("/home/hbase/ncqa/ima_test_out/visitJoinedDf/").repartition(20).cache()
+    visitJoinedDf.count()
     val visitNonSuppDf = visitJoinedDf.filter($"${KpiConstants.supplflagColName}".===("N")).cache()
     visitNonSuppDf.count()
-    val dfMapForCalculation = mutable.Map(KpiConstants.eligibleDfName -> visitNonSuppDf,KpiConstants.refHedisTblName -> refHedisDf
-      ,KpiConstants.refmedValueSetTblName -> ref_medvaluesetDf)
+    val toutDf = spark.read.parquet("/home/hbase/ncqa/ima_test_out/tout/")
+    val denominatorPopDf = toutDf.select(KpiConstants.memberidColName).distinct().cache()
+
 
 
     //<editor-fold desc="IMA Menucocal Tmp Numerator Calculation">
 
     val imaMenValueSet = List(KpiConstants.meningococcalVal)
     val imaMenNonSuppDf = visitNonSuppDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.meningococcalVal))
-      && ($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months132)))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months168))))
+      && ($"${KpiConstants.serviceDateColName}".>=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months132)))
+      && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months156))))
       .select(s"${KpiConstants.memberidColName}").cache()
 
     val imaMenOtherMemIdDf = denominatorPopDf.except(imaMenNonSuppDf)
@@ -357,17 +381,17 @@ object NcqaIMA {
 
 
     val imaMenOtherDf = visitForMenOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.meningococcalVal))
-      && ($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months132)))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months168))))
+      && ($"${KpiConstants.serviceDateColName}".>=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months132)))
+      && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months156))))
       .select(s"${KpiConstants.memberidColName}")
 
     val imaMenTmpDf = imaMenNonSuppDf.union(imaMenOtherDf).dropDuplicates().cache()
-    imaMenTmpDf.count()
-    imaMenTmpDf.select(KpiConstants.memberidColName).coalesce(1)
+
+    /*imaMenTmpDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaMenTmpDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaMenTmpDf/")*/
 
     //</editor-fold>
 
@@ -387,11 +411,11 @@ object NcqaIMA {
 
     imaHpvTmpDf.count()
 
-    imaHpvTmpDf.select(KpiConstants.memberidColName).coalesce(1)
+   /* imaHpvTmpDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaHpvTmpDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaHpvTmpDf/")*/
 
     //</editor-fold>
 
@@ -400,8 +424,8 @@ object NcqaIMA {
     val imaTdapValueSet = List(KpiConstants.tdapVacceVal)
 
     val imaTdapNonSuppDf = visitNonSuppDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.tdapVacceVal ))
-      && ($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months120)))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months168))))
+      && ($"${KpiConstants.serviceDateColName}".>=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months120)))
+      && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months156))))
       .select(s"${KpiConstants.memberidColName}")
 
 
@@ -411,19 +435,18 @@ object NcqaIMA {
       .select("df1.*")
 
     val imaTdapOtherDf = visitForTdapOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.tdapVacceVal ))
-      && ($"${KpiConstants.serviceDateColName}".>=(add_months($"${KpiConstants.dobColName}", KpiConstants.months120)))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}", KpiConstants.months168))))
+      && ($"${KpiConstants.serviceDateColName}".>=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months120)))
+      && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}", KpiConstants.months156))))
       .select(s"${KpiConstants.memberidColName}")
 
     val imaTdapTmpDf = imaTdapNonSuppDf.union(imaTdapOtherDf).cache()
-
     imaTdapTmpDf.count()
 
-    imaTdapTmpDf.coalesce(1)
+   /* imaTdapTmpDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaTdapTmpDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaTdapTmpDf/")*/
 
     //</editor-fold>
 
@@ -434,7 +457,7 @@ object NcqaIMA {
     val eligMemForOptDf = denominatorPopDf.except(imaMenTmpDf.intersect(imaHpvTmpDf).intersect(imaTdapTmpDf)).cache()
 
     val visitForOptDf = visitJoinedDf.as("df1").join(eligMemForOptDf.as("df2"), KpiConstants.memberidColName)
-      .select("df1.*").cache()
+                                      .select("df1.*").cache()
     visitForOptDf.count()
 
     /*First Optinal exclusion on Non Supplement data*/
@@ -446,7 +469,8 @@ object NcqaIMA {
 
     val imaDinoExclValSet1 = List(KpiConstants.ardvVal)
     val ardvBef13yearNonSuppdf = visitNonSuppOptDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardvVal))
-                                                        &&($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156))))
+                                                        &&($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                                        &&($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}",KpiConstants.months156))))
                                                   .select(s"${KpiConstants.memberidColName}").distinct()
 
     val ardvOtherMemDf = eligMemForOptDf.except(ardvBef13yearNonSuppdf).rdd
@@ -456,25 +480,27 @@ object NcqaIMA {
     val visitArdvOtherDf = visitForOptDf.filter($"${KpiConstants.memberidColName}".isin(ardvOtherMemDf:_*))
 
     val ardvBef13yearOtherdf = visitArdvOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardvVal))
-      &&($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156))))
-      .select(s"${KpiConstants.memberidColName}")
-      .distinct()
+                                                      &&($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                                      &&($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}",KpiConstants.months156))))
+                                                .select(s"${KpiConstants.memberidColName}").distinct()
     val ardvBef13Df = ardvBef13yearNonSuppdf.union(ardvBef13yearOtherdf).cache()
     ardvBef13Df.count()
 
-      ardvBef13Df.coalesce(1)
+     /* ardvBef13Df.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
       .csv("/home/hbase/ncqa/ima_test_out/ardvBef13Df/")
-
+*/
     //</editor-fold>
 
     //<editor-fold desc="Anaphylactic Reaction Due To Serum Value Set">
 
     val filterOct1st2011 = "2011-10-01"
     val imaDinoExclValSet2 = List(KpiConstants.ardtsVal)
-    val ardtsNonSupDf = visitNonSuppOptDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardtsVal))&&($"${KpiConstants.serviceDateColName}".<=(filterOct1st2011)))
+    val ardtsNonSupDf = visitNonSuppOptDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardtsVal))
+                                               &&($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                               &&($"${KpiConstants.serviceDateColName}".<(filterOct1st2011)))
                                          .select(s"${KpiConstants.memberidColName}").distinct()
 
     val ardtsOtherMemDf = eligMemForOptDf.except(ardtsNonSupDf).rdd
@@ -483,16 +509,18 @@ object NcqaIMA {
 
     val visitArdtsOtherDf = visitForOptDf.filter($"${KpiConstants.memberidColName}".isin(ardvOtherMemDf:_*))
 
-    val ardtsOtherDf = visitArdtsOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardtsVal))&&($"${KpiConstants.serviceDateColName}".<=(filterOct1st2011)))
-      .select(s"${KpiConstants.memberidColName}").distinct()
+    val ardtsOtherDf = visitArdtsOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.ardtsVal))
+                                              &&($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                              &&($"${KpiConstants.serviceDateColName}".<(filterOct1st2011)))
+                                        .select(s"${KpiConstants.memberidColName}").distinct()
 
     val ardtsDf = ardtsNonSupDf.union(ardtsOtherDf).cache()
     ardtsDf.count()
-    ardtsDf.coalesce(1)
+   /* ardtsDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/ardtsDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/ardtsDf/")*/
 
 
     //</editor-fold>
@@ -509,64 +537,87 @@ object NcqaIMA {
 
     val imaDinoExclValSet3a = List(KpiConstants.encephalopathyVal)
     val edvvcaNonSuppDf = visitForNonSuppEncDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.encephalopathyVal))
-      && (array_contains($"${KpiConstants.valuesetColName}", KpiConstants.vaccineAdverseVal))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156))))
-      .select(KpiConstants.memberidColName)
+                                                   && (array_contains($"${KpiConstants.valuesetColName}", KpiConstants.vaccineAdverseVal))
+                                                   && ($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                                   && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}",KpiConstants.months156))))
+                                              .select(KpiConstants.memberidColName).distinct()
 
     val edvvcaOtherMemDf = inmemForEnc.except(edvvcaNonSuppDf)
     val visitedvVcaOtherDf = visitForEncDf.as("df1").join(edvvcaOtherMemDf.as("df2"), KpiConstants.memberidColName)
       .select("df1.*")
 
     val edvvcaOtherDf = visitedvVcaOtherDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.encephalopathyVal))
-      && (array_contains($"${KpiConstants.valuesetColName}", KpiConstants.vaccineAdverseVal))
-      && ($"${KpiConstants.serviceDateColName}".<=(add_months($"${KpiConstants.dobColName}",KpiConstants.months156))))
-      .select(KpiConstants.memberidColName)
+                                               && (array_contains($"${KpiConstants.valuesetColName}", KpiConstants.vaccineAdverseVal))
+                                               && ($"${KpiConstants.serviceDateColName}".>=($"${KpiConstants.dobColName}"))
+                                               && ($"${KpiConstants.serviceDateColName}".<=(UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dobColName}",KpiConstants.months156))))
+                                          .select(KpiConstants.memberidColName).distinct()
 
     val edvvcaDf = edvvcaNonSuppDf.union(edvvcaOtherDf).cache()
     edvvcaDf.count()
 
-    edvvcaDf.select(KpiConstants.memberidColName).coalesce(1)
+   /* edvvcaDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/edvvcaDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/edvvcaDf/")*/
 
     //</editor-fold>
 
     val optExclDf = ardvBef13Df.union(ardtsDf).union(edvvcaDf).dropDuplicates().cache()
-
-    optExclDf.select(KpiConstants.memberidColName).coalesce(1)
+    optExclDf.count()
+    /*optExclDf.select(KpiConstants.memberidColName).coalesce(3)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/optExclDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/optExclDf/")*/
 
     //</editor-fold>
 
 
-    val imaMenNumDf = imaMenTmpDf.except(optExclDf)
-
-    imaMenNumDf.select(KpiConstants.memberidColName).coalesce(1)
+    val imaMenNumDf = imaMenTmpDf.except(optExclDf).cache()
+    imaMenNumDf.count()
+    /*imaMenNumDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaMenNumDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaMenNumDf/")*/
 
-    val imaHpvNumDf = imaHpvTmpDf.except(optExclDf)
-
-    imaHpvNumDf.select(KpiConstants.memberidColName).coalesce(1)
+    val imaHpvNumDf = imaHpvTmpDf.except(optExclDf).cache()
+    imaHpvNumDf.count()
+   /* imaHpvNumDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaHpvNumDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaHpvNumDf/")*/
 
-    val imaTdapNumDf = imaTdapTmpDf.except(optExclDf)
-
-    imaTdapNumDf.select(KpiConstants.memberidColName).coalesce(1)
+    val imaTdapNumDf = imaTdapTmpDf.except(optExclDf).cache()
+    imaTdapNumDf.count()
+   /* imaTdapNumDf.select(KpiConstants.memberidColName).coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/imaTdapNumDf/")
+      .csv("/home/hbase/ncqa/ima_test_out/imaTdapNumDf/")*/
+
+
+    val imaCmb1Df = imaMenNumDf.intersect(imaTdapNumDf).cache()
+    imaCmb1Df.count()
+    val imaCmb2Df = imaMenNumDf.intersect(imaTdapNumDf).intersect(imaHpvNumDf).cache()
+    imaCmb2Df.count()
+
+    val outMap = mutable.Map(KpiConstants.totalPopDfName -> toutDf, KpiConstants.eligibleDfName -> denominatorPopDf,
+      KpiConstants.mandatoryExclDfname -> spark.emptyDataFrame, KpiConstants.optionalExclDfName -> optExclDf,
+      KpiConstants.numeratorDfName -> imaMenNumDf , KpiConstants.numerator2DfName -> imaTdapNumDf,
+      KpiConstants.numerator3DfName -> imaHpvNumDf, KpiConstants.numerator4DfName -> imaCmb1Df,
+      KpiConstants.numerator5DfName -> imaCmb2Df)
+
+
+    val outDf = UtilFunctions.ncqaOutputDfCreation1(spark,outMap)
+    outDf.coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/ima_test_out/outDf/")
+
 
     spark.sparkContext.stop()
   }
