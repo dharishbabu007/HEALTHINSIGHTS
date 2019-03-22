@@ -33,12 +33,12 @@ public class PATController {
 	PATService patService;
 	
 	@RequestMapping(value = "/get_population_list", method = RequestMethod.GET)
-	public ResponseEntity<Set<String>> getPopulationList() {
-		Set<String> workList = patService.getPopulationList();
+	public ResponseEntity<Set<NameValue>> getPopulationList() {
+		Set<NameValue> workList = patService.getPopulationList();
 		if (workList.isEmpty()) {
-			return new ResponseEntity<Set<String>>(HttpStatus.NO_CONTENT);			
+			return new ResponseEntity<Set<NameValue>>(HttpStatus.NO_CONTENT);			
 		}
-		return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+		return new ResponseEntity<Set<NameValue>>(workList, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/get_care_gap_list", method = RequestMethod.GET)
@@ -91,13 +91,11 @@ public class PATController {
 	
 	@RequestMapping(value = "/pat_create/", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> createPatCreater(@RequestBody Pat pat, UriComponentsBuilder ucBuilder) {
-		//logger.info("Creating PatCreator : {}", pat);
-		System.out.println(" Creating PatCreator with status --> " + pat.getPatientId());
 		RestResult restResult = patService.insertPatCreator(pat);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/pat/{id}").buildAndExpand(10).toUri());
-		return new ResponseEntity<RestResult>(restResult, headers, HttpStatus.CREATED);
+		if(RestResult.isSuccessRestResult(restResult))
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
+		else	
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}	
 
 }

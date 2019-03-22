@@ -53,7 +53,6 @@ public class EnrollmentController {
 	@RequestMapping(value = "/get_enrollment_file_output/{criteria}", method = RequestMethod.GET)
 	public ResponseEntity<List<EnrollmentFileOutput>> getEnrollmentFileOutput(
 			@PathVariable("criteria") String criteria) {
-		System.out.println("Fetching personaMemberList ");
 		List<EnrollmentFileOutput> setCSVOutPut = enrollmentService.getEnrollmentFileOutput(criteria);
 		return new ResponseEntity<List<EnrollmentFileOutput>>(setCSVOutPut, HttpStatus.OK);
 	}
@@ -111,7 +110,6 @@ public class EnrollmentController {
 			UriComponentsBuilder ucBuilder) {
 		FactGoalRecommendations dataList = enrollmentService
 				.getFactGoalRecommendations(factGoalRecommendations.getMemberId());
-		System.out.println(" Returned Fact Goal Recommendations for member id --> " + factGoalRecommendations);
 		RestResult restResult = null;
 		if (dataList == null) {
 			System.out.println(

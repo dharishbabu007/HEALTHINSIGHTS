@@ -62,7 +62,6 @@ public class MemberGapListController {
 	
 	 @RequestMapping(value = "/findAllMembers", method = RequestMethod.GET )
 	public ResponseEntity<List<MemberCareGapsList>> findAllMembersList() {
-		System.out.println("Fetching All MemberCareGapsList " );
 		logger.info("Fetching dimMemberGaps with mid {}");
 		List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersList();
 		if (memberCareGapsList == null) {

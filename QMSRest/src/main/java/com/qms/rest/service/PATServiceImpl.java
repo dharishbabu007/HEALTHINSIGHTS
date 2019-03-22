@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qms.rest.model.CloseGap;
 import com.qms.rest.model.DimMemeber;
 import com.qms.rest.model.NameValue;
 import com.qms.rest.model.Pat;
@@ -36,22 +39,29 @@ public class PATServiceImpl implements PATService {
 	
 	@Autowired 
 	private HttpSession httpSession;
+	
+	@Autowired
+	CloseGapsService closeGapsService;	
 
 	@Override
-	public Set<String> getPopulationList() {
-		Set<String> categorySet = new HashSet<>();
+	public Set<NameValue> getPopulationList() {
+		Set<NameValue> categorySet = new HashSet<>();
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT DPP.LOB_PRODUCT FROM FACT_HEDIS_GAPS_IN_CARE FHGIC "+ 
+			String query = "SELECT DISTINCT DPP.LOB_PRODUCT,DPP.PLAN_NAME FROM FACT_HEDIS_GAPS_IN_CARE FHGIC "+ 
 					"INNER JOIN DIM_PRODUCT_PLAN DPP ON FHGIC.PRODUCT_PLAN_SK = DPP.PRODUCT_PLAN_SK "+ 
 					"INNER JOIN REF_LOB RL ON DPP.LOB_ID = RL.LOB_ID";			
 			resultSet = statement.executeQuery(query);
+			NameValue nameValue = null; 
 			while (resultSet.next()) {
-				categorySet.add(resultSet.getString("LOB_PRODUCT"));				
+				nameValue = new NameValue();
+				nameValue.setName(resultSet.getString("LOB_PRODUCT"));
+				nameValue.setValue(resultSet.getString("PLAN_NAME"));				
+				categorySet.add(nameValue);				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,8 +234,9 @@ public class PATServiceImpl implements PATService {
 			statement.setString(++i, pat.getCompliantFlag()); //COMPLIANT_FLAG
 			statement.executeUpdate();
 			
-			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, mitId+"");			
-			return RestResult.getSucessRestResult("MIT creation sucess. ");
+			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, mitId+"");
+			System.out.println(" Inserting QMS_MIT sucess for ID --> " + mitId);
+			return RestResult.getSucessRestResult("MIT creation success. ");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RestResult.getFailRestResult(e.getMessage());		
@@ -272,7 +283,7 @@ public class PATServiceImpl implements PATService {
 			resultSet.close();
 			membergplistQry = "SELECT DDA.CALENDAR_DATE AS \"Next_Appointment_Date\", "
 					+ "(DP.FIRST_NAME||' '||DP.LAST_NAME) AS \"Physician_Name\", "
-					+ "DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW, DPA.PAT_ID "+ 
+					+ "DD.DEPARTMENT_NAME, FA.NOSHOW_LIKELIHOOD, FA.NOSHOW, DPA.PAT_ID, DPA.PAT_MRN "+ 
 					"FROM FACT_APPOINTMENT FA "+ 
 					"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
 					"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
@@ -284,7 +295,9 @@ public class PATServiceImpl implements PATService {
 				//dimMemeberList.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
 				dimMemeberList.setNextAppointmentDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Next_Appointment_Date")));
 				dimMemeberList.setPcpName(resultSet.getString("Physician_Name"));
+				dimMemeberList.setMrn(resultSet.getString("PAT_MRN"));
 			}
+			
 	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -305,29 +318,43 @@ public class PATServiceImpl implements PATService {
 		try {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			System.out.println(patientId + " patientId and measureId " + measureId);
+			System.out.println(patientId + " patientId. getPatById. measureId " + measureId);
 			String membergplistQry = "SELECT MIT_ID,MEASURE_ID,PATIENT_ID,COMPLIANT_FLAG,LOB_ID,MRN,APPOINTMENT_DATE,PROVIDER_ID,GENDER,DOB,"
 				+ "MEMBER_STATUS,VALUE_SET,CODE_TYPE,CODES,REASON "
 				+ "from QMS_MIT where PATIENT_ID="+patientId+" and MEASURE_ID='"+measureId+"' order by REC_CREATE_DATE desc";
 			resultSet = statement.executeQuery(membergplistQry);
+			List<Integer> mitIds = new ArrayList<>();
 			while(resultSet.next()) {
 				pat = new Pat();
 				pat.setMitId(resultSet.getString("MIT_ID"));
+				mitIds.add(Integer.parseInt(pat.getMitId()));
 				pat.setMeasureSk(resultSet.getString("MEASURE_ID"));
 				pat.setPatientId(resultSet.getString("PATIENT_ID"));
 				pat.setCompliantFlag(resultSet.getString("COMPLIANT_FLAG"));
 				pat.setLobId(resultSet.getString("LOB_ID"));
 				pat.setMrn(resultSet.getString("MRN"));
-				pat.setAppointmentDate(resultSet.getString("APPOINTMENT_DATE"));
+				pat.setAppointmentDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("APPOINTMENT_DATE")));
 				pat.setProviderId(resultSet.getString("PROVIDER_ID"));
 				pat.setGender(resultSet.getString("GENDER"));
-				pat.setDob(resultSet.getString("DOB"));
+				pat.setDob(QMSDateUtil.getSQLDateFormat(resultSet.getDate("DOB")));
 				pat.setMemberStatus(resultSet.getString("MEMBER_STATUS"));
 				pat.setValueSet(resultSet.getString("VALUE_SET"));
 				pat.setCodeType(resultSet.getString("CODE_TYPE"));
 				pat.setCodes(resultSet.getString("CODES"));
 				pat.setReason(resultSet.getString("REASON"));
 				mitList.add(pat);
+			}
+			if(mitIds.size() > 0) {
+				HashMap<Integer, List<String>> upLoadData = closeGapsService.getUploadFileByTypeId(statement, mitIds, 0, "mit");
+				if(upLoadData != null) {
+					List<String> fileNames = null;
+					for (Pat pat1 : mitList) {
+						fileNames = upLoadData.get(Integer.parseInt(pat1.getMitId()));
+						if(fileNames != null && !fileNames.isEmpty()) {
+							pat1.getUploadFilesList().addAll(fileNames);
+						}
+					}
+				}				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

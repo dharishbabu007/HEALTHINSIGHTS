@@ -74,5 +74,7 @@ public class DimMemeber {
 	
 	private String pcpName;
 	
+	private String mrn;
+	
 	private String compliant="No";
 }

@@ -71,4 +71,14 @@ public class SMVController {
 		}
 		return new ResponseEntity<Set<LhrMemberListView>>(workList, HttpStatus.OK);
 	}
+	
+    @RequestMapping(value = "/getMemberIdList/{memberListType}", method = RequestMethod.GET)
+    public ResponseEntity<Set<String>> getMemberIdList(@PathVariable("memberListType") String memberListType) {
+          Set<String> workList = smvService.getMemberIdList(memberListType);
+          if (workList==null) {
+                return new ResponseEntity<Set<String>>(HttpStatus.NO_CONTENT);
+          }
+          return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+    }
+	
 }

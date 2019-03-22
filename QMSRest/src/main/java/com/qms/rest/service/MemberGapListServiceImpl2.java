@@ -284,7 +284,6 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 		try {
 
 			connection = qmsConnection.getOracleConnection();
-			System.out.println("Service after connection " + connection);
 			statement = connection.createStatement();
 			
 			//hive query

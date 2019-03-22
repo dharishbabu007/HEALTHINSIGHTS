@@ -333,6 +333,7 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			
 			statement.executeUpdate();
 			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, clusteringPersona.getClusterId()+"");
+			System.out.println(" Inserting QMS_CP_Define sucess for ID --> " + clusteringPersona.getClusterId());
 			return RestResult.getSucessRestResult(" Cluster Persona update Success. ");
 		} catch (Exception e) {
 			e.printStackTrace();

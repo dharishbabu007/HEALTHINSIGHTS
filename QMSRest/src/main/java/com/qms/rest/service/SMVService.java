@@ -19,5 +19,7 @@ public interface SMVService {
 	Set<LhcMemberView> getLhcMemberViewList();
 	
 	Set<LhrMemberListView> getLhrMemberListView();
+
+	Set<String> getMemberIdList(String memberListType);
 	
 }

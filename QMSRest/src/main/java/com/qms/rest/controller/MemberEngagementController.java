@@ -112,21 +112,18 @@ public class MemberEngagementController {
 	/////////////////////////////LHE//////////////////////////////////////////
 	@RequestMapping(value = "/lhe_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<LHEOutput>> getLHEOutput() {
-		System.out.println("Fetching LHE out ");
 		Set<LHEOutput> setCSVOutPut = memberEngagementService.getLHEModelOutPut();
 		return new ResponseEntity<Set<LHEOutput>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/lhe_modelSummary", method = RequestMethod.GET)
 	public ResponseEntity<Set<ModelSummary>> getLHEModelSummary() {
-		System.out.println("Fetching LHE Model summary ");
 		Set<ModelSummary> setCSVOutPut = memberEngagementService.getLHEModelSummary();
 		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/lhe_modelMatric", method = RequestMethod.GET)
 	public ResponseEntity<ModelMetric> getLHEModelMatric() {
-		System.out.println("Fetching LHE Model metric ");
 		ModelMetric setCSVOutPut = memberEngagementService.getLHEModelMetric();
 		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
 	}	
@@ -134,14 +131,12 @@ public class MemberEngagementController {
 	
 	@RequestMapping(value = "/lhe_reason_not_enroll_statics", method = RequestMethod.GET)
 	public ResponseEntity<String[][]> getLHEReasonNotEnrollStatics() {
-		System.out.println("Fetching LHE Reason Not Enroll Statics ");
 		String[][] setCSVOutPut = memberEngagementService.getLHEReasonNotEnrollStatics();
 		return new ResponseEntity<String[][]>(setCSVOutPut, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/create_lhe_input_file", method = RequestMethod.GET)
 	public ResponseEntity<RestResult> createLHEInputFile() {
-		System.out.println("Create LHE Input File ");
 		RestResult restResult = memberEngagementService.createLHEInputFile();
 		if(RestResult.isSuccessRestResult(restResult))
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
@@ -152,7 +147,6 @@ public class MemberEngagementController {
 	/////////////////////////////PERSONA//////////////////////////////////////////	
 	@RequestMapping(value = "/create_persona_input_file", method = RequestMethod.GET)
 	public ResponseEntity<RestResult> createPersonaInputFile() {
-		System.out.println("Create LHE Input File ");
 		RestResult restResult = memberEngagementService.createPersonaInputFile();
 		if(RestResult.isSuccessRestResult(restResult))
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
@@ -162,7 +156,6 @@ public class MemberEngagementController {
 	
 	@RequestMapping(value = "/persona_member_list/{clusterId}", method = RequestMethod.GET)
 	public ResponseEntity<Set<PersonaMember>> personaMemberList(@PathVariable("clusterId") String clusterId) {
-		System.out.println("Fetching personaMemberList ");
 		Set<PersonaMember> setCSVOutPut = memberEngagementService.personaMemberList(clusterId);
 		return new ResponseEntity<Set<PersonaMember>>(setCSVOutPut, HttpStatus.OK);
 	}
@@ -170,7 +163,6 @@ public class MemberEngagementController {
 	/////////////////////////////LHC//////////////////////////////////////////	
 	@RequestMapping(value = "/create_lhc_input_file", method = RequestMethod.GET)
 	public ResponseEntity<RestResult> createLHCInputFile() {
-		System.out.println("Create LHC Input File ");
 		RestResult restResult = memberEngagementService.createLHCInputFile();
 		if(RestResult.isSuccessRestResult(restResult))
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
@@ -180,28 +172,24 @@ public class MemberEngagementController {
 	
 	@RequestMapping(value = "/lhc_member_list", method = RequestMethod.GET)
 	public ResponseEntity<Set<LHCMember>> lhcMemberList() {
-		System.out.println("Fetching personaMemberList ");
 		Set<LHCMember> setCSVOutPut = memberEngagementService.lhcMemberList();
 		return new ResponseEntity<Set<LHCMember>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/lhc_modelSummary", method = RequestMethod.GET)
 	public ResponseEntity<Set<ModelSummary>> getLHCModelSummary() {
-		System.out.println("Fetching LHC Model summary ");
 		Set<ModelSummary> setCSVOutPut = memberEngagementService.getLHCModelSummary();
 		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/lhc_modelMatric", method = RequestMethod.GET)
 	public ResponseEntity<ModelMetric> getLHCModelMatric() {
-		System.out.println("Fetching LHC Model metric ");
 		ModelMetric setCSVOutPut = memberEngagementService.getLHCModelMetric();
 		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/role_landing_page", method = RequestMethod.GET)
 	public ResponseEntity<Set<RoleLandingPage>> roleLandingPage() {
-		System.out.println("Fetching LHC Model metric ");
 		Set<RoleLandingPage> setCSVOutPut = memberEngagementService.getRoleLandingPage();
 		return new ResponseEntity<Set<RoleLandingPage>>(setCSVOutPut, HttpStatus.OK);
 	}
