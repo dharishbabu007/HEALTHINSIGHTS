@@ -1018,7 +1018,7 @@ object UtilFunctions {
 
         val df = item match {
 
-          case KpiConstants.modifierCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.proccodemod1ColName}" === $"df2.${KpiConstants.codeColName}"
+          case KpiConstants.modifierCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.proccodemod1ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.proccodemod2ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.proccode2mod1ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.proccode2mod2ColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
@@ -1026,23 +1026,23 @@ object UtilFunctions {
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
 
-          case KpiConstants.cptCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), ($"df1.${KpiConstants.proccodeColName}" === $"df2.${KpiConstants.codeColName}"), KpiConstants.innerJoinType)
+          case KpiConstants.cptCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), ($"df1.${KpiConstants.proccodeColName}" === $"df2.${KpiConstants.codeColName}"), KpiConstants.innerJoinType)
                                                                       .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                       .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.cptCatIIVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.proccode2ColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.cptCatIIVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.proccode2ColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                        .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                        .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.cvxCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.cvxCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
             .filter(($"df2.${KpiConstants.valuesetColName}".===(value)) && ($"df1.${KpiConstants.medcodeflagColName}".===("C")))
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.hcpsCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.prochcpscodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.hcpsCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.prochcpscodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
             .filter($"df2.${KpiConstants.valuesetColName}".===(value))
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.icd9cmCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.primaryDiagnosisColname}" === $"df2.${KpiConstants.codeColName}"
+          case KpiConstants.icd9cmCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.primaryDiagnosisColname}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode2ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode3ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode4ColName}" === $"df2.${KpiConstants.codeColName}"
@@ -1056,7 +1056,7 @@ object UtilFunctions {
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
 
-          case KpiConstants.icd10cmCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.primaryDiagnosisColname}" === $"df2.${KpiConstants.codeColName}"
+          case KpiConstants.icd10cmCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.primaryDiagnosisColname}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode2ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode3ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.diagcode4ColName}" === $"df2.${KpiConstants.codeColName}"
@@ -1069,7 +1069,7 @@ object UtilFunctions {
             .filter(($"df2.${KpiConstants.valuesetColName}".===(value)) && ($"df1.${KpiConstants.icdflagColName}".===("X")))
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.icd9pcsCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.priicdprocColName}" === $"df2.${KpiConstants.codeColName}"
+          case KpiConstants.icd9pcsCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.priicdprocColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc2ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc3ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc4ColName}" === $"df2.${KpiConstants.codeColName}"
@@ -1078,7 +1078,7 @@ object UtilFunctions {
             .filter(($"df2.${KpiConstants.valuesetColName}".===(value)) && ($"df1.${KpiConstants.icdflagColName}".===("9")))
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.icd10pcsCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.priicdprocColName}" === $"df2.${KpiConstants.codeColName}"
+          case KpiConstants.icd10pcsCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.priicdprocColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc2ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc3ColName}" === $"df2.${KpiConstants.codeColName}"
             || $"df1.${KpiConstants.icdproc4ColName}" === $"df2.${KpiConstants.codeColName}"
@@ -1088,28 +1088,28 @@ object UtilFunctions {
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
 
-          case KpiConstants.loincCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), ($"df1.${KpiConstants.loinccodeColName}" === $"df2.${KpiConstants.codeColName}"), KpiConstants.innerJoinType)
+          case KpiConstants.loincCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), ($"df1.${KpiConstants.loinccodeColName}" === $"df2.${KpiConstants.codeColName}"), KpiConstants.innerJoinType)
                                                                         .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                         .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
 
-          case KpiConstants.posCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.poscodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.posCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.poscodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
             .filter($"df2.${KpiConstants.valuesetColName}".===(value))
             .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.rxnormCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.rxnormCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.medcodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                          .filter(($"df2.${KpiConstants.valuesetColName}".===(value)) && ($"df1.${KpiConstants.medcodeflagColName}".===("R")))
                                                                          .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.snomedctCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.snomedColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.snomedctCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.snomedColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                            .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                            .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.ubrevCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.revenuecodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.ubrevCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.revenuecodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                         .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                         .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
-          case KpiConstants.ubtobCodeVal => factClaimDf.as("df1").join(refhedisDf.as("df2"), $"df1.${KpiConstants.billtypecodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
+          case KpiConstants.ubtobCodeVal => factClaimDf.as("df1").join(broadcast(refhedisDf.as("df2")), $"df1.${KpiConstants.billtypecodeColName}" === $"df2.${KpiConstants.codeColName}", KpiConstants.innerJoinType)
                                                                         .filter($"df2.${KpiConstants.valuesetColName}".===(value))
                                                                         .select("df1.*", s"df2.${KpiConstants.valuesetColName}")
 
@@ -1147,7 +1147,7 @@ object UtilFunctions {
 
         var medInDf = spark.emptyDataFrame
 
-        medInDf = factClaimDf.as("df1").join(refmedDf.as("df2"), $"df1.${KpiConstants.ndcCodeColName}" === $"df2.${KpiConstants.ndcCodeColName}", KpiConstants.innerJoinType)
+        medInDf = factClaimDf.as("df1").join(broadcast(refmedDf.as("df2")), $"df1.${KpiConstants.ndcCodeColName}" === $"df2.${KpiConstants.ndcCodeColName}", KpiConstants.innerJoinType)
                                               .filter($"df2.${KpiConstants.medicatiolListColName}".isin(valueset: _*))
                                               .select("df1.*", s"df2.${KpiConstants.medicatiolListColName}")
 
