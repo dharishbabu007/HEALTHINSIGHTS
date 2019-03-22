@@ -20,15 +20,14 @@ object NcqaCBP {
 
   def main(args: Array[String]): Unit = {
 
-/*
+
 
     //<editor-fold desc="Reading program arguments and SaprkSession oBject creation">
 
     val year = args(0)
-    val lob_name = args(1)
-    val programType = args(2)
-    val dbName = args(3)
-    val measureId = args(4)
+    val measureId = args(1)
+    val dbName = args(2)
+    val programType = args(3)
     var data_source = ""
 
     /*define data_source based on program type. */
@@ -56,36 +55,31 @@ object NcqaCBP {
 
     //<editor-fold desc="Loading Required Tables to memory">
 
+
     val aLiat = List("col1")
     val msrVal = "'"+measureId+"'"
-    val lobList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName, KpiConstants.marketplaceLobName, KpiConstants.mmdLobName)
+    val lobList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName,KpiConstants.medicareLobName, KpiConstants.marketplaceLobName, KpiConstants.mmdLobName)
     val memqueryString = "SELECT * FROM "+ KpiConstants.dbName +".membership_enrollment WHERE measure = "+msrVal+" and  (member_plan_start_date IS  NOT NULL) AND(member_plan_end_date IS NOT NULL)"
     val membershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.membershipTblName,memqueryString,aLiat)
-      .filter(($"${KpiConstants.considerationsColName}".===(KpiConstants.yesVal)))
-      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-    /*.withColumn(KpiConstants.memStartDateColName, to_date($"${KpiConstants.memStartDateColName}", KpiConstants.dateFormatString))
-    .withColumn(KpiConstants.memEndDateColName, to_date($"${KpiConstants.memEndDateColName}", KpiConstants.dateFormatString))
-    .withColumn(KpiConstants.dateofbirthColName, to_date($"${KpiConstants.dateofbirthColName}", KpiConstants.dateFormatString))
-*/
+                                        .filter(($"${KpiConstants.considerationsColName}".===(KpiConstants.yesVal))
+                                             && ($"${KpiConstants.memStartDateColName}".isNotNull)
+                                             && ($"${KpiConstants.memEndDateColName}".isNotNull))
+                                        .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+
     //membershipDf.show(2)
 
 
 
     val claimStatusList = List(KpiConstants.paidVal, KpiConstants.suspendedVal, KpiConstants.pendingVal, KpiConstants.deniedVal)
-    val visitqueryString = "SELECT * FROM "+ KpiConstants.dbName +".visits WHERE measure ="+msrVal+" and  (service_date IS  NOT NULL) AND((admit_date IS NULL and discharge_date IS NULL) OR (ADMIT_DATE IS NOT NULL AND DISCHARGE_DATE IS NOT NULL))"
+    val visitqueryString = "SELECT * FROM "+ KpiConstants.dbName +".visits WHERE measure = 'IMA' and  (service_date IS  NOT NULL) AND((admit_date IS NULL and discharge_date IS NULL) OR (ADMIT_DATE IS NOT NULL AND DISCHARGE_DATE IS NOT NULL))"
     val visitsDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.visitTblName,visitqueryString,aLiat)
-      .filter((($"${KpiConstants.dataSourceColName}".===("Claim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
-        || (($"${KpiConstants.dataSourceColName}".===("RxClaim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
-        ||($"${KpiConstants.dataSourceColName}".===("Rx")))
-      .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
-      /* .withColumn(KpiConstants.dobColName, to_date($"${KpiConstants.dobColName}", KpiConstants.dateFormatString))
-       .withColumn(KpiConstants.serviceDateColName, to_date($"${KpiConstants.serviceDateColName}", KpiConstants.dateFormatString))
-       .withColumn(KpiConstants.admitDateColName, when($"${KpiConstants.admitDateColName}".isNotNull,to_date($"${KpiConstants.admitDateColName}",  KpiConstants.dateFormatString)))
-       .withColumn(KpiConstants.dischargeDateColName, when($"${KpiConstants.dischargeDateColName}".isNotNull,to_date($"${KpiConstants.dischargeDateColName}",  KpiConstants.dateFormatString)))
-       .withColumn(KpiConstants.medstartdateColName, when($"${KpiConstants.medstartdateColName}".isNotNull,to_date($"${KpiConstants.medstartdateColName}",  KpiConstants.dateFormatString)))*/
-      .withColumn(KpiConstants.revenuecodeColName, when((length($"${KpiConstants.revenuecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.revenuecodeColName}"))).otherwise($"${KpiConstants.revenuecodeColName}"))
-      .withColumn(KpiConstants.billtypecodeColName, when((length($"${KpiConstants.billtypecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.billtypecodeColName}"))).otherwise($"${KpiConstants.billtypecodeColName}"))
-      .withColumn(KpiConstants.proccode2ColName, when(($"${KpiConstants.proccode2mod1ColName}".isin(KpiConstants.avoidCodeList:_*)) || ($"${KpiConstants.proccode2mod2ColName}".isin(KpiConstants.avoidCodeList:_*)),lit("NA")).otherwise($"${KpiConstants.proccode2ColName}"))
+                                    .filter((($"${KpiConstants.dataSourceColName}".===("Claim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
+                                           ||(($"${KpiConstants.dataSourceColName}".===("RxClaim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
+                                           ||($"${KpiConstants.dataSourceColName}".===("Rx")))
+                                    .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
+                                    .withColumn(KpiConstants.revenuecodeColName, when((length($"${KpiConstants.revenuecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.revenuecodeColName}"))).otherwise($"${KpiConstants.revenuecodeColName}"))
+                                    .withColumn(KpiConstants.billtypecodeColName, when((length($"${KpiConstants.billtypecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.billtypecodeColName}"))).otherwise($"${KpiConstants.billtypecodeColName}"))
+                                    .withColumn(KpiConstants.proccode2ColName, when(($"${KpiConstants.proccode2mod1ColName}".isin(KpiConstants.avoidCodeList:_*)) || ($"${KpiConstants.proccode2mod2ColName}".isin(KpiConstants.avoidCodeList:_*)),lit("NA")).otherwise($"${KpiConstants.proccode2ColName}"))
 
 
     /* val medmonmemDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.medmonmemTblName,KpiConstants.imaMeasureId,aLiat)
@@ -97,17 +91,19 @@ object NcqaCBP {
 
 
     val refHedisDf = DataLoadFunctions.referDataLoadFromTragetModel(spark, KpiConstants.dbName, KpiConstants.refHedisTblName)
-      .filter(($"${KpiConstants.measureIdColName}".===(KpiConstants.cbpMeasureId)) || ($"${KpiConstants.measureIdColName}".===(KpiConstants.ggMeasureId)))
-      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-      .cache()
-    refHedisDf.count()
+                                      .filter(($"${KpiConstants.measureIdColName}".===(KpiConstants.imaMeasureId)) || ($"${KpiConstants.measureIdColName}".===(KpiConstants.ggMeasureId)))
+                                      .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+
+
+    broadcast(refHedisDf)
+    //refHedisDf.count()
 
     val ref_medvaluesetDf = DataLoadFunctions.referDataLoadFromTragetModel(spark,KpiConstants.dbName,KpiConstants.refmedValueSetTblName)
-      .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.cbpMeasureId))
+      .filter($"${KpiConstants.measure_idColName}".===(KpiConstants.imaMeasureId))
       .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
-      .cache()
 
-    ref_medvaluesetDf.count()
+
+    broadcast(ref_medvaluesetDf)
 
     // println("counts of the dataframe:"+membershipDf.count()+","+ visitsDf.count())
     /* val argMapForValidVisits = mutable.Map(KpiConstants.eligibleDfName -> visitsDf, KpiConstants.refHedisTblName -> refHedisDf)
@@ -248,7 +244,9 @@ object NcqaCBP {
     val allValueList = List(KpiConstants.independentLabVal, KpiConstants.hospiceVal,KpiConstants.outpatwoUbrevVal, KpiConstants.telehealthModifierVal,
                             KpiConstants.essentialHyptenVal, KpiConstants.telephoneVisitsVal, KpiConstants.onlineAssesmentVal, KpiConstants.fralityVal,
                             KpiConstants.outPatientVal, KpiConstants.advancedIllVal, KpiConstants.observationVal, KpiConstants.edVal, KpiConstants.nonAcuteInPatientVal,
-                            KpiConstants.acuteInpatientVal, KpiConstants.remotebpmVal, KpiConstants )
+                            KpiConstants.acuteInpatientVal, KpiConstants.remotebpmVal, KpiConstants.systolicLt140Val, KpiConstants.diastolicBtwn8090Val,
+                            KpiConstants.diastolicLt80Val, KpiConstants.esrdVal, KpiConstants.esrdObsoleteVal,KpiConstants.kidneyTransplantVal,
+                            KpiConstants.pregnancyVal, KpiConstants.inpatientStayVal, KpiConstants.nonacuteInPatStayVal)
 
 
     val medicationlList = List(KpiConstants.dementiaMedicationVal)
@@ -267,19 +265,14 @@ object NcqaCBP {
 
     //</editor-fold>
 
-
-
-
-
-
     //<editor-fold desc="Hospice Removal">
 
     val yearStartDate = year+"-01-01"
     val yearEndDate = year+"-12-31"
     val hospiceInCurrYearMemDf = indLabVisRemDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.hospiceVal))
-      &&($"${KpiConstants.serviceDateColName}".>=(yearStartDate) && $"${KpiConstants.serviceDateColName}".<=(yearEndDate)))
-      .select(KpiConstants.memberidColName)
-      .dropDuplicates().cache()
+                                                     &&($"${KpiConstants.serviceDateColName}".>=(yearStartDate) && $"${KpiConstants.serviceDateColName}".<=(yearEndDate)))
+                                               .select(KpiConstants.memberidColName)
+                                               .dropDuplicates().cache()
 
 
     /*   hospiceincurryearDf.coalesce(1)
