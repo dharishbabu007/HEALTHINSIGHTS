@@ -54,7 +54,10 @@ public class CloseGapController {
 			@PathVariable("measureId") String measureId,
 			@RequestBody CloseGaps closeGaps, UriComponentsBuilder ucBuilder) {
 		RestResult restResult = closeGapsService.insertCloseGaps(closeGaps, memberId, measureId);
-		return new ResponseEntity<RestResult>(restResult, HttpStatus.CREATED);
+		if(RestResult.isSuccessRestResult(restResult))
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
+		else	
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);		
 	}	
 	
 	@RequestMapping(value = "/file_upload/{type}", method = RequestMethod.POST)

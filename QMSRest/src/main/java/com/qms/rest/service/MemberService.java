@@ -37,7 +37,6 @@ public class MemberService {
         try {
             //connection = qmsConnection.getHiveConnection();
         	connection = qmsConnection.getOracleConnection();
-            System.out.println("Service after connection: " + connection);
             statement = connection.prepareStatement(sqlQuery);
             memberId = "%"+memberId.toLowerCase()+"%";
             if(isNumeric){
@@ -55,7 +54,6 @@ public class MemberService {
             System.out.println("Error: Exception while fetching dimMember for id: " + memberId);
             e.printStackTrace();
         } finally {
-            System.out.println("About to close connection in find dim members");
             qmsConnection.closeJDBCResources(resultSet, statement, connection);
         }
 

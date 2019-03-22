@@ -11,14 +11,11 @@ import com.qms.rest.model.RestResult;
 import com.qms.rest.model.SearchAssociatedPatient;
 
 public interface PATService {
-
-	Set<String> getPopulationList();
+	Set<NameValue> getPopulationList();
 	Set<NameValue> getCareGapList();
 	Set<SearchAssociatedPatient> searchAssociatedPatientList(String measureId, String mrnIdOrName);
 	PatActionCareGap actionOnCareGapList(String measureId);	
 	List<Pat> getPatById(String patId, String measureId);
 	DimMemeber findMembergapListByMid(String memberId);
-	
 	RestResult insertPatCreator(Pat pat);
-	
 }

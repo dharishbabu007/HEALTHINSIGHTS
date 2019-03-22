@@ -121,7 +121,7 @@ public class SMVServiceImpl implements SMVService {
 				memberDetails.setCode(resultSet.getString("CODE"));
 				memberDetails.setPlanName(resultSet.getString("PLAN_NAME"));
 				memberDetails.setPlanCategory(resultSet.getString("PLAN_CATEGORY"));
-				memberDetails.setMemberPlanStartDateSk(resultSet.getString("MEMBER_PLAN_START_DATE_SK"));
+				//memberDetails.setMemberPlanStartDateSk(resultSet.getString("MEMBER_PLAN_START_DATE_SK"));
 				memberDetails.setMemberPlanEndDateSk(resultSet.getString("MEMBER_PLAN_END_DATE_SK"));
 				memberDetails.setNoOfPendingClaimsYtd(resultSet.getString("NO_OF_PENDING_CLAIMS_YTD"));
 				memberDetails.setNoOfDeniedClaimsYtd(resultSet.getString("NO_OF_DENIED_CLAIMS_YTD"));
@@ -225,8 +225,34 @@ public class SMVServiceImpl implements SMVService {
 		return lhrMemberList;
 	}
 	
-	
-	
-	
-
+	@Override
+    public Set<String> getMemberIdList(String memberListType) {
+		Set<String> dataSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;         
+		Connection connection = null;
+		try {    
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String sqlQuery = null;
+			if(memberListType.equalsIgnoreCase("enrollment"))
+				sqlQuery = "select DISTINCT A.MEMBER_ID FROM DIM_MEMBER A "
+						+ "INNER JOIN QMS_ENROLLMENT_FILE_OUTPUT B ON A.MEMBER_ID = B.MEMBER_ID";
+                if(memberListType.equalsIgnoreCase("goalsRecommendations"))
+                	sqlQuery = "select  DISTINCT a.MEMBER_ID from DIM_MEMBER a "
+                            + "INNER JOIN FACT_SURVEY b on b.MEMBER_SK =a.MEMBER_SK";      
+                if(memberListType.equalsIgnoreCase("rewardsRecommendations"))
+                	sqlQuery = "select DISTINCT MEMBER_ID from QMS_FACT_GOAL_INTERVENTIONS";
+                resultSet = statement.executeQuery(sqlQuery);
+                while (resultSet.next()) {
+                	dataSet.add(resultSet.getString("MEMBER_ID"));              
+                }
+		} catch (Exception e) {
+			e.printStackTrace();
+        }
+        finally {
+        	qmsConnection.closeJDBCResources(resultSet, statement, connection);
+        }           
+		return dataSet;               
+    }
 }

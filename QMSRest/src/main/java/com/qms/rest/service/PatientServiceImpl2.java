@@ -226,8 +226,8 @@ public class PatientServiceImpl2 implements PatientService {
 //			memberSQL = "select dqm.measure_title, qgl.status,COMPLIANCE_POTENTIAL from dim_quality_measure dqm "
 //					+ "inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "
 //					+ "where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' order by qgl.gap_date desc";
-			memberSQL = "select dqm.measure_title, qgl.status, qgl.COMPLIANCE_POTENTIAL, qgl.gap_date "+
-			"from dim_quality_measure dqm "+
+			memberSQL = "select dqm.measure_name, qgl.status, qgl.COMPLIANCE_POTENTIAL, qgl.gap_date "+
+			"from qms_quality_measure dqm "+
 			"inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "+
 			"where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' and rownum < 2 order by qgl.gap_date desc";			
 			
@@ -236,7 +236,7 @@ public class PatientServiceImpl2 implements PatientService {
 			Set<String> careGapNameSet = new HashSet<>();
 			String gapName = null;
 			while (resultSet.next()) {
-				gapName = resultSet.getString("measure_title");
+				gapName = resultSet.getString("measure_name");
 				if(!careGapNameSet.contains(gapName)) {					
 					careGapNameSet.add(gapName);
 					careGaps.add(new String[]{gapName, resultSet.getString("COMPLIANCE_POTENTIAL")});

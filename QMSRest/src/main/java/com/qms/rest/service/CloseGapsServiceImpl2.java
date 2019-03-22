@@ -221,7 +221,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, closeGap.getProviderComments());
 			System.out.println(" User data --> " + userData);
 			if(userData == null)
-				return RestResult.getFailRestResult(" Logged in user data is null ");
+				return RestResult.getFailRestResult(" Logged in user data is null. Please logout and login once. ");
 			System.out.println(" User Role Id --> " + userData.getRoleId());
 			String updateStatus = getStatus(userData.getRoleId(), status, closeGap.getCloseGap());
 			if(updateStatus == null) {
@@ -253,7 +253,6 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			statement.setString(++i, memberId);
 			statement.setString(++i, closeGap.getTargetDate());
 			statement.setString(++i, closeGap.getActionCareGap());
-			System.out.println(" Inserting qms_gic_lifecycle with id --> " + lifeCycleId);
 			statement.executeUpdate();
 			System.out.println(" Inserting qms_gic_lifecycle sucess for ID --> " + lifeCycleId);
 			httpSession.setAttribute(QMSConstants.SESSION_TYPE_ID, lifeCycleId+"");
