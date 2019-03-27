@@ -1245,7 +1245,7 @@ object UtilFunctions {
     val mandatoryExclDf = dfMap.get(KpiConstants.mandatoryExclDfname).getOrElse(spark.emptyDataFrame)
     val optionalExclDf = dfMap.get(KpiConstants.optionalExclDfName).getOrElse(spark.emptyDataFrame)
     val numeratorPopDf = dfMap.get(KpiConstants.numeratorDfName).getOrElse(spark.emptyDataFrame)
-   // val productPlanDf = dfMap.get(KpiConstants.productPlanTblName).getOrElse(spark.emptyDataFrame)
+
 
 
     val eligiblePopList = if(eligiblePopDf.count() > 0) eligiblePopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
@@ -1277,12 +1277,7 @@ object UtilFunctions {
                             rexclColAddedDf.withColumn(KpiConstants.ncqaOutNumCol, when(exclColAddedDf.col(KpiConstants.memberidColName).isin(numeratorPopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
 
 
-    val measAddedDf = numColAddedDf.withColumnRenamed(KpiConstants.memberidColName, KpiConstants.ncqaOutmemberIdCol)
-                                   .withColumnRenamed(KpiConstants.payerColName, KpiConstants.ncqaOutPayerCol)
-                                   .withColumn(KpiConstants.ncqaOutMeasureCol,lit(measureId))
-                                   .withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
-
-
+    val measAddedDf = numColAddedDf.withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
 
     val resultDf = measAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
     resultDf

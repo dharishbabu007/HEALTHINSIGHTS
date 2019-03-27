@@ -161,6 +161,7 @@ object KpiConstants {
   val months216 = 216
   val months240 = 240
   val months792 = 792
+  val months972 = 972
   val months888 = 888
   val months1032 = 1032
 
@@ -348,6 +349,7 @@ object KpiConstants {
   val medicatiolListColName = "medication_list"
   val lisPremiumSubColName = "lis_premium_subsidy"
   val orgreasentcodeColName = "ori_reason_for_entitle_code"
+  val measureColName = "measure"
 
 
   /*member table column name constants*/
@@ -486,7 +488,10 @@ object KpiConstants {
   val supplflagColName = "supplement_flag"
   val labCodeColName = "lab_code"
   val dataSourceColName = "data_source"
+  val secondServiceDateColName = "second_service_date"
 
+
+  /*medicare_monthly_membership table column names*/
 
 
   /*Common Schema Constants*/
