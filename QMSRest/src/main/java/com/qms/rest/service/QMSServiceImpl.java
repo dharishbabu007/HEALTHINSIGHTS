@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -92,6 +94,13 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				measureCreator.setStatus(statusMap.get(resultSet.getString("status_id")));
+				System.out.println(resultSet.getDate("END_DATE") + " :: " + resultSet.getString("END_DATE"));
+				if(resultSet.getDate("END_DATE") != null) {
+					System.out.println(resultSet.getDate("END_DATE") + " ::: " + resultSet.getDate("END_DATE").getTime());
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(new Date(resultSet.getDate("END_DATE").getTime()));
+					measureCreator.setMeasurementYear(calendar.get(Calendar.YEAR));
+				}
 				measureList.add(measureCreator);
 			}			
 			
@@ -144,6 +153,10 @@ public class QMSServiceImpl implements QMSService {
 				measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+				if(resultSet.getDate("END_DATE") != null) {
+					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+					measureCreator.setMeasurementYear(localDate.getYear());
+				}				
 				break;
 			}
 		} catch (Exception e) {
@@ -619,7 +632,11 @@ public class QMSServiceImpl implements QMSService {
 					measureCreator.setReviewedBy(userMap.get(resultSet.getString("REVIEWER_ID")));
 					measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 					measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
-					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));					
+					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+					if(resultSet.getDate("END_DATE") != null) {
+						LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+						measureCreator.setMeasurementYear(localDate.getYear());
+					}					
 					dataSet.add(measureCreator);
 				}
 			}

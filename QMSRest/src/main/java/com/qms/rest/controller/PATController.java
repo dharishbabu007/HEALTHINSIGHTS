@@ -60,15 +60,6 @@ public class PATController {
 		return new ResponseEntity<Set<SearchAssociatedPatient>>(workList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/action_on_caregap_list/{measureId}", method = RequestMethod.GET)
-	public ResponseEntity<PatActionCareGap> actionOnCareGapList(@PathVariable("measureId") String measureId) {
-		PatActionCareGap workList = patService.actionOnCareGapList(measureId);
-		if (workList == null) {
-			return new ResponseEntity<PatActionCareGap>(HttpStatus.NO_CONTENT);			
-		}
-		return new ResponseEntity<PatActionCareGap>(workList, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value = "/get_pat/{memberId}/{measureId}", method = RequestMethod.GET)
 	public ResponseEntity<List<Pat>> getPatById(@PathVariable("memberId") String memberId, @PathVariable("measureId") String measureId) {
 		List<Pat> workList = patService.getPatById(memberId, measureId);
@@ -96,6 +87,36 @@ public class PATController {
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);		
 		else	
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
-	}	
+	}
+	
+	@RequestMapping(value = "/action_on_caregap_list/{measureId}", method = RequestMethod.GET)
+	public ResponseEntity<PatActionCareGap> actionOnCareGapList(@PathVariable("measureId") String measureId) {
+		PatActionCareGap workList = patService.actionOnCareGapList(measureId);
+		if (workList == null) {
+			return new ResponseEntity<PatActionCareGap>(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<PatActionCareGap>(workList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/action_on_caregap_Code_Type_list/{measureId}/{valueSet}", method = RequestMethod.GET)
+	public ResponseEntity<Set<String>> actionOnCareGapCodeTypeList(@PathVariable("measureId") String measureId ,
+																   @PathVariable("valueSet") String valueSet) {
+		Set<String> workList = patService.actionOnCareGapCodeTypeList(measureId, valueSet);
+		if (workList == null) {
+			return new ResponseEntity<Set<String>>(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+	}
 
+	@RequestMapping(value = "/action_on_caregap_Codes_list/{measureId}/{valueSet}/{codeSystem}", method = RequestMethod.GET)
+	public ResponseEntity<Set<String>> actionOnCareGapCodesList(@PathVariable("measureId") String measureId,
+																@PathVariable("valueSet") String valueSet,
+																@PathVariable("codeSystem") String codeSystem) {
+		Set<String> workList = patService.actionOnCareGapCodesList(measureId, valueSet, codeSystem);
+		if (workList == null) {
+			return new ResponseEntity<Set<String>>(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+	}	
+	
 }
