@@ -98,7 +98,8 @@ public class UserRoleServiceImpl2 implements UserRoleService{
 			for (ScreenPermission pagePermissions2 : pagePermissions) {
 				int i=0;
 				maxPageRoleId++;
-				System.out.println(" Adding QMS_ROLE_ACCESS with id --> " + maxPageRoleId);
+				System.out.println(roleId + " role Id. "+ pagePermissions2.getScreenId()+ 
+						" screen Id. Adding QMS_ROLE_ACCESS id " + maxPageRoleId);
 				statement.setInt(++i, maxPageRoleId);
 				statement.setInt(++i, pagePermissions2.getScreenId());
 				statement.setInt(++i, roleId);

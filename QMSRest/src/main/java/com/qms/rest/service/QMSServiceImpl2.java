@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,6 +92,11 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				measureCreator.setStatus(statusMap.get(resultSet.getString("MEASURE_STATUS_ID")));
+				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				if(resultSet.getDate("END_DATE") != null) {
+					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+					measureCreator.setMeasurementYear(localDate.getYear());
+				}				
 				measureList.add(measureCreator);
 			}			
 			
@@ -148,8 +154,12 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setP90(resultSet.getInt("P90"));
 				measureCreator.setCollectionSource(resultSet.getString("COLLECTION_SOURCE"));
 				measureCreator.setMrss(resultSet.getInt("MRSS"));
-				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));				
-				//measureCreator.setCollectionMethod(resultSet.getString("OVERFLOW_RATE"));
+				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));
+				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				if(resultSet.getDate("END_DATE") != null) {
+					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+					measureCreator.setMeasurementYear(localDate.getYear());
+				}
 				break;
 			}
 		} catch (Exception e) {
@@ -320,9 +330,9 @@ public class QMSServiceImpl2 implements QMSService {
 				+ "numerator,num_exclusion,QUALITY_MEASURE_ID,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
 				+ "measure_type_id,measure_edit_id,REC_UPDATE_DATE,MEASURE_STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
 				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name,"
-				+ "P50,P90,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE,review_comments) "
+				+ "P50,P90,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE,review_comments,OPT_EXCLUSION) "
 				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement statement = null;
 		Statement sqlStatement = null;
@@ -418,6 +428,7 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setInt(++i, measureCreator.getMrss());
 			statement.setString(++i, measureCreator.getOverFlowRate());			
 			statement.setString(++i, measureCreator.getReviewComments());
+			statement.setString(++i, measureCreator.getOptionalExclusion());
 			
 			statement.executeUpdate();
 			connection.commit();
@@ -477,7 +488,7 @@ public class QMSServiceImpl2 implements QMSService {
 				+ "measure_domain_id=?, deno_exclusions=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
 				+ "QUALITY_PROGRAM_ID=?, measure_steward_id=?, target_population_age=?, measure_type_id=?, rec_update_date=?, "
 				+ "MEASURE_STATUS_ID=?, USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=?, "
-				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=? "
+				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=?,OPT_EXCLUSION=? "
 				+ "where QUALITY_MEASURE_ID=? and MEASURE_EDIT_ID=?";
 		
 		String qualityProgramId = this.getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
@@ -530,6 +541,7 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setString(++i, measureCreator.getCollectionSource());
 			statement.setInt(++i, measureCreator.getMrss());
 			statement.setString(++i, measureCreator.getOverFlowRate());			
+			statement.setString(++i, measureCreator.getOptionalExclusion());
 			
 			//where clause parameters
 			statement.setInt(++i, measureCreator.getId());
@@ -601,7 +613,11 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setCollectionSource(resultSet.getString("COLLECTION_SOURCE"));
 				measureCreator.setMrss(resultSet.getInt("MRSS"));
 				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));
-				//measureCreator.setCollectionMethod(resultSet.getString("OVERFLOW_RATE"));
+				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				if(resultSet.getDate("END_DATE") != null) {
+					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+					measureCreator.setMeasurementYear(localDate.getYear());
+				}
 				break;
 			}
 		} catch (Exception e) {
@@ -647,7 +663,12 @@ public class QMSServiceImpl2 implements QMSService {
 					measureCreator.setReviewedBy(userMap.get(resultSet.getString("REVIEWER_ID")));
 					measureCreator.setIsActive(resultSet.getString("IS_ACTIVE"));
 					measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
-					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));					
+					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
+					measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+					if(resultSet.getDate("END_DATE") != null) {
+						LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
+						measureCreator.setMeasurementYear(localDate.getYear());
+					}					
 					dataSet.add(measureCreator);
 				}
 			}

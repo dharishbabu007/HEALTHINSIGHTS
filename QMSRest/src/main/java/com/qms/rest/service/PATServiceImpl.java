@@ -159,6 +159,7 @@ public class PATServiceImpl implements PATService {
 						   "INNER JOIN QMS_QUALITY_MEASURE QQM ON QQM.QUALITY_MEASURE_ID = FHGIC.QUALITY_MEASURE_ID "+
 						   "INNER JOIN REF_HEDIS2019 HEDIS ON HEDIS.MEASURENAME = QQM.MEASURE_NAME "+
 						   "where QQM.QUALITY_MEASURE_ID='"+measureId+"'";
+			System.out.println(" actionOnCareGapList - measureId "+measureId);
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				valueSet.add(resultSet.getString("VALUESET"));
@@ -365,6 +366,59 @@ public class PATServiceImpl implements PATService {
 		return mitList;		
 	}
 	
+
+	@Override
+	public Set<String> actionOnCareGapCodeTypeList(String measureId ,String valueSet) {
+		Set<String> codeType1 = new TreeSet<>();
 	
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT HEDIS.CODESYSTEM FROM QMS_GIC_LIFECYCLE FHGIC "+
+						   "INNER JOIN QMS_QUALITY_MEASURE QQM ON QQM.QUALITY_MEASURE_ID = FHGIC.QUALITY_MEASURE_ID "+
+						   "INNER JOIN REF_HEDIS2019 HEDIS ON HEDIS.MEASURENAME = QQM.MEASURE_NAME "+
+						   "where QQM.QUALITY_MEASURE_ID='"+measureId+"' and HEDIS.VALUESET='"+valueSet+"'";
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				codeType1.add(resultSet.getString("CODESYSTEM"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return codeType1;
+	}	
+	
+	@Override
+	public Set<String> actionOnCareGapCodesList(String measureId ,String valueSet,String codeTypeem) {
+		Set<String> codes1 = new TreeSet<>();	
+		
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT HEDIS.CODE FROM QMS_GIC_LIFECYCLE FHGIC "+
+						   "INNER JOIN QMS_QUALITY_MEASURE QQM ON QQM.QUALITY_MEASURE_ID = FHGIC.QUALITY_MEASURE_ID "+
+						   "INNER JOIN REF_HEDIS2019 HEDIS ON HEDIS.MEASURENAME = QQM.MEASURE_NAME "+
+						   "where QQM.QUALITY_MEASURE_ID='"+measureId+"' and HEDIS.VALUESET='"+valueSet+"' and HEDIS.CODESYSTEM='"+codeTypeem+"'";
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				codes1.add(resultSet.getString("CODE"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return codes1;
+	}	
 	
 }

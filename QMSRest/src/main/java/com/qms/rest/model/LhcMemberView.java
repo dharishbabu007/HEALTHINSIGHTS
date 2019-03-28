@@ -92,7 +92,8 @@ public class LhcMemberView {
 	private String careGapDuration;
 	private String reward;
 //	private String source;
-//	private String likelihoodToChurn;
-//	private String predicted_churn;
+	private String likelihoodToChurn;
+	private String predictedChurn;
+	
 
 }

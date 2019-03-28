@@ -251,7 +251,10 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			connection = qmsConnection.getHiveThriftConnection();
 			statement = connection.createStatement();
 			
-			String membergaptotallistqry = "SELECT  DM.MEMBER_ID, DM.FIRST_NAME, DM.MIDDLE_NAME ,DM.LAST_NAME FROM DIM_MEMBER DM where DM.MEMBER_ID like '"+search+"%' or DM.FIRST_NAME like '"+search+"%' or DM.MIDDLE_NAME like '"+search+"%' or DM.LAST_NAME like '"+search+"%' order by DM.MEMBER_ID ASC";
+			String membergaptotallistqry = 
+			"SELECT  DM.MEMBER_ID, DM.FIRST_NAME, DM.MIDDLE_NAME ,DM.LAST_NAME "
+			+ "FROM DIM_MEMBER DM where DM.MEMBER_ID like '"+search+"%' or DM.FIRST_NAME like '"+search+"%' or DM.MIDDLE_NAME "
+			+ "like '"+search+"%' or DM.LAST_NAME like '"+search+"%' order by DM.MEMBER_ID ASC";
 			resultSet = statement.executeQuery(membergaptotallistqry);
 			Map<String, DimMemberGapListSearch> dimMerberscerchlist = new TreeMap<String, DimMemberGapListSearch >();
 			while (resultSet.next()) {

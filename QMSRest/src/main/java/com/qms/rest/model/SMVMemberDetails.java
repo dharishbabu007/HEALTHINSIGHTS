@@ -30,4 +30,6 @@ public class SMVMemberDetails {
 	private String departmentName; 
 	private String noShowLikelihood; 
 	private String noShow;
+	private String ssn;
+	private String physicianName; 
 }

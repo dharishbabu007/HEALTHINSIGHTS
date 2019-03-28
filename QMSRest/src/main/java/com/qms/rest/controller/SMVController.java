@@ -15,6 +15,7 @@ import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
+import com.qms.rest.model.SmvMember;
 import com.qms.rest.model.SmvMemberClinical;
 import com.qms.rest.service.SMVService;
 
@@ -80,5 +81,14 @@ public class SMVController {
           }
           return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/getSmvMember/{memberId}", method = RequestMethod.GET)
+    public ResponseEntity<SmvMember> getSmvMember(@PathVariable("memberId") String memberId) {
+          SmvMember workList = smvService.getSmvMember(memberId);
+          if (workList==null) {
+                return new ResponseEntity<SmvMember>(HttpStatus.NO_CONTENT);
+          }
+          return new ResponseEntity<SmvMember>(workList, HttpStatus.OK);
+    }    
 	
 }

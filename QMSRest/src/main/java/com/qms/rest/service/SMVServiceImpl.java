@@ -2,11 +2,11 @@ package com.qms.rest.service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,10 +15,13 @@ import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
+import com.qms.rest.model.RewardSet;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
+import com.qms.rest.model.SmvMember;
 import com.qms.rest.model.SmvMemberClinical;
 import com.qms.rest.util.QMSConnection;
+import com.qms.rest.util.QMSDateUtil;
 
 @Service("smvService")
 public class SMVServiceImpl implements SMVService {
@@ -61,6 +64,8 @@ public class SMVServiceImpl implements SMVService {
 				memberDetails.setDepartmentName(resultSet.getString("DEPARTMENT_NAME"));
 				memberDetails.setNoShowLikelihood(resultSet.getString("NOSHOW_LIKELIHOOD"));
 				memberDetails.setNoShow(resultSet.getString("NOSHOW"));
+				memberDetails.setSsn(resultSet.getString("SSN"));
+				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN NAME"));
 				memberDetailsList.add(memberDetails);
 			}
 		} catch (Exception e) {
@@ -170,6 +175,8 @@ public class SMVServiceImpl implements SMVService {
 				lhcMemberDetails.setCareGapDuration(resultSet.getString("CARE_GAP_DURATION"));
 				lhcMemberDetails.setReward(resultSet.getString("REWARD"));
 				lhcMemberDetails.setMotivations(resultSet.getString("MOTIVATIONS"));
+				lhcMemberDetails.setLikelihoodToChurn(resultSet.getString("LIKELIHOOD_TO_CHURN"));
+				lhcMemberDetails.setPredictedChurn(resultSet.getString("PREDICTED_CHURN"));				
 				memberDetailsList.add(lhcMemberDetails);
 			}
 		} catch (Exception e) {
@@ -189,7 +196,7 @@ public class SMVServiceImpl implements SMVService {
 		try {
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			String query = "select * from LHR_MEMBERLIST_VIEW ";
+			String query = "select * from LHR_MEMBERLIST_VIEW";
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				lhrMemberListView = new LhrMemberListView();
@@ -255,4 +262,264 @@ public class SMVServiceImpl implements SMVService {
         }           
 		return dataSet;               
     }
+	
+	@Override
+	public SmvMember getSmvMember(String memberId) {
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		SmvMember smvMember = new SmvMember();
+		try {
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String sqlQuery = null;
+
+			// SMV INSURANCE
+			sqlQuery = "SELECT DM.MEMBER_ID, COUNT(FC.CLAIMS_SK) AS \"Number_of_Pending_Claims\", MAX(DDS.CALENDAR_DATE)"
+					+ " FROM FACT_MEMBERSHIP FM" + " INNER JOIN DIM_MEMBER DM ON FM.MEMBER_SK = DM.MEMBER_SK"
+					+ " INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = FM.MEMBER_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FC.START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDS ON DDS.DATE_SK = FM.MEMBER_PLAN_START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDE ON DDE.DATE_SK = FM.MEMBER_PLAN_END_DATE_SK"
+					+ " WHERE DD.CALENDAR_DATE BETWEEN DDS.CALENDAR_DATE AND DDE.CALENDAR_DATE"
+					+ " AND FC.CLAIM_STATUS= 'Pending' AND DM.MEMBER_ID='" + memberId + "'" + " GROUP BY DM.MEMBER_ID";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setMemberId(resultSet.getString("MEMBER_ID"));
+				smvMember.setNumberOfPendingClaims(resultSet.getString("Number_of_Pending_Claims"));
+				smvMember.setPendingClaimsDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(3)));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, COUNT(FC.CLAIMS_SK) AS \"Number_of_Denied_Claims\", MAX(DDS.CALENDAR_DATE)"
+					+ " FROM FACT_MEMBERSHIP FM" + " INNER JOIN DIM_MEMBER DM ON FM.MEMBER_SK = DM.MEMBER_SK"
+					+ " INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = FM.MEMBER_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FC.START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDS ON DDS.DATE_SK = FM.MEMBER_PLAN_START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDE ON DDE.DATE_SK = FM.MEMBER_PLAN_END_DATE_SK"
+					+ " WHERE DD.CALENDAR_DATE BETWEEN DDS.CALENDAR_DATE AND DDE.CALENDAR_DATE"
+					+ " AND FC.CLAIM_STATUS= 'Denied' AND DM.MEMBER_ID='" + memberId + "'" + " GROUP BY DM.MEMBER_ID";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setNumberOfDeniedClaims(resultSet.getString("Number_of_Denied_Claims"));
+				smvMember.setDeniedClaimsDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(3)));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, SUM(AMOUNT_PAID) AS \"Total_Amount_Spend\", MAX(DDS.CALENDAR_DATE)"
+					+ " FROM FACT_MEMBERSHIP FM" + " INNER JOIN DIM_MEMBER DM ON FM.MEMBER_SK = DM.MEMBER_SK"
+					+ " INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = FM.MEMBER_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FC.START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDS ON DDS.DATE_SK = FM.MEMBER_PLAN_START_DATE_SK"
+					+ " INNER JOIN DIM_DATE DDE ON DDE.DATE_SK = FM.MEMBER_PLAN_END_DATE_SK"
+					+ " WHERE DD.CALENDAR_DATE BETWEEN DDS.CALENDAR_DATE AND DDE.CALENDAR_DATE" + " AND DM.MEMBER_ID='"
+					+ memberId + "'" + " GROUP BY DM.MEMBER_ID";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setTotalAmountSpend(resultSet.getString("Total_Amount_Spend"));
+				smvMember.setAmountSpendDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate((3))));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DISTINCT B.MEMBER_ID as \"Beneficiary_ID\", C.PAYER_NAME as \"Primary_Payer\","
+					+ "RL.LOB, D.CODE AS \"Product\",D.PLAN_NAME AS \"Plan\","
+					+ "D.PLAN_CATEGORY AS \"Plan_Type\",DD.CALENDAR_DATE AS \"Enrollment_Start_Date\","
+					+ "DDT.CALENDAR_DATE AS \"Enrollment_End_Date\" FROM DIM_MEMBER B "
+					+ "INNER JOIN FACT_MEMBERSHIP A ON A.MEMBER_SK = B.MEMBER_SK "
+					+ "INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = A.MEMBER_SK "
+					+ "INNER JOIN DIM_PAYER C ON A.PRIMARY_PAYER_SK = C.PAYER_SK "
+					+ "INNER JOIN DIM_PRODUCT_PLAN D ON A.PRODUCT_PLAN_SK = D.PRODUCT_PLAN_SK "
+					+ "INNER JOIN REF_LOB RL ON RL.LOB_ID = D.LOB_ID "
+					+ "INNER JOIN DIM_DATE DD ON DD.DATE_SK = A.MEMBER_PLAN_START_DATE_SK "
+					+ "INNER JOIN DIM_DATE DDT ON DDT.DATE_SK = A.MEMBER_PLAN_END_DATE_SK WHERE B.MEMBER_ID='"+memberId+"'";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setEnrollmentPrimaryPayer(resultSet.getString("Primary_Payer"));
+				smvMember.setEnrollmentLob(resultSet.getString("lob"));
+				smvMember.setEnrollmentProduct(resultSet.getString("Product"));
+				smvMember.setEnrollmentPlan(resultSet.getString("Plan"));
+				smvMember.setEnrollmentPlanType(resultSet.getString("Plan_Type"));
+				smvMember.setEnrollmentStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Enrollment_Start_Date")));
+				smvMember.setEnrollmentEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Enrollment_End_Date")));
+			}
+			resultSet.close();
+
+			// SMV ENGAGEMENT
+			sqlQuery = "SELECT CD.PERSONA_NAME, CFO.MEMBER_ID, EFO.LIKELIHOOD_ENROLLMENT,"
+					+ "EFO.REASON_TO_NOT_ENROLL, EFO.CHANNEL, LHC.LIKELIHOOD_OF_ENROLLMENT,"
+					+ "LHR.LIKELIHOOD_TO_RECOMMEND FROM QMS_CP_FILE_OUTPUT CFO "
+					+ "INNER JOIN QMS_CP_DEFINE CD ON CD.CLUSTER_ID = CFO.CLUSTER_ID "
+					+ "INNER JOIN QMS_ENROLLMENT_FILE_OUTPUT EFO ON EFO.MEMBER_ID = CFO.MEMBER_ID "
+					+ "INNER JOIN QMS_LHC_FILE_OUTPUT LHC ON LHC.MEMBER_ID = EFO.MEMBER_ID "
+					+ "INNER JOIN QMS_LHR_FILE_OUTPUT LHR ON LHR.MEMBER_ID = EFO.MEMBER_ID WHERE CFO.MEMBER_ID='"+memberId+"'";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setEngagementPersonaName(resultSet.getString("PERSONA_NAME"));
+				smvMember.setEngagementLikelihoodOfEnrollment(resultSet.getString("LIKELIHOOD_ENROLLMENT"));
+				smvMember.setEngagementReasonToNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
+				smvMember.setEngagementChannel(resultSet.getString("CHANNEL"));
+				smvMember.setEngagementLikelihoodOfEnrollment(resultSet.getString("LIKELIHOOD_OF_ENROLLMENT"));
+				smvMember.setEngagementLikelihoodToRecommend(resultSet.getString("LIKELIHOOD_TO_RECOMMEND"));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT B.MEMBER_ID, B.CATEGORY, B.GOAL, B.FREQUENCY, B.GOAL_DATE,"
+					+ "B.REWARD, A.INTERVENTIONS FROM QMS_FACT_GOAL_INTERVENTIONS A "
+					+ "INNER JOIN QMS_REWARDS_SET B ON A.GOAL_SET_ID = B.GOAL_SET_ID AND "
+					+ "A.MEMBER_ID = B.MEMBER_ID WHERE A.MEMBER_ID ='" + memberId + "'";
+			resultSet = statement.executeQuery(sqlQuery);
+			Set<RewardSet> rewardSetList = new HashSet<>();
+			smvMember.setRewardSetList(rewardSetList);
+			RewardSet rewardSet = null;
+			while (resultSet.next()) {
+				rewardSet = new RewardSet();
+				rewardSet.setCategory(resultSet.getString("CATEGORY"));
+				rewardSet.setGoal(resultSet.getString("GOAL"));
+				rewardSet.setFrequency(resultSet.getString("FREQUENCY"));
+				rewardSet.setGoalDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("GOAL_DATE")));
+				rewardSet.setReward(resultSet.getString("REWARD"));
+				rewardSet.setInterventions(resultSet.getString("INTERVENTIONS"));
+				rewardSetList.add(rewardSet);
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, MAX(DD.CALENDAR_DATE), FI.IMMUNIZATION_NAME AS \"Active_Immunizations\", FI.IMMUNIZATION_STATUS"
+					+ " FROM DIM_MEMBER DM INNER JOIN FACT_PAT_MEM FPM ON FPM.MEMBER_ID = DM.MEMBER_ID"
+					+ " INNER JOIN DIM_PATIENT DP ON DP.PAT_ID = FPM.PAT_ID"
+					+ " INNER JOIN FACT_ENC FE ON FE.PATIENT_SK = DP.PATIENT_SK"
+					+ " INNER JOIN FACT_IMMUNIZATION FI ON DP.PATIENT_SK = FI.PATIENT_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FI.IMMUNIZATION_DATE_SK WHERE DM.MEMBER_ID ='"
+					+ memberId + "' AND FI.IMMUNIZATION_STATUS = 'completed'"
+					+ " GROUP BY DM.MEMBER_ID, FI.IMMUNIZATION_NAME, FI.IMMUNIZATION_STATUS";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setActiveImmunizationsDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(2)));
+				smvMember.setActiveImmunizations(resultSet.getString("Active_Immunizations"));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, MAX(DD.CALENDAR_DATE), FI.IMMUNIZATION_NAME AS \"Pending_Immunizations\", FI.IMMUNIZATION_STATUS"
+					+ " FROM DIM_MEMBER DM INNER JOIN FACT_PAT_MEM FPM ON FPM.MEMBER_ID = DM.MEMBER_ID"
+					+ " INNER JOIN DIM_PATIENT DP ON DP.PAT_ID = FPM.PAT_ID"
+					+ " INNER JOIN FACT_ENC FE ON FE.PATIENT_SK = DP.PATIENT_SK"
+					+ " INNER JOIN FACT_IMMUNIZATION FI ON DP.PATIENT_SK = FI.PATIENT_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FI.IMMUNIZATION_DATE_SK WHERE DM.MEMBER_ID = '"
+					+ memberId + "' AND FI.IMMUNIZATION_STATUS = 'pending'"
+					+ " GROUP BY DM.MEMBER_ID, FI.IMMUNIZATION_NAME, FI.IMMUNIZATION_STATUS";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setPendingImmunizationsDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(2)));
+				smvMember.setPendingImmunizations(resultSet.getString("Pending_Immunizations"));
+				smvMember.setPendingImmunizationsStatus(resultSet.getString("IMMUNIZATION_STATUS"));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, MAX(DD.CALENDAR_DATE), FOP.PROCEDURE_NAME AS \"Last_Prescribed_Procedures\""
+					+ " FROM DIM_MEMBER DM" + " INNER JOIN FACT_PAT_MEM FPM ON FPM.MEMBER_ID = DM.MEMBER_ID"
+					+ " INNER JOIN DIM_PATIENT DP ON DP.PAT_ID = FPM.PAT_ID"
+					+ " INNER JOIN FACT_ENC FE ON FE.PATIENT_SK = DP.PATIENT_SK"
+					+ " INNER JOIN FACT_ORDER_PROC FOP ON FOP.ENC_CSN_ID = FE.ENC_CSN_ID"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FOP.ORDER_DATE_SK" + " WHERE DM.MEMBER_ID = '" + memberId
+					+ "'" + " GROUP BY DM.MEMBER_ID, FOP.PROCEDURE_NAME";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setLastPrescribedProceduresDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(2)));
+				smvMember.setLastPrescribedProcedures(resultSet.getString("Last_Prescribed_Procedures"));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT DM.MEMBER_ID, MAX(DD.CALENDAR_DATE), DME.MEDICATION_NAME AS \"Last_Prescribed_Medications\""
+					+ " FROM DIM_MEMBER DM INNER JOIN FACT_PAT_MEM FPM ON FPM.MEMBER_ID = DM.MEMBER_ID"
+					+ " INNER JOIN DIM_PATIENT DP ON DP.PAT_ID = FPM.PAT_ID"
+					+ " INNER JOIN FACT_ENC FE ON FE.PATIENT_SK = DP.PATIENT_SK"
+					+ " INNER JOIN FACT_ORDER_MED FOM ON FOM.ENC_CSN_ID = FE.ENC_CSN_ID"
+					+ " INNER JOIN DIM_MEDICATION DME ON DME.NDC_CODE = FOM.NDC"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FOM.ORDER_DATE_SK WHERE DM.MEMBER_ID = '" + memberId+"'"
+					+ " GROUP BY DM.MEMBER_ID, DME.MEDICATION_NAME";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setLastPrescribedMedicationsDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate(2)));
+				smvMember.setLastPrescribedMedications(resultSet.getString("Last_Prescribed_Medications"));
+			}
+			resultSet.close();
+
+			sqlQuery = "SELECT MAX(CALENDAR_DATE) AS \"Last_Date_of_Service\", FCRS.CCI_SCORE AS \"Risk\""
+					+ " FROM DIM_MEMBER DM INNER JOIN FACT_PAT_MEM FPM ON FPM.MEMBER_ID = DM.MEMBER_ID"
+					+ " INNER JOIN DIM_PATIENT DP ON DP.PAT_ID = FPM.PAT_ID"
+					+ " INNER JOIN FACT_ENC FE ON FE.PATIENT_SK = DP.PATIENT_SK"
+					+ " INNER JOIN DIM_DATE DD ON DD.DATE_SK = FE.ENCOUNTER_DATE_SK"
+					+ " INNER JOIN FACT_CCI_RISK_SCORE FCRS ON DM.MEMBER_SK = FCRS.MEMBER_SK"
+					+ " INNER JOIN QMS_GIC_LIFECYCLE QGL ON DM.MEMBER_ID = QGL.MEMBER_ID WHERE DM.MEMBER_ID = '"
+					+ memberId + "'" + " GROUP BY FCRS.CCI_SCORE";
+			resultSet = statement.executeQuery(sqlQuery);
+			while (resultSet.next()) {
+				smvMember.setLastDateOfService(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Last_Date_of_Service")));
+				smvMember.setRisk(resultSet.getString("Risk"));
+			}
+			resultSet.close();
+			
+			sqlQuery = "SELECT COUNT(IP.MEMBER_SK) AS \"IP_VISITS\" FROM IP_VISIT_VIEW IP WHERE IP.MEMBER_SK LIKE '"
+					+ memberId + "%' UNION SELECT COUNT(OP.MEMBER_SK) AS \"IP_VISITS\" FROM OP_VISIT_VIEW OP"
+					+ " WHERE OP.MEMBER_SK LIKE '" + memberId + "%' UNION"
+					+ " SELECT COUNT(ER.MEMBER_SK) AS \"IP_VISITS\" FROM ER_FLYER_VIEW ER WHERE ER.MEMBER_SK LIKE '"+memberId+"%'";
+			resultSet = statement.executeQuery(sqlQuery);
+			int count = 1;
+			while (resultSet.next()) {
+				if(count == 1)
+					smvMember.setIpVisits(resultSet.getString("IP_VISITS"));
+				if(count == 2)
+					smvMember.setOpVisits(resultSet.getString("IP_VISITS"));
+				if(count == 3)
+					smvMember.setErVisits(resultSet.getString("IP_VISITS"));
+				count++;
+			}
+			
+			//Comorbidities
+			resultSet.close();
+			sqlQuery = "select fmc.* from fact_mem_comorbidity fmc, dim_member dm where "
+					+ "fmc.member_sk = dm.member_sk and dm.member_id = '"+memberId+"'";
+			resultSet = statement.executeQuery(sqlQuery);
+			Set<String> comorbidities = new TreeSet<>();
+			ResultSetMetaData rsmd = resultSet.getMetaData();
+			String colName = null;
+			String colValue = null;
+			while (resultSet.next()) {
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					colName = rsmd.getColumnName(i); 
+					colValue = resultSet.getString(i);
+					if(colValue != null && colValue.equalsIgnoreCase("1") && !colName.equalsIgnoreCase("fmc.comorbidity_count"))
+						comorbidities.add(colName.replaceFirst("fmc.", "").toLowerCase());
+                }
+				break;
+			}
+			smvMember.setComorbidities(comorbidities);
+			smvMember.setComorbiditiesCount(comorbidities.size()+"");
+			
+			//Care Gaps			
+			resultSet.close();
+			sqlQuery = "select dqm.measure_name, qgl.status, qgl.COMPLIANCE_POTENTIAL, qgl.gap_date "+
+			"from qms_quality_measure dqm "+
+			"inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "+
+			"where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' and rownum < 2 order by qgl.gap_date desc";			
+			Set<String[]> careGaps = new HashSet<>();
+			resultSet = statement.executeQuery(sqlQuery);
+			Set<String> careGapNameSet = new HashSet<>();
+			String gapName = null;
+			while (resultSet.next()) {
+				gapName = resultSet.getString("measure_name");
+				if(!careGapNameSet.contains(gapName)) {					
+					careGapNameSet.add(gapName);
+					careGaps.add(new String[]{gapName, resultSet.getString("COMPLIANCE_POTENTIAL")});
+				}
+			}
+			smvMember.setCareGaps(careGaps);
+			smvMember.setCareGapsCount(careGaps.size()+"");			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		return smvMember;
+	}	
 }

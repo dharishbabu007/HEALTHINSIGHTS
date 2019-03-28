@@ -77,10 +77,10 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			if (resultSet.next()) {
 				closeGaps.setCareGap(resultSet.getString("MEASURE_NAME")); 
 				closeGaps.setOpenDate(resultSet.getString("OPENDATE"));
-				closeGaps.setTargetDate(resultSet.getString("TARGET_DATE"));
+				closeGaps.setTargetDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("TARGET_DATE")));				
 				closeGaps.setAssignedTo(resultSet.getString("PCP")); 
 				closeGaps.setStatus(resultSet.getString("STATUS")); 
-				closeGaps.setLastActionDate(resultSet.getString("GAP_DATE"));
+				closeGaps.setLastActionDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("GAP_DATE")));
 			}
 			
 			resultSet.close();
@@ -93,7 +93,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 					"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
 			resultSet = statement.executeQuery(membergplistQry);
 			while (resultSet.next()) {
-				closeGaps.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
+				closeGaps.setNextAppointmentDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Next_Appointment_Date")));
 			}						
 			
 			resultSet.close();	
@@ -128,23 +128,6 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			}
 			closeGaps.setCareGaps(closeGapSet);
 			if(lifeCycleIds.size() > 0) {
-//				resultSet.close();
-//				String glcIds = lifeCycleIds.toString().substring(1, (lifeCycleIds.toString().length()-1));
-//				resultSet = statement.executeQuery("select GIC_LIFECYCLE_ID,FILE_PATH,FILE_NAME from "
-//						+ "QMS_GIC_FILE_UPLOAD where GIC_LIFECYCLE_ID in("+glcIds+")");
-//				int lifeCycleId = 0;
-//				while (resultSet.next()) {
-//					lifeCycleId = resultSet.getInt("GIC_LIFECYCLE_ID");
-//					for (CloseGap closeGap1 : closeGapSet) {
-//						if(closeGap1.getLifeCycleId() == lifeCycleId) {
-//							closeGap1.getUploadList().add(resultSet.getString("FILE_PATH")+
-//									resultSet.getString("GIC_LIFECYCLE_ID")+"/"+
-//									resultSet.getString("FILE_NAME"));
-//							break;
-//						}
-//					}
-//				}
-				
 				HashMap<Integer, List<String>> upLoadData = getUploadFileByTypeId(statement, lifeCycleIds, 0, "close_gap");
 				if(upLoadData != null) {
 					List<String> fileNames = null;
@@ -184,18 +167,22 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 			connection = qmsConnection.getOracleConnection();
 			
 			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select gap_date,status,HEDIS_GAPS_IN_CARE_SK,PRODUCT_PLAN_ID,user_name "
+			resultSet = statementObj.executeQuery("select gap_date,status,HEDIS_GAPS_IN_CARE_SK,PRODUCT_PLAN_ID,user_name,TARGET_DATE,priority "
 					+ "from qms_gic_lifecycle where member_id='"+memberId+"' and "
 					+ "quality_measure_id = '"+measureId+"' order by gap_date desc");
 			String productId = null;
 			String hedisGapsSK = null;
 			String userName = null;
 			String status = null;
+			String dbTargetDate = null;
+			String dbPriority = null;
 			if (resultSet.next()) {
 				productId = resultSet.getString("PRODUCT_PLAN_ID");
 				hedisGapsSK = resultSet.getString("HEDIS_GAPS_IN_CARE_SK");
 				userName = resultSet.getString("user_name");
 				status = resultSet.getString("status");
+				dbTargetDate = QMSDateUtil.getSQLDateFormat(resultSet.getDate("TARGET_DATE"));
+				dbPriority = resultSet.getString("priority");
 				System.out.println(productId + " :::: " + hedisGapsSK);
 			}			
 			
@@ -212,7 +199,10 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 				return RestResult.getFailRestResult("Close Gap not found in Request body. ");
 			}
 			CloseGap closeGap = closeGapSet.iterator().next();
-			int i=0;							
+			if(closeGap.getPriority()==null) closeGap.setPriority(dbPriority);
+			if(closeGap.getTargetDate()==null) closeGap.setTargetDate(dbTargetDate);
+			
+			int i=0;	
 			statement.setString(++i, memberId);
 			statement.setString(++i, measureId);
 			statement.setString(++i, closeGap.getIntervention());
@@ -289,7 +279,7 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 				updateStatus = "Submitted by Nurse";
 		} 
 		System.out.println(roleName + " updating status to --> " + updateStatus);
-		return null;
+		return updateStatus;
 	}
 	
 	private String getPath (String type) {

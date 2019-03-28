@@ -6,6 +6,7 @@ import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
+import com.qms.rest.model.SmvMember;
 import com.qms.rest.model.SmvMemberClinical;
 
 public interface SMVService {
@@ -21,5 +22,7 @@ public interface SMVService {
 	Set<LhrMemberListView> getLhrMemberListView();
 
 	Set<String> getMemberIdList(String memberListType);
+
+	SmvMember getSmvMember(String memberId);
 	
 }

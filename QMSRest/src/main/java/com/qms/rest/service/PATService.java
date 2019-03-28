@@ -14,8 +14,11 @@ public interface PATService {
 	Set<NameValue> getPopulationList();
 	Set<NameValue> getCareGapList();
 	Set<SearchAssociatedPatient> searchAssociatedPatientList(String measureId, String mrnIdOrName);
-	PatActionCareGap actionOnCareGapList(String measureId);	
 	List<Pat> getPatById(String patId, String measureId);
 	DimMemeber findMembergapListByMid(String memberId);
 	RestResult insertPatCreator(Pat pat);
+	
+	PatActionCareGap actionOnCareGapList(String measureId);	
+	Set<String> actionOnCareGapCodeTypeList(String measureId, String valueSet);
+	Set<String> actionOnCareGapCodesList(String measureId, String valueSet, String codeTypeem);
 }

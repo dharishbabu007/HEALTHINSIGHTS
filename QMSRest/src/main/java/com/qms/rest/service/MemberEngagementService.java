@@ -1,6 +1,5 @@
 package com.qms.rest.service;
 
-import java.util.List;
 import java.util.Set;
 
 import com.qms.rest.model.ClusterData;
