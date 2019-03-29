@@ -233,6 +233,8 @@ object KpiConstants {
   val numerator3DfName = "numerator3_df"
   val numerator4DfName = "numerator4_df"
   val numerator5DfName = "numerator5_df"
+  val numerator6DfName = "numerator6_df"
+  val numerator7DfName = "numerator7_df"
 
 
   /*Measure Title constants*/
@@ -942,6 +944,7 @@ object KpiConstants {
   val painAssessmentVal = "Pain Assessment"
   val independentLabVal = "Independent Laboratory"
 
+  val lionicValList = List(leadTestVal, pregnancyExcltestVal)
 
 
 

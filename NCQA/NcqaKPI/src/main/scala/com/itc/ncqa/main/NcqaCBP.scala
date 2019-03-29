@@ -2,6 +2,7 @@ package com.itc.ncqa.main
 
 import com.itc.ncqa.Constants
 import com.itc.ncqa.Constants.KpiConstants
+import org.apache.directory.shared.kerberos.exceptions.ErrorType
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions.year
 //import com.itc.ncqa.Functions.SparkObject.spark
@@ -43,7 +44,8 @@ object NcqaCBP {
 
     //<editor-fold desc="Loading Required Tables to memory">
 
-
+    val ystDate = year+"-01-01"
+    val yendDate = year+"-12-31"
     val aLiat = List("col1")
     val msrVal = s"'$measureId'"
     val ggMsrId = s"'${KpiConstants.ggMeasureId}'"
@@ -51,6 +53,7 @@ object NcqaCBP {
     val memqueryString = s"""SELECT * FROM ${KpiConstants.dbName}.${KpiConstants.membershipTblName} WHERE measure = $msrVal AND (member_plan_start_date IS  NOT NULL) AND(member_plan_end_date IS NOT NULL)"""
     val membershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.membershipTblName,memqueryString,aLiat)
                                         .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .repartition(2)
 
 
 
@@ -66,10 +69,13 @@ object NcqaCBP {
                                     .withColumn(KpiConstants.revenuecodeColName, when((length($"${KpiConstants.revenuecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.revenuecodeColName}"))).otherwise($"${KpiConstants.revenuecodeColName}"))
                                     .withColumn(KpiConstants.billtypecodeColName, when((length($"${KpiConstants.billtypecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.billtypecodeColName}"))).otherwise($"${KpiConstants.billtypecodeColName}"))
                                     .withColumn(KpiConstants.proccode2ColName, when(($"${KpiConstants.proccode2mod1ColName}".isin(KpiConstants.avoidCodeList:_*)) || ($"${KpiConstants.proccode2mod2ColName}".isin(KpiConstants.avoidCodeList:_*)),lit("NA")).otherwise($"${KpiConstants.proccode2ColName}"))
+      .repartition(2)
 
     val medmonmemqueryString = s"""SELECT * FROM ${KpiConstants.dbName}.${KpiConstants.medmonmemTblName} WHERE measure = $msrVal"""
     val medmonmemDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.medmonmemTblName,medmonmemqueryString,aLiat)
+      .filter(($"run_date".>=(ystDate)) && ($"run_date".<=(yendDate)))
                                         .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
+      .repartition(2)
 
     val refHedisqueryString =s"""SELECT * FROM  ${KpiConstants.dbName}.${KpiConstants.refHedisTblName} WHERE measureid = $msrVal OR measureid= $ggMsrId"""
     val refHedisDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.medmonmemTblName,refHedisqueryString,aLiat)
@@ -86,7 +92,7 @@ object NcqaCBP {
                                              .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
 
 
-    println("counts:"+membershipDf.count()+","+ visitsDf.count()+","+medmonmemDf.count() +","+refHedisDf.count()+","+ref_medvaluesetDf.count())
+   // println("counts:"+membershipDf.count()+","+ visitsDf.count()+","+medmonmemDf.count() +","+refHedisDf.count()+","+ref_medvaluesetDf.count())
 
     //</editor-fold
 
@@ -98,6 +104,11 @@ object NcqaCBP {
     val ageFilterDf = membershipDf.filter((UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}", KpiConstants.months216).<=(ageChkDate))
       && (UtilFunctions.add_ncqa_months(spark,$"${KpiConstants.dateofbirthColName}", KpiConstants.months1032).>(ageChkDate)))
 
+   /* ageFilterDf.select(KpiConstants.memberidColName).coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/ageFilterDf/")*/
     //</editor-fold>
 
     //<editor-fold desc="Continuous Enrollment, Allowable Gap and Benefit">
@@ -192,26 +203,19 @@ object NcqaCBP {
       .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
       .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}",s"df1.${KpiConstants.primaryPlanFlagColName}").cache()
 
-    // contEnrollDf.show()
-    /*contEnrollDf.select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.lobProductColName, KpiConstants.payerColName, KpiConstants.primaryPlanFlagColName).dropDuplicates()
-      .coalesce(1)
-      .write
-      .mode(SaveMode.Append)
-      .option("header", "true")
-      .csv("/home/hbase/ncqa/ima_test_out/contEnrolldetail/")*/
+
 
     //</editor-fold
 
     //<editor-fold desc="Dual eligibility,Dual enrollment, Ima enrollment filter">
 
     val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList)
-    //baseOutDf.show()
-    /*  baseOutDf.coalesce(1)
-        .write
-        .mode(SaveMode.Append)
-        .option("header", "true")
-        .csv("/home/hbase/ncqa/ima_test_out/baseOut/")*/
-
+  /*  baseOutDf.select(KpiConstants.memberidColName).coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/baseOutDf/")
+*/
 
     //</editor-fold>
 
@@ -237,11 +241,12 @@ object NcqaCBP {
 
     val groupList = visitsDf.schema.fieldNames.toList.dropWhile(p=> p.equalsIgnoreCase(KpiConstants.memberidColName))
     val visitgroupedDf = visitRefHedisDf.groupBy(KpiConstants.memberidColName, groupList:_*).agg(collect_list(KpiConstants.valuesetColName).alias(KpiConstants.valuesetColName))
-      .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName, KpiConstants.admitDateColName, KpiConstants.dischargeDateColName,
+                                        .select(KpiConstants.memberidColName,KpiConstants.dobColName, KpiConstants.serviceDateColName, KpiConstants.admitDateColName, KpiConstants.dischargeDateColName,
         KpiConstants.supplflagColName, KpiConstants.valuesetColName)
     //visitgroupedDf.show()
 
-    val indLabVisRemDf = visitgroupedDf.filter(!array_contains($"${KpiConstants.valuesetColName}",KpiConstants.independentLabVal)).cache()
+    val indLabVisRemDf = visitgroupedDf.filter((!array_contains($"${KpiConstants.valuesetColName}",KpiConstants.independentLabVal)))
+                                       .repartition(2).cache()
     indLabVisRemDf.count()
 
     //</editor-fold>
@@ -259,26 +264,34 @@ object NcqaCBP {
       .map(r=> r.getString(0))
       .collect()
 
+
     val hospiceRemMemEnrollDf = baseOutDf.except(baseOutDf.filter($"${KpiConstants.memberidColName}".isin(hospiceInCurrYearMemDf:_*)))
+    hospiceRemMemEnrollDf.select(KpiConstants.memberidColName).distinct().coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/hospiceRemMemEnrollDf/")
+
     //</editor-fold>
 
     //<editor-fold desc="Initial join function">
 
     val argmapForVisittJoin = mutable.Map(KpiConstants.membershipTblName -> hospiceRemMemEnrollDf , KpiConstants.visitTblName -> indLabVisRemDf)
-    val validVisitsDf = UtilFunctions.initialJoinFunction(spark,argmapForVisittJoin).cache()
-    validVisitsDf.count()
-
-    /* visitJoinedOutDf.coalesce(1)
-       .write
-       .mode(SaveMode.Append)
-       .parquet("/home/hbase/ncqa/ima_test_out/visitJoinedDf/")
- */
+    val validVisitsOutDf = UtilFunctions.initialJoinFunction(spark,argmapForVisittJoin).repartition(2).cache()
+    validVisitsOutDf.coalesce(1)
+      .write
+      .mode(SaveMode.Overwrite)
+      .parquet("/home/hbase/ncqa/cbp_test_out/validVisitsOutDf/")
 
     //</editor-fold>
 
     //<editor-fold desc="Eligible Event calculation">
 
-    val visitForEventDf = validVisitsDf.filter($"${KpiConstants.supplflagColName}".===("N")).cache()
+    val validVisitsDf = spark.read.parquet("/home/hbase/ncqa/cbp_test_out/validVisitsOutDf/").repartition(2).cache()
+    validVisitsDf.count()
+
+    val visitForEventDf = validVisitsDf.filter($"${KpiConstants.supplflagColName}".===("N"))
+
 
     //<editor-fold desc="Event Calculation">
 
@@ -303,13 +316,14 @@ object NcqaCBP {
       .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName)
 
     /*Find out the memebers who has Outpatient,Essential Hypertension,and(Telehealth or Telephone )*/
-    val eventStep2Df = visitForEventDf.filter((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.outpatwoUbrevVal))
-      &&(array_contains($"${KpiConstants.valuesetColName}", KpiConstants.essentialHyptenVal))
-      &&((array_contains($"${KpiConstants.valuesetColName}", KpiConstants.telehealthModifierVal))
+    val eventStep2Df = visitForEventDf.filter( (((array_contains($"${KpiConstants.valuesetColName}",KpiConstants.outpatwoUbrevVal))
+      &&(array_contains($"${KpiConstants.valuesetColName}", KpiConstants.telehealthModifierVal)))
       ||(array_contains($"${KpiConstants.valuesetColName}", KpiConstants.onlineAssesmentVal))
       ||(array_contains($"${KpiConstants.valuesetColName}", KpiConstants.telephoneVisitsVal)))
+      &&(array_contains($"${KpiConstants.valuesetColName}", KpiConstants.essentialHyptenVal))
       &&($"${KpiConstants.serviceDateColName}".>=(eventStartDate))
       &&($"${KpiConstants.serviceDateColName}".<=(eventEndDate)))
+      .groupBy(KpiConstants.memberidColName).agg(min(KpiConstants.serviceDateColName).alias(KpiConstants.serviceDateColName))
       .select(KpiConstants.memberidColName, KpiConstants.serviceDateColName)
 
     val eventSub1Df = oneVisitEventDf.as("df1").join(eventStep2Df.as("df2"), Seq(KpiConstants.memberidColName))
@@ -350,19 +364,35 @@ object NcqaCBP {
     val totalPopulationVisitsDf = validVisitsDf.as("df1").join(eventDf.as("df2"), KpiConstants.memberidColName)
       .select(s"df1.*", s"df2.${KpiConstants.secondServiceDateColName}")
 
+
+    totalPopulationVisitsDf.select(KpiConstants.memberidColName).coalesce(1)
+      .write
+      .mode(SaveMode.Append)
+      .option("header", "true")
+      .csv("/home/hbase/ncqa/cbp_test_out/totalPopulationVisitsDf/")
     //</editor-fold>
 
     //<editor-fold desc="Mandatory Exclusion Calculation">
 
     val visitForMandExclDf = totalPopulationVisitsDf.filter($"${KpiConstants.supplflagColName}".===("N"))
+                                                   .repartition(2).cache()
+    visitForMandExclDf.count()
 
     //<editor-fold desc="Mandatory Exclusion1(Only for Medicare)">
 
     val ageCheckDate = year + "12-31"
-    val mandatoryExcl1Df = totalPopulationVisitsDf.as("df1").join(medmonmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
-      .filter(($"df1.${KpiConstants.lobColName}".===(KpiConstants.medicareLobName)) && (add_months($"df1.${KpiConstants.dobColName}",KpiConstants.months792).<=(ageCheckDate))
-        && ((($"df2.${KpiConstants.ltiFlagColName}".===(KpiConstants.boolTrueVal))) || ($"df1.${KpiConstants.lobProductColName}".===(KpiConstants.lobProductNameConVal))))
-      .select(s"df1.${KpiConstants.memberidColName}").distinct()
+    val mandExcl1InDf = totalPopulationVisitsDf.filter(($"${KpiConstants.lobColName}".===(KpiConstants.medicareLobName))
+                                                     &&(UtilFunctions.add_ncqa_months(spark,$"df1.${KpiConstants.dobColName}",KpiConstants.months792).<=(ageCheckDate)))
+                                               .select(KpiConstants.memberidColName, KpiConstants.lobProductColName)
+
+    val mandatoryExcl1Df = mandExcl1InDf.as("df1").join(medmonmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+                                                         .select(s"df1.${KpiConstants.memberidColName}", KpiConstants.lobProductColName, KpiConstants.ltiFlagColName)
+                                                         .groupBy(KpiConstants.memberidColName).agg(first(KpiConstants.lobProductColName).alias(KpiConstants.lobProductColName),
+                                                                                                    count(when($"${KpiConstants.ltiFlagColName}".===("Y"),1)).alias("count"))
+                                                         .filter(($"${KpiConstants.lobProductColName}".===(KpiConstants.lobProductNameConVal))
+                                                               ||($"count".>=(1)))
+                                                         .select(KpiConstants.memberidColName)
+
 
     //</editor-fold>
 
@@ -475,9 +505,6 @@ object NcqaCBP {
       .mode(SaveMode.Append)
       .option("header", "true")
       .csv("/home/hbase/ncqa/cbp_test_out/eligiblePop/")
-
-
-
 
     //</editor-fold>
 
