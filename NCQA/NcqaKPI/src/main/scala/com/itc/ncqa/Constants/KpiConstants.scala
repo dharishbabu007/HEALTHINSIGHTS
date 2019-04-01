@@ -135,6 +135,8 @@ object KpiConstants {
 
 
   /*days constant*/
+  val days320Val = "320"
+  val days321Val = "321"
   val days60 = 60
   val days730 = 730
   val days365 = 365
@@ -159,10 +161,12 @@ object KpiConstants {
   val months120 = 120
   val months108 = 108
   val months216 = 216
+  val months624 = 624
   val months240 = 240
   val months792 = 792
   val months972 = 972
   val months888 = 888
+  val months900 = 900
   val months1032 = 1032
 
   /*measurement Year Constants*/
@@ -352,6 +356,7 @@ object KpiConstants {
   val lisPremiumSubColName = "lis_premium_subsidy"
   val orgreasentcodeColName = "ori_reason_for_entitle_code"
   val measureColName = "measure"
+  val reqCovDaysColName = "requiredCoverageDays"
 
 
   /*member table column name constants*/
@@ -831,14 +836,14 @@ object KpiConstants {
   val totalColectomyVal = "Total Colectomy"
   val bilateralMastectomyVal = "Bilateral Mastectomy"
   val unilateralMastectomyVal = "Unilateral Mastectomy"
+  val unilateralMastectomyLeftVal = "Unilateral Mastectomy Left"
+  val unilateralMastectomyRightVal = "Unilateral Mastectomy Right"
   val bilateralModifierVal = "Bilateral Modifier"
   val historyBilateralMastectomyVal = "History of Bilateral Mastectomy"
   val leftModifierVal = "Left Modifier"
   val rightModifierVal = "Right Modifier"
   val absOfLeftBreastVal = "Absence of Left Breast"
   val absOfRightBreastVal = "Absence of Right Breast"
-  val uniMasLeftVal = "Unilateral Mastectomy Left"
-  val uniMasRightVal = "Unilateral Mastectomy Right"
   val ardvVal = "Anaphylactic Reaction Due To Vaccination"
   val encephalopathyVal = "Encephalopathy Due To Vaccination"
   val tdVaccineVal = "Td Vaccine"

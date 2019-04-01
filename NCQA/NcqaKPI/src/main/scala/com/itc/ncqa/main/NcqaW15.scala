@@ -191,11 +191,13 @@ object NcqaW15 {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
 
-    /* coverage days */
+
+
     val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>=($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
       + (when(date_add($"max_mem_end_date", 1).<=($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
-      && ($"${KpiConstants.coverageDaysColName}".>=(380)))
+      && ($"${KpiConstants.coverageDaysColName}".>=($"${KpiConstants.reqCovDaysColName}")))
       .select(KpiConstants.memberidColName).distinct()
 
 
@@ -313,12 +315,12 @@ object NcqaW15 {
     denominatorDf.cache()
     denominatorDf.count()
 
-    denominatorDf.coalesce(1)
+  /*  denominatorDf.coalesce(1)
       .write
       .mode(SaveMode.Append)
       .option("header", "true")
       .csv("/home/hbase/ncqa/w15/denominator/")
-
+*/
     //</editor-fold>
 
     //<editor-fold desc="Intial join">
@@ -351,20 +353,22 @@ object NcqaW15 {
     val W150 = denominatorPopDf.except(w15NumDf.select(s"${KpiConstants.memberidColName}").distinct())
 
     /*Second Numerator*/
-    val W151 = w15NumDf.groupBy($"${KpiConstants.memberidColName}")
+    val W151_1 = w15NumDf.groupBy($"${KpiConstants.memberidColName}")
       .agg(countDistinct($"${KpiConstants.serviceDateColName}").alias("visits"))
       .filter($"visits".===(1))
       .select($"${KpiConstants.memberidColName}").distinct()
 
 
     /*W15 Numerator 2 or more visits*/
-    val w152OrMoreVisitsDf = w15NumDf.except(w15NumDf.filter($"${KpiConstants.memberidColName}".isin(W151.rdd.map(r=> r.getString(0)).collect():_*)))
+    val w152OrMoreVisitsDf = w15NumDf.except(w15NumDf.filter($"${KpiConstants.memberidColName}".isin(W151_1.rdd.map(r=> r.getString(0)).collect():_*)))
 
     val groupedDs = w152OrMoreVisitsDf.as[Member].groupByKey(k=>k.member_id)
                                       .mapGroups((k,itr) => (k,itr.map(f=> f.service_date.getTime).toArray.sorted))
 
     val w152OrMoreNumDf = groupedDs.map(f=>(UtilFunctions.getVisits(f._1,f._2))).toDF(KpiConstants.memberidColName,"visits")
 
+    val W151_2 = w152OrMoreNumDf.filter($"visits".===(1)).select(KpiConstants.memberidColName)
+    val W151 = W151_1.union(W151_2)
     val W152 = w152OrMoreNumDf.filter($"visits".===(2)).select(KpiConstants.memberidColName)
     val W153 = w152OrMoreNumDf.filter($"visits".===(3)).select(KpiConstants.memberidColName)
     val W154 = w152OrMoreNumDf.filter($"visits".===(4)).select(KpiConstants.memberidColName)

@@ -120,10 +120,7 @@ object NcqaW34 {
         && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.anchorDateColName}")), lit(1)).otherwise(lit(0)))
       .withColumn(KpiConstants.contEdFlagColName, when( ($"${KpiConstants.memStartDateColName}".<=($"${KpiConstants.contenrollUppCoName}"))
         && ($"${KpiConstants.memEndDateColName}".>=($"${KpiConstants.contenrollUppCoName}")), lit(1)).otherwise(lit(0)))
-    /*temp3 */
-    printf("contEnrollStep1Df")
-    contEnrollStep1Df.show()
-    /*temp3 */
+
     /*Step3(select the members who satisfy both (min_start_date- ces and cee- max_end_date <= allowable gap) conditions)*/
     val listDf = contEnrollStep1Df.groupBy($"${KpiConstants.memberidColName}")
       .agg(max($"${KpiConstants.memEndDateColName}").alias(KpiConstants.maxMemEndDateColName),
@@ -139,11 +136,7 @@ object NcqaW34 {
     val contEnrollStep2Df = contEnrollStep1Df.as("df1").join(listDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
       .select("df1.*")
 
-    /*temp3 */
-    printf("contEnrollStep2Df")
-    contEnrollStep2Df.show()
-    /*temp3 */
-    // contEnrollStep3Df.printSchema()
+
     /*window function creation based on partioned by member_sk and order by mem_start_date*/
     val contWindowVal = Window.partitionBy(s"${KpiConstants.memberidColName}").orderBy(org.apache.spark.sql.functions.col(s"${KpiConstants.memEndDateColName}").desc,org.apache.spark.sql.functions.col(s"${KpiConstants.memStartDateColName}"))
 
@@ -168,10 +161,6 @@ object NcqaW34 {
         .otherwise(0).>(1),lit(1))
         .otherwise(lit(0)) )
 
-    /*temp3 */
-    printf("contEnrollStep3Df")
-    contEnrollStep3Df.show()
-    /*temp3 */
 
     val contEnrollStep5Df = contEnrollStep3Df.groupBy(KpiConstants.memberidColName)
       .agg(min($"${KpiConstants.memStartDateColName}").alias(KpiConstants.minMemStDateColName),
@@ -180,28 +169,20 @@ object NcqaW34 {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
+
 
 
     val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>=($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
       + (when(date_add($"max_mem_end_date", 1).<=($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
-      && ($"${KpiConstants.coverageDaysColName}".>=(320)))
+      && ($"${KpiConstants.coverageDaysColName}".>=($"${KpiConstants.reqCovDaysColName}")))
       .select(KpiConstants.memberidColName).distinct()
 
-    /*temp3 */
-    printf("contEnrollmemDf")
-    contEnrollmemDf.show()
-    /*temp3 */
-
-
-    //val contEnrollmemDf = UtilFunctions.contEnrollAndAllowableGapFilter(spark,inputForContEnrolldf,KpiConstants.commondateformatName,argMap)
 
     val contEnrollDf = contEnrollStep1Df.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
       .filter($"df1.${KpiConstants.contEdFlagColName}".===(1))
       .select(s"df1.${KpiConstants.memberidColName}", s"df1.${KpiConstants.lobColName}", s"df1.${KpiConstants.lobProductColName}",s"df1.${KpiConstants.payerColName}",s"df1.${KpiConstants.primaryPlanFlagColName}").cache()
-    /*temp3 */
-    printf("contEnrollDf")
-    contEnrollDf.show()
-    /*temp3 */
+
     //</editor-fold>
 
     //<editor-fold desc="Dual enrollment Calculation">
@@ -285,7 +266,7 @@ object NcqaW34 {
     eligiblePopDf.count()
     //</editor-fold>
 
-    //<editor-fold desc="Dinominator calculation">
+    //<editor-fold desc="Denominator calculation">
 
     val denominatorDf = eligiblePopDf
     denominatorDf.repartition(2).cache()
