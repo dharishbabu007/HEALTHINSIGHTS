@@ -64,7 +64,8 @@ object NcqaCBP {
     val visitsDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.visitTblName,visitqueryString,aLiat)
                                     .filter((($"${KpiConstants.dataSourceColName}".===("Claim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
                                            ||(($"${KpiConstants.dataSourceColName}".===("RxClaim"))&&($"${KpiConstants.claimstatusColName}".isin(claimStatusList:_*)))
-                                           ||($"${KpiConstants.dataSourceColName}".===("Rx")))
+                                           ||($"${KpiConstants.dataSourceColName}".===("Rx"))
+                                           || ($"${KpiConstants.dataSourceColName}".===("Lab")))
                                     .drop(KpiConstants.lobProductColName, "latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name","product")
                                     .withColumn(KpiConstants.revenuecodeColName, when((length($"${KpiConstants.revenuecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.revenuecodeColName}"))).otherwise($"${KpiConstants.revenuecodeColName}"))
                                     .withColumn(KpiConstants.billtypecodeColName, when((length($"${KpiConstants.billtypecodeColName}").as[Int].===(3)),concat(lit("0" ),lit($"${KpiConstants.billtypecodeColName}"))).otherwise($"${KpiConstants.billtypecodeColName}"))
@@ -190,12 +191,13 @@ object NcqaCBP {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
 
 
 
     val contEnrollmemDf = contEnrollStep5Df.filter(((($"${KpiConstants.countColName}") + (when(date_sub($"min_mem_start_date", 1).>=($"${KpiConstants.contenrollLowCoName}"),lit(1)).otherwise(lit(0)))
       + (when(date_add($"max_mem_end_date", 1).<=($"${KpiConstants.contenrollUppCoName}"),lit(1)).otherwise(lit(0)))).<=(1) )
-      && ($"${KpiConstants.coverageDaysColName}".>=(320)))
+      && ($"${KpiConstants.coverageDaysColName}".>=($"${KpiConstants.reqCovDaysColName}")))
       .select(KpiConstants.memberidColName).distinct()
 
 
