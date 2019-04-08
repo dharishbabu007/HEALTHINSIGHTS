@@ -133,7 +133,7 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setDenominator(resultSet.getString("denominator"));
 				measureCreator.setTarget(resultSet.getString("target")); 
 				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("measure_domain_id")));
-				measureCreator.setDenomExclusions(resultSet.getString("DENO_EXCLUSIONS"));
+				measureCreator.setDenomExclusions(resultSet.getString("DEN_EXCLUSION"));
 				measureCreator.setNumerator(resultSet.getString("numerator"));
 				measureCreator.setNumeratorExclusions(resultSet.getString("num_exclusion"));				
 				measureCreator.setId(resultSet.getInt("QUALITY_MEASURE_ID")); 
@@ -326,7 +326,7 @@ public class QMSServiceImpl2 implements QMSService {
 		User userData = (User) httpSession.getAttribute(QMSConstants.SESSION_USER_OBJ);
 
 		String sqlStatementInsert = 
-				"insert into QMS_QUALITY_MEASURE (clinical_conditions,measure_source_id,denominator,target,measure_domain_id,deno_exclusions,"
+				"insert into QMS_QUALITY_MEASURE (clinical_conditions,measure_source_id,denominator,target,measure_domain_id,DEN_EXCLUSION,"
 				+ "numerator,num_exclusion,QUALITY_MEASURE_ID,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
 				+ "measure_type_id,measure_edit_id,REC_UPDATE_DATE,MEASURE_STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
 				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name,"
@@ -485,7 +485,7 @@ public class QMSServiceImpl2 implements QMSService {
 		
 		String sqlStatementUpdate = 
 				"update QMS_QUALITY_MEASURE set clinical_conditions=?, measure_source_id=?, denominator=?, target=?, "
-				+ "measure_domain_id=?, deno_exclusions=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
+				+ "measure_domain_id=?, DEN_EXCLUSION=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
 				+ "QUALITY_PROGRAM_ID=?, measure_steward_id=?, target_population_age=?, measure_type_id=?, rec_update_date=?, "
 				+ "MEASURE_STATUS_ID=?, USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=?, "
 				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=?,OPT_EXCLUSION=? "
@@ -591,7 +591,7 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setDenominator(resultSet.getString("denominator"));
 				measureCreator.setTarget(resultSet.getString("target")); 
 				measureCreator.setMeasureDomain(domainMap.get(resultSet.getString("measure_domain_id")));
-				measureCreator.setDenomExclusions(resultSet.getString("DENO_EXCLUSIONS"));
+				measureCreator.setDenomExclusions(resultSet.getString("DEN_EXCLUSION"));
 				measureCreator.setNumerator(resultSet.getString("numerator"));
 				measureCreator.setNumeratorExclusions(resultSet.getString("num_exclusion"));				
 				measureCreator.setId(resultSet.getInt("QUALITY_MEASURE_ID")); 

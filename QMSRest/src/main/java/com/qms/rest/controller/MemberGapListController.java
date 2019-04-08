@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qms.rest.exception.QmsInsertionException;
+import com.qms.rest.exception.QMSException;
+import com.qms.rest.model.CloseGaps;
 import com.qms.rest.model.DimMemberGapListSearch;
 import com.qms.rest.model.DimMemeberList;
 import com.qms.rest.model.MemberCareGapsList;
@@ -53,17 +54,18 @@ public class MemberGapListController {
 		logger.info("updating data with dimMemberGaps with mid {}", qMSMemberReq);
 		try {
 			return new ResponseEntity((QMSMemberReq) memberGapList.editMembergapListByQMS(qMSMemberReq), HttpStatus.OK);
-		} catch (QmsInsertionException e) {
+		} catch (QMSException e) {
 			logger.error("editMemberGapQMSList insertion process failed."+ e.getMessage(), qMSMemberReq.getCareGapsId());
 			return new ResponseEntity(new CustomErrorType("editMemberGapQMSList insertion process failed."), HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 	
-	 @RequestMapping(value = "/findAllMembers", method = RequestMethod.GET )
+	@RequestMapping(value = "/findAllMembers", method = RequestMethod.GET )
 	public ResponseEntity<List<MemberCareGapsList>> findAllMembersList() {
 		logger.info("Fetching dimMemberGaps with mid {}");
 		List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersList();
+		//List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersListFromHive();		
 		if (memberCareGapsList == null) {
 			logger.error("Not able to find the Members .", memberCareGapsList);
 			return (ResponseEntity<List<MemberCareGapsList>>) new ResponseEntity(new CustomErrorType("dimMemberGaps with mid " + memberCareGapsList 
@@ -71,9 +73,28 @@ public class MemberGapListController {
 		}
 		return (ResponseEntity<List<MemberCareGapsList>>) new ResponseEntity((List<MemberCareGapsList>) memberCareGapsList, HttpStatus.OK);
 	}
+	 
+	@RequestMapping(value = "/findAllMembersHive", method = RequestMethod.GET)
+	public ResponseEntity<List<MemberCareGapsList>> findAllMembersHive() {
+		logger.info("Fetching dimMemberGaps with mid {}");
+		List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersListFromHive();
+		if (memberCareGapsList == null || memberCareGapsList.isEmpty()) {
+			return new ResponseEntity<List<MemberCareGapsList>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<MemberCareGapsList>>(memberCareGapsList, HttpStatus.OK);
+	}	 
+	 
+	@RequestMapping(value = "/getHomePageCareGapsList", method = RequestMethod.GET )
+	public ResponseEntity<List<MemberCareGapsList>> getHomePageCareGapsList() {
+		List<MemberCareGapsList>  memberCareGapsList = memberGapList.getHomePageCareGapsList();
+		if (memberCareGapsList == null || memberCareGapsList.isEmpty()) {
+			return new ResponseEntity<List<MemberCareGapsList>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<MemberCareGapsList>>(memberCareGapsList, HttpStatus.OK);
+	}	 
 	
-	 @RequestMapping(value = "/searchMember/{search}", method = RequestMethod.GET)
-		public ResponseEntity<List<DimMemberGapListSearch>> getSearchMemberGapList(@PathVariable("search") String search) {
+	@RequestMapping(value = "/searchMember/{search}", method = RequestMethod.GET)
+	public ResponseEntity<List<DimMemberGapListSearch>> getSearchMemberGapList(@PathVariable("search") String search) {
 			System.out.println("Fetching dimMemberGaps with mid {}"+ search);
 			logger.info("Fetching dimMemberGaps with mid {}", search);
 			search = search.substring(0, 1).toUpperCase()+search.substring(1);
@@ -84,6 +105,6 @@ public class MemberGapListController {
 						+ " not found"), HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<List<DimMemberGapListSearch>>((List<DimMemberGapListSearch>) dimMemberGapListSearch, HttpStatus.OK);
-		}
+	}
 	 
 }

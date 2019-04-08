@@ -26,5 +26,10 @@ public class LHEOutput {
 	private String reasonNotEnroll;
 	private String likeliHoodEnroll;
 	private String enrollmentBin;	
-
+	private String gender;
+	private String lengthTimeUninsured;
+	private String daysPendingTermination;
+	private String comorbidityCount;
+	
+	
 }

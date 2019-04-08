@@ -1,7 +1,9 @@
 package com.qms.rest.service;
 
+import java.util.List;
 import java.util.Set;
 
+import com.qms.rest.model.CPOutput;
 import com.qms.rest.model.ClusterData;
 import com.qms.rest.model.PersonaDefine;
 import com.qms.rest.model.PersonaMember;
@@ -41,9 +43,14 @@ public interface MemberEngagementService {
 	RestResult createPersonaInputFile();	
 	Set<PersonaMember> personaMemberList(String clusterId);
 	
+	List<PersonaClusterFeatures> getCPFeature();
+	Set<CPOutput> getCPOutput();
+	String[][] getCPStatistics();
+	
 	///////////LHC////////////////////
 	RestResult createLHCInputFile();	
 	Set<LHCMember> lhcMemberList();
 	Set<ModelSummary> getLHCModelSummary();	
-	ModelMetric getLHCModelMetric();	
+	ModelMetric getLHCModelMetric();
+		
 }

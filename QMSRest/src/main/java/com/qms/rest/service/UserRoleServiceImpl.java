@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qms.rest.model.ScreenPermission;
+import com.qms.rest.model.NameValue;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RoleScreen;
 import com.qms.rest.model.User;
@@ -238,6 +239,18 @@ public class UserRoleServiceImpl implements UserRoleService{
 		}		
 		
 		return roleName;
+	}
+
+	@Override
+	public RestResult updateRoleFavourites(RoleScreen rolePage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<NameValue> getScreensForRole(String roleId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	//api to return all the pages

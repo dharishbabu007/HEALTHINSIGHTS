@@ -32,6 +32,7 @@ import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
+import com.qms.rest.model.NCOutput;
 import com.qms.rest.model.QMSFile;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.User;
@@ -136,44 +137,39 @@ public class ImportExportController {
 	
 	@RequestMapping(value = "/csv_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<CSVOutPut>> getOutputCSVData() {
-		System.out.println("Fetching Output.csv data ");
 		Set<CSVOutPut> setCSVOutPut = importExportService.getCSVOutPut();
 		return new ResponseEntity<Set<CSVOutPut>>(setCSVOutPut, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/csv_output1", method = RequestMethod.GET)
 	public ResponseEntity<Set<CSVOutPut1>> getOutputCSVData1() {
-		System.out.println("Fetching Output.csv data ");
 		Set<CSVOutPut1> setCSVOutPut = importExportService.getCSVOutPut1();
 		return new ResponseEntity<Set<CSVOutPut1>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/csv_modelSummary", method = RequestMethod.GET)
 	public ResponseEntity<Set<ModelSummary>> getModelSummaryCSVData() {
-		System.out.println("Fetching ModelSummary.csv data ");
 		Set<ModelSummary> setCSVOutPut = importExportService.getCSVModelSummary();
 		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/csv_confusionMatric", method = RequestMethod.GET)
-	public ResponseEntity<Set<ConfusionMatric>> getConfusionMatricCSVData() {
-		System.out.println("Fetching ConfusionMatric.csv data ");
-		Set<ConfusionMatric> setCSVOutPut = importExportService.getCSVConfusionMatric();
-		return new ResponseEntity<Set<ConfusionMatric>>(setCSVOutPut, HttpStatus.OK);
+	public ResponseEntity<ModelMetric> getConfusionMatricCSVData() {
+		ModelMetric setCSVOutPut = importExportService.getCSVConfusionMatric();
+		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/csv_modelScore", method = RequestMethod.GET)
 	public ResponseEntity<ModelScore> getModelScoreCSVData() {
-		System.out.println("Fetching ModelScore.csv data ");
 		ModelScore cSVOutPut = importExportService.getCSVModelScore();
 		return new ResponseEntity<ModelScore>(cSVOutPut, HttpStatus.OK);
 	}
 	
 	//////////////////////////NON Complience//////////////////////////////
 	@RequestMapping(value = "/nc_output", method = RequestMethod.GET)
-	public ResponseEntity<Set<LHEOutput>> getNCOutput() {
-		Set<LHEOutput> setCSVOutPut = importExportService.getNCOutPut();
-		return new ResponseEntity<Set<LHEOutput>>(setCSVOutPut, HttpStatus.OK);
+	public ResponseEntity<Set<NCOutput>> getNCOutput() {
+		Set<NCOutput> setCSVOutPut = importExportService.getNCOutPut();
+		return new ResponseEntity<Set<NCOutput>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/nc_modelSummary", method = RequestMethod.GET)
@@ -191,21 +187,18 @@ public class ImportExportController {
 	//////////////////////////Complience//////////////////////////////	
 	@RequestMapping(value = "/complience_output", method = RequestMethod.GET)
 	public ResponseEntity<Set<ComplianceOutPut>> getComplienceOutput() {
-		System.out.println("Fetching Output.csv data ");
 		Set<ComplianceOutPut> setCSVOutPut = importExportService.getComplianceOutPut();
 		return new ResponseEntity<Set<ComplianceOutPut>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/complience_modelSummary", method = RequestMethod.GET)
 	public ResponseEntity<Set<ModelSummary>> getComplienceModelSummary() {
-		System.out.println("Fetching ModelSummary.csv data ");
 		Set<ModelSummary> setCSVOutPut = importExportService.getComplianceModelSummary();
 		return new ResponseEntity<Set<ModelSummary>>(setCSVOutPut, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/complience_modelMatric", method = RequestMethod.GET)
 	public ResponseEntity<ModelMetric> getComplienceConfusionMatric() {
-		System.out.println("Fetching ConfusionMatric.csv data ");
 		ModelMetric setCSVOutPut = importExportService.getComplianceModelMetric();
 		return new ResponseEntity<ModelMetric>(setCSVOutPut, HttpStatus.OK);
 	}	

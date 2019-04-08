@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +18,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qms.rest.exception.QmsInsertionException;
+import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.DimMemberGapListSearch;
 import com.qms.rest.model.DimMemeberList;
 import com.qms.rest.model.FactHedisGapsInCare;
@@ -24,6 +26,7 @@ import com.qms.rest.model.MemberCareGaps;
 import com.qms.rest.model.MemberCareGapsList;
 import com.qms.rest.model.QMSMemberReq;
 import com.qms.rest.model.QmsGicLifecycle;
+import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 
 @Service("memberGapList")
@@ -180,7 +183,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 	}
 
 	@Override
-	public QMSMemberReq editMembergapListByQMS(QMSMemberReq qMSMemberReq) throws QmsInsertionException {
+	public QMSMemberReq editMembergapListByQMS(QMSMemberReq qMSMemberReq) throws QMSException {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
@@ -223,7 +226,7 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			connection.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new QmsInsertionException("Failed while inserting into QMSLifeCycle data", e);
+			throw new QMSException("Failed while inserting into QMSLifeCycle data", e);
 		} finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}
@@ -288,44 +291,6 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			
-			//hive query
-//			String memberCregapList = "SELECT GIC.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.MIDDLE_NAME,' ',DM.LAST_NAME) AS NAME, \n" + 
-//					"FLOOR(DATEDIFF('2018-12-31',(CONCAT(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2))))/365.25) AS AGE,\n" + 
-//					"DM.GENDER, CONCAT(DP.FIRST_NAME,' ',DP.LAST_NAME) AS PCP, DQM.MEASURE_TITLE AS CARE_GAPS, GIC.STATUS,\n" + 
-//					"COUNT(DQM.MEASURE_TITLE) AS COUNT_OF_CARE_GAPS, DPP.PLAN_NAME AS PLAN, GIC.GAP_DATE AS TIME_PERIOD\n" + 
-//					"FROM QMS_GIC_LIFECYCLE GIC \n" + 
-//					"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_ID = GIC.MEMBER_ID\n" + 
-//					"INNER JOIN FACT_MEM_ATTRIBUTION FMA ON FMA.MEMBER_SK = DM.MEMBER_SK\n" + 
-//					"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FMA.PROVIDER_SK\n" + 
-//					"INNER JOIN DIM_QUALITY_MEASURE DQM ON DQM.QUALITY_MEASURE_ID = GIC.QUALITY_MEASURE_ID\n" + 
-//					"INNER JOIN DIM_PRODUCT_PLAN DPP ON DPP.PRODUCT_PLAN_ID = GIC.PRODUCT_PLAN_ID\n" + 
-//					"WHERE GIC.GAP_DATE <= upper(from_unixtime(unix_timestamp(current_date, 'yyyy-MM-dd'),'d-MMM-yy')) \n" + 
-//					"GROUP BY GIC.MEMBER_ID, CONCAT(DM.FIRST_NAME,' ',DM.MIDDLE_NAME,' ',DM.LAST_NAME), \n" + 
-//					"FLOOR(DATEDIFF('2018-12-31',(CONCAT(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2),'-',SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2))))/365.25),\n" + 
-//					"DM.GENDER, CONCAT(DP.FIRST_NAME,' ',DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE";
-			
-			/*
-			//oracle query
-			String memberCregapList = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER,"
-			+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) AS AGE,"
-			+"(DP.FIRST_NAME||' '||DP.LAST_NAME) AS PCP, DQM.MEASURE_TITLE AS CARE_GAPS, GIC.STATUS,GIC.QUALITY_MEASURE_ID,"
-			+"COUNT(DQM.MEASURE_TITLE) AS COUNT_OF_CARE_GAPS, DPP.PLAN_NAME AS PLAN, GIC.GAP_DATE AS TIME_PERIOD, GIC.COMPLIANCE_POTENTIAL,DQM.QUALITY_MEASURE_SK "
-			+"FROM QMS_GIC_LIFECYCLE GIC "
-			+"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_ID = GIC.MEMBER_ID "
-			+"INNER JOIN FACT_MEM_ATTRIBUTION FMA ON FMA.MEMBER_SK = DM.MEMBER_SK "
-			+"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FMA.PROVIDER_SK "
-			+"INNER JOIN DIM_QUALITY_MEASURE DQM ON DQM.QUALITY_MEASURE_ID = GIC.QUALITY_MEASURE_ID "
-			+"INNER JOIN DIM_PRODUCT_PLAN DPP ON DPP.PRODUCT_PLAN_ID = GIC.PRODUCT_PLAN_ID "
-			+"WHERE GIC.GAP_DATE <= SYSDATE "
-			+"GROUP BY DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME), DM.GENDER,GIC.COMPLIANCE_POTENTIAL,"
-			+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25),"
-			+"(DP.FIRST_NAME||' '||DP.LAST_NAME), DQM.MEASURE_TITLE, GIC.STATUS, DPP.PLAN_NAME, GIC.GAP_DATE,GIC.QUALITY_MEASURE_ID,DQM.QUALITY_MEASURE_SK order by GIC.GAP_DATE DESC";
-			
-			//String memberCregapList = "SELECT * FROM FINDMEMGAPLISTFORALL ORDER BY TIME_PERIOD DESC";
-			
-			*/
-			
 			
 			String memberCregapList = "SELECT DM.MEMBER_ID, (DM.FIRST_NAME||' '||DM.MIDDLE_NAME||' '||DM.LAST_NAME) AS NAME, DM.GENDER,"
 					+"FLOOR(TRUNC(CAST('31-DEC-18' AS DATE) - (TO_DATE(SUBSTR(DM.DATE_OF_BIRTH_SK, 1, 4) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 5,2) || '-' || SUBSTR(DM.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) AS AGE,"
@@ -416,6 +381,99 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 		
 		return memberCareGapsList;
 	}
+	
+	
+	@Override
+	public List<MemberCareGapsList> findAllMembersListFromHive() {
+		List<MemberCareGapsList> memberCareGapsList=new ArrayList<MemberCareGapsList>(); 
+		Map<String, MemberCareGapsList> members = new HashMap<String, MemberCareGapsList>();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			User userData = qmsConnection.getLoggedInUser();
+			if(userData == null) {
+				System.out.println(" Logged in user data is not available. ");
+				return memberCareGapsList;
+			}
+			connection = qmsConnection.getHiveConnectionBySchemaName(null, userData.getLoginId(), userData.getPassword());
+			statement = connection.createStatement();
+			
+			String memberCregapList = "select * from HEALTHIN.FACT_HEDIS_CARE_GAP_LIST";
+			
+			resultSet = statement.executeQuery(memberCregapList);
+			Map<String, Set<Integer>> countCareGapMap = new HashMap<>(); 
+			while (resultSet.next()) {
+				String member_id =resultSet.getString("MEMBER_ID");
+				String quaMesid =resultSet.getString("QUALITY_MEASURE_ID");
+				String mapKey = member_id+"##"+quaMesid; 
+				
+				Set<Integer> countHashSet = countCareGapMap.get(member_id);
+				if(countHashSet == null) {
+					countHashSet = new HashSet<>();	
+					countCareGapMap.put(member_id, countHashSet);
+				}
+				countHashSet.add(Integer.parseInt(quaMesid));
+					
+				if(!members.containsKey(mapKey)) {
+					MemberCareGapsList memberCareGaps =new MemberCareGapsList();
+					memberCareGaps.setMember_id(member_id);
+					memberCareGaps.setAge(resultSet.getString("AGE"));
+					memberCareGaps.setGender(resultSet.getString("GENDER"));
+					memberCareGaps.setName(resultSet.getString("NAME"));
+					memberCareGaps.setRiskGrade("LOW");
+					memberCareGaps.setCompliancePotential(resultSet.getString("COMPLIANCE_POTENTIAL"));
+					memberCareGaps.setMeasureSK(resultSet.getString("QUALITY_MEASURE_ID"));
+					memberCareGaps.setCountOfCareGaps(1);
+					//For care gaps
+					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
+					memberCareGaps2.setPcp(resultSet.getString("PCP"));
+					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
+					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
+					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
+					memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
+					memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+		
+					memberCareGaps.setMembers(new ArrayList<MemberCareGaps>());
+					memberCareGaps.getMembers().add(memberCareGaps2);
+					members.put(mapKey, memberCareGaps);
+				}
+				else {
+//					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
+//					memberCareGaps2.setPcp(resultSet.getString("PCP"));
+//					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
+//					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
+//					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
+//				    memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
+//				    memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+					MemberCareGapsList memberCareGaps = members.get(mapKey);
+//					memberCareGaps.getMembers().add(memberCareGaps2);
+//					int carGap = memberCareGaps.getCountOfCareGaps()+1;
+					int carGap = countHashSet.size();
+					memberCareGaps.setRiskGrade(getRiskBasedOnCareGap(carGap));
+					memberCareGaps.setCountOfCareGaps(carGap);
+				}
+			}
+			if(members.size() > 0) {
+				memberCareGapsList.addAll(members.values());
+				
+				for (MemberCareGapsList memberCareGapsList2 : memberCareGapsList) {
+					String memberId = memberCareGapsList2.getMember_id();
+					Set<Integer> countMesIds = countCareGapMap.get(memberId);					
+					int carGap = countMesIds!= null?countMesIds.size():0;
+					memberCareGapsList2.setRiskGrade(getRiskBasedOnCareGap(carGap));
+					memberCareGapsList2.setCountOfCareGaps(carGap);					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}	
+		
+		System.out.println(" Returned memberCareGapsList size " + memberCareGapsList.size());
+		return memberCareGapsList;
+	}	
 
 	private String getRiskBasedOnCareGap(int carGap) {
 		String risk = "LOW";
@@ -427,6 +485,42 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			risk = "CATASTROPHIC";
 		}
 		return risk;
+	}
+
+	@Override
+	public List<MemberCareGapsList> getHomePageCareGapsList() {
+		List<MemberCareGapsList> memberCareGapsList = findAllMembersList();
+		List<MemberCareGapsList> memberCareGapsFinalList = new LinkedList<MemberCareGapsList>();
+		Map<String, MemberCareGapsList> memberCareGapsListMap = new LinkedHashMap<>();
+		MemberCareGapsList memberCareGapsListObj = null;
+		int memberCounter = 0;
+		boolean filledCareGaps = false;
+		if(memberCareGapsList != null && !memberCareGapsList.isEmpty()) {
+			
+			memberCareGapsList.sort((MemberCareGapsList memberCareGaps1, MemberCareGapsList memberCareGaps2)->
+			memberCareGaps2.getCountOfCareGaps()-memberCareGaps1.getCountOfCareGaps());
+			for (MemberCareGapsList memberCareGapsList2 : memberCareGapsList) {
+				memberCareGapsListObj = memberCareGapsListMap.get(memberCareGapsList2.getMember_id());
+				if(memberCareGapsListObj == null) {
+					if(memberCounter >= 3) {
+						List<MemberCareGapsList> hashValues = new ArrayList<>(memberCareGapsListMap.values());
+						for (MemberCareGapsList memberCareGapsList3 : hashValues) {
+							if(memberCareGapsList3.getCountOfCareGaps()==memberCareGapsList3.getCareGaps().size()) 
+								filledCareGaps = true;	
+							else 
+								filledCareGaps = false;
+						}
+						if(filledCareGaps) break;
+					}
+					memberCareGapsListObj = memberCareGapsList2;
+					memberCareGapsListMap.put(memberCareGapsList2.getMember_id(), memberCareGapsListObj);
+					memberCounter++;
+				} 
+				memberCareGapsListObj.getCareGaps().add(memberCareGapsList2.getMembers().get(0).getCareGaps());
+			}
+		}
+		memberCareGapsFinalList.addAll(memberCareGapsListMap.values());
+		return memberCareGapsFinalList.subList(0, 3);
 	}
 
 }

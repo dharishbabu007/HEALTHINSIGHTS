@@ -3,6 +3,7 @@ package com.qms.rest.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.qms.rest.model.NameValue;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RoleScreen;
 import com.qms.rest.model.UserRole;
@@ -69,6 +71,25 @@ public class UserRoleController {
 		List<String> userStatusList = new ArrayList<String>(Arrays.asList(userStatusListStr.split(",")));
 				
 		return new ResponseEntity<List<String>>(userStatusList, HttpStatus.OK);
+	}	
+	
+
+	@RequestMapping(value = "/getScreensForRole/{roleId}", method = RequestMethod.GET)
+	public ResponseEntity<Set<NameValue>> getScreensForRole(@PathVariable("roleId") String roleId) {
+		System.out.println("Fetching User Access Role ");
+		Set<NameValue> favourites = userRoleService.getScreensForRole(roleId);
+		return new ResponseEntity<Set<NameValue>>(favourites, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/updateRoleFavourites", method = RequestMethod.POST)
+	public ResponseEntity<RestResult> updateRoleFavourites(@RequestBody RoleScreen rolePage, UriComponentsBuilder ucBuilder) {
+		
+		RestResult restResult = userRoleService.updateRoleFavourites(rolePage);
+		if(RestResult.isSuccessRestResult(restResult)) {
+			return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}	
 	
 }

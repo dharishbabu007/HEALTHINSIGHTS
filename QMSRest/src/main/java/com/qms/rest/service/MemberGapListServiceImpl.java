@@ -16,7 +16,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qms.rest.exception.QmsInsertionException;
+import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.DimMemberGapListSearch;
 import com.qms.rest.model.DimMemeberList;
 import com.qms.rest.model.FactHedisGapsInCare;
@@ -168,7 +168,7 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 	}
 
 	@Override
-	public QMSMemberReq editMembergapListByQMS(QMSMemberReq qMSMemberReq) throws QmsInsertionException {
+	public QMSMemberReq editMembergapListByQMS(QMSMemberReq qMSMemberReq) throws QMSException {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
@@ -211,7 +211,7 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			connection.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new QmsInsertionException("Failed while inserting into QMSLifeCycle data", e);
+			throw new QMSException("Failed while inserting into QMSLifeCycle data", e);
 		} finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}
@@ -402,6 +402,18 @@ public class MemberGapListServiceImpl implements MemberGapListService {
 			risk = "CATASTROPHIC";
 		}
 		return risk;
+	}
+
+	@Override
+	public List<MemberCareGapsList> getHomePageCareGapsList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MemberCareGapsList> findAllMembersListFromHive() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -17,4 +17,5 @@ public class ScreenPermission {
 	String read;
 	String write;
 	String download;
+	String favourites;
 }

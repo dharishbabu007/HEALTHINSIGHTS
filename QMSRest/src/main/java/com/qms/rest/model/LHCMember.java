@@ -24,5 +24,9 @@ public class LHCMember {
 	private String enrollmentGaps;	
 	private String amountSpend;	
 	private String likelihoodChurn;
-	private String churn;	
+	private String churn;
+	private String outPocketExpenses;
+	private String addictions;
+	private String copd;
+	private String occupation;
 }

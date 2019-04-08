@@ -26,9 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.qms.rest.model.ClusterAnalysis;
-import com.qms.rest.model.ClusterCateVar;
-import com.qms.rest.model.ClusterContVar;
+import com.qms.rest.model.CPOutput;
 import com.qms.rest.model.ClusterData;
 import com.qms.rest.model.PersonaDefine;
 import com.qms.rest.model.PersonaMember;
@@ -408,8 +406,6 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 
 	@Override
 	public Set<LHEOutput> getLHEModelOutPut() {
-		//Set<LHEOutput> lheModelOutPut = new HashSet<>();
-		
 		if(lheModelOutPut != null && !lheModelOutPut.isEmpty()) {
 			System.out.println(" Getting LHE Output data from cache ");
 			return lheModelOutPut;
@@ -420,13 +416,16 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			Connection connection = null;
 			try {						
 				connection = qmsConnection.getHiveConnection();
-				statement = connection.createStatement();			
-	//			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
-	//					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
-				resultSet = statement.executeQuery("SELECT LFO.MEMBER_ID,LFO.ENROLLMENT_GAPS,LFO.OUT_OF_POCKET_EXPENSES,"
-						+ "LFO.UTILIZER_CATEGORY,LFO.AGE,LFO.AMOUNT_SPEND,LFO.ER,LFO.REASON_TO_NOT_ENROLL,LFO.likelihood_enrollment,"
-						+ "LFO.ENROLLMENT_BIN, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
-						+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
+				statement = connection.createStatement();
+				
+				int fileId = 0;
+				if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+					fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+				}
+				System.out.println(" Fetching LHE_FILE_OUTPUT for file id : "+fileId);				
+				resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
+						+ "LEFT OUTER JOIN healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID) where LFO.fid='"+fileId+"'");
+				
 				LHEOutput output = null;
 				String name = "";			
 				while (resultSet.next()) {
@@ -449,6 +448,10 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 					output.setReasonNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
 					output.setLikeliHoodEnroll(resultSet.getString("likelihood_enrollment"));
 					output.setEnrollmentBin(resultSet.getString("ENROLLMENT_BIN"));
+					output.setGender(resultSet.getString("gender"));
+					output.setLengthTimeUninsured(resultSet.getString("length_of_time_uninsured"));
+					output.setDaysPendingTermination(resultSet.getString("days_pending_for_termination"));
+					output.setComorbidityCount(resultSet.getString("comorbidity_count"));					
 					lheModelOutPut.add(output);
 				}
 			} catch (Exception e) {
@@ -580,78 +583,8 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		}		
 		
 		return transData;		
-		
-
-//		int columns = 6;
-//		int rows = 0;
-//		String[][] transData = null;
-//		Statement statement = null;
-//		ResultSet resultSet = null;		
-//		Connection connection = null;
-//		try {
-//			connection = qmsConnection.getHiveConnection();
-//			statement = connection.createStatement();			
-//			resultSet = statement.executeQuery("select count(*) from LHE_CLUSTERING_STATISTICS");
-//			while (resultSet.next()) {
-//				rows = resultSet.getInt(1);
-//				System.out.println(" total rows in LHE_CLUSTERING_STATISTICS --> " + rows);
-//			}			
-//			rows = rows+1;
-//			resultSet.close();
-//			resultSet = statement.executeQuery("select * from LHE_CLUSTERING_STATISTICS");
-//			String[][] data = new String [rows][columns]; 
-//			data[0][0] = "agglomeration_stage";
-//			data[0][1] = "within_cluster_ss";
-//			data[0][2] = "average_within";
-//			data[0][3] = "average_between";
-//			data[0][4] = "average_silwidth";
-//			data[0][5] = "modelid";
-//			int i = 1;
-//			int j = 0;
-//			while (resultSet.next()) {
-//				j = 0;
-//				data[i][j++] = resultSet.getString("agglomeration_stage");
-//				data[i][j++] = resultSet.getString("within_cluster_ss");
-//				data[i][j++] = resultSet.getString("average_within");
-//				data[i][j++] = resultSet.getString("average_between");
-//				data[i][j++] = resultSet.getString("average_silwidth");
-//				data[i][j++] = resultSet.getString("modelid");
-//				i++;
-//			}
-//			
-////			for (i = 0; i < rows; i++) {
-////				for (j = 0; j < columns; j++) {
-////					System.out.print(data[i][j] + " ");
-////				}
-////				System.out.println();
-////			}
-//			
-//			//transpose
-//			transData = new String[columns][rows];
-//			for (i = 0; i < rows; i++) {
-//				for (j = 0; j < columns; j++) {
-//					transData[j][i] = data[i][j];
-//				}
-//			}
-//			
-////			System.out.println(" after transpose.... ");
-////			for (i = 0; i < columns; i++) {
-////				for (j = 0; j < rows; j++) {
-////					System.out.print(transData[i][j] + " ");
-////				}
-////				System.out.println();
-////			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();			
-//		}
-//		finally {
-//			qmsConnection.closeJDBCResources(resultSet, statement, connection);
-//		}		
-//		
-//		return transData;
 	}
-
+	
 	@Override
 	public RestResult createLHEInputFile() {
 		Statement statement = null;
@@ -1026,8 +959,13 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		try {		
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();
+			int fileId = 0;
+			if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+				fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+			}
+			System.out.println(" Fetching LHC_File_Output for file id : "+fileId);
 			String qryStr = "select DM.*, LFO.* from LHC_File_Output LFO "+ 
-					"INNER JOIN healthin.Dim_Member DM ON DM.MEMBER_ID = LFO.MEMBER_ID";
+					"INNER JOIN healthin.Dim_Member DM ON DM.MEMBER_ID = LFO.MEMBER_ID where LFO.fid='"+fileId+"'";
 			resultSet = statement.executeQuery(qryStr);
 			LHCMember output = null;
 			String name = "";			
@@ -1054,7 +992,10 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 				output.setAmountSpend(resultSet.getString("Amount_Spend"));	
 				output.setLikelihoodChurn(resultSet.getString("Likelihood_to_churn"));
 				output.setChurn(resultSet.getString("predicted_churn"));				
-				
+				output.setOutPocketExpenses(resultSet.getString("out_of_pocket_expenses"));
+				output.setAddictions(resultSet.getString("addictions"));
+				output.setCopd(resultSet.getString("copd"));
+				output.setOccupation(resultSet.getString("occupation"));
 				personaMembers.add(output);
 			}
 		} catch (Exception e) {
@@ -1172,6 +1113,164 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		System.out.println(roleId + " RoleLandingPage records size --> " + setOutput.size());
 		
 		return setOutput;
+	}
+	
+	@Override
+	public String[][] getCPStatistics() {
+		
+		String[] columnNames = {"cluster_id", "size", "withinss", "totwithinss", "betweenss", "totss"};
+		int columns = columnNames.length;
+		int rows = 0;
+		
+		String[][] transData = null;
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();			
+			
+			int fileId = 0;
+			if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+				fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+			}
+			System.out.println(" Fetching CP_STATISTICS for file id : "+fileId);			
+			List<String[]> dataList = new ArrayList<>();
+			resultSet = statement.executeQuery("select * from CP_STATISTICS where fid="+fileId);
+			String[] dataAry = null;
+			while (resultSet.next()) {
+				dataAry = new String[columns];
+				for(int c=0; c < columnNames.length; c++) {
+					dataAry[c] = resultSet.getString(columnNames[c]);
+				}
+				dataList.add(dataAry);					
+			}			
+			rows = dataList.size()+1;
+			
+			String[][] data = new String [rows][columns];
+			for(int c=0; c < columnNames.length; c++)
+				data[0][c] = columnNames[c];
+					
+			int i = 1;
+			int j = 0;
+			for(int l=0; l < dataList.size(); l++) {
+				j = 0;
+				dataAry = dataList.get(l);
+				for(int c=0; c < dataAry.length; c++)
+					data[i][j++] = dataAry[c];				
+				i++;				
+			}
+			
+			//transpose
+			transData = new String[columns][rows];
+			for (i = 0; i < rows; i++) {
+				for (j = 0; j < columns; j++) {
+					transData[j][i] = data[i][j];
+				}
+			}
+						
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}		
+		
+		return transData;		
+	}		
+
+	@Override
+	public List<PersonaClusterFeatures> getCPFeature() {
+		List<PersonaClusterFeatures> setOutput = new ArrayList<>();
+		PersonaClusterFeatures personaClusterFeatures = null;
+		
+		ResultSet resultSet = null;		
+		Statement statement = null;
+		Connection connection = null;		
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();
+			
+			int fileId = 0;
+			if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+				fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+			}
+			System.out.println(" Fetching CP_Features for file id : "+fileId);			
+			resultSet = statement.executeQuery("select * from CP_Features where fid="+fileId);
+			while (resultSet.next()) {
+				personaClusterFeatures = new PersonaClusterFeatures(); 
+				personaClusterFeatures.setClusterId(resultSet.getString("cluster_id"));
+				personaClusterFeatures.setFeatureName(resultSet.getString("FEATURE_NAME"));
+				personaClusterFeatures.setFeatureType(resultSet.getString("FEATURE_TYPE"));
+				personaClusterFeatures.setFeatureSignificanceValue(resultSet.getString("feature_significance_value"));
+				personaClusterFeatures.setMaxFrequency(resultSet.getString("MAX_FREQUENCY"));
+				personaClusterFeatures.setX(resultSet.getString("X"));
+				personaClusterFeatures.setY(resultSet.getInt("Y"));
+				setOutput.add(personaClusterFeatures);
+			}			
+			
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		
+		return setOutput;
+	}
+
+	@Override
+	public Set<CPOutput> getCPOutput() {
+		Set<CPOutput> personaMembers = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getHiveConnection();
+			statement = connection.createStatement();
+			
+			int fileId = 0;
+			if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+				fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+			}
+			System.out.println(" Fetching cp_file_output for file id : "+fileId);			
+			String qryStr = "select DM.*, LFO.* from cp_file_output LFO "+ 
+					"INNER JOIN healthin.Dim_Member DM ON DM.MEMBER_ID = LFO.MEMBER_ID where LFO.fid="+fileId;			
+			resultSet = statement.executeQuery(qryStr);
+			CPOutput output = null;
+			String name = "";			
+			while (resultSet.next()) {
+		    	output = new CPOutput();			    
+				name = "";
+				if(resultSet.getString("first_name") != null)
+					name = resultSet.getString("first_name");
+				if(resultSet.getString("middle_name") != null)
+					name = name+" "+resultSet.getString("middle_name");
+				if(resultSet.getString("last_name") != null)				
+					name = name+" "+resultSet.getString("last_name");
+				output.setMemberName(name);
+				
+				output.setMemberId(resultSet.getString("member_id"));
+				output.setAge(resultSet.getString("age"));
+				output.setDaysPendingTermination(resultSet.getString("days_pending_for_termination"));
+				output.setOutPocketExpenses(resultSet.getString("out_of_pocket_expenses"));
+				output.setFormExercise(resultSet.getString("form_of_exercise"));
+				output.setFrequencyExercise(resultSet.getString("frequency_of_exercise"));
+				output.setMeasureCalorieIntake(resultSet.getString("measure_calorie_intake"));
+				output.setDailyConsumption(resultSet.getString("daily_consumption"));
+				output.setWeight(resultSet.getString("weight"));
+				output.setMotivations(resultSet.getString("motivations"));
+				output.setAmountSpend(resultSet.getString("amount_spend"));
+				output.setClusterId(resultSet.getString("cluster_id"));				
+				personaMembers.add(output);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}	
+		return personaMembers;
 	}	
 	
 }

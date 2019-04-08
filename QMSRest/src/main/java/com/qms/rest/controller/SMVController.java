@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
+import com.qms.rest.model.RewardSet;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
 import com.qms.rest.model.SmvMember;
@@ -30,7 +32,7 @@ public class SMVController {
 	@RequestMapping(value = "/getSMVMemberDetails/{memberId}", method = RequestMethod.GET)
 	public ResponseEntity<Set<SMVMemberDetails>> getSMVMemberDetails(@PathVariable("memberId") String memberId) {
 		Set<SMVMemberDetails> workList = smvService.getSMVMemberDetails(memberId);
-		if (workList==null) {
+		if (workList==null || workList.isEmpty()) {
 			return new ResponseEntity<Set<SMVMemberDetails>>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<Set<SMVMemberDetails>>(workList, HttpStatus.OK);
@@ -89,6 +91,15 @@ public class SMVController {
                 return new ResponseEntity<SmvMember>(HttpStatus.NO_CONTENT);
           }
           return new ResponseEntity<SmvMember>(workList, HttpStatus.OK);
+    }    
+    
+    @RequestMapping(value = "/getIntervention/{memberId}", method = RequestMethod.GET)
+    public ResponseEntity<Set<RewardSet>> getIntervention(@PathVariable("memberId") String memberId) {
+    	Set<RewardSet> workList = smvService.getIntervention(memberId);
+          if (workList==null) {
+                return new ResponseEntity<Set<RewardSet>>(HttpStatus.NO_CONTENT);
+          }
+          return new ResponseEntity<Set<RewardSet>>(workList, HttpStatus.OK);
     }    
 	
 }

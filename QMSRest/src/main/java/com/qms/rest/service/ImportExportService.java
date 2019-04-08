@@ -13,6 +13,7 @@ import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
+import com.qms.rest.model.NCOutput;
 import com.qms.rest.model.RestResult;
 
 public interface ImportExportService {
@@ -25,7 +26,7 @@ public interface ImportExportService {
 	Set<CSVOutPut1> getCSVOutPut1();
 	Set<ModelSummary> getCSVModelSummary();
 	
-	Set<ConfusionMatric> getCSVConfusionMatric();	
+	ModelMetric getCSVConfusionMatric();	
 	ModelScore getCSVModelScore();
 	
 	FileUpload saveFileUpload(FileUpload fileUpload);	
@@ -37,7 +38,7 @@ public interface ImportExportService {
 	ModelMetric getComplianceModelMetric();	
 	
 	//Non Compliance
-	Set<LHEOutput> getNCOutPut();
+	Set<NCOutput> getNCOutPut();
 	Set<ModelSummary> getNCModelSummary();	
 	ModelMetric getNCModelMetric();	
 }

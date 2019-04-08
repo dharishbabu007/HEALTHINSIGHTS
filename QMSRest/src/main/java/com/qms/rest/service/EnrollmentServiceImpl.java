@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
@@ -684,7 +685,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 	@Override
 	public Set<String> getDataByTableAndColumn(String tableName, String columnName) {
-		Set<String> objectives = new HashSet<>();
+		Set<String> objectives = new TreeSet<>();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;

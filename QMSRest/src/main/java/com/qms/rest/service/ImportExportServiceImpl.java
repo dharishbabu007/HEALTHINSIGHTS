@@ -38,10 +38,10 @@ import com.qms.rest.model.CSVOutPut1;
 import com.qms.rest.model.ComplianceOutPut;
 import com.qms.rest.model.ConfusionMatric;
 import com.qms.rest.model.FileUpload;
-import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
+import com.qms.rest.model.NCOutput;
 import com.qms.rest.model.RestResult;
 import com.qms.rest.repository.FileUpoadRepository;
 import com.qms.rest.util.AzureBlobStorage;
@@ -201,19 +201,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 	
     private void putFile(MultipartFile file, int fileId, String model)
             throws JSchException, SftpException {
-    	String linuxDir = null; 
-//    	if(model.equals("noshow")) 
-//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNoshow();
-//    	else if(model.equals("lhe")) 
-//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHE();
-//    	else if(model.equals("lhc")) 
-//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathLHC();    	
-//    	else if(model.equals("persona")) 
-//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathPersona();
-//    	else if(model.equals("nc")) 
-//    		linuxDir = qmsAnalyticsProperty.getLinuxUploadPathNC();    	
-//    	linuxDir = linuxDir + fileId;
-    	linuxDir = getUploadPath(model) + fileId;
+    	String linuxDir = getUploadPath(model) + fileId; 
     	
         System.out.println("Initiate sending file to Linux Server...");
         JSch jsch = new JSch();
@@ -340,40 +328,6 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}		
 		System.out.println(fileId+" Data returned from ns_file_output " + setOutput.size());
 		
-//	    BufferedReader br = null;
-//		try {		
-//			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output100.csv"));			
-//		    int i = 0;
-//		    String line = null;
-//		    CSVOutPut output = null;
-//		    while ((line = br.readLine()) != null) {
-//		    	i++;
-//		    	if(i == 1) continue;
-//		    	String[] values = line.split(",");
-//		    	if(values.length > 17) {
-//			    	output = new CSVOutPut();			    
-//				    output.setAppointmentDay(values[7]);
-//				    output.setAppointmentID(values[2]);
-//				    output.setLikelihood(values[16]);
-//				    output.setNeighbourhood(values[9]);
-//				    output.setNoShow(values[17]);
-//				    output.setPatientId(values[0]);
-//				    output.setPatientName(values[1]);
-//				    setOutput.add(output);
-//		    	}
-//		    	i++;
-//		    }		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			try {
-//				if(br != null) br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-				
 		return setOutput;
 	}
 	
@@ -475,48 +429,6 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}				
 		System.out.println(" Results returned from HIVE --> " + setOutput.size());
 		
-
-//	    BufferedReader br = null;
-//		try {		
-//			br = new BufferedReader(new FileReader(windowsCopyPath+"/Output32.csv"));			
-//		    int i = 0;
-//		    String line = null;
-//		    CSVOutPut1 output = null;
-//		    while ((line = br.readLine()) != null) {
-//		    	i++;
-//		    	if(i == 1) continue;
-//		    	String[] values = line.split(",");
-//		    	if(values.length > 10 && values[9] !=null && values[9].trim().equalsIgnoreCase("1")) {
-//		    		int counter=0;
-//			    	output = new CSVOutPut1();	
-//			    	output.setPatientId(values[counter++]);
-//			    	output.setName(values[counter++]);
-//			    	output.setAppointmentId(values[counter++]);
-//			    	output.setGender(values[counter++]);
-//			    	output.setDayClass(values[counter++]);
-//			    	output.setAppointmentDay(values[counter++]);
-//			    	output.setAge(values[counter++]);
-//			    	output.setNeighbourhood(values[counter++]);
-//			    	output.setLogOdds(values[counter++]);
-//			    	output.setNoshow(values[counter++]);
-//			    	output.setCountCareGaps(values[counter++]);
-//			    	output.setRiskGrade(values[counter++]);
-//				    setOutput.add(output);
-//		    	}
-//		    	i++;
-//		    }		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			try {
-//				if(br != null) br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-	    
-	    
 		return setOutput;
 	}
 	
@@ -570,45 +482,13 @@ public class ImportExportServiceImpl implements ImportExportService {
 		}		
 		System.out.println(" ModelSummary records size --> " + setOutput.size());
 		
-		
-//	    BufferedReader br = null;
-//		try {
-//			br = new BufferedReader(new FileReader(windowsCopyPath+"/ModelSummary.csv"));
-//		    String line = null;
-//		    ModelSummary output = null;
-//		    int i = 0;
-//		    while ((line = br.readLine()) != null) {
-//		    	i++;
-//		    	if(i == 1) continue;
-//		    	String[] values = line.split(",");
-//		    	if(values.length > 4) {
-//			    	output = new ModelSummary();			    
-//			    	output.setAttributes(values[0]);
-//			    	output.setEstimate(values[1]);
-//			    	output.setPrz(values[4]);
-//			    	output.setStdError(values[2]);
-//			    	output.setzValue(values[3]);
-//				    setOutput.add(output);
-//		    	}
-//		    }		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			try {
-//				if(br != null) br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
 		return setOutput;
 	}
 
 	@Override
-	public Set<ConfusionMatric> getCSVConfusionMatric() {
-		Set<ConfusionMatric> setOutput = new HashSet<>();
+	public ModelMetric getCSVConfusionMatric() {
 		
+		ModelMetric modelMetric = new ModelMetric();
 		
 		Statement statement = null;
 		ResultSet resultSet = null;		
@@ -616,62 +496,23 @@ public class ImportExportServiceImpl implements ImportExportService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from ns_model_metric where modelid='1'");
+			resultSet = statement.executeQuery("select * from ns_model_metric where modelid='1'");			
 			while (resultSet.next()) {
-				ConfusionMatric output1 = new ConfusionMatric();
-		    	output1.setId(resultSet.getString("modelid"));
-		    	output1.setZero(resultSet.getString("tp"));
-		    	output1.setOne(resultSet.getString("tn"));
-		    	System.out.println(resultSet.getString("tp") + " TP TN" + resultSet.getString("tn"));
-			    setOutput.add(output1);
-			    
-			    ConfusionMatric output2 = new ConfusionMatric();
-		    	output2.setId(resultSet.getString("modelid"));
-		    	output2.setZero(resultSet.getString("fp"));
-		    	output2.setOne(resultSet.getString("fn"));
-		    	System.out.println(resultSet.getString("fp") + " FP FN" + resultSet.getString("fn"));
-			    setOutput.add(output2);			    
-			    
+	    		modelMetric.setTp(resultSet.getString("TP"));
+	    		modelMetric.setFp(resultSet.getString("FP"));
+	    		modelMetric.setTn(resultSet.getString("TN"));
+	    		modelMetric.setFn(resultSet.getString("FN"));
+	    		modelMetric.setScore(resultSet.getString("SCORE"));
+	    		modelMetric.setImagePath(windowsCopyPath+"/ROCplot.PNG");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
-		}		
+		}			
 		
-		
-		
-//	    BufferedReader br = null;
-//		try {
-//			br = new BufferedReader(new FileReader(windowsCopyPath+"/ConfusionMatric.csv"));
-//		    String line = null;
-//		    ConfusionMatric output = null;
-//		    int i = 0;
-//		    while ((line = br.readLine()) != null) {
-//		    	i++;
-//		    	if(i == 1) continue;
-//		    	String[] values = line.split(",");
-//		    	if(values.length > 2) {
-//			    	output = new ConfusionMatric();
-//			    	output.setId(values[0]);
-//			    	output.setZero(values[1]);
-//			    	output.setOne(values[2]);
-//				    setOutput.add(output);
-//		    	}
-//		    }		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			try {
-//				if(br != null) br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
-		return setOutput;
+		return modelMetric;
 	}
 
 	@Override
@@ -696,32 +537,6 @@ public class ImportExportServiceImpl implements ImportExportService {
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}		
-		
-		
-//	    BufferedReader br = null;
-//		try {
-//			br = new BufferedReader(new FileReader(windowsCopyPath+"/ModelScore.csv"));
-//		    String line = null;
-//		    
-//		    while ((line = br.readLine()) != null) {
-//		    	if(line != null && !line.trim().isEmpty()) {
-//			    	String[] values = line.split(",");
-//			    	output = new ModelScore();	
-//			    	output.setScore(values[0]);
-//			    	output.setImageFullPath(windowsCopyPath+"/ROCplot.PNG");
-//		    	}
-//		    }		    
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			try {
-//				if(br != null) br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
 		
 		return output;
 	}
@@ -965,26 +780,27 @@ public class ImportExportServiceImpl implements ImportExportService {
 	}
 
 	@Override
-	public Set<LHEOutput> getNCOutPut() {
-		Set<LHEOutput> lheModelOutPut = new HashSet<>();
-		System.out.println(" Loading LHE Output data ");
+	public Set<NCOutput> getNCOutPut() {
+		Set<NCOutput> ncModelOutPut = new HashSet<>();
+		System.out.println(" Loading NC Output data ");
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		try {						
 			connection = qmsConnection.getHiveConnection();
-			statement = connection.createStatement();			
-//			resultSet = statement.executeQuery("SELECT LFO.*, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
-//					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
-			resultSet = statement.executeQuery("SELECT LFO.MEMBER_ID,LFO.ENROLLMENT_GAPS,LFO.OUT_OF_POCKET_EXPENSES,"
-					+ "LFO.UTILIZER_CATEGORY,LFO.AGE,LFO.AMOUNT_SPEND,LFO.ER,LFO.REASON_TO_NOT_ENROLL,LFO.likelihood_enrollment,"
-					+ "LFO.ENROLLMENT_BIN, DM.first_name, DM.middle_name, DM.last_name from analytics.LHE_FILE_OUTPUT LFO "
-					+ "LEFT OUTER JOIN  healthin.DIM_MEMBER DM ON (LFO.MEMBER_ID=DM.MEMBER_ID)");
-			LHEOutput output = null;
+			statement = connection.createStatement();	
+			int fileId = 0;
+			if(httpSession.getAttribute(QMSConstants.INPUT_FILE_ID) != null) {
+				fileId = (int) httpSession.getAttribute(QMSConstants.INPUT_FILE_ID);
+			}
+			System.out.println(" Fetching nc_file_output for file id : "+fileId);			
+			resultSet = statement.executeQuery("SELECT NFO.*, DM.first_name, DM.middle_name, DM.last_name "
+					+ "from analytics.nc_file_output NFO LEFT OUTER JOIN "
+					+ "healthin.DIM_MEMBER DM ON (NFO.patient_id=DM.MEMBER_ID) where NFO.fid="+fileId);
+			NCOutput output = null;
 			String name = "";			
 			while (resultSet.next()) {
-		    	output = new LHEOutput();			    
-				output.setMemberId(resultSet.getString("MEMBER_ID"));
+		    	output = new NCOutput();			    
 				name = "";
 				if(resultSet.getString("first_name") != null)
 					name = resultSet.getString("first_name");
@@ -992,17 +808,24 @@ public class ImportExportServiceImpl implements ImportExportService {
 					name = name+" "+resultSet.getString("middle_name");
 				if(resultSet.getString("last_name") != null)				
 					name = name+" "+resultSet.getString("last_name");
-				output.setMemberName(name);
-				output.setEnrollGaps(resultSet.getString("ENROLLMENT_GAPS"));
-				output.setOutOfPocketExpenses(resultSet.getString("OUT_OF_POCKET_EXPENSES"));
-				output.setUtilizerCategory(resultSet.getString("UTILIZER_CATEGORY"));
-				output.setAge(resultSet.getString("AGE"));
-				output.setAmountSpend(resultSet.getString("AMOUNT_SPEND"));
-				output.setEr(resultSet.getString("ER"));
-				output.setReasonNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
-				output.setLikeliHoodEnroll(resultSet.getString("likelihood_enrollment"));
-				output.setEnrollmentBin(resultSet.getString("ENROLLMENT_BIN"));
-				lheModelOutPut.add(output);
+
+				output.setPatientId(resultSet.getString("patient_id"));
+				output.setPatientName(name);
+				output.setAge(resultSet.getString("age"));;                  
+				output.setGender(resultSet.getString("gender"));                 
+				output.setRace(resultSet.getString("race"));                    
+				output.setEthnicity(resultSet.getString("ethnicity"));              
+				output.setMaritalStatus(resultSet.getString("marital_status"));
+				output.setDistanceNearestHC(resultSet.getString("distance_from_nearest_heath_center"));      
+				output.setState(resultSet.getString("state"));                   
+				output.setZipCode(resultSet.getString("zip_code"));                
+				output.setCountry(resultSet.getString("country"));                 
+				output.setPcpAssignment(resultSet.getString("pcp_assignment"));          
+				output.setNoNCMeasures(resultSet.getString("no_of_non_compliance_measures"));   
+				output.setNcHistroy(resultSet.getString("histroy_of_non_compliance"));       
+				output.setLogOdds(resultSet.getString("logodds"));                 
+				output.setPredictedNC(resultSet.getString("predicted_non_compliance"));				
+				ncModelOutPut.add(output);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();			
@@ -1010,7 +833,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		finally {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}		
-		return lheModelOutPut;
+		return ncModelOutPut;
 	}
 
 	@Override
@@ -1024,7 +847,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
 			//resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY where modelid='1'");			
-			resultSet = statement.executeQuery("select * from LHE_MODEL_SUMMARY");
+			resultSet = statement.executeQuery("select * from NC_MODEL_SUMMARY");
 			ModelSummary output = null;
 			while (resultSet.next()) {
 		    	output = new ModelSummary();			    
@@ -1056,7 +879,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 		try {						
 			connection = qmsConnection.getHiveConnection();
 			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from LHE_MODEL_METRIC");			
+			resultSet = statement.executeQuery("select * from NC_MODEL_METRIC");			
 			while (resultSet.next()) {
 	    		modelMetric.setTp(resultSet.getString("TP"));
 	    		modelMetric.setFp(resultSet.getString("FP"));
@@ -1074,7 +897,4 @@ public class ImportExportServiceImpl implements ImportExportService {
 		
 		return modelMetric;
 	}
-
-	
-
 }
