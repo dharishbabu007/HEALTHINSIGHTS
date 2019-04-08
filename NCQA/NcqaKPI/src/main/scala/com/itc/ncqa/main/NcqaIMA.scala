@@ -181,7 +181,7 @@ object NcqaIMA {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
-      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")-44))
 
 
 
@@ -211,7 +211,7 @@ object NcqaIMA {
 
     //<editor-fold desc="Dual eligibility,Dual enrollment, Ima enrollment filter">
 
-    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList)
+    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList,measureId)
     //baseOutDf.show()
      /* baseOutDf.coalesce(1)
         .write

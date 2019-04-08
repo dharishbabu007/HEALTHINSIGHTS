@@ -42,7 +42,7 @@ object NcqaW34 {
     val aLiat = List("col1")
     val msrVal = s"'$measureId'"
     val ggMsrId = s"'${KpiConstants.ggMeasureId}'"
-    val lobList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName, KpiConstants.marketplaceLobName, KpiConstants.mmdLobName)
+    val lobList = List(KpiConstants.commercialLobName, KpiConstants.medicaidLobName, KpiConstants.marketplaceLobName)
     val memqueryString = s"""SELECT * FROM ${KpiConstants.dbName}.${KpiConstants.membershipTblName} WHERE measure = $msrVal AND (member_plan_start_date IS  NOT NULL) AND(member_plan_end_date IS NOT NULL)"""
     val membershipDf = DataLoadFunctions.dataLoadFromHiveStageTable(spark,KpiConstants.dbName,KpiConstants.membershipTblName,memqueryString,aLiat)
       .drop("latest_flag", "curr_flag", "active_flag", "ingestion_date", "rec_update_date" , "source_name" , "rec_create_date", "user_name")
@@ -169,7 +169,7 @@ object NcqaW34 {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
-      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")-44))
 
 
 
@@ -187,7 +187,7 @@ object NcqaW34 {
 
     //<editor-fold desc="Dual enrollment Calculation">
 
-    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList)
+    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList,measureId)
 
     val imaContEnrollDf = baseOutDf.filter($"${KpiConstants.lobColName}".isin(lobList:_*)).dropDuplicates().cache()
     imaContEnrollDf.count()
@@ -208,8 +208,7 @@ object NcqaW34 {
 
     val medList = KpiConstants.emptyList
     val visitRefHedisDf = UtilFunctions.joinWithRefHedisFunction(spark,argmapforRefHedis,allValueList,medList)
-    println("visitRefHedisDf")
-    visitRefHedisDf.filter($"${KpiConstants.memberidColName}" === ("99998")).show()
+
     //visitRefHedisDf.show()
     //</editor-fold>
 

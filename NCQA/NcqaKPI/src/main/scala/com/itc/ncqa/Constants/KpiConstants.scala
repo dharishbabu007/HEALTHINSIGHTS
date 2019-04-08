@@ -42,6 +42,7 @@ object KpiConstants {
   val lobProductNameConVal = "Special Needs Plan-Institutionalized"
 
 
+
   /*Payer constant values*/
   val sn1PayerVal = "SN1"
   val sn2PayerVal = "SN2"
@@ -345,7 +346,6 @@ object KpiConstants {
   val anchorflagColName = "anchor_flag"
   val contEdFlagColName = "cont_enroll_flag"
   val secondContFlag = "second_cont_flag"
-  val ltiFlagColName = "lti_flag"
   val serviceTempColName = "service_temp"
   val admitTempColName = "admit_temp"
   val dischargeTempColName = "discharge_temp"
@@ -499,6 +499,9 @@ object KpiConstants {
 
 
   /*medicare_monthly_membership table column names*/
+  val hospiceFlagColName = "hospice"
+  val ltiFlagColName = "lti_flag"
+  val runDateColName = "run_date"
 
 
   /*Common Schema Constants*/
@@ -795,8 +798,10 @@ object KpiConstants {
   val nephropathyTreatmentVal= "Nephropathy Treatment"
   val kidneyTransplantVal = "Kidney Transplant"
   val systolicLt140Val = "Systolic Less Than 140"
+  val systolicGtOrEq140Val = "Systolic Greater Than/Equal To 140"
   val diastolicLt80Val = "Diastolic Less Than 80"
   val diastolicBtwn8090Val = "Diastolic 80-89"
+  val diastolicGt90Val = "Diastolic Greater Than/Equal To 90"
   val dentalVisitsVal = "Dental Visits"
   val wellCareVal= "Well-Care"
   val observationVal = "Observation"

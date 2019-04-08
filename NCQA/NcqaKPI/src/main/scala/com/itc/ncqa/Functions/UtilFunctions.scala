@@ -1279,6 +1279,12 @@ object UtilFunctions {
 
   }
 
+  /**
+    *
+    * @param dualMem1
+    * @param dualMem2
+    * @return
+    */
   def memberSelection(dualMem1:DualMember, dualMem2:DualMember):DualMember ={
 
 
@@ -1311,7 +1317,7 @@ object UtilFunctions {
     resultMember
   }
 
-  def baseOutDataframeCreation(spark:SparkSession, dataframe:DataFrame, validLobList:List[String]):DataFrame ={
+  def baseOutDataframeCreation(spark:SparkSession, dataframe:DataFrame, validLobList:List[String],measureId:String):DataFrame ={
 
 
     import spark.implicits._
@@ -1382,13 +1388,21 @@ object UtilFunctions {
     //<editor-fold desc="Dual enrolled Data Logic">
 
     val multipleEnrollMemDf = distPayerCommRemMemDf.except(singleEnrollMemDf)
-    val multipleEnrollDs = multipleEnrollMemDf.as[DualMember]
-    //multipleEnrollDs.show()
+    val multipleEnrolledMemInDf = multipleEnrollMemDf.select(KpiConstants.memberidColName,KpiConstants.lobColName, KpiConstants.lobProductColName,
+                                                             KpiConstants.payerColName, KpiConstants.primaryPlanFlagColName)
+    val multipleEnrollDs = multipleEnrolledMemInDf.as[DualMember]
+
     val dualEnrolledDataDf = multipleEnrollDs.groupByKey(inDs => (inDs.member_id)).reduceGroups(memberSelection(_,_))
-      .map(f=> f._2)
+      .map(f=> f._2).toDF()
+
+    dualEnrolledDataDf.show()
+
+    val dualEnrollOutDf = multipleEnrollMemDf.as("df1").join(dualEnrolledDataDf.as("df2"), Seq(KpiConstants.memberidColName, KpiConstants.payerColName), KpiConstants.innerJoinType)
+                                             .select("df1.*")
+
     //</editor-fold>
 
-    val dualAndSingleEnrolledDf = singleEnrollMemDf.union(dualEnrolledDataDf.toDF()).union(distCommEnrollDf).union(dualEligibleMemDf)
+    val dualAndSingleEnrolledDf = singleEnrollMemDf.union(dualEnrollOutDf).union(distCommEnrollDf).union(dualEligibleMemDf)
 
     //<editor-fold desc=" Mmp Logic">
 
@@ -1618,6 +1632,61 @@ object UtilFunctions {
 
   }
 
+  def ncqaWCCOutputDfCreation(spark: SparkSession, dfMap:mutable.Map[String, DataFrame]): DataFrame = {
+
+
+    import spark.implicits._
+
+    val totalPopDf = dfMap.get(KpiConstants.totalPopDfName).getOrElse(spark.emptyDataFrame)
+    val eligiblePopDf = dfMap.get(KpiConstants.eligibleDfName).getOrElse(spark.emptyDataFrame)
+    val mandatoryExclDf = dfMap.get(KpiConstants.mandatoryExclDfname).getOrElse(spark.emptyDataFrame)
+    val optionalExclDf = dfMap.get(KpiConstants.optionalExclDfName).getOrElse(spark.emptyDataFrame)
+    val numerator1PopDf = dfMap.get(KpiConstants.numeratorDfName).getOrElse(spark.emptyDataFrame)
+    val numerator2PopDf = dfMap.get(KpiConstants.numerator2DfName).getOrElse(spark.emptyDataFrame)
+    val numerator3PopDf = dfMap.get(KpiConstants.numerator3DfName).getOrElse(spark.emptyDataFrame)
+
+
+
+    val eligiblePopList = if(eligiblePopDf.count() > 0) eligiblePopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val mandatoryExclList = if(mandatoryExclDf.count() > 0) mandatoryExclDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val optionalExclList = if(optionalExclDf.count() > 0) optionalExclDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val numerator1PopList = if(numerator1PopDf.count() > 0) numerator1PopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val numerator2PopList = if(numerator2PopDf.count() > 0) numerator2PopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+    val numerator3PopList = if(numerator3PopDf.count() > 0) numerator3PopDf.as[String].collectAsList() else mutableSeqAsJavaList(Seq(""))
+
+
+
+    val epopColAddedDf = if (eligiblePopList.isEmpty) totalPopDf.withColumn(KpiConstants.ncqaOutEpopCol, lit(KpiConstants.zeroVal))
+    else
+      totalPopDf.withColumn(KpiConstants.ncqaOutEpopCol, when(totalPopDf.col(KpiConstants.memberidColName).isin(eligiblePopList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+
+
+
+    val exclColAddedDf = if (optionalExclList.isEmpty) epopColAddedDf.withColumn(KpiConstants.ncqaOutExclCol, lit(KpiConstants.zeroVal))
+    else
+      epopColAddedDf.withColumn(KpiConstants.ncqaOutExclCol, when(epopColAddedDf.col(KpiConstants.memberidColName).isin(optionalExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+
+
+    val rexclColAddedDf = if (mandatoryExclList.isEmpty) exclColAddedDf.withColumn(KpiConstants.ncqaOutRexclCol, lit(KpiConstants.zeroVal))
+    else
+      exclColAddedDf.withColumn(KpiConstants.ncqaOutRexclCol, when(exclColAddedDf.col(KpiConstants.memberidColName).isin(mandatoryExclList: _*), lit(KpiConstants.oneVal)).otherwise(lit(KpiConstants.zeroVal)))
+
+    val numColAddedDf = rexclColAddedDf.withColumn(KpiConstants.ncqaOutNumCol, lit(KpiConstants.zeroVal))
+      .withColumn(KpiConstants.ncqaOutNumCol,
+        when(($"${KpiConstants.memberidColName}".isin(numerator1PopList: _*)) && ($"meas"===lit("WCC1A") || $"meas"===lit("WCC2A") ),lit(KpiConstants.oneVal))
+          .when(($"${KpiConstants.memberidColName}".isin(numerator2PopList: _*)) && ($"meas"===lit("WCC1B") || $"meas"===lit("WCC2B") ),lit(KpiConstants.oneVal))
+          .when(($"${KpiConstants.memberidColName}".isin(numerator3PopList: _*)) && ($"meas"===lit("WCC1C") || $"meas"===lit("WCC2C") ),lit(KpiConstants.oneVal))
+          .otherwise(lit(KpiConstants.zeroVal)))
+
+
+    val indAddedDf = numColAddedDf.withColumn(KpiConstants.ncqaOutIndCol, lit(KpiConstants.zeroVal))
+
+
+    val resultDf = indAddedDf.select(KpiConstants.outncqaFormattedList.head, KpiConstants.outncqaFormattedList.tail: _*)
+    resultDf
+
+  }
+
   def add_ncqa_months(spark:SparkSession,startDate:Column, n:Int):Column ={
 
     import spark.implicits._
@@ -1639,6 +1708,7 @@ object UtilFunctions {
     val endDate = argMap.get("end_date").getOrElse("")
     val anchorDate = argMap.get("anchor_date").getOrElse("")
     val gapCount = argMap.get("gapcount").getOrElse("").toInt
+    val reqCovDays = argMap.get("reqCovDays").getOrElse("").toInt
     val chckVal = argMap.get("checkval").getOrElse("")
 
 
@@ -1746,7 +1816,8 @@ object UtilFunctions {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
-      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
+      .withColumn(KpiConstants.reqCovDaysColName, when(lit(reqCovDays).===(0),(datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")-44))
+                                                  .otherwise(lit(reqCovDays)))
 
 
 
@@ -1766,7 +1837,7 @@ object UtilFunctions {
     }
     else{
 
-      contEnrollDf = contEnrollStep1Df.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
+      contEnrollDf = inputForContEnrolldf.as("df1").join(contEnrollmemDf.as("df2"), $"df1.${KpiConstants.memberidColName}" === $"df2.${KpiConstants.memberidColName}", KpiConstants.innerJoinType)
         .select("df1.*")
 
     }
