@@ -178,7 +178,7 @@ object NcqaAWC {
         sum($"${KpiConstants.coverageDaysColName}").alias(KpiConstants.coverageDaysColName),
         first($"${KpiConstants.contenrollLowCoName}").alias(KpiConstants.contenrollLowCoName),
         first($"${KpiConstants.contenrollUppCoName}").alias(KpiConstants.contenrollUppCoName))
-      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")+1))
+      .withColumn(KpiConstants.reqCovDaysColName, (datediff($"${KpiConstants.contenrollUppCoName}", $"${KpiConstants.contenrollLowCoName}")-44))
 
 
 
@@ -200,7 +200,7 @@ object NcqaAWC {
 
     //<editor-fold desc="Dual eligibility,Dual enrollment, AWC enrollment filter">
 
-    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList)
+    val baseOutDf = UtilFunctions.baseOutDataframeCreation(spark, contEnrollDf, lobList, measureId)
 
     //baseOutDf.filter($"${KpiConstants.memberidColName}".===("95033")).show()
 
