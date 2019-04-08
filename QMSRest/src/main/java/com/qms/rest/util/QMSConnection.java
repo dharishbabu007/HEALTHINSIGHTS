@@ -68,6 +68,19 @@ public class QMSConnection {
 		Class.forName(HIVE_JDBC_DRIVER);
 		Connection connection = DriverManager.getConnection(qmsProperty.getHiveJDBCBaseUrl()+SchemaName, qmsProperty.getHiveUserName(), qmsProperty.getHivePassword());		
 		return connection;
+	}
+	
+	public Connection getHiveConnectionBySchemaName(String SchemaName, String userName, String password) throws Exception {
+		Class.forName(HIVE_JDBC_DRIVER);
+		String url = null;
+		if(SchemaName == null || SchemaName.isEmpty())
+			url = qmsProperty.getHiveJDBCUrl();
+		else
+			url = qmsProperty.getHiveJDBCBaseUrl()+SchemaName;
+		System.out.println(" Getting hive connection by url, user name & password "+ url + " " 
+			+ userName + " "+password);
+		Connection connection = DriverManager.getConnection(url, userName, password);		
+		return connection;
 	}	
 	
 	public Connection getPhoenixConnection() throws Exception {

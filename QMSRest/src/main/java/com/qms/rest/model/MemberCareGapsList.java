@@ -1,5 +1,6 @@
 package com.qms.rest.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +24,5 @@ public class MemberCareGapsList {
     private List<MemberCareGaps> members;
     private String compliancePotential;
     private String measureSK;
+    private List<String> careGaps=new ArrayList();
 }

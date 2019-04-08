@@ -1,5 +1,6 @@
 package com.qms.rest.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.qms.rest.model.CPOutput;
 import com.qms.rest.model.ClusterData;
 import com.qms.rest.model.PersonaDefine;
 import com.qms.rest.model.PersonaMember;
@@ -23,6 +25,7 @@ import com.qms.rest.model.LHEOutput;
 import com.qms.rest.model.ModelMetric;
 import com.qms.rest.model.ModelScore;
 import com.qms.rest.model.ModelSummary;
+import com.qms.rest.model.Objectives;
 import com.qms.rest.model.Param;
 import com.qms.rest.model.PersonaClusterFeatures;
 import com.qms.rest.model.RestResult;
@@ -159,6 +162,30 @@ public class MemberEngagementController {
 		Set<PersonaMember> setCSVOutPut = memberEngagementService.personaMemberList(clusterId);
 		return new ResponseEntity<Set<PersonaMember>>(setCSVOutPut, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/getCPFeature", method = RequestMethod.GET)
+	public ResponseEntity<List<PersonaClusterFeatures>> getCPFeature() {
+		List<PersonaClusterFeatures> setCSVOutPut = memberEngagementService.getCPFeature();
+		if (setCSVOutPut == null || setCSVOutPut.isEmpty()) {
+			return new ResponseEntity<List<PersonaClusterFeatures>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<PersonaClusterFeatures>>(setCSVOutPut, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(value = "/getCPOutput", method = RequestMethod.GET)
+	public ResponseEntity<Set<CPOutput>> getCPOutput() {
+		Set<CPOutput> setCSVOutPut = memberEngagementService.getCPOutput();
+		if (setCSVOutPut == null || setCSVOutPut.isEmpty()) {
+			return new ResponseEntity<Set<CPOutput>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<Set<CPOutput>>(setCSVOutPut, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/getCPStatistics", method = RequestMethod.GET)
+	public ResponseEntity<String[][]> getCPStatistics() {
+		String[][] setCSVOutPut = memberEngagementService.getCPStatistics();
+		return new ResponseEntity<String[][]>(setCSVOutPut, HttpStatus.OK);
+	}	
 	
 	/////////////////////////////LHC//////////////////////////////////////////	
 	@RequestMapping(value = "/create_lhc_input_file", method = RequestMethod.GET)

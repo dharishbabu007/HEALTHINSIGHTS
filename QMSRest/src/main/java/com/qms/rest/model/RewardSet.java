@@ -18,4 +18,6 @@ public class RewardSet {
 	private String goalDate;
 	private String reward;
 	private String interventions;
+	private String performance;
+	private int goalSetId;
 }

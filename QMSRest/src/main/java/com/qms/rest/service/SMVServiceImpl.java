@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
 import com.qms.rest.model.RewardSet;
@@ -20,6 +21,7 @@ import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
 import com.qms.rest.model.SmvMember;
 import com.qms.rest.model.SmvMemberClinical;
+import com.qms.rest.model.User;
 import com.qms.rest.util.QMSConnection;
 import com.qms.rest.util.QMSDateUtil;
 
@@ -39,10 +41,22 @@ public class SMVServiceImpl implements SMVService {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
+		String query = null;
 		try {
+			//oracle
 			connection = qmsConnection.getOracleConnection();
+			query = "select * from SMV_MEMBER_DETAILS_VIEW where MEMBER_ID='" + memberId + "'";
+			
+			//hive
+//			User userData = qmsConnection.getLoggedInUser();
+//			if(userData == null) {
+//				throw new QMSException(" Logged in user data is not available. Please logout and login again.");
+//			}
+//			System.out.println(" test 123 ");
+//			connection = qmsConnection.getHiveConnectionBySchemaName(null, userData.getLoginId(), userData.getPassword());			
+//			query = "select * from healthin.fact_smv_member_details where MEMBER_ID='" + memberId + "'";
+			
 			statement = connection.createStatement();
-			String query = "select * from SMV_MEMBER_DETAILS_VIEW where MEMBER_ID='" + memberId + "'";
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				memberDetails = new SMVMemberDetails();
@@ -56,16 +70,27 @@ public class SMVServiceImpl implements SMVService {
 				memberDetails.setEthnicity(resultSet.getString("ETHNICITY"));
 				memberDetails.setIncome(resultSet.getString("INCOME"));
 				memberDetails.setOccupation(resultSet.getString("OCCUPATION"));
+				
+				//oracle				
 				memberDetails.setPcpName(resultSet.getString("PCP NAME"));
 				memberDetails.setPcpNpi(resultSet.getString("PCP NPI"));
 				memberDetails.setPcpSpeciality(resultSet.getString("PCP SPECIALITY"));
 				memberDetails.setPcpAddress(resultSet.getString("PCP ADDRESS"));
+				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN NAME"));	
+				
+				//hive
+//				memberDetails.setPcpName(resultSet.getString("PCP_NAME"));
+//				memberDetails.setPcpNpi(resultSet.getString("PCP_NPI"));
+//				memberDetails.setPcpSpeciality(resultSet.getString("PCP_SPECIALITY"));
+//				memberDetails.setPcpAddress(resultSet.getString("PCP_ADDRESS"));
+//				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN_NAME"));	
+								
 				memberDetails.setNextAppointmentDate(resultSet.getString("NEXT_APPOINTMENT_DATE"));
 				memberDetails.setDepartmentName(resultSet.getString("DEPARTMENT_NAME"));
 				memberDetails.setNoShowLikelihood(resultSet.getString("NOSHOW_LIKELIHOOD"));
 				memberDetails.setNoShow(resultSet.getString("NOSHOW"));
 				memberDetails.setSsn(resultSet.getString("SSN"));
-				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN NAME"));
+
 				memberDetailsList.add(memberDetails);
 			}
 		} catch (Exception e) {
@@ -362,11 +387,14 @@ public class SMVServiceImpl implements SMVService {
 				smvMember.setEngagementLikelihoodToRecommend(resultSet.getString("LIKELIHOOD_TO_RECOMMEND"));
 			}
 			resultSet.close();
-
-			sqlQuery = "SELECT B.MEMBER_ID, B.CATEGORY, B.GOAL, B.FREQUENCY, B.GOAL_DATE,"
-					+ "B.REWARD, A.INTERVENTIONS FROM QMS_FACT_GOAL_INTERVENTIONS A "
-					+ "INNER JOIN QMS_REWARDS_SET B ON A.GOAL_SET_ID = B.GOAL_SET_ID AND "
-					+ "A.MEMBER_ID = B.MEMBER_ID WHERE A.MEMBER_ID ='" + memberId + "'";
+			
+			//Goals & Rewards
+			sqlQuery = "SELECT DISTINCT A.MEMBER_ID, A.GOAL_SET_ID, A.CATEGORY, A.GOAL, "
+					+ "A.FREQUENCY, A.GOAL_DATE,"
+					+ "A.REWARD, B.PERFORMANCE, C.INTERVENTIONS FROM QMS_REWARDS_SET A "
+					+ "INNER JOIN QMS_FACT_PERFORMANCE B ON A.MEMBER_ID = B.MEMBER_ID "
+					+ "INNER JOIN QMS_FACT_INTERVENTIONS C ON C.MEMBER_ID = A.MEMBER_ID "
+					+ "WHERE A.MEMBER_ID='"+memberId+"'";          
 			resultSet = statement.executeQuery(sqlQuery);
 			Set<RewardSet> rewardSetList = new HashSet<>();
 			smvMember.setRewardSetList(rewardSetList);
@@ -379,6 +407,7 @@ public class SMVServiceImpl implements SMVService {
 				rewardSet.setGoalDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("GOAL_DATE")));
 				rewardSet.setReward(resultSet.getString("REWARD"));
 				rewardSet.setInterventions(resultSet.getString("INTERVENTIONS"));
+				rewardSet.setPerformance(resultSet.getString("PERFORMANCE"));
 				rewardSetList.add(rewardSet);
 			}
 			resultSet.close();
@@ -521,5 +550,35 @@ public class SMVServiceImpl implements SMVService {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}
 		return smvMember;
+	}
+
+	@Override
+	public Set<RewardSet> getIntervention(String memberId) {
+		Set<RewardSet> rewardSetList = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();
+			String sqlQuery = "select * from QMS_FACT_INTERVENTIONS where MEMBER_ID='" + memberId + "'";
+			resultSet = statement.executeQuery(sqlQuery);
+			RewardSet rewardSet = null;
+			while (resultSet.next()) {
+				rewardSet = new RewardSet();
+				rewardSet.setCategory(resultSet.getString("CATEGORY"));
+				rewardSet.setGoal(resultSet.getString("GOAL"));
+				rewardSet.setFrequency(resultSet.getString("FREQUENCY"));
+				rewardSet.setGoalDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("GOAL_DATE")));
+				rewardSet.setGoalSetId(resultSet.getInt("GOAL_SET_ID"));
+				rewardSet.setInterventions(resultSet.getString("INTERVENTIONS"));
+				rewardSetList.add(rewardSet);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}
+		return rewardSetList;
 	}	
 }

@@ -3,17 +3,17 @@
  */
 package com.qms.rest.exception;
 
-public class QmsInsertionException extends Exception {
+public class QMSException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public QmsInsertionException(String errorMessage) {
+	public QMSException(String errorMessage) {
         super(errorMessage);
     }
 
-    public QmsInsertionException(String errorMessage, Exception e) {
+    public QMSException(String errorMessage, Exception e) {
         super(errorMessage, e);
     }
 }
