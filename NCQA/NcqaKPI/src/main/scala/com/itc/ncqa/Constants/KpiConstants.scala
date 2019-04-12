@@ -502,6 +502,8 @@ object KpiConstants {
   val hospiceFlagColName = "hospice"
   val ltiFlagColName = "lti_flag"
   val runDateColName = "run_date"
+  val orecCodeColName = "ori_reason_for_entitle_code"
+  val lisPreSubsColName = "lis_premium_subsidy"
 
 
   /*Common Schema Constants*/

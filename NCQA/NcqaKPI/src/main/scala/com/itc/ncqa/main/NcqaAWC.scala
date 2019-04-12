@@ -387,7 +387,7 @@ object NcqaAWC {
 
     //</editor-fold>
 
-
+    //<editor-fold desc="AWC NCQA Output Creation">
 
     val outMap = mutable.Map(KpiConstants.totalPopDfName -> toutStrDf, KpiConstants.eligibleDfName -> denominatorPopDf,
       KpiConstants.mandatoryExclDfname -> spark.emptyDataFrame, KpiConstants.optionalExclDfName -> spark.emptyDataFrame,
@@ -400,7 +400,7 @@ object NcqaAWC {
       .mode(SaveMode.Append)
       .option("header", "true")
       .csv("D:\\Scala\\AWC\\outDf")
-
+    //</editor-fold>
 
     spark.sparkContext.stop()
   }

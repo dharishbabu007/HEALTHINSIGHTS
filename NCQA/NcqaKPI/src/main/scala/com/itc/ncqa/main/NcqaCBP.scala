@@ -497,6 +497,7 @@ object NcqaCBP {
     /*Member level Removal of Mandatory Exclusion*/
     val eligibleVisitsStep1Df = visitForMandExclDf.except(visitForMandExclDf.filter($"${KpiConstants.memberidColName}".isin(mandatoryExcl_1Df.rdd.map(r=> r.getString(0)).collect():_*)))
 
+
     /*Lob level Removal of Mandatory Exclusion*/
     val eligibleVisitsDf = eligibleVisitsStep1Df.except(eligibleVisitsStep1Df.filter(($"${KpiConstants.memberidColName}".isin(mandatoryExcl1Members:_*))
                                                                                    &&(($"${KpiConstants.lobColName}".===(KpiConstants.medicareLobName))

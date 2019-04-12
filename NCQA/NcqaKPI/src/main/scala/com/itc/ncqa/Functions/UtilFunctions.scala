@@ -6,7 +6,7 @@ import com.itc.ncqa.Constants.KpiConstants
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{Column, DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.DateType
+import org.apache.spark.sql.types.{DateType, StringType}
 
 import scala.util.Try
 import scala.collection.JavaConversions._
@@ -1395,9 +1395,9 @@ object UtilFunctions {
     val dualEnrolledDataDf = multipleEnrollDs.groupByKey(inDs => (inDs.member_id)).reduceGroups(memberSelection(_,_))
       .map(f=> f._2).toDF()
 
-    dualEnrolledDataDf.show()
+   // dualEnrolledDataDf.show()
 
-    val dualEnrollOutDf = multipleEnrollMemDf.as("df1").join(dualEnrolledDataDf.as("df2"), Seq(KpiConstants.memberidColName, KpiConstants.payerColName), KpiConstants.innerJoinType)
+    val dualEnrollOutDf = multipleEnrollMemDf.as("df1").join(dualEnrolledDataDf.as("df2"), $"df1.${KpiConstants.memberidColName}"=== $"df2.${KpiConstants.memberidColName}" && $"df1.${KpiConstants.payerColName}"=== $"df2.${KpiConstants.payerColName}", KpiConstants.innerJoinType)
                                              .select("df1.*")
 
     //</editor-fold>
@@ -1713,9 +1713,10 @@ object UtilFunctions {
 
 
     val inputForContEnrolldf = inputDf.select(KpiConstants.memberidColName, KpiConstants.benefitMedicalColname,
-      KpiConstants.memStartDateColName,KpiConstants.memEndDateColName,
-      KpiConstants.lobColName, KpiConstants.lobProductColName,
-      KpiConstants.payerColName,KpiConstants.primaryPlanFlagColName)
+                                              KpiConstants.memStartDateColName,KpiConstants.memEndDateColName,
+                                              KpiConstants.lobColName, KpiConstants.lobProductColName,
+                                              KpiConstants.payerColName,KpiConstants.primaryPlanFlagColName,
+                                              KpiConstants.dateofbirthColName)
 
     val benNonMedRemDf = inputForContEnrolldf.filter($"${KpiConstants.benefitMedicalColname}".===(KpiConstants.yesVal))
     val contEnrollInDf = benNonMedRemDf.withColumn(KpiConstants.contenrollLowCoName, lit(startDate).cast(DateType))
