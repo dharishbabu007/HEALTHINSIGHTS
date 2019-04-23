@@ -1,5 +1,7 @@
 package com.qms.rest.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +47,9 @@ public class MeasureCreator implements Comparable<MeasureCreator> {
 	private String overFlowRate;
 	private int measurementYear;
 	private String optionalExclusion;
+	private String certified;
+	private List<String> payer;
+	private List<String> product;	
 	
 	@Override
 	public int compareTo(MeasureCreator arg0) {
