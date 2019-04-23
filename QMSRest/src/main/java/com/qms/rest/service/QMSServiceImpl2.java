@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,10 +94,13 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				measureCreator.setStatus(statusMap.get(resultSet.getString("MEASURE_STATUS_ID")));
 				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				measureCreator.setCertified(resultSet.getString("CERTIFIED"));
 				if(resultSet.getDate("END_DATE") != null) {
 					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
 					measureCreator.setMeasurementYear(localDate.getYear());
-				}				
+				}
+				measureCreator.setPayer(getListFromString(resultSet.getString("PAYER")));
+				measureCreator.setProduct(getListFromString(resultSet.getString("LOB")));				
 				measureList.add(measureCreator);
 			}			
 			
@@ -110,7 +114,20 @@ public class QMSServiceImpl2 implements QMSService {
 		
 		return treeMeasureList;
 	}
+	
+	private List<String> getListFromString (String value) {
+		if(value == null)
+			return new ArrayList<String>();
+		value = value.replaceAll(", ", ",");
+		List<String> valueList = Arrays.asList(value.split(","));
+		return valueList;
+	}
 
+	private String getStringFromList (List<String> values) {
+		if(values == null || values.isEmpty())
+			return null;
+		return values.toString().substring(0, values.toString().length()-1);
+	}
 	
 	@Override
 	public MeasureCreator getMeasureLibraryById(int id) {
@@ -156,10 +173,13 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setMrss(resultSet.getInt("MRSS"));
 				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));
 				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				measureCreator.setCertified(resultSet.getString("CERTIFIED"));
 				if(resultSet.getDate("END_DATE") != null) {
 					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
 					measureCreator.setMeasurementYear(localDate.getYear());
 				}
+				measureCreator.setPayer(getListFromString(resultSet.getString("PAYER")));
+				measureCreator.setProduct(getListFromString(resultSet.getString("LOB")));				
 				break;
 			}
 		} catch (Exception e) {
@@ -330,9 +350,9 @@ public class QMSServiceImpl2 implements QMSService {
 				+ "numerator,num_exclusion,QUALITY_MEASURE_ID,description,measure_name,QUALITY_PROGRAM_ID,target_population_age,"
 				+ "measure_type_id,measure_edit_id,REC_UPDATE_DATE,MEASURE_STATUS_ID,ACTIVE_FLAG,REVIEWER_ID,AUTHOR_ID,USER_NAME,IS_ACTIVE,"
 				+ "START_DATE,END_DATE,curr_flag,rec_create_date,latest_flag,ingestion_date,source_name,"
-				+ "P50,P90,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE,review_comments,OPT_EXCLUSION) "
+				+ "P50,P90,COLLECTION_SOURCE,MRSS,OVERFLOW_RATE,review_comments,OPT_EXCLUSION,CERTIFIED,PAYER,LOB) "
 				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement statement = null;
 		Statement sqlStatement = null;
@@ -429,6 +449,10 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setString(++i, measureCreator.getOverFlowRate());			
 			statement.setString(++i, measureCreator.getReviewComments());
 			statement.setString(++i, measureCreator.getOptionalExclusion());
+			if(measureCreator.getCertified() == null) measureCreator.setCertified("N");
+			statement.setString(++i, measureCreator.getCertified());
+			statement.setString(++i, getStringFromList(measureCreator.getPayer()));
+			statement.setString(++i, getStringFromList(measureCreator.getProduct()));
 			
 			statement.executeUpdate();
 			connection.commit();
@@ -488,7 +512,7 @@ public class QMSServiceImpl2 implements QMSService {
 				+ "measure_domain_id=?, DEN_EXCLUSION=?, numerator=?, num_exclusion=?, description=?, measure_name=?, "
 				+ "QUALITY_PROGRAM_ID=?, measure_steward_id=?, target_population_age=?, measure_type_id=?, rec_update_date=?, "
 				+ "MEASURE_STATUS_ID=?, USER_NAME=?, IS_ACTIVE=?, START_DATE=?, END_DATE=?, "
-				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=?,OPT_EXCLUSION=? "
+				+ "P50=?,P90=?,COLLECTION_SOURCE=?,MRSS=?,OVERFLOW_RATE=?,OPT_EXCLUSION=?,PAYER=?,LOB=? "
 				+ "where QUALITY_MEASURE_ID=? and MEASURE_EDIT_ID=?";
 		
 		String qualityProgramId = this.getQualityProgramId(measureCreator.getProgramName(), measureCreator.getMeasureCategory());
@@ -542,6 +566,8 @@ public class QMSServiceImpl2 implements QMSService {
 			statement.setInt(++i, measureCreator.getMrss());
 			statement.setString(++i, measureCreator.getOverFlowRate());			
 			statement.setString(++i, measureCreator.getOptionalExclusion());
+			statement.setString(++i, getStringFromList(measureCreator.getPayer()));
+			statement.setString(++i, getStringFromList(measureCreator.getProduct()));			
 			
 			//where clause parameters
 			statement.setInt(++i, measureCreator.getId());
@@ -614,10 +640,13 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setMrss(resultSet.getInt("MRSS"));
 				measureCreator.setOverFlowRate(resultSet.getString("OVERFLOW_RATE"));
 				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				measureCreator.setCertified(resultSet.getString("CERTIFIED"));
 				if(resultSet.getDate("END_DATE") != null) {
 					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
 					measureCreator.setMeasurementYear(localDate.getYear());
 				}
+				measureCreator.setPayer(getListFromString(resultSet.getString("PAYER")));
+				measureCreator.setProduct(getListFromString(resultSet.getString("LOB")));				
 				break;
 			}
 		} catch (Exception e) {
@@ -665,10 +694,13 @@ public class QMSServiceImpl2 implements QMSService {
 					measureCreator.setStartDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("START_DATE")));
 					measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));
 					measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+					measureCreator.setCertified(resultSet.getString("CERTIFIED"));
 					if(resultSet.getDate("END_DATE") != null) {
 						LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
 						measureCreator.setMeasurementYear(localDate.getYear());
-					}					
+					}	
+					measureCreator.setPayer(getListFromString(resultSet.getString("PAYER")));
+					measureCreator.setProduct(getListFromString(resultSet.getString("LOB")));					
 					dataSet.add(measureCreator);
 				}
 			}
@@ -853,6 +885,29 @@ public class QMSServiceImpl2 implements QMSService {
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}			
 		return dataSet2;		
+	}
+
+	@Override
+	public Set<String> getProductPlanByLobId(String lobId) {
+		Set<String> productSet = new HashSet<>();
+		Statement statement = null;
+		ResultSet resultSet = null;		
+		Connection connection = null;
+		try {						
+			connection = qmsConnection.getOracleConnection();
+			statement = connection.createStatement();			
+			resultSet = statement.executeQuery("select LOB_PRODUCT from DIM_PRODUCT_PLAN where LOB_ID="+lobId);
+			
+			while (resultSet.next()) {
+				productSet.add(resultSet.getString("LOB_PRODUCT"));				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}			
+		return productSet;
 	}	
 
 }

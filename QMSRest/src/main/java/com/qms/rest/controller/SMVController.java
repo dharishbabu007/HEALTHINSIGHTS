@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
+import com.qms.rest.model.RestResult;
 import com.qms.rest.model.RewardSet;
 import com.qms.rest.model.SMVMemberDetails;
 import com.qms.rest.model.SMVMemberPayerClustering;
@@ -30,10 +31,12 @@ public class SMVController {
 	SMVService smvService;
 	
 	@RequestMapping(value = "/getSMVMemberDetails/{memberId}", method = RequestMethod.GET)
-	public ResponseEntity<Set<SMVMemberDetails>> getSMVMemberDetails(@PathVariable("memberId") String memberId) {
+	public ResponseEntity<?> getSMVMemberDetails(@PathVariable("memberId") String memberId) {
+		System.out.println(" calling service in controller");
 		Set<SMVMemberDetails> workList = smvService.getSMVMemberDetails(memberId);
-		if (workList==null || workList.isEmpty()) {
-			return new ResponseEntity<Set<SMVMemberDetails>>(HttpStatus.NO_CONTENT);
+		if(workList == null) {
+			return new ResponseEntity<RestResult>(RestResult.getFailRestResult("Logged in user data is not available. Please logout and login again."), 
+					HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<Set<SMVMemberDetails>>(workList, HttpStatus.OK);
 	}

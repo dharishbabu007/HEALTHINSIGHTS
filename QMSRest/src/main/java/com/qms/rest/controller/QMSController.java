@@ -198,16 +198,16 @@ public class QMSController {
 		return new ResponseEntity<Set<MemberDetail>>(memberDetails, HttpStatus.OK);
 	}		
 
-	@RequestMapping(value = "/createProgram", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<RestResult> createProgram(@RequestBody Program program) {
-		String response = "Program created successfully for ProgramName : "+program.getProgramName();
-		logger.info("About to create program :  " + program);
-		programService.createProgram(program);
-		
-		RestResult restResult = RestResult.getSucessRestResult(response);		
-		return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/createProgram", method = RequestMethod.POST)
+//	@ResponseBody
+//	public ResponseEntity<RestResult> createProgram(@RequestBody Program program) {
+//		String response = "Program created successfully for ProgramName : "+program.getProgramName();
+//		logger.info("About to create program :  " + program);
+//		programService.createProgram(program);
+//		
+//		RestResult restResult = RestResult.getSucessRestResult(response);		
+//		return new ResponseEntity<RestResult>(restResult, HttpStatus.OK);
+//	}
 
 	@RequestMapping(value = "/members/{dimMemberId}", method = RequestMethod.GET)
 	@ResponseBody
@@ -218,17 +218,17 @@ public class QMSController {
 		return new ResponseEntity<Object>(dimMemberList, headers, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/program/{programId}", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<?> getProgramById(@PathVariable("programId") int programId) {
-
-		QualityProgramUI qualityProgram = programService.getProgramById(programId);
-		if (qualityProgram == null) {
-			logger.error(" Unable to fetch program details");
-			return new ResponseEntity(new CustomErrorType("Program not found."), HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<QualityProgramUI>(qualityProgram, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/program/{programId}", method = RequestMethod.GET)
+//	@ResponseBody
+//	public ResponseEntity<?> getProgramById(@PathVariable("programId") int programId) {
+//
+//		QualityProgramUI qualityProgram = programService.getProgramById(programId);
+//		if (qualityProgram == null) {
+//			logger.error(" Unable to fetch program details");
+//			return new ResponseEntity(new CustomErrorType("Program not found."), HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<QualityProgramUI>(qualityProgram, HttpStatus.OK);
+//	}
 	
 	@RequestMapping(value = "/refMrss_list", method = RequestMethod.GET)
 	public ResponseEntity<Set<RefMrss>> refMrssList(){
@@ -247,6 +247,16 @@ public class QMSController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);			
 		}
 		return new ResponseEntity<Set<RefMrssSample>>(workList, HttpStatus.OK);
-	}			
+	}
+	
 
+	@RequestMapping(value = "/getProductPlanByLobId/{lobId}", method = RequestMethod.GET)
+	public ResponseEntity<Set<String>> getProductPlanByLobId(@PathVariable("lobId") String lobId) {
+		Set<String> workList = qmsService.getProductPlanByLobId(lobId);
+		if (workList.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);			
+		}
+		return new ResponseEntity<Set<String>>(workList, HttpStatus.OK);
+	}	
+	
 }

@@ -36,5 +36,7 @@ public interface QMSService {
 	
 	Set<RefMrss> getRefMrssList();
 	
-	Set<RefMrssSample> getRefMrssSaimpleList();	
+	Set<RefMrssSample> getRefMrssSaimpleList();
+
+	Set<String> getProductPlanByLobId(String lobId);	
 }

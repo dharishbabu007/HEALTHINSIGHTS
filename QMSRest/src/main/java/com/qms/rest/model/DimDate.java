@@ -11,7 +11,5 @@ public class DimDate {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	
+	}	
 }

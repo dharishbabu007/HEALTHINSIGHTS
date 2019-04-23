@@ -43,18 +43,19 @@ public class SMVServiceImpl implements SMVService {
 		Connection connection = null;
 		String query = null;
 		try {
-			//oracle
-			connection = qmsConnection.getOracleConnection();
-			query = "select * from SMV_MEMBER_DETAILS_VIEW where MEMBER_ID='" + memberId + "'";
+//			//oracle
+//			connection = qmsConnection.getOracleConnection();
+//			query = "select * from SMV_MEMBER_DETAILS_VIEW where MEMBER_ID='" + memberId + "'";
 			
 			//hive
-//			User userData = qmsConnection.getLoggedInUser();
-//			if(userData == null) {
-//				throw new QMSException(" Logged in user data is not available. Please logout and login again.");
-//			}
-//			System.out.println(" test 123 ");
-//			connection = qmsConnection.getHiveConnectionBySchemaName(null, userData.getLoginId(), userData.getPassword());			
-//			query = "select * from healthin.fact_smv_member_details where MEMBER_ID='" + memberId + "'";
+			User userData = qmsConnection.getLoggedInUser();
+			if(userData == null) {
+				return null;
+				//throw new QMSException(" Logged in user data is not available. Please logout and login again.");
+			}
+			System.out.println(" test 123 ");
+			connection = qmsConnection.getHiveConnectionBySchemaName(null, userData.getLoginId(), userData.getPassword());			
+			query = "select * from healthin.fact_smv_member_details where MEMBER_ID='" + memberId + "'";
 			
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
@@ -72,18 +73,18 @@ public class SMVServiceImpl implements SMVService {
 				memberDetails.setOccupation(resultSet.getString("OCCUPATION"));
 				
 				//oracle				
-				memberDetails.setPcpName(resultSet.getString("PCP NAME"));
-				memberDetails.setPcpNpi(resultSet.getString("PCP NPI"));
-				memberDetails.setPcpSpeciality(resultSet.getString("PCP SPECIALITY"));
-				memberDetails.setPcpAddress(resultSet.getString("PCP ADDRESS"));
-				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN NAME"));	
+//				memberDetails.setPcpName(resultSet.getString("PCP NAME"));
+//				memberDetails.setPcpNpi(resultSet.getString("PCP NPI"));
+//				memberDetails.setPcpSpeciality(resultSet.getString("PCP SPECIALITY"));
+//				memberDetails.setPcpAddress(resultSet.getString("PCP ADDRESS"));
+//				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN NAME"));	
 				
 				//hive
-//				memberDetails.setPcpName(resultSet.getString("PCP_NAME"));
-//				memberDetails.setPcpNpi(resultSet.getString("PCP_NPI"));
-//				memberDetails.setPcpSpeciality(resultSet.getString("PCP_SPECIALITY"));
-//				memberDetails.setPcpAddress(resultSet.getString("PCP_ADDRESS"));
-//				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN_NAME"));	
+				memberDetails.setPcpName(resultSet.getString("PCP_NAME"));
+				memberDetails.setPcpNpi(resultSet.getString("PCP_NPI"));
+				memberDetails.setPcpSpeciality(resultSet.getString("PCP_SPECIALITY"));
+				memberDetails.setPcpAddress(resultSet.getString("PCP_ADDRESS"));
+				memberDetails.setPhysicianName(resultSet.getString("PHYSICIAN_NAME"));	
 								
 				memberDetails.setNextAppointmentDate(resultSet.getString("NEXT_APPOINTMENT_DATE"));
 				memberDetails.setDepartmentName(resultSet.getString("DEPARTMENT_NAME"));
@@ -371,7 +372,7 @@ public class SMVServiceImpl implements SMVService {
 
 			// SMV ENGAGEMENT
 			sqlQuery = "SELECT CD.PERSONA_NAME, CFO.MEMBER_ID, EFO.LIKELIHOOD_ENROLLMENT,"
-					+ "EFO.REASON_TO_NOT_ENROLL, EFO.CHANNEL, LHC.LIKELIHOOD_OF_ENROLLMENT,"
+					+ "EFO.REASON_TO_NOT_ENROLL, EFO.CHANNEL, LHC.LIKELIHOOD_TO_CHURN,"
 					+ "LHR.LIKELIHOOD_TO_RECOMMEND FROM QMS_CP_FILE_OUTPUT CFO "
 					+ "INNER JOIN QMS_CP_DEFINE CD ON CD.CLUSTER_ID = CFO.CLUSTER_ID "
 					+ "INNER JOIN QMS_ENROLLMENT_FILE_OUTPUT EFO ON EFO.MEMBER_ID = CFO.MEMBER_ID "
@@ -380,21 +381,24 @@ public class SMVServiceImpl implements SMVService {
 			resultSet = statement.executeQuery(sqlQuery);
 			while (resultSet.next()) {
 				smvMember.setEngagementPersonaName(resultSet.getString("PERSONA_NAME"));
-				smvMember.setEngagementLikelihoodOfEnrollment(resultSet.getString("LIKELIHOOD_ENROLLMENT"));
+				smvMember.setEngagementLikelihoodEnrollment(resultSet.getString("LIKELIHOOD_ENROLLMENT"));
 				smvMember.setEngagementReasonToNotEnroll(resultSet.getString("REASON_TO_NOT_ENROLL"));
 				smvMember.setEngagementChannel(resultSet.getString("CHANNEL"));
-				smvMember.setEngagementLikelihoodOfEnrollment(resultSet.getString("LIKELIHOOD_OF_ENROLLMENT"));
+				smvMember.setEngagementLikelihoodOfEnrollment(resultSet.getString("LIKELIHOOD_TO_CHURN"));
 				smvMember.setEngagementLikelihoodToRecommend(resultSet.getString("LIKELIHOOD_TO_RECOMMEND"));
 			}
 			resultSet.close();
 			
 			//Goals & Rewards
-			sqlQuery = "SELECT DISTINCT A.MEMBER_ID, A.GOAL_SET_ID, A.CATEGORY, A.GOAL, "
+			
+			sqlQuery = "SELECT DISTINCT A.MEMBER_ID, A.GOAL_SET_ID, A.CATEGORY, A.GOAL, A.FREQUENCY, A.GOAL_DATE, A.REWARD, B.PERFORMANCE, C.INTERVENTIONS FROM QMS_REWARDS_SET A INNER JOIN QMS_FACT_PERFORMANCE B ON A.MEMBER_ID = B.MEMBER_ID AND A.GOAL_SET_ID = B.GOAL_SET_ID AND A.CATEGORY = B.CATEGORY INNER JOIN QMS_FACT_INTERVENTIONS C ON C.MEMBER_ID = B.MEMBER_ID AND C.GOAL_SET_ID = B.GOAL_SET_ID AND C.CATEGORY = B.CATEGORY WHERE A.MEMBER_ID='"+memberId+"'";
+
+			/*sqlQuery = "SELECT DISTINCT A.MEMBER_ID, A.GOAL_SET_ID, A.CATEGORY, A.GOAL, "
 					+ "A.FREQUENCY, A.GOAL_DATE,"
 					+ "A.REWARD, B.PERFORMANCE, C.INTERVENTIONS FROM QMS_REWARDS_SET A "
 					+ "INNER JOIN QMS_FACT_PERFORMANCE B ON A.MEMBER_ID = B.MEMBER_ID "
 					+ "INNER JOIN QMS_FACT_INTERVENTIONS C ON C.MEMBER_ID = A.MEMBER_ID "
-					+ "WHERE A.MEMBER_ID='"+memberId+"'";          
+					+ "WHERE A.MEMBER_ID='"+memberId+"'";        */  
 			resultSet = statement.executeQuery(sqlQuery);
 			Set<RewardSet> rewardSetList = new HashSet<>();
 			smvMember.setRewardSetList(rewardSetList);

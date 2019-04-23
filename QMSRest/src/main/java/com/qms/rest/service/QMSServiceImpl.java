@@ -748,5 +748,12 @@ public class QMSServiceImpl implements QMSService {
 	}
 
 
+	@Override
+	public Set<String> getProductPlanByLobId(String lobId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }
