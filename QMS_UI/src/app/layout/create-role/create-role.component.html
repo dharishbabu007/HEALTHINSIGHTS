@@ -27,15 +27,15 @@
                     <div *ngFor="let address of formData.controls; let i=index;" class="panel panel-default">
                       <div [formGroupName]="i">
                           <div class="row" *ngIf="i==0">
-                            <span class="col-lg-4">
+                            <span class="col-lg-4 col-md-4">
                               <label class="font-weight-bold">Pages</label>
                             </span>
                        
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 col-md-3">
                               <label class="font-weight-bold">Permissions</label>
                             </span>
 
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 col-md-3">
                                 <label class="font-weight-bold">Add</label>
                               </span>
                           </div>
@@ -68,12 +68,12 @@
                          -->
                      
                           <div class="row">
-                            <span class="col-lg-4" let i = index>
+                            <span class="col-lg-4 col-md-4" let i = index>
                             
                                 <p-dropdown  placeholder="Select a Page" [style]="{'width':'250px'}"  [autoDisplayFirst]="false" [options]="pageList" formControlName="parentPage" (onChange)="pagelistChange($event,i)"></p-dropdown>
                             </span>
-                            <span class="col-lg-3">
-                                <div class="ui-g-12">
+                            <span class="col-lg-3 col-md-3">
+                                <div class="col-lg-12 col-md-12">
                                   
                                     Read <input type="checkbox" name="group1"  value="read" formControlName="read"  class="inputCheckbox">
                                   
@@ -88,10 +88,10 @@
                               -->
                             </div>
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length == i+1" style="padding: 5px;">
+                            <span class="col-lg-2 col-md-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length == i+1" style="padding: 5px;">
                               <button let i = "index" class="btn btn-secondary" (click)="addCategory(i)">+</button> 
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length != i+1" style="padding: 5px;">
+                            <span class="col-lg-2 col-md-2 btn-background" *ngIf="myForm.controls.roleCategorys.controls.length != i+1" style="padding: 5px;">
                               <button  class="btn btn-secondary" (click)="removeCategory(i)">-</button> 
                             </span>                         
                           </div>

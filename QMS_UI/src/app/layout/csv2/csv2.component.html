@@ -1,116 +1,171 @@
 <div  style="margin: 25px">
-    <app-page-header [heading]="'Model Statistics'" [icon]="'fa-table'"></app-page-header>
-    <div class="card row p-3 align-items-center">
-
-            <div class="row p-3 align-items-center">
-            <div class="col  col-lg-12">
-                    <span class="col-lg-6">
-                            <h4>Model Summary</h4>
-                          </span>
-               
-              <!--<button type="button" pButton label="back" [routerLink]="['/csv1/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
-           
-
-                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
-                 <br><br>
+        <app-page-header [heading]="'Model Statistics'" [icon]="'fa-table'"></app-page-header>
+        <div class="card row p-3">
     
-                <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
-                    <ng-template pTemplate="header">
-                        <tr class="header-class">
-                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th *ngFor="let col of cols" [ngSwitch]="col.field">
-                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr>
-                            <td *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <span *ngSwitchCase="'estimate' || 'stdError' || 'zValue'">
-                                    {{rowData[col.field] | number}}
-                                </span>
-                                <span *ngSwitchCase="'stdError'">
-                                    {{rowData[col.field] | number}}
-                                </span>
-                                <span *ngSwitchCase="'zValue'">
-                                    {{rowData[col.field] | number}}
-                                </span>
-                                <span *ngSwitchCase="'prz'">
-                                    {{rowData[col.field] | number}}
-                                </span>
-                                <span *ngSwitchDefault>{{rowData[col.field]}}</span>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-           </div>
-       </div>
-       <div class="row p-3 align-items-center">
-            <div class="col  col-lg-12 ">
-                    <span class="col-lg-6">
-                            <h4>Confusion Matrix</h4>
-                            </span>
-                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt1.exportCSV()" style="float:right"></button>
-                <br><br>
-             
-                <p-table #dt1  class="table table-bordered table-hover" [scrollable]="false" [value]="sales" [columns]="cols" exportFilename="Confusion_Matrix">
-                        <ng-template pTemplate="caption">
-                                Actual
-                            </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr class="header-class">
-                            <th></th>
-                            <th>Positive</th>
-                            <th>Negative</th>
-                        </tr>
+                <div class="row p-3 align-items-center">
+                <div class="col  col-lg-12">
+                        <span class="col-lg-6">
+                                <h4>Model Summary</h4>
+                              </span>
+                   
+                  <!--<button type="button" pButton label="back" [routerLink]="['/csv1/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
+               
+    
+                     <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
+                     <br><br>
+        
+                    <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
+                        <ng-template pTemplate="header">
+                            <tr class="header-class">
+                                <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                                <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                </th>
+                            </tr>
                         </ng-template>
-                    <ng-template pTemplate="body"  let-rowData>
-                        <tr> 
-                           
-                            <td>{{rowData.brand}}</td>
-                            <td>{{rowData.num}}</td>
-                            <td>{{rowData.num2}}</td>
-                            
-                        </tr>
-                        
-                    </ng-template>
-                </p-table>
-            </div>
-        </div>
-
-        <div class="row p-3 align-items-center">
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                                    <span *ngSwitchCase="'estimate' || 'stdError' || 'zValue'">
+                                        {{rowData[col.field] | number}}
+                                    </span>
+                                    <span *ngSwitchCase="'stdError'">
+                                        {{rowData[col.field] | number}}
+                                    </span>
+                                    <span *ngSwitchCase="'zValue'">
+                                        {{rowData[col.field] | number}}
+                                    </span>
+                                    <span *ngSwitchCase="'prz'">
+                                        {{rowData[col.field] | number}}
+                                    </span>
+                                    <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+               </div>
+           </div>
+           <div class="row p-3">
                 <div class="col  col-lg-12 ">
-                <span class="col-lg-6">
-                        <h4>Model Score</h4>
-                </span>        
-                    <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt2.exportCSV()" style="float:right"></button>
-                    <br><br>
-                    <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="ModelScore" [columns]="cols" exportFilename="Model_Score">
-                            <ng-template pTemplate="header">
+                        <span class="col-lg-6">
+                                <h4>Confusion Matrix</h4>
+                                </span>
+                    <!-- <button type="button" pButton icon="fa fa-download" label="Export" (click)="confusion.exportCSV()" style="float:right"></button> -->
+                    <br>
+                 
+                    <!-- <p-table #confusion  class="table table-bordered table-hover" [scrollable]="false" [value]="sales" [columns]="cols" exportFilename="Confusion_Matrix">
+                            <ng-template pTemplate="caption">
+                                    Actual
+                                </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr class="header-class">
+                                <th></th>
+                                <th>Positive</th>
+                                <th>Negative</th>
+                            </tr>
+                            </ng-template>
+                        <ng-template pTemplate="body"  let-rowData>
+                            <tr> 
+                            
+                                <td>{{rowData.id}}</td>
+                                <td>{{rowData.zero}}</td>
+                                <td>{{rowData.one}}</td>
+                                
+                            </tr>
+                            
+                        </ng-template>
+                    </p-table> -->
+                    <table class="table table-bordered table-hover" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th colspan="2"></th>
+                                    <th colspan="2" style="text-align: center">Actual</th>
+                                </tr>
+                                <tr class="header-class">
+                                    <th></th><th></th>
+                                    <th>Positive</th>
+                                    <th>Negative</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2" style="font-weight: bold;">Predicted</td>
+                                    <td style="font-weight: bold;">Positive</td>
+                                    <td>{{tp}}</td>
+                                    <td>{{fp}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Negative</td>
+                                    <td>{{fn}}</td>
+                                    <td>{{tn}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+    
+            <div class="row p-3">
+                    <div class="col  col-lg-12 ">
+                    <span class="col-lg-6">
+                            <h4>Model Score</h4>
+                    </span>        
+                        <!-- <button type="button" pButton icon="fa fa-download" label="Export" (click)="score.exportCSV()" style="float:right"></button> -->
+                        <br>
+                        <!-- <p-table #score  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="ModelScore" [columns]="cols" exportFilename="Model_Score">
+                                <ng-template pTemplate="header">
+                                        <tr class="header-class">
+                                            <th>ModelScore</th>
+                                           
+                                        </tr>
+                                        </ng-template>
+                                <ng-template pTemplate="body" let-rowData >
+                                    <tr> 
+                                            
+                                            <td>{{rowData.num}}</td>
+                                        
+                                    </tr>
+                                    
+                                </ng-template>
+                            </p-table> -->
+                            <table class="table table-bordered table-hover" style="width: 100%;text-align: center">
+                                <thead>
                                     <tr class="header-class">
                                         <th>ModelScore</th>
-                                       
                                     </tr>
-                                    </ng-template>
-                            <ng-template pTemplate="body" let-rowData >
-                                <tr> 
-                                        
-                                        <td>{{rowData.num}}</td>
-                                    
-                                </tr>
-                                
-                            </ng-template>
-                        </p-table>
-                </div>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ModelScore}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+            </div>
+    <!-- <p-chart type="line" [data]="data" width="600px" height="400px" style="margin-right: 0px"></p-chart> -->
+    <!-- <img src="C:/Users/avinashsethi/Desktop/hdp-hadoop/models/noshow/1/ROCplot.jpeg" width="600px" height="480px">
+    <img src="ROCplot.jpeg" width="600px" height="480px"> -->
+    <!-- <img src="http://healthinsight:8082/1/ROCplot.jpeg" width="600px" height="480px">
+    <img src="http://healthinsight:8082/1/FourFoldPlot.jpeg" width="600px" height="480px"> -->
+    <br>
+    <span class="col-lg-6">
+            <h4>Model Performance</h4>
+    </span>        
+        <br>
+    <div class="row col-lg-12">
+            <div class="col-lg-6 ">
+              <img src="http://healthinsight:8082/noshow/FourFoldPlot.jpeg">
+            </div>
+            <div class="col-lg-6">
+               <img src="http://healthinsight:8082/noshow/ROCplot.jpeg">
+            </div>
         </div>
-<!-- <p-chart type="line" [data]="data" width="600px" height="400px" style="margin-right: 0px"></p-chart> -->
-<img src="assets/images/ROCplot.jpeg" width="600px" height="480px">
     </div>
-
-</div>
-
+    
+    </div>
+    
+    

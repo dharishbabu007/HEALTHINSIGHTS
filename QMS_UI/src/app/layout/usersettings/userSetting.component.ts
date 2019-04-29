@@ -36,8 +36,8 @@ export class UserSettingComponent implements OnInit {
         lastName: [''],
         securityQuestion: [''],
         securityAnswer: [''],
-        phoneNumber: [''],
-        EmailId: ['']
+        phoneNumber: ['',[Validators.pattern("[0-9]{0,10}")]],
+        EmailId: ['',[Validators.required, Validators.email]]
         
       });
 
@@ -64,7 +64,7 @@ export class UserSettingComponent implements OnInit {
         this.Question = this.tableRepository.filter(item => item.id == this.Queid);
      this.actualQuestion =  this.Question[0].question;
      this.myForm.controls['securityQuestion'].setValue(this.actualQuestion);
-     console.log(this.Queid)
+    // console.log(this.Queid)
  
      
     });
@@ -85,6 +85,25 @@ export class UserSettingComponent implements OnInit {
    
   
 }
+validateAllFormFields(formGroup: FormGroup) {
+  Object.keys(formGroup.controls).forEach(field => {
+  const control = formGroup.get(field);
+  if (control instanceof FormControl) {
+    control.markAsTouched({ onlySelf: true });
+  } else if (control instanceof FormGroup) {
+    this.validateAllFormFields(control);
+  }
+});
+}
+OnSubmit(modelPc: UserSetting,isValid: boolean){
+  if(isValid){
+    this.submitPc(modelPc,isValid)
+  }
+  else{
+    this.validateAllFormFields(this.myForm);
+
+  }
+}
   submitPc(modelPc: UserSetting, isValid: boolean) {
     var user =  JSON.parse(localStorage.getItem('currentUser'));
     this.Queid =  [];
@@ -94,8 +113,16 @@ export class UserSettingComponent implements OnInit {
        this.submitted = true;
       // call API to save
       // ...
-      console.log( 'Model' + user.loginId);
-    this.UserSettingService.UserSettingSubmit(modelPc,user.loginId).subscribe( model => this.msgService.success('Successfully Updated UserSettings'));
+      //console.log( 'Model' + user.loginId);
+     // console.log(isValid)
+    this.UserSettingService.UserSettingSubmit(modelPc,user.loginId).subscribe( (model:any) => {
+    if(model.status=="SUCCESS")  
+    {this.msgService.success('Successfully Updated UserSettings')}
+    else{
+      this.msgService.error(model.message)
+    }
+    }
+    );
 
   }
 

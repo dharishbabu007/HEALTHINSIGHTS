@@ -19,7 +19,7 @@ export class LikelihoodStatisticsComponent implements OnInit {
     constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router) {
         this.route.params.subscribe(params => {
             this.type = params['type'];
-            this.title = (this.type === '1' ) ? 'Likelihood To Churn Statistics' : 'Statistics - Likelihood To Enroll ';
+            this.title = (this.type === '1' ) ? 'Likelihood To Churn Statistics' : 'Likelihood To Enroll Statistics  ';
             
         });
     }
@@ -34,6 +34,7 @@ export class LikelihoodStatisticsComponent implements OnInit {
     imageUrl: any;
     membergaps1: any;
     membergaps2: any;
+    membergapslhe:any;
     cols1: any =[];
     field: any;
     header: any;
@@ -61,7 +62,7 @@ export class LikelihoodStatisticsComponent implements OnInit {
         ];
        // console.log(this.ConfusionMatrix)
 
-        this.gapsService.getlikelihoodmodel().subscribe((data: MemberCareGaps[]) => {
+        this.gapsService.getlhcmodelsummary().subscribe((data: MemberCareGaps[]) => {
             this.membergaps = data;
         });
         this.cols = [
@@ -73,7 +74,8 @@ export class LikelihoodStatisticsComponent implements OnInit {
            // {field: 'significance', header: 's'}
         ];
         this.gapsService.getLHEModelSummary().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps = data;
+            this.membergapslhe = data;
+            console.log(data)
         });
         this.LHEModelSummary = [
             { field: 'attributes', header: 'Attributes' },

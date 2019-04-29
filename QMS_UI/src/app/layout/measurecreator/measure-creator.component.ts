@@ -6,8 +6,8 @@ import { MessageService } from '../../shared/services/message.service';
 import { FormGroup, FormControl, Validators, FormBuilder,FormArray} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MemberCareGaps } from '../../shared/services/gaps.data';
-
-
+import { DomSanitizer } from '@angular/platform-browser';
+import * as FileSaver from 'file-saver';
 @Component({
   selector: 'app-measurecreator',
   templateUrl: './measure-creator.component.html',
@@ -52,13 +52,14 @@ ColumnNameList: any;
 tableRepository: any;
 measureData: any;
 
-
+fileUrl:any;
 
   constructor(private _fb: FormBuilder,
     private gapsService: GapsService,
     private msgService: MessageService,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+  private DomSanitizer:DomSanitizer) {
         this.route.params.subscribe(params => {
             this.measureId = params['measureId'];
             this.type = params['type'];
@@ -279,6 +280,7 @@ measureData: any;
       this.measureData =[];
       this.measureData = data;
       this.setMeasureInfo(data);
+    // this.downloadFile(data)
     });
    }
    this.gapsService.getMrssSampleList().subscribe((res: any)=>{
@@ -306,6 +308,7 @@ measureData: any;
   }
  
  setMeasureInfo(measureInfo) {
+ //  console.log(measureInfo)
    if (measureInfo.isActive === 'N' && this.type== '1') {
     this.myForm.disable();
     this.disableForm = true;
@@ -319,22 +322,31 @@ measureData: any;
    this.myForm.controls['description'].setValue(measureInfo.description);
    this.myForm.controls['targetAge'].setValue(measureInfo.targetAge);
    this.myForm.controls['measureDomain'].setValue(measureInfo.measureDomain);
-   this.myForm.controls['measureCategory'].setValue(measureInfo.measureCategory);
    this.myForm.controls['type'].setValue(measureInfo.type);
    this.myForm.controls['clinocalCondition'].setValue(measureInfo.clinocalCondition);
    this.myForm.controls['denominator'].setValue(measureInfo.denominator);
    this.myForm.controls['denomExclusions'].setValue(measureInfo.denomExclusions);
    this.myForm.controls['numerator'].setValue(measureInfo.numerator);
-   this.myForm.controls['numeratorExclusions'].setValue(measureInfo.numeratorExclusions);
+   this.myForm.controls['numeratorExclusions'].setValue(measureInfo.optionalExclusion);
    this.myForm.controls['target'].setValue(measureInfo.target);
    this.myForm.controls['p50'].setValue(measureInfo.p50);
    this.myForm.controls['p90'].setValue(measureInfo.p90);
    this.myForm.controls['collectionSource'].setValue(measureInfo.collectionSource);
    this.myForm1.controls['sampleSize'].setValue(measureInfo.mrss);
    this.myForm1.controls['overSampleRate'].setValue(measureInfo.overFlowRate);
+   const temp =this.Repositry.filter(element =>element.name == measureInfo.programName);
+   this.gapsService.getMeasureCategory(temp[0].value).subscribe((res:any)=> {
+    const data = res;
+   // console.log(data)
+    this.measureCategories =[];
+    data.forEach(element => {
+      this.measureCategories.push({label:element,value: element });
+      this.myForm.controls['measureCategory'].setValue(measureInfo.measureCategory);
+    });
+    
+  });
 
    if (measureInfo.startDate) {
-     console.log(measureInfo.startDate)
     this.myForm.controls['startDate'].setValue(new Date(measureInfo.startDate));
    }
    if (measureInfo.endDate) {
@@ -344,6 +356,23 @@ measureData: any;
     this.myForm.controls['id'].setValue(measureInfo.id);
    }
  }
+downloadForm(event){
+  var mediaType = 'text/plain';
+  event = JSON.stringify(event);
+  event = event.split(/,/g).join('\n');
+  event = event.split("{").join(" ");
+  event = event.split("}").join(" ");
+  event = event.split('"').join(" ");
+  event = event.split('"').join(" ");
+  var blob = new Blob([event], {type: 'application/json'});
+ 
+  var filename = 'test.txt';
+  FileSaver.saveAs(blob, filename);
+}
+
+
+
+
  validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
     const control = formGroup.get(field);
@@ -370,7 +399,6 @@ measureData: any;
       model.endDate = this.formatDate(model.endDate);
       model.mrss =  this.myForm1.controls['sampleSize'].value;
       model.overFlowRate =  this.myForm1.controls['overSampleRate'].value;
-      console.log(model)
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure created Successfully');
@@ -395,7 +423,6 @@ measureData: any;
   // model.target = parseInt(model.target, 10);
    model.startDate = this.formatDate(model.startDate);
    model.endDate = this.formatDate(model.endDate);
-   console.log(model);
   this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure saved Successfully');
@@ -462,7 +489,7 @@ measureData: any;
     }); 
     this.gapsService.getMeasureCategory(this.programId[0].value).subscribe((res:any)=> {
       const data = res;
-     // console.log(data)
+      // console.log(data)
       this.measureCategories =[];
       data.forEach(element => {
         this.measureCategories.push({label:element,value: element })
@@ -472,7 +499,7 @@ measureData: any;
   }
   dataSourceSelected(event)
   {
-    if(event.value=="hybrid"){
+    if(event.value=="3"){
       this.samplingButton = true;
     }
     else{

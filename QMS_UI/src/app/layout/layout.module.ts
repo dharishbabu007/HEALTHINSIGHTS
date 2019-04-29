@@ -49,6 +49,9 @@ import { CommunicationStatisticsComponent } from  './communication-stats/communi
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 import { PatComponent } from './pat-screen/pat-screen.component';
 import { RStudioComponent } from './r-studio/frame-url.component';
+import { NcStatsComponent } from './non-compliance-statistics/ncStats.component';
+import { PersonaClusteringComponent } from './persona-clustering/persona-clustering.component';
+import { PCStatsComponent } from './persona-clustering-statistics/pc-stats.component';
 
 import { PageHeaderModule } from '../shared/modules/page-header/page-header.module';
 import { SidebarToggleDirective, AsideToggleDirective, SidebarMinimizeDirective,
@@ -87,7 +90,10 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {TabViewModule} from 'primeng/tabview';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {InputSwitchModule} from 'primeng/inputswitch';
+import {  SmvComponent } from './smv/smv.component';
 import {ToggleButtonModule} from 'primeng/togglebutton';
+import {CarouselModule} from 'primeng/carousel';
+import {PickListModule} from 'primeng/picklist';
 @NgModule({
     imports: [
         CommonModule,
@@ -123,7 +129,9 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         NgIdleKeepaliveModule.forRoot(),
         NgxPermissionsModule.forRoot(),
         InputSwitchModule,
-        ToggleButtonModule
+        ToggleButtonModule,
+        CarouselModule,
+        PickListModule
     ],
 
     declarations: [LayoutComponent,
@@ -183,7 +191,11 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         CommunicationStatisticsComponent,
         CommunicationToEnrollComponent,
         PatComponent,
-        RStudioComponent],
+        RStudioComponent,
+        SmvComponent,
+        NcStatsComponent,
+        PersonaClusteringComponent,
+        PCStatsComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

@@ -194,7 +194,7 @@ loadMemberInfo(memberString) {
     })
 
   }
-  careGapSelection(event){
+  careGapSelection(event){ 
     this.qualitymeasureId = event.value;
   }
 

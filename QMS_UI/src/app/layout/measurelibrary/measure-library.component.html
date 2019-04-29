@@ -3,16 +3,24 @@
     <div class="card">
     <div class="row" style="margin: 20px">
         <div class="col col-lg-12 ">
+            <p-dropdown placeholder="Select" *ngIf="!MIPS" [autoDisplayFirst]="false" [options]="dropdownOptions" (onChange)="filterCategory($event)" ></p-dropdown>
             <button type="button" *ngxPermissionsOnly="['6D']" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right;"></button>
             <br><br>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" exportFilename="Quality_Measures" >
                 <ng-template pTemplate="header">
-                    <tr>
-                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" [ngSwitch]="col.header" >
+                    <tr class="text-center align-middle header-class">
+                        <!-- <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" [ngSwitch]="col.header" >
                                     {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
-                        </th>
-                        <th width="6%" class="header-class"></th>
+                        </th> -->
+                        <th [pSortableColumn]="'id'" style="width:8.5vw">Measure ID <p-sortIcon [field]="'id'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'name'" width=""> Measure Name<p-sortIcon [field]="'name'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'programName'" width="">Program Name <p-sortIcon [field]="'programName'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'type'"style="width:9.5vw">Measure Type <p-sortIcon [field]="'type'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'steward'" width="">Measure Steward <p-sortIcon [field]="'steward'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'clinocalCondition'" style="width:11.5vw">Clinical Condition <p-sortIcon [field]="'clinocalCondition'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'isActive'" style="width:7.6vw"> Status<p-sortIcon [field]="'isActive'"></p-sortIcon></th>
+                        <th style="width:5vw" class="header-class"></th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field">
@@ -24,17 +32,20 @@
                             <input *ngSwitchCase="'id'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
 
                             <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                            <p-multiSelect *ngSwitchCase="'status'" [filter]="false" [options]="statusTypes" [style]="{'width':'100%','padding':'0px'}" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+                            <p-multiSelect *ngSwitchCase="'isActive'" [filter]="false"  [(ngModel)]="selectedOption" [options]="statusTypes" [style]="{'width':'100%','padding':'0px'}" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
                         </th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr >
+                    <tr>
                         <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field" pTooltip="Click to open in editor">
-                                <span *ngSwitchCase="'status'" >
-                                    <i class="text-primary" *ngIf="rowData['status'] != 'In-active'">Active</i>
-                                    <i class="text-danger" *ngIf="rowData['status'] == 'In-active'">Decommission</i>
+                                <span *ngSwitchCase="'isActive'" >
+                                    <i class="text-primary" *ngIf="rowData['isActive'] != 'N'">Active</i>
+                                    <i class="text-danger" *ngIf="rowData['isActive'] == 'N'">Decommission</i>
+                                </span>
+                                <span *ngSwitchCase="'name'">
+                                        {{rowData[col.field]}} <img *ngIf="rowData['certified'] == 'Y'" src="assets/images/certificate.png" width="17px" height="17px">
                                 </span>
                                 <span *ngSwitchDefault>
                                     {{rowData[col.field]}}

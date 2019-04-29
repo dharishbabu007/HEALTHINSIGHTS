@@ -27,54 +27,70 @@ export class LikelihoodToChurnComponent implements OnInit {
        
     }
 
-    membergaps: MemberCareGaps[];
-    membergaps1: MemberCareGaps[];
+    membergapslhe: MemberCareGaps[];
+    membergapslhc: MemberCareGaps[];
     cols: any[];
     cols1:any[];
     loading = true;
+    loadinglhe = true;
      genderTypes =  [
         { label: 'Select', value: '' },
         { label: 'Male', value: 'Male' },
         { label: 'Female', value: 'Female' }
     ];
     ngOnInit() {
-        this.gapsService.getLikelihoodMeasureDetails().subscribe((data: MemberCareGaps[]) => {
+        if(this.type == 2){
+        this.gapsService.getlheMeasureDetails().subscribe((data: MemberCareGaps[]) => {
             data.forEach(element => {
                 element.age = parseInt(element.age, 10);
             });
-            this.membergaps = data;
-            this.loading = false;
+            this.membergapslhe = data;
+            this.loadinglhe = false;
         });
         this.cols = [
             { field: 'memberId', header: 'Member Id' },
             { field: 'memberName', header: 'Member Name' },
-            { field: 'enrollGaps', header: 'Enrollment Gaps' },
-            { field: 'outOfPocketExpenses', header: 'Out of Pocket Expenses' },
-            { field: 'utilizerCategory', header: 'Utilizer Category' },
             { field: 'age', header: 'Age' },
+            { field: 'gender', header: 'Gender' },
+            { field: 'lengthTimeUninsured', header: 'Length of time uninsured' },
+            { field: 'outOfPocketExpenses', header: 'Out of Pocket Expenses' },
             { field: 'amountSpend', header: 'Amount Spend' },
-            { field: 'er', header: 'ER Visits' },
-            { field: 'reasonNotEnroll', header: 'Reason to not Enroll' },
+            { field: 'daysPendingTermination', header: 'Days Pending for Termination' },
+            { field: 'comorbidityCount', header: 'Comorbidity Count' },
+            { field: 'reasonNotEnroll', header: 'Predicted Reason to not enroll' },
             { field: 'likeliHoodEnroll', header: 'Likelihood to Enroll' },
-            { field: 'enrollmentBin', header: 'Enrollment Potential' },
+            { field: 'enrollmentBin', header: 'Enrollment' },
             
            
         ];
+    }
+        else{
         this.gapsService.getLikehoodchurnMeasureDetails().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps1 = data;
+            this.membergapslhc = data;
             this.loading = false; 
            
         });
         this.cols1 = [
-            { field: 'memberId1', header: 'Member Id' },
-            { field: 'memberName1', header: 'What persona does the member belong to?'},
-            { field: 'memberName1', header: 'What are your motivations for leading a healthy life?' },
-            { field: 'Utilization', header: 'Why would you abstain from enrolling into the wellness program?' },
-            { field: 'Channel', header: 'How many gaps did the member have during the enrollment period?' },
-            { field: 'Reward', header: 'What is the participation frequency for the member?' },
-            { field: 'Reward', header: 'Likelihood to Churn'}
+            { field: 'memberID', header: 'Member Id' },
+            { field: 'memberName', header: 'Member Name' },
+            { field: 'age', header: 'Age' },
+            { field: 'gender', header: 'Gender' },
+            // {field:'persona',header:'Persona'},
+            { field: 'participationQuotient', header: 'Participation Quotient' },
+            // { field: 'comorbidityCount', header: 'Comorbidity Count' },
+            // { field:'frequencyExercise',header:'Frequency Exercise'},
+            // { field:'motivations',header:'Motivations'},
+            { field: 'outPocketExpenses', header: 'Out of Pocket Expenses' },
+            // { field: 'enrollmentGaps', header: 'Enrollment Gaps' },
+            // { field: 'amountSpend', header: 'Amount Spend' },
+            { field: 'addictions', header: 'Addictions' },
+            { field: 'copd', header: 'COPD' },
+            { field: 'occupation', header: 'Occupation' },
+            { field: 'likelihoodChurn', header: 'Likelihood to Churn'},
+            { field: 'churn', header: 'Predicted  Churn'}
            
         ];
+         }
         
     }
 }

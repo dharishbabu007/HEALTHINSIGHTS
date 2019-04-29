@@ -26,7 +26,6 @@ export class MemberGapListComponent implements OnInit {
     memberList: any;
    
     statusTypes =  [
-        { label: 'Select', value: '' },
         { label: 'Open', value: 'Open' },
         { label: 'Open with Provider', value: 'Open with Provider' },
         { label: 'Close by Provider', value: 'Close by Provider' },
@@ -34,10 +33,9 @@ export class MemberGapListComponent implements OnInit {
         { label: 'Close by Payer', value: 'Close by Payer' }
     ];
     priorityTypes =  [
-        { label: 'Select', value: '' },
-        { label: 'High', value: 'High' },
         { label: 'Low', value: 'Low' },
-        { label: 'Medium', value: 'Medium' }
+        { label: 'Medium', value: 'Medium' },
+        { label: 'High', value: 'High' }
     ];
 
     ngOnInit() {

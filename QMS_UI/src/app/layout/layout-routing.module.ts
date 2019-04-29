@@ -39,7 +39,10 @@ import { CommunicationStatisticsComponent } from  './communication-stats/communi
 import { CommunicationToEnrollComponent } from './communication-enroll/communication-enroll.component';
 import { PatComponent } from './pat-screen/pat-screen.component';
 import { RStudioComponent } from './r-studio/frame-url.component';
-
+import {  SmvComponent } from './smv/smv.component';
+import { NcStatsComponent } from './non-compliance-statistics/ncStats.component';
+import { PersonaClusteringComponent } from './persona-clustering/persona-clustering.component';
+import { PCStatsComponent } from './persona-clustering-statistics/pc-stats.component';
 const routes: Routes = [
     {
         path: '',
@@ -53,6 +56,10 @@ const routes: Routes = [
             data: { 
               expectedRole: '11'
             } },
+            { path: 'Member Gap List', component: MemberGapListComponent ,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '11'
+            } },
             { path: 'member-gap-list/:memberId', component: MemberGapListComponent ,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '11'
@@ -61,7 +68,15 @@ const routes: Routes = [
             data: { 
               expectedRole: '9'
             }  },
+            { path: 'Member Care Gap Registry', component: MemberCareGapListComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '9'
+            }  },
             { path: 'member-gap/:gapId/:memberId', component: MemberGapInfoComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '10'
+            }  },
+            { path: 'Close Gaps', component: MemberGapInfoComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '10'
             }  },
@@ -69,7 +84,15 @@ const routes: Routes = [
             data: { 
               expectedRole: '2'
             } },
+            { path: 'Program Creator', component: ProgramcreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '2'
+            } },
             { path: 'programeditor', component: ProgrameditorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '3'
+            } },
+            { path: 'Program Editor', component: ProgrameditorComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '3'
             } },
@@ -77,15 +100,23 @@ const routes: Routes = [
             data: { 
               expectedRole: '1'
             }  },
-            { path: 'Quality central', component: QualityCentralComponent },
-            { path: 'quality Central', component: QualityCentralComponent },
-            { path: 'quality central', component: QualityCentralComponent },
-            { path: 'kwality central', component: QualityCentralComponent },
+            { path: 'Quality Central', component: QualityCentralComponent,   canActivate: [RoleGuardService],
+            data: { 
+              expectedRole: '1'
+            }  },
             { path: 'measureworklist', component: MeasureworklistComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '7'
             } },
+            { path: 'My Measures', component: MeasureworklistComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '7'
+            } },
             { path: 'measurelibrary', component: MeasurelibraryComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '6'
+            } },
+            { path: 'Quality Measures', component: MeasurelibraryComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '6'
             } },
@@ -99,6 +130,10 @@ const routes: Routes = [
             data: { 
               expectedRole: '4'
             } },
+            { path: 'Measure Creator', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '4'
+            } },
             { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '4' || '5'
@@ -107,15 +142,29 @@ const routes: Routes = [
             data: { 
               expectedRole: '8'
             } },
+            { path: 'Single Patient View', component: SpvComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '8'
+            } },
+            { path: 'smv/:memberId', component: SmvComponent},
             { path: 'usersettings', component: UserSettingComponent},
             { path: 'file-manager', component: FileManagerComponent},
-            { path: 'csv1', component: Csv1Component },
+            { path: 'Use Cases', component: FileManagerComponent},
+            { path: 'csv1/:selectedModel', component: Csv1Component },
             { path: 'csv2', component: Csv2Component},
             { path: 'create-role', component: CreateRoleComponent,  canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '13'
             } },
+            { path: 'Role Mapping', component: CreateRoleComponent,  canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '13'
+            } },
             { path: 'create-user', component: CreateUserComponent,  canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '14'
+            } },
+            { path: 'User Mapping', component: CreateUserComponent,  canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '14'
             } },
@@ -137,8 +186,12 @@ const routes: Routes = [
             { path: 'communication-stats', component: CommunicationStatisticsComponent},
             { path: 'communication-enroll', component:CommunicationToEnrollComponent},
             { path: 'pat-screen', component:PatComponent},
+            { path: 'pat-screen/:memberId/:measureSK/:plan', component:PatComponent},
             { path: 'pat-screen/:memberId/:measureSK', component:PatComponent},
-            { path: 'r-studio', component:RStudioComponent}
+            { path: 'r-studio', component:RStudioComponent},
+            { path: 'ncStats', component:NcStatsComponent},
+            { path: 'persona-clustering', component:PersonaClusteringComponent},
+            { path: 'pc-stats', component:PCStatsComponent}
         ]
     },
     { path: 'health', loadChildren: './health/health.module#HealthModule' },

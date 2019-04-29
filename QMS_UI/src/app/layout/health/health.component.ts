@@ -56,7 +56,7 @@ export class HealthComponent implements OnInit {
       else if(this.rolename == "Quality_Director"){
         this.qulaity_director = true;
       }
-      else if(this.rolename == "Demo"){
+      else if(this.rolename == "HI_Admin"){
         this.demo_user = true;
       }
       else{

@@ -4,6 +4,8 @@ import {GapsService }from '../../../shared/services/gaps.service';
 import { DatePipe } from '@angular/common';
 import { MessageService } from '../../../shared/services/message.service';
 import { ActivatedRoute } from '@angular/router';
+import { Intervention } from './interventions.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-interventions',
@@ -20,7 +22,8 @@ export class InterventionComponent implements OnInit {
   paramId:any;
   personaData: any;
   goalsData:any;
-  constructor(private GapsService:GapsService,private _fb: FormBuilder,private msgService:MessageService,private route: ActivatedRoute) {
+  qualitymeasureId:any;
+  constructor(private GapsService:GapsService,private _fb: FormBuilder,private msgService:MessageService,private route: ActivatedRoute,    private router: Router,) {
     this.route.params.subscribe(params => {
       this.paramId = params['memberId'];    
   });
@@ -62,7 +65,17 @@ export class InterventionComponent implements OnInit {
     }
   }
   onSubmit(model){
-    
+    console.log(model);
+    model.memberId = this.memberID;
+  this.GapsService.createIntervention(model).subscribe((res:any)=>{
+    if(res.status == 'SUCCESS'){
+      this.msgService.success(res.message);
+      this.myForm.reset();
+    }
+    else {
+      this.msgService.error(res.message);
+    }
+  })
   }
   search(event) {
     this.GapsService.getMemberList(event.query).subscribe((data: any) => {
@@ -79,6 +92,7 @@ loadMemberInfo(memberString) {
         this.memberID = memberString;
         this.GapsService.getGoalsMemberDetails(this.memberID).subscribe((data: any) => {
             this.gaps = data;
+            this.qualitymeasureId=data.qualityMeasureId;
           
         });
         this.GapsService.getGoalsPersonaData(this.memberID).subscribe((data : any)=>{
@@ -106,5 +120,15 @@ loadMemberInfo(memberString) {
         })
 
   }
+  closeGap(){
+    if(this.memberID){
+      this.router.navigate(['/member-gap/',this.qualitymeasureId,this.memberID]);
+    }
+
+  }
 
 }
+export interface Intervention {
+
+}
+

@@ -17,7 +17,7 @@
                         </div>
                         <div class="col col-lg-3 col-xl-3">
                             <span class="font-weight-bold">Name</span> : 
-                            <a [routerLink]="['/spv', gaps.memberId]">{{gaps.name}} </a>
+                            <a [routerLink]="['/smv', gaps.memberId]">{{gaps.name}} </a>
                         </div>
                         <div class="col col-lg-4 col-xl-4">
                             <span class="font-weight-bold">Next Appointement Date</span> : 
@@ -49,8 +49,8 @@
                                     <tr>
                                         <th *ngFor="let col of cols" [ngSwitch]="col.field" >
                                             <!-- <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
-                                            <p-dropdown *ngSwitchCase="'status'" [options]="statusTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
-                                            <p-dropdown *ngSwitchCase="'priority'" [options]="priorityTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                                            <p-dropdown *ngSwitchCase="'status'"  placeholder="select" [options]="statusTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                                            <p-dropdown *ngSwitchCase="'priority'"  placeholder="select" [options]="priorityTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
                                         </th>
                                     </tr>
                                 </ng-template>

@@ -1,6 +1,6 @@
-.images-heightClass{
-    height: 242px;
-}
+// .images-heightClass{
+//     height: 242px;
+// }
 .btn-style{
     position: absolute;
     right: 23px;
@@ -20,4 +20,12 @@ padding: 0px;
 }
 /deep/ ::-webkit-scrollbar {
     width: 3px;
+}
+@media(max-width:770px){
+    .mainline{
+        width: 70%;
+    }
+    .secondline{
+        width:30%;
+    }
 }

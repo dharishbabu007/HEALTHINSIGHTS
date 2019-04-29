@@ -24,9 +24,9 @@
                <br>
                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
                 <button type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',2]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
-                <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+                <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
                 <br><br>
-                    <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Details">
+                    <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhe" [columns]="cols" [paginator]="true" [loading]="loadinglhe" [rows]="20" exportFilename="Member_Details">
                         <ng-template pTemplate="header">
                             <tr class="header-class">
                                 <th *ngFor="let col of cols" [pSortableColumn]="col.field">
@@ -49,7 +49,7 @@
                             <tr>
                                 <td *ngFor="let col of columns"[ngSwitch]="col.field">
                                     <span *ngSwitchCase="'memberName'"> 
-                                        <a [routerLink]="['/spv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
+                                        <a [routerLink]="['/smv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
                                     <span *ngSwitchDefault>
                                             {{rowData[col.field]}}
                                     </span>
@@ -63,13 +63,13 @@
                         <br>
                         <button  type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
                         <button  type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',1]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
-                        <button  type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/ChurnModeling/Churn?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+                        <button  type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/views/ChurnModeling/Churn?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
                         <br><br>
                         <!-- <div class="embed-responsive embed-responsive-16by9 col-lg-12 justify-content-center h-100">
                                 <iframe class="embed-responsive-item" [src]="externalURL" allowfullscreen>
                                 </iframe>
                         </div> -->
-                        <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols1" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Details">
+                        <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhc" [columns]="cols1" [paginator]="true" [loading]="loading" [rows]="20"  exportFilename="Member_Details">
                             <ng-template pTemplate="header">
                                 <tr class="header-class">
                                     <th *ngFor="let col of cols1" [pSortableColumn]="col.field">
@@ -92,7 +92,7 @@
                                 <tr>
                                     <td *ngFor="let col of columns"[ngSwitch]="col.field">
                                         <span *ngSwitchCase="'memberName'"> 
-                                            <a [routerLink]="['/spv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
+                                            <a [routerLink]="['/smv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
                                         <span *ngSwitchDefault>
                                                 {{rowData[col.field]}}
                                         </span>

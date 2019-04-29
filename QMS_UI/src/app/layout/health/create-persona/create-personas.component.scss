@@ -61,3 +61,12 @@ input[type="file"] {
     border-radius: 50%;
     border: 2px solid #fff;
 }
+.quickview-boxes{
+    width: 18vw;
+}
+@media(max-width:1050px){
+    .quickview-boxes{
+        width: 21vw;
+    }
+
+}

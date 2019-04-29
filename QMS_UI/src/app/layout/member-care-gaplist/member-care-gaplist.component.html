@@ -4,59 +4,80 @@
         <div class="card-body">
     <div class="row">
         <div class="col col-lg-12">
-            <button class="btn btn-sm btn-info float-right" type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()"></button>
+            <button class="btn btn-sm btn-info float-right" type="button" pButton icon="fa fa-download" label="Export" (click)="exporting()"></button>
             <br><br>
-            <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="Member_Care_Gaps_Registry">
+            <p-table #dt  class="table  table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading">
                 <ng-template pTemplate="header" >
+                    <tr  class="text-center align-middle header-class" >
+                        <th [pSortableColumn]="'member_id'" style="width: 18vw">Member Details<p-sortIcon [field]="'member_id'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'pcp'" style="width: 6.5vw;">PCP<p-sortIcon [field]="'pcp'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'plan'" style="width: 5.5vw;">Plan<p-sortIcon [field]="'plan'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'countOfCareGaps'" style="width: 5.5vw;">#Care Gaps<p-sortIcon [field]="'countOfCareGaps'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'careGaps'" >Care Gaps<p-sortIcon [field]="'careGaps'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'status'" style="width: 5.5vw;">Status<p-sortIcon [field]="'status'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'compliancePotential'" style="width: 7.5vw;">Compliance Potential<p-sortIcon [field]="'compliancePotential'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'riskGrade'" style="width: 7.5vw;">Health Risk Grade<p-sortIcon [field]="'riskGrade'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'timePeriod'" style="width: 7.5vw;">Last Action Date<p-sortIcon [field]="'timePeriod'"></p-sortIcon></th>
+                         <th class=" header-class" style="width: 5.5vw;"></th>
+                    </tr> 
                     <tr>
-                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" >
-                            {{col.header}}
-                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                         </th>
-                         <th class=" header-class"></th>
-                    </tr>
-                    <tr>
-                        <th *ngFor="let col of cols" [ngSwitch]="col.field">
-                                <div *ngSwitchCase="'age'">
+                        <th *ngFor="let col of cols" [ngSwitch]="col.header">
+                                <!-- <div *ngSwitchCase="'age'">
                                         Age > {{ageFilter}}
                                         <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
                                         <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
-                               </div>
-                              <div *ngSwitchCase="'timePeriod'">
+                               </div> -->
+                              <div *ngSwitchCase="'Last Action Date'">
                                        
-                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body"*ngSwitchCase="'timePeriod'"  [inputStyle]="{'width':'100%'}"  mode="inline" [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
+                                    <p-calendar  [(ngModel)]="dateFilters" appendTo="body" *ngSwitchCase="'Last Action Date'"  [inputStyle]="{'width':'100%'}"  mode="inline" [readonlyInput]="true" dateFormat="M dd,yy" (onSelect)="dt.filter(formatDate($event), col.field, 'contains')"></p-calendar> 
                                         
                                </div>
-                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                               <div *ngSwitchCase="'Member Details'">
+                                    <input  class="inputStyle" type="text" (input)="dt.filter($event.target.value, col.field[1], 'contains')">
+                               </div>
+
+                            <input *ngSwitchDefault class="inputStyle" type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                            <!-- col.filterMatchMode-->                            
-                           <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                           <!-- <p-dropdown *ngSwitchCase="'gender'" [options]="genderTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown> -->
                         </th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr>
-                        <td *ngFor="let col of columns" [ngSwitch]="col.field">
-                            <span *ngSwitchCase="'member_id'">
+                        <td *ngFor="let col of columns" [ngSwitch]="col.header">
+                            <!-- <span *ngSwitchCase="'member_id'">
                                 <a [routerLink]="['/member-gap-list/',rowData[col.field]]">{{rowData[col.field]}}</a>
                             </span>
                             <span *ngSwitchCase="'name'">
-                                <a [routerLink]="['/spv/',rowData['member_id']]">{{rowData[col.field]}}</a>
-                            </span>
-                            <span *ngSwitchCase="'careGaps'">
+                                <a [routerLink]="['/smv/',rowData['member_id']]">{{rowData[col.field]}}</a>
+                            </span> -->
+                            <span  *ngSwitchCase="'Member Details'">
+                                    <div class="col-lg-12 no-padding" style="text-align: left;">
+                                        <div class="col-lg-12 no-padding">
+                                            <span><a [routerLink]="['/smv/',rowData[col.field[1]]]">{{rowData[col.field[0]]}}&nbsp;</a><span class="vl"></span>&nbsp;{{rowData[col.field[2]]}}&nbsp;<span class="vl"></span>&nbsp;{{rowData[col.field[3]]}}&nbsp;<span class="vl"></span></span>
+                                        </div>
+                                        <div class="col-lg-12 no-padding">
+                                       <span style="font-size: 13px;" class="col-lg-12 no-padding"><b style="font-weight: 400;"><a [routerLink]="['/member-gap-list/',rowData[col.field[1]]]">{{rowData[col.field[1]]}} </a></b></span>
+                                        </div>
+                                    </div>
+                                       
+                                       
+                                </span>
+                            <span *ngSwitchCase="'Care Gaps'">
                                 <a [routerLink]="['/member-gap', rowData['qualityMeasureId'], rowData['member_id']]">{{rowData[col.field]}}</a>
                             </span>
-                            <span *ngSwitchCase="'timePeriod'">
+                            <span *ngSwitchCase="'Last Action Date'">
                                     {{rowData[col.field] | date}}
                                 </span>
-                                <span *ngSwitchCase="'compliancePotential'">
+                                <span *ngSwitchCase="'Compliance Potential'">
                                         {{rowData[col.field]}}%
                                     </span>
                             <span *ngSwitchDefault>{{rowData[col.field]}}</span>
                              
                             
                         </td>
-                        <td> <button class="btn btn-sm btn-info" type="button" pButton label="MIT" (click)= "mitscreen(rowData)" style="background-color: #68ADE8"></button></td>
+                        <td> <button class="btn btn-sm btn-info" type="button" pButton label="MIT" (click)= "mitscreen(rowData)" style="background-color: #68ADE8" pTooltip="Measure Improvement Tool"></button></td>
                     </tr>
                 </ng-template>
             </p-table>

@@ -52,7 +52,7 @@ formatDate(dateString) {
       return this._fb.group({
         categoryName: [''],
         maxPoints: [''],
-        maxScore: ['']
+        maxScore: ['',[ Validators.max(100)]]
       });
   }
   get formData() { return <FormArray>this.myForm.get('programCategorys'); }

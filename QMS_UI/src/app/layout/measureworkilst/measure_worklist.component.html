@@ -7,13 +7,19 @@
             <br><br>
             <p-table #dt  class="table table-bordered table-hover"  [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" exportFilename="My_Measures">
                 <ng-template pTemplate="header">
-                    <tr>
-                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class">
+                    <tr class="text-center align-middle header-class">
+                        <!-- <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class">
                             
                                     {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
-                        </th>
-                        <th class="header-class" width="12%"></th>
+                        </th> --><th [pSortableColumn]="'id'" width="11%">Measure ID <p-sortIcon [field]="'id'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'name'" width=""> Measure Name<p-sortIcon [field]="'name'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'programName'" width="">Program Name <p-sortIcon [field]="'programName'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'status'" width="9%"> Status<p-sortIcon [field]="'status'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'reviewComments'" width="15%"> Review Comments<p-sortIcon [field]="'reviewComments'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'reviewedBy'" width="12%"> Reviewed By<p-sortIcon [field]="'reviewedBy'"></p-sortIcon></th>
+                        
+                        <th width="9%"></th>
                     </tr>
                    <tr>
                         <th *ngFor="let col of cols" [ngSwitch]="col.field" >
@@ -36,19 +42,19 @@
                         </td>
                         <td [ngSwitch]="rowData['status']">
                             <div *ngSwitchCase="'Approved'" >
-                                <button pButton type="button" label="Action" class="btn btn-secondary" style="background-color: #C8CED3;"></button> &nbsp;
+                                <button pButton type="button" label="Action" class="btn btn-secondary" style="background-color: #C8CED3;width: 100%"></button> &nbsp;
                                 <!-- <a [routerLink]="['/configurator']" *ngxPermissionsOnly="['7W']"><i class="fa fa-2x fa-cog text-primary" style="cursor:pointer" pTooltip="Configure"></i></a> -->
                             </div>
                             <div *ngSwitchCase="'New'">
                                 <!-- <i class="fa fa-2x fa-check-square text-primary" style="cursor:pointer" (click)="statusClickImg('Approved',rowData['id'])" pTooltip="Approve" *ngxPermissionsOnly="['7W']"></i>&nbsp;
                                 <i class="fa fa-2x fa-window-close text-primary" style="cursor:pointer" (click)="statusClickImg('Rejected',rowData['id'])" pTooltip="Reject" *ngxPermissionsOnly="['7W']"></i>&nbsp; -->
-                                <button pButton type="button" label="Action" class="btn btn-primary" *ngxPermissionsOnly="['7W']" (click)="showDialog(rowData['id'])" pTooltip="Approve or Reject Measure"></button>&nbsp;
+                                <button pButton type="button" label="Action" class="btn btn-primary" *ngxPermissionsOnly="['7W']" style="width: 100%"  (click)="showDialog(rowData['id'])" pTooltip="Approve or Reject Measure"></button>&nbsp;
                                 <!-- <i class="fa fa-2x fa-cog text-secondary"></i> -->
                             </div>
                             <div *ngSwitchDefault>
                                 <!-- <i class="fa fa-2x fa-check-square text-secondary"></i>&nbsp; 
                                 <i class="fa fa-2x fa-window-close text-secondary"></i>&nbsp; -->
-                                <button pButton type="button" label="Action" class="btn btn-secondary"  style="background-color: #C8CED3;"></button>&nbsp;
+                                <button pButton type="button" label="Action" class="btn btn-secondary"  style="background-color: #C8CED3;width: 100%"></button>&nbsp;
                                 <!-- <i class="fa fa-2x fa-cog text-secondary"></i> -->
                             </div>
                             

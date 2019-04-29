@@ -54,3 +54,19 @@ p-tabview {
     background-color: #0275D8;
     color: white
 }
+.updownGraph{
+    padding-top: 5vh;
+    padding-right: 0px;
+    padding-left: 0px;
+    font-weight: bold;
+    font-size: 1.2vw;
+}
+@media(max-width:780px){
+   .updownGraph{
+    padding-top: 5vh;
+    padding-right: 15px;
+    padding-left: 15px;
+    font-weight: bold;
+    font-size: inherit;
+   } 
+}

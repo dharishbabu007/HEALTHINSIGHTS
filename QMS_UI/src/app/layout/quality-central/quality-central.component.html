@@ -11,12 +11,12 @@
                 <div class="text-value">Quality Programs</div>
             </div>
             <div class="brand-card-body text-black pb-2">
-                <table class="qmstable" style="width:100%;height:100%">
+                <table class="qmstable" style="width:100%;">
                     <tr *ngFor="let program of programs; let i = index">
                         <td class="text-left list-values">{{program}}</td>
                         <td width="15%">
                             <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CurisDashboard_MIPS/MIPS_Control_Tower?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target" *ngIf="i==0" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
-                            <a [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/HedisDashboard/Hedis?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" *ngIf="i==1" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
+                            <a [routerLink]="['/frame-url','http://192.168.184.70/views/HedisDashboard/Hedis?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" *ngIf="i==1" pTooltip="Dashboard"> <i class="fa fa-pie-chart" ></i></a>
                             <span *ngIf="i>1"> &nbsp;&nbsp;&nbsp;</span>
                             &nbsp;<a *ngxPermissionsOnly="['1W']" [routerLink]="['/measurelibrary','reimbursement', program]"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
                     </tr>
@@ -33,7 +33,7 @@
                 <div class="text-value">Clinical Conditions</div>
             </div>
             <div class="brand-card-body text-black pb-2">
-                <table class="qmstable">
+                <table class="qmstable" style="width:100%;">
                     <tr *ngFor="let clinicalCondition of clinicalConditions; let i = index">
                         <td class="text-left">{{clinicalCondition}}</td>
                         <td><a *ngxPermissionsOnly="['1W']" [routerLink]="['/measurelibrary','clinical', clinicalCondition]" pTooltip="List"><i class="fa fa-th-list"></i></a></td>
@@ -48,10 +48,10 @@
                 <div class="btn-group float-left icon-bg">
                         <img src="assets/images/NQF.png">
                 </div>
-                <div class="text-value">NQF Domain</div>
+                <div class="text-value">NQS Domain</div>
             </div>
             <div class="brand-card-body text-black pb-2">
-                <table class="qmstable">
+                <table class="qmstable" style="width:100%;">
                     <tr *ngFor="let measureDomain of measureDomains; let i = index">
                         <td class="text-left">{{measureDomain.name}}</td>
                         <td><a [routerLink]="['/measurelibrary','nqf', measureDomain.value]" *ngxPermissionsOnly="['1W']"><i class="fa fa-th-list" pTooltip="List"></i></a></td>
