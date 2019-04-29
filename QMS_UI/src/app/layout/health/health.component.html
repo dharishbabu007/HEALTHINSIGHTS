@@ -1,9 +1,10 @@
 <app-header
   [fixed]="true"
+  
   [sidebarToggler]="'lg'"
-  [asideMenuToggler]="'lg'">
+  [asideMenuToggler]="'lg'"> 
   <span class="healthyme">
-  <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/HealthyMe_Logo_Header.png"/>
+  <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/HealthyMe_Logo_Header.png" [routerLink]="['/dashboard/']"/>
 </span>
   <ul class="nav navbar-nav ml-auto">
     <!-- <li class="nav-item ">

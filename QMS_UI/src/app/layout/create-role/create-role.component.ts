@@ -27,7 +27,7 @@ export class CreateRoleComponent implements OnInit {
     readvalue: any;
     writevalue:any;
     downloadvalue: any;
-    arr: Array<Object>;
+    arr: Role[] = [];;
     selectedPages: any;
     constructor(private _fb: FormBuilder,
       private GapsService: GapsService,
@@ -129,20 +129,17 @@ export class CreateRoleComponent implements OnInit {
           }
          this.removeCategory(1)
       }
-
+      this.GapsService.getRoleList().subscribe((data1: any) => {
+        this.Repositry = data1;
         const roleId1 = this.Repositry.filter(item => item.name === event.value);
-        this.pageListRepositry;
         this.GapsService.getRoleData(roleId1[0].value).subscribe((data: any) => {
-
+          //  console.log(data.screenPermissions)
                     this.k = data.screenPermissions.length;
-                      // console.log(data)
-                    //console.log(data.screenPermissions)
                      if(this.k>0){
-                        
+                        this.GapsService.getPageList().subscribe((data2 : any) =>{
+                            this.pageListRepositry = data2;
                     for(this.i= 0; this.i<this.k; this.i++){
-               
                       let pagename = this.pageListRepositry.filter(item => item.value == data.screenPermissions[this.i].screenId);
-                
                     (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['parentPage'].patchValue(pagename[0].name);
                     if(data.screenPermissions[this.i].write == "Y"){
                     (<FormArray>this.myForm.controls['roleCategorys']).controls[this.i]['controls']['write'].patchValue(true);}
@@ -153,6 +150,7 @@ export class CreateRoleComponent implements OnInit {
                     this.addCategory(this.i) 
                         }
                         this.removeCategory(this.k) 
+                    });
                 }
                 else{
                         return false
@@ -160,6 +158,7 @@ export class CreateRoleComponent implements OnInit {
                 //this.pageList.push({label: item.name, value: item.name});
     
         });
+    });
     
     }
 
@@ -213,14 +212,16 @@ export class CreateRoleComponent implements OnInit {
         this.downloadvalue = "N" 
        }
         //  console.log(screenid)
-       this.arr =[{
-         screenid : screenid[0].value,
+       this.arr.push({
+         screenId : screenid[0].value,
         read: this.readvalue,
         write: this.writevalue,
        download: this.downloadvalue
-      }]
+      })
     }
-  console.log(this.arr);
+    
+   }
+ //  console.log(this.arr)
     this.GapsService.createRole(roleId[0].value,this.arr).subscribe( (res: any) => {
         if (res.status === 'SUCCESS') {
           this.msgService.success('Role Pages Mapping Successfully');
@@ -229,12 +230,16 @@ export class CreateRoleComponent implements OnInit {
           this.msgService.error(res.message);
         }
         });
-   }
-
 
     }
     check(event){
         console.log(event)
     }   
 
+}
+export interface Role{
+    screenId: number;
+    read: string;
+    write: string;
+    download: string;
 }

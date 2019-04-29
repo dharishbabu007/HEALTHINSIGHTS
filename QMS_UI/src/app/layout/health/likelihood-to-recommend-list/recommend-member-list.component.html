@@ -1,11 +1,11 @@
 <div> 
     <div class="col-lg-12" style="padding: 0px">
         <h2 [ngStyle]="{ 'background-color': '#F26363',
-            'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i>Likelihood To Recommend Member List</h2>
+            'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Likelihood To Recommend Member List</h2>
    </div>
    <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
     <div class="card">
-        <div class="col col-lg-12">
+        <div class="col-lg-12">
             <br>
             <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="recommendData" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="Member_Details" dataKey="memberId">
@@ -16,7 +16,7 @@
                         <th>Goals</th>
                         <th style="width: 8vw;">Performance</th>
                         <th style="width: 10vw;">Likelihood To Recommend</th>
-                        <th style="width: 7vw;">Recommend</th>
+                        <th style="width: 8vw;">Recommend</th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of cols" >
@@ -77,6 +77,9 @@
                                     <span class="col-lg-12" style="height: 118px;">{{rowData[col.field[1]]}}%</span>
                                     <span class="col-lg-12" style="height: 80px;">{{rowData[col.field[2]]}}%</span>
                                 </div>
+                            </span>
+                            <span *ngSwitchCase="'Likelihood To Recommend'">
+                                    {{rowData[col.field] * 100 | number: '1.0-0' }}%      
                             </span>
                             <span *ngSwitchDefault>
                                     {{rowData[col.field]}}

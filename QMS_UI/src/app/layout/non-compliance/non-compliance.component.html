@@ -1,13 +1,94 @@
-<div  style="margin: 25px;margin-top: 10px">
-        <app-page-header [heading]="'Non-compliance prediction'" [icon]="'fa-table'"></app-page-header>
+<div style="margin-top: 10px">
+        <app-page-header [heading]="'Non-Compliance'" [icon]="'fa-table'"></app-page-header>
         <div class="card">
-        <div class="row">
+        <div class="row"   style="margin: 20px">
             <div class="col col-lg-12">
     
                 <!-- <button type="button" pButton label="back" [routerLink]="['/file-manager/']" style="float:left" class="btn-space"></button> -->
     
+               <br>
+                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button> 
     
-                <!--<button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:left" class="btn-space"></button>  -->
+                <button type="button" pButton label="Statistics" [routerLink]="['/ncStats/']" style="float:right" class="btn-space"></button> 
+    
+    
+                <a [routerLink]="['/frame-url','http://192.168.184.70/views/NonComplianceDashboard/NonComplianceDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no#1']"> <button type="button" pButton label="Dashboard" style="float:left" class="btn-space"></button> </a>
+       <br><br>
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="nonCompliance" [columns]="cols" [paginator]="true" [loading]="loading"  [rows]="20" exportFilename="No_Show_Likelihood">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                               <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns"> 
+                        <tr>
+                            <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                                    <span *ngSwitchCase="'patientName'">
+                                        <a [routerLink]="['/smv/',rowData['patientId']]">{{rowData[col.field]}}</a>
+                                    </span>
+                                    <span *ngSwitchCase="'likelihood'">
+                                      {{rowData[col.field] * 100 | number: '1.0-0' }} %
+                                    </span>
+                                    <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        </div>
+    
+        <!-- <div class="row">
+            <img src="assets/images/Dr Tablet.jpg" >
+        </div>
+    -->
+    </div>
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div  style="margin: 25px;margin-top: 10px">
+        <app-page-header [heading]="'Non-compliance prediction'" [icon]="'fa-table'"></app-page-header>
+        <div class="card">
+        <div class="row">
+            <div class="col col-lg-12">
                 <button type="button" pButton label="Statistics" *ngIf="redirect !=1" [routerLink]="['/csv2/']" style="float:left" class="btn-space"></button>
                 <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/MeasureHerniaNon-Compliance/MeasureDetailsHerniarepair?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" style="float:left" class="btn-space"></button> 
 
@@ -270,8 +351,4 @@
         </div>
         </div>
     
-        <!-- <div class="row">
-            <img src="assets/images/Dr Tablet.jpg" >
-        </div>
-    -->
-    </div>
+    </div> -->

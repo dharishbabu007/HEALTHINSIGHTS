@@ -16,24 +16,25 @@ export const navItems = [
     },
     {
       name: 'Rewards',
-      url: '/health/home',
+      url: '/health/rewards',
       icon: 'fa fa-line-chart',
     },
     {
       name: 'Intervention',
-      url: '/health/home',
+      url: '/health/intervention',
       icon: 'fa fa-sliders',
     },
     {
-      name: 'Satisfaction',
-      url: '/health/home',
-      icon: 'fa fa-smile-o',
+      name: 'Progress',
+      url: '/health/churn-member-list',
+      icon: 'fa fa-line-chart',
     },
     {
-      name: 'Progress',
-      url: 'http://i3lbfsiserver:93/',
-      icon: 'fa fa-line-chart',
+      name: 'Satisfaction',
+      url: '/health/recommend-member-list',
+      icon: 'fa fa-smile-o',
     }
+
 ];
 export const navItems1 = [
   {
@@ -65,7 +66,7 @@ export const navItems2 = [
   },
   {
     name: 'Enrollments',
-    url: '/health/home',
+    url: '/health/enrollments',
     icon: 'fa fa-users',
   },
   {
@@ -108,7 +109,7 @@ export const demoRole = [
   },
   {
     name: 'Clustering Dashboard',
-    url: 'http://192.168.184.70/t/CurisSite/views/Clustering/Clustering?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+    url: 'http://192.168.184.70/views/Clustering/Clustering?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
     icon: 'fa fa-sliders',
   },
   { 

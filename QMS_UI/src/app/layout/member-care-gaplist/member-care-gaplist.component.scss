@@ -18,4 +18,26 @@ input {
 .table-bordered{
     border: none;
 }
-  
+.vl {
+    border-left: 1px solid #BDBDBD;
+    height: 18px;
+    margin: 1px;
+  }
+  .inputStyle{
+    border: 1px solid #A9A9A9;
+  }
+  .no-padding{
+      padding: 0;
+  }
+
+
+//   /deep/
+//   .app-body .main{
+//     font-family: "Fira Sans";
+//   }
+//   .table-bordered td{
+//     font-family: "Fira Sans";
+// }
+.table-bordered td{
+    font-family: "Amazon Ember",Arial,sans-serif;
+    }

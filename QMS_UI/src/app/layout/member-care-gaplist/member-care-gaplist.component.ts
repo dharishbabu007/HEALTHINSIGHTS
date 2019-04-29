@@ -5,6 +5,7 @@ import { GapsService } from '../../shared/services/gaps.service';
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 @Component({
     selector: 'app-tables',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
     providers: [GapsService]
 })
 export class MemberCareGapListComponent implements OnInit {
+    @ViewChild('dt') dt: any;
     constructor(private gapsService: GapsService,    private router: Router) {}
     membergaps = [];
     cols: any[];
@@ -72,10 +74,11 @@ export class MemberCareGapListComponent implements OnInit {
 
 
         this.cols = [
-            { field: 'member_id', header: 'Member Id' },
-            { field: 'name', header: 'Name' },
-            { field: 'age', header: 'Age' },
-            { field: 'gender', header: 'Gender' },
+            // { field: 'member_id', header: 'Member Id' },
+            // { field: 'name', header: 'Name' },
+            // { field: 'age', header: 'Age' },
+            // { field: 'gender', header: 'Gender' },
+            { field:['name','member_id','age','gender'],header:'Member Details'},
             { field: 'pcp', header: 'PCP' },
             { field: 'plan', header: 'Plan' },
             { field: 'countOfCareGaps', header: 'Count of Care Gaps' },
@@ -89,6 +92,14 @@ export class MemberCareGapListComponent implements OnInit {
  
 
 
+    }
+    exporting(){
+        // this.dt.exportCSV(this.membergaps, "Contracts.csv");
+        const workBook = XLSX.utils.book_new(); // create a new blank book
+        const workSheet = XLSX.utils.json_to_sheet(this.membergaps);
+    
+        XLSX.utils.book_append_sheet(workBook, workSheet, 'data'); // add the worksheet to the book
+        XLSX.writeFile(workBook, 'Member_Care_Gaps_Registry.xlsx'); // initiate a file download in browser
     }
     dateFilter(dateString){
         console.log('date', this.formatDate(dateString))
@@ -107,7 +118,7 @@ export class MemberCareGapListComponent implements OnInit {
 
       mitscreen(rowData){
         // console.log(rowData);
-            this.router.navigate(['/pat-screen', rowData.member_id, rowData.measureSK]);  
+            this.router.navigate(['/pat-screen', rowData.member_id, rowData.measureSK,rowData.plan]);  
      //
       }
 }

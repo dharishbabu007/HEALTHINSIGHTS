@@ -24,22 +24,25 @@ redirect: any = 0 ;
     DashboardClick(){
  
     }
-    membergaps: MemberCareGaps[];
+    nonCompliance: any[];
+    loading = true;
     cols: any[];
     ngOnInit() {
-        this.gapsService.getCsv().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps = data;
+        this.gapsService.getNonComplianceOutputList().subscribe((data: MemberCareGaps[]) => {
+            this.loading = false;
+            this.nonCompliance = data;
         });
         this.cols = [
             { field: 'patientId', header: 'Patient Id' },
             { field: 'patientName', header: 'Patient Name' },          
             { field: 'age', header: 'Age' },
             { field: 'gender', header: 'Gender' },
-            { field: 'race', header: 'Race' },
-            { field: 'ethinicity', header: 'Ethinicity' },
-            { field: 'distance', header: 'Distance' },
-            { field: 'logodds', header: 'Compliance potential' },
-            { field: 'predictednoncompliance', header: 'Predicted non-Compliance' }
+            // { field: 'race', header: 'Race' },
+            // { field: 'ethnicity', header: 'Ethinicity' },
+            { field: 'distanceNearestHC', header: 'Distance from nearest health center' },
+            { field:'ncHistroy',header:'History of non-compliance'},
+            { field: 'logOdds', header: 'Compliance potential' },
+            { field: 'predictedNC', header: 'Predicted non-Compliance' }
         ];
     }
 }

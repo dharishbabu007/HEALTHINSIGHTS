@@ -101,3 +101,26 @@ body .ui-paginator .ui-paginator-pages .ui-paginator-page{
 body .ui-chkbox .ui-chkbox-box {
     border: 1px solid #AFAFAF;}
 }
+.checkboxwidth{
+    width: 3vw;
+}
+@media (max-width: 770px){
+.memberDetails{
+ width: 22vw
+}
+.header-row{
+ font-size: 14px;
+}
+.checkboxwidth{
+    width: 4vw;
+}
+}
+/deep/
+.ui-picklist-source-controls {
+    display: none !important;
+  }
+  /deep/
+  .ui-picklist-target-controls {
+    display: none !important;
+  }
+  

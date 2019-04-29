@@ -20,7 +20,7 @@ import { MemberGapService } from './member-gap-info.service';
 })
 
 export class MemberGapInfoComponent implements OnInit {
-    closeGaps: CloseGaps;
+    closeGaps: any;
     gaps: any;
     cols: any[];
     flag: any;
@@ -34,6 +34,8 @@ export class MemberGapInfoComponent implements OnInit {
     SelectedFile: File = null;
     targetDate: any;
     fd: any;
+    dowloadData:any;
+    closeGapCreated:boolean = false;
     fileUploadStatus:boolean = false;
     headers={
         headers: new HttpHeaders({
@@ -59,7 +61,7 @@ export class MemberGapInfoComponent implements OnInit {
         { label: 'MIT', value: 'MIT' },
         { label: 'Other', value: 'Other' }
     ];
-    priorityTypes =  [{label: 'Priority', value: null},{ label: 'High', value: 'High' }, { label: 'Low', value: 'Low' }, { label: 'Medium', value: 'Medium' }];
+    priorityTypes =  [{ label: 'Low', value: 'Low' }, { label: 'Medium', value: 'Medium' },{ label: 'High', value: 'High' }];
     public closeGapForm: FormGroup;
     roleList: any[];
     roleListRepositry:any;
@@ -115,16 +117,16 @@ export class MemberGapInfoComponent implements OnInit {
        
         this.gapsService.getGapsInfo(this.gapId, this.memberId).subscribe((data: CloseGaps) => {
             this.closeGaps = data;
-
+         //  console.log(data)
             const gapsArray = this.closeGaps.careGaps;
             if (gapsArray.length) {
                 this.gaps = gapsArray;
                 //console.log(gapsArray);
-               // this.closeGapForm.controls['priority'].setValue(gapsArray[0].priority);
-               // this.closeGapForm.controls['status'].setValue(gapsArray[0].status);
-                //this.closeGapForm.controls['intervention'].setValue(gapsArray[0].intervention);
-               // this.closeGapForm.controls['payerComments'].setValue(gapsArray[0].payerComments);
-               // this.closeGapForm.controls['providerComments'].setValue(gapsArray[0].providerComments);
+               this.closeGapForm.controls['priority'].setValue(gapsArray[0].priority);
+                this.closeGapForm.controls['status'].setValue(gapsArray[0].status);
+                this.closeGapForm.controls['intervention'].setValue(gapsArray[0].intervention);
+                this.closeGapForm.controls['payerComments'].setValue(gapsArray[0].payerComments);
+                this.closeGapForm.controls['providerComments'].setValue(gapsArray[0].providerComments);
             }
             this.i = 0;
         for(let num of this.closeGaps.careGaps){
@@ -155,7 +157,7 @@ export class MemberGapInfoComponent implements OnInit {
             { field: 'priority', header: 'Priority' },
             { field: 'providerComments', header: 'Provider Comments' },
             // { field: 'gapDate', header: 'Date Time' },
-            { field: 'gapDate', header: 'Gap Date' },
+            { field: 'gapDate', header: 'Action Date' },
             { field: 'uploadList',header: 'Attachment'}
         ];
     }
@@ -171,35 +173,34 @@ export class MemberGapInfoComponent implements OnInit {
         this.SelectedFile= <File>event.target.files[0];
         this.fd = new FormData();
       this.fd.append('file',  this.SelectedFile);
-       // this.fd = event;
-      // console.log(event)
-       console.log(this.fd)
     }
     type:any;
     onSubmit(formModel) {
-       // console.log(formModel);
+      //  console.log(this.targetDate)
         this.gapsService.updateCloseGaps(formModel,this.targetDate,this.closeGaps,this.gapId,this.headers).subscribe((res: any) => {
-                    if (res.status === 'SUCCESS') {
-                        this.msgService.success('Closegap updated Successfully');
-                      } else {
-                        this.msgService.error(res.message);
-                      }
-                }); 
-                this.type = "close_gap";
-                this.MemberGapService.commonfileupload(this.type,this.fd).subscribe((res1:any)=>
-                {
-                     if(res1.status === 'SUCCESS'){
-                         this.fileUploadStatus = true;
-                         this.msgService.success('Closegap file upload Successfully');
-                     }
-                     else {
-                        //throwError(res1.message);
-                        this.msgService.error(res1.message);
-                      }
-                 })
-                
-        
 
+            if (res.status === 'SUCCESS') {
+                this.closeGapCreated = true;
+                this.msgService.success('Closegap updated Successfully');
+            } 
+            else
+            {
+            this.msgService.error(res.message);
+            }
+        });
+        if(this.closeGapCreated && this.fd){
+        this.type = "close_gap";
+        this.MemberGapService.commonfileupload(this.type,this.fd).subscribe((res1:any)=>
+        {
+            if(res1.status === 'SUCCESS'){
+                this.fileUploadStatus = true;
+                this.msgService.success('Closegap file upload Successfully');
+            }
+            else {
+                this.msgService.error(res1.message);
+            }
+        }) 
+        }
         // for(let num of this.closeGaps.careGaps){
         //   if(num.status === formModel.status && this.formatDate(num.dateTime) === this.formatDate(this.now)){
         //         this.dateFlag = 1;
@@ -235,7 +236,6 @@ export class MemberGapInfoComponent implements OnInit {
         }
         mitButton: boolean = false;
         actionCare(event){
-            console.log(event)
             if(event.value == "MIT"){
                 this.mitButton = true;
             }
@@ -243,8 +243,56 @@ export class MemberGapInfoComponent implements OnInit {
                 this.mitButton =false;
             }
         }
+        downloadFile(event){
+            //console.log(event);
+            const filetype = event.uploadList[0].slice(-3);
+         //   console.log(filetype)
+            if(filetype=="png"||filetype=="jpg"){
+                this.MemberGapService.downloadimage(event.uploadList[0]).subscribe((res:any)=> {
+                    this.saveimage(res)
+               if(res){
+                   this.msgService.success('Download Successfully');
+               }
+               else {
+                  this.msgService.error(res.message);
+                }
+           })
+            }
+            else{
+                this.MemberGapService.downloadfile(event.uploadList[0]).subscribe((res:any)=> {
+                    this.savefile(res)
+               if(res){
+                   this.msgService.success('Download Successfully');
+               }
+               else {
+                  this.msgService.error(res.message);
+                }
+           })
+            }
+    }
+    savefile(data){
+    var blob = new Blob([(<any>data)], {type: 'text/csv'});
+    var url= window.URL.createObjectURL(blob);
+    var anchor = document.createElement("a");
+    anchor.download = "closeGaps.csv";
+    anchor.href = url;
+    anchor.click();
+    console.log();
+    }
+    saveimage(data){
+        var blob = new Blob([(<any>data)], {type: 'mime'});
+        var url= window.URL.createObjectURL(blob);
+        var anchor = document.createElement("a");
+        anchor.download = "closeGaps.jpg";
+        anchor.href = url;
+        anchor.click();
+        console.log();
+        }
+        mitscreen(){
+            this.router.navigate(['/pat-screen', this.memberId,this.gapId]);  
+        }
        
-}
+} 
 export interface MemberGap{
 
 }

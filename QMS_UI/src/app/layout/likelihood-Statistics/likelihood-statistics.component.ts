@@ -38,31 +38,23 @@ export class LikelihoodStatisticsComponent implements OnInit {
     field: any;
     header: any;
     loading: boolean = true;
+    membergapslhe:any;
+    membergapslhc:any;
+    tp:any;
+    fp:any;
+    tn:any;
+    fn:any;
+    ModelScorelhe: any;
+    tplhe:any;
+    fplhe:any;
+    tnlhe:any;
+    fnlhe:any;
+    mergeCols:any;
     ngOnInit() {
-
-        this.gapsService.getlikelihoodmodelScore().subscribe((data: any) =>{
-                this.modelscore = data;
-                this.ModelScore = [
-                    {num:this.modelscore.score},    
-               ];
-               this.imageUrl = this.modelscore.imageFullPath;
-
-        });
-       
-       // this.imageUrl = this.modelscore[0].imageFullPath;
-        this.gapsService.getlikelihoodconfusionmatric().subscribe((data: MemberCareGaps[]) => {
-            this.confusionmatrix = data;
-        });
-
-        this.ConfusionMatrix = [
-            { field: 'id', header: 'ID' },
-            { field: 'zero', header: 'Zero' },
-            { field: 'one', header: 'One' },
-        ];
-       // console.log(this.ConfusionMatrix)
-
-        this.gapsService.getlikelihoodmodel().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps = data;
+        if(this.type == 1){
+        this.gapsService.getlhcmodelsummary().subscribe((data: MemberCareGaps[]) => {
+            this.membergapslhc = data;
+          //  console.log(data)
         });
         this.cols = [
             { field: 'attributes', header: 'Attributes' },
@@ -72,8 +64,19 @@ export class LikelihoodStatisticsComponent implements OnInit {
             { field: 'prz', header: 'P-value' },
            // {field: 'significance', header: 's'}
         ];
+        this.gapsService.getLhcModelMetric().subscribe((data:any)=>{
+            // console.log(data)
+             this.ModelScore = data.score;
+             this.tp= data.tp;
+             this.tn =data.tn;
+             this.fp = data.fp;
+             this.fn = data.fn;
+         });
+
+    }
+    else{
         this.gapsService.getLHEModelSummary().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps = data;
+            this.membergapslhe = data;
         });
         this.LHEModelSummary = [
             { field: 'attributes', header: 'Attributes' },
@@ -84,34 +87,41 @@ export class LikelihoodStatisticsComponent implements OnInit {
            // {field: 'significance', header: 's'}
         ];
        // console.log(this.LHEModelSummary)
-        this.gapsService.getLHEModelMatric().subscribe((data: MemberCareGaps[]) => {
-            this.membergaps1 = data;
-            this.LHEModelMatric = [
-                { field: this.membergaps1.tp , header: 'tp' },
-                { field: this.membergaps1.fp, header: 'fp' },
-                { field: this.membergaps1.tn, header: 'tn' },
-                { field: this.membergaps1.fn, header: 'fn' },
-                { field: this.membergaps1.score, header: 'Score' },
-               // {field: 'significance', header: 's'}
-            ];
-         //   console.log(this.LHEModelMatric)
+        this.gapsService.getLheModelMetric().subscribe((data: any) => {
+                        // console.log(data)
+                        this.ModelScorelhe = data.score;
+                        this.tplhe= data.tp;
+                        this.tnlhe =data.tn;
+                        this.fplhe = data.fp;
+                        this.fnlhe = data.fn;
+
         });
+                         
         this.gapsService.getLikelihoodClusterStatistics().subscribe((data: MemberCareGaps[]) => {
             this.membergaps2 = data;
             this.loading = false;
-            this.field = this.membergaps2.length-1;
-            // for(let i=0;i<this.membergaps2.length-1;i++){
-            //     for(let j=0;j<this.membergaps2.length-1;j++){
-            //     console.log(this.membergaps2[0][i])
-            //     this.cols1.push({field: this.membergaps2[i+1][j],header:this.membergaps2[0][i]})
-            //     }
-            // }
-          this.cols1 = this.membergaps2.filter(item => item);
-          //console.log(this.cols1)
+            this.field = [];
+            this.field.push(this.membergaps2[0]);
+            this.field.push(this.membergaps2[1]);
+            this.field.push(this.membergaps2[2]);
+            this.mergeCols = [];
+            this.mergeCols.push(this.membergaps2[3]);
+            this.mergeCols.push(this.membergaps2[4]);
+            this.mergeCols.push(this.membergaps2[5]);
+            
+              // this.field = this.membergaps2.length-1;
+                    // for(let i=0;i<this.membergaps2.length-1;i++){
+                    //     for(let j=0;j<this.membergaps2.length-1;j++){
+                    //     console.log(this.membergaps2[0][i])
+                    //     this.cols1.push({field: this.membergaps2[i+1][j],header:this.membergaps2[0][i]})
+                    //     }
+                    // }
+          this.cols1 = this.field.filter(item => item);
         });
+
         
         
-        
+    }   
         this.data = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [

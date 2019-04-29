@@ -14,8 +14,8 @@
 .padding-class{
     padding: 0px;
 }
-.row{
-    margin-bottom: 5px;
+.row-class{
+    margin-bottom: 8px;
 }
 .header-class{
     background-color: #0275D8;
@@ -24,3 +24,8 @@
 .table-bordered{
     border: none;
 }
+
+// /deep/
+// .app-body .main{
+//   font-family: "Lato";
+// }

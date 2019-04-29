@@ -1,12 +1,11 @@
 <div class="col-lg-12" style="padding: 0px">
  
         <h2 [ngStyle]="{ 'background-color': 'rgba(255, 156, 7, 0.59)',
-        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Clustering Statictics</h2>
+        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Clustering Statistics</h2>
 </div>
 <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
     <div class="card">
-        <div class="row p-3 align-items-center">
-            <div class="col col-lg-12 ">
+            <div class="col-lg-12 " style="    padding: 15px;">
                 <p-table #dt  class="table table-bordered table-hover styletable" [scrollable]="false" [value]="membergaps" [columns]="cols"  selectionMode="single" dataKey="id">
                     <ng-template pTemplate="header">
                         <tr>
@@ -31,7 +30,6 @@
                         </ng-template>
                 </p-table>
             </div>
-        </div>
         <br>
         <div class="row col-lg-12">
                 <br>
@@ -44,11 +42,11 @@
                     </div>
                 </div>
                 <br><br>
-                    <div class="col-lg-6 ">
-                        <img src="assets/images/Kmean_silhouette_validation.png" height="500px" width="500px">
+                    <div class="col-lg-6 " style="overflow: auto;">
+                        <img src="assets/images/Kmean_silhouette_validation.png" height="400px" width="400px">
                     </div>
-                    <div class="col-lg-6 ">
-                        <img src="assets/images/Kmean_elbow_validation.png" height="500px" width="500px">
+                    <div class="col-lg-6 " style="overflow: auto;">
+                        <img src="assets/images/Kmean_elbow_validation.png" height="400px" width="400px">
                     </div>
             </div>
     </div>

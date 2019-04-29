@@ -36,13 +36,31 @@
     margin: 20px
 }
 .healthyme{
-    margin-left:  24vw;
+    margin-left:  33vw;
 }
 @media (max-width: 991px){
     .healthyme{
-        display: none;
+       margin: 0;
     } 
 }
 /deep/ ::-webkit-scrollbar {
-    width: 3px;
+    width: 4px;
+}
+
+
+@media (min-width: 576px){
+    /deep/
+html:not([dir=rtl]) .sidebar-show.sidebar-fixed  .main {
+     margin-left: 0px; 
+}
+}
+
+  
+/deep/
+.app-body .main{
+  font-family: "Amazon Ember",Arial,sans-serif;
+}
+/deep/
+body{
+    font-family: "Amazon Ember",Arial,sans-serif;
 }

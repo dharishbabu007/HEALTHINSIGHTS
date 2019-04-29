@@ -24,41 +24,51 @@ export class SmvComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.memberId = params['memberId'];    
     });
-    this.GapsService.getSpv(this.memberId).subscribe((res:any)=>{
+    this.GapsService.getSmvData(this.memberId).subscribe((res:any)=>{
       this.memberData = res;
+      this.careData = this.memberData.rewardSetList;
+     // console.log(this.careData)
+      this.data = {
+        labels: ['IP Visits', 'OP Visits', 'ER Visits'],
+        datasets: [
+            {
+                label: 'Visit Count',
+                backgroundColor: '#20a8d8',
+                borderColor: '#1E88E5',
+                data: [this.memberData.ipVisits, this.memberData.opVisits, this.memberData.erVisits]
+            },
+        ]
+    }
+    //  console.log(this.memberData)
     });
-    this.GapsService.getSmvDataGeneral(this.memberId).subscribe((res: any)=>{
+    this.GapsService.getSmvGeneralData(this.memberId).subscribe((res:any)=>{
       this.generalData = res;
-     // console.log(this.generalData[0])
+  //    console.log(this.generalData)
     });
-    this.GapsService.getSmvDataCare(this.memberId).subscribe((res: any)=>{
-      this.PersonaData = res;
-     // console.log(this.PersonaData)
-    })
-    this.cols =[
-      {field:['goal','frequency','goalDate'],header:'Goals'},
-      {field:'reward',header:'Reward'}
-    ];
-    console.log(this.cols)
-    this.GapsService.getSmvInsuranceData(this.memberId).subscribe((res:any)=>{
-      this.insuranceData = res;
+    // this.GapsService.getSpv(this.memberId).subscribe((res:any)=>{
+    //   this.memberData = res;
+    // });
+    // this.GapsService.getSmvDataGeneral(this.memberId).subscribe((res: any)=>{
+    //   this.generalData = res;
+    //  // console.log(this.generalData[0])
+    // });
+    // this.GapsService.getSmvDataCare(this.memberId).subscribe((res: any)=>{
+    //   this.PersonaData = res;
+    //  // console.log(this.PersonaData)
+    // })
+    // this.cols =[
+    //   {field:['goal','frequency','goalDate'],header:'Goals'},
+    //   {field:'reward',header:'Reward'}
+    // ];
+    // console.log(this.cols)
+    // this.GapsService.getSmvInsuranceData(this.memberId).subscribe((res:any)=>{
+    //   this.insuranceData = res;
 
-    })
+    // })
   }
 
   ngOnInit() {  
     
-    this.data = {
-      labels: ['IP Visits', 'OP Visits', 'ER Visits'],
-      datasets: [
-          {
-              label: 'Visit Count',
-              backgroundColor: '#20a8d8',
-              borderColor: '#1E88E5',
-              data: [2, 5, 1]
-          },
-      ]
-  }
   this.options = {
       legend: {
           display: false

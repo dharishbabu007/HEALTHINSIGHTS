@@ -5,6 +5,7 @@ import { MemberCareGaps } from '../../shared/services/gaps.data';
 import { GapsService } from '../../shared/services/gaps.service';
 import { Router } from '@angular/router';
 import { NgxPermissionsService} from 'ngx-permissions';
+import { ViewChild } from '@angular/core'
 @Component({
     selector: 'app-tables',
     templateUrl: './measure-library.component.html',
@@ -13,12 +14,16 @@ import { NgxPermissionsService} from 'ngx-permissions';
     providers: [GapsService]
 })
 export class MeasurelibraryComponent implements OnInit {
-     
+    @ViewChild('dt') dt: any;
     programType = 'test';
     programValue = 'test';
     perms: any;
     flag: any;
-    statusTypes = [{label: 'Active', value: 'Approved'}, {label: 'Decommission', value: 'In-active'}];
+    statusTypes = [{label: 'Active', value: 'Y'}, {label: 'Decommission', value: 'N'}];
+    selectedOption=['Y'];
+    certifiedData:any;
+    MIPS:boolean = false;
+    dropdownOptions =[{label: 'NCQA Certified',value: 'certified'},{label:'All',value:'all'}]
     constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router,  private permissionsService: NgxPermissionsService,) {
         this.route.params.subscribe(params => {
             if (params['type']) {
@@ -27,12 +32,24 @@ export class MeasurelibraryComponent implements OnInit {
             if (params['value']) {
                 this.programValue = params['value'];
             }
-        });
+        }); 
     }
-    membergaps: MemberCareGaps[];
+    membergaps: any[];
     cols: any[];
+
     ngOnInit() {
-        this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: MemberCareGaps[]) => {
+        this.dt.filters = {
+            isActive: { value:'Y'}
+          };
+          this.dt.filter(null, null, null);
+        // let arrayOfValues=['Y'];
+        // this.selectedOption = this.statusTypes.filter(a => arrayOfValues.includes(a.value)).map(a => a.value);
+       // console.log(this.selectedOption)
+       if(this.programValue == "Merit-Based Incentive Payment System (MIPS) Program"){
+           this.MIPS = true;
+       }
+       this.certifiedData =[];
+        this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: any[]) => {
             this.membergaps = data;
         });
         this.cols = [
@@ -42,11 +59,12 @@ export class MeasurelibraryComponent implements OnInit {
             { field: 'type', header: 'Measure Type' },
             { field: 'steward', header: 'Measure Steward' },
             { field: 'clinocalCondition', header: 'Clinical Condition' },
-            { field: 'status', header: 'Status'}
+            { field: 'isActive', header: 'Status'},
         ];
         this.permissionsService.permissions$.subscribe((permissions) => {
           this.perms = permissions;
-        })
+        });
+     //   console.log(this. selectedOption);
     }
     copytoCreator(id, newType) {
       
@@ -57,4 +75,25 @@ export class MeasurelibraryComponent implements OnInit {
             }     
 
     }
+    filterCategory(event){
+       // console.log(event.value)
+        if(event.value =="certified"){
+            this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: any[]) => {
+                this.membergaps = [];
+                data.forEach(element =>{
+                    if(element.certified == 'Y'){
+                        this.membergaps.push({id:element.id,name:element.name,programName:element.programName,type:element.type,steward:element.steward,clinocalCondition:element.clinocalCondition,isActive:element.isActive,certified:element.certified})
+                    }
+                });
+              //  console.log(this.membergaps)
+            });
+        }
+        else{
+            this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: any[]) => {
+                this.membergaps = data;
+            });
+        }
+    }
+
+   
 }

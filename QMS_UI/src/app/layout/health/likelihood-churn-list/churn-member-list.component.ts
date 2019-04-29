@@ -30,8 +30,8 @@ export class ChurnMemberListComponent implements OnInit {
             { field:'motivations', header: 'Motivations' },
             { field:  ['physicalActivityGoal','physicalActivityFrequency','physicalActivityDuration','calorieIintakeGoal','calorieIntakeFrequency','calorieIntakeDuration','careGap','careGapDuration'], header: 'Goals' },
             { field:'reward', header: 'Reward' },
-            { field:'likelihoodTochurn', header: 'Likelihood To Churn' },
-            { field:'churn', header: 'Churn' },
+            { field:'likelihoodToChurn', header: 'Likelihood To Churn' },
+            { field:'predictedChurn', header: 'Churn' },
            
         ];
        

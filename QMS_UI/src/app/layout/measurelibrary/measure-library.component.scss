@@ -11,3 +11,17 @@ input {
 .table-bordered {
  border: none;
 }
+
+/deep/
+.ui-multiselect .ui-multiselect-label {
+    padding: 0;
+}
+
+// /deep/
+// .app-body .main{
+//   font-family: "Montserrat";
+// }
+
+.table-bordered td{
+    font-family: "Amazon Ember",Arial,sans-serif;
+    }

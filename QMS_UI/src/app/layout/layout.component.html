@@ -1,13 +1,11 @@
 <app-header
   [fixed]="true"
-  [navbarBrandFull]="{src: 'assets/images/itcinfotech-logo.jpg', width: 100, height: 45, alt: 'ITC Logo'}"
-  
   [sidebarToggler]="'lg'"
   [asideMenuToggler]="'lg'"> 
   <span class="healthyme">
-      <img src="assets/images/HealthCareInsightsLogo.png"/>
+      <img src="assets/images/HealthCareInsightsLogo.png" [routerLink]="['/dashboard/']"/>
     </span>
-  
+    <!-- [navbarBrandFull]="{src: 'assets/images/itcinfotech-logo.jpg', width: 100, height: 45, alt: 'ITC Logo'}"  for itc icon--> 
   <ul class="nav navbar-nav ml-auto">
 
       <!-- <li class="nav-item ">

@@ -25,7 +25,10 @@ export class RewardsMemberListComponent implements OnInit {
         this.cols = [
             { field:['name','memberId','age','gender','persona','motivations','category','goal','frequency'], header: 'Member Details' },
             { field: 'rewardRecommendation', header: 'Reccomendations' },
-            { field: 'rewardSet', header: 'Rewards Set' }
+            { field: 'rewardSet', header: 'Rewards Set' },
+            { field:'',header:'Goal Category Heading'},
+            { field:['goal','frequency'],header:'Goals Set'},
+            
         ];
         this.gapsService.getRewardsList().subscribe((res:any)=>{
            this.rewardTypes =[]; 

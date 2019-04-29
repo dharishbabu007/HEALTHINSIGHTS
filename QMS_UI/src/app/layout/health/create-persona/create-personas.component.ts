@@ -6,6 +6,7 @@ import { MessageService } from '../../../shared/services/message.service';
 import { MemberCareGaps } from '../../../shared/services/gaps.data';
 import { GapsService } from '../../../shared/services/gaps.service';
 import { NgxPermissionsService, NgxRolesService} from 'ngx-permissions';
+import { PersonaService } from './create-persona.service';
 
 @Component({
   selector: 'app-createpersonas',
@@ -36,11 +37,13 @@ export class CreatePersonaComponent implements OnInit {
   addictionList: any;
   clusterLength: any;
   personaFormData:any;
+  fd: any;
   constructor(private _fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
   private msgService: MessageService,
-private gapsService: GapsService) {
+private gapsService: GapsService,
+private PersonaService:PersonaService) {
    
     this.route.params.subscribe(params => {
             this.measureId = params['measureId'];
@@ -115,6 +118,8 @@ smallCardClick(event){
 }
 handleFileInput(event) {
 this.SelectedFile= <File>event.target.files[0];
+this.fd = new FormData();
+this.fd.append('file', this.SelectedFile);
 }
 conditionParamForm(){
   return this._fb.group({
@@ -150,20 +155,21 @@ filetype:any;
  this.msgService.error("please select a cluster")
     }
     else{
-      const fd = new FormData();
-      fd.append('file', this.SelectedFile);
       // if(this.SelectedFile.type=="image/png"||this.SelectedFile.type=="image/jpeg"){
 
-        this.gapsService.createPersona(model,this.selectedClusterId).subscribe((res: any )=>{
-          this.msgService.success(res.message)
-           });
-          this.filetype = "persona";
-           this.gapsService.commonfileupload(this.filetype,fd).subscribe((res:any)=>{
-            if(res.status === 'SUCCESS'){ this.msgService.success('File Upload Success');
-            } else {
-              this.msgService.error(res.message);
-            }
-          })
+    this.gapsService.createPersona(model,this.selectedClusterId).subscribe((res: any )=>{
+      this.msgService.success(res.message);
+      this.filetype = "persona";
+      this.PersonaService.commonfileupload(this.filetype,this.fd).subscribe((res:any)=>{
+        if(res.status === 'SUCCESS'){ 
+          this.msgService.success('File Upload Success');
+        } 
+        else {
+          this.msgService.error(res.message);
+        }
+      })
+      });
+
     } 
 
   }

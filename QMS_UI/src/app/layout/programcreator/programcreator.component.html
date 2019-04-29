@@ -1,5 +1,5 @@
 <div  style="margin: 25px;margin-top: 10px">
-    <app-page-header [heading]="'Program creator'" [icon]="'fa-table'"></app-page-header>
+    <app-page-header [heading]="'Program Creator'" [icon]="'fa-table'"></app-page-header>
 <div class="card ">
   <div class="row">
     <div class="col-lg-12">
@@ -26,29 +26,29 @@
                   </small>
                 </span>
               </div>
-              <div class="row">
-                <span class="col-lg-3 col-form-label font-weight-bold" for="hf-startDate">Start Date*</span>
-                <span class="col-lg-3 col-form-label font-weight-bold" for="hf-endDate">End Date*</span>
-              </div>
-              <div class="row">
-                  <span class="col-lg-3">
-                    <p-calendar formControlName="startDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
-                  </span>
-                  <span class="col-lg-3">
+              <div class="row col-lg-12">
+                <div class="col-lg-4 no-padding row">
+                    <span class="col-lg-12 col-form-label font-weight-bold" for="hf-startDate">Start Date*</span>
+                    <span class="col-lg-12">
+                        <p-calendar formControlName="startDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
+                    </span>
+                    <span class="col-lg-3">
+                        <small *ngIf="!myForm.controls.startDate.valid && myForm.controls.startDate.touched" class="text-danger">
+                              startDate is required.
+                        </small>
+                      </span>
+                </div>
+                <div class="col-lg-6 no-padding row">
+                    <span class="col-lg-12 col-form-label font-weight-bold" for="hf-endDate">End Date*</span>
+                    <span class="col-lg-12">
                     <p-calendar formControlName="endDate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
                   </span>
-              </div>
-              <div class="row">
-               <span class="col-lg-3">
-                  <small *ngIf="!myForm.controls.startDate.valid && myForm.controls.startDate.touched" class="text-danger">
-                        startDate is required.
-                  </small>
-                </span>
-                <span class="col-lg-3">
-                  <small *ngIf="!myForm.controls.endDate.valid && myForm.controls.endDate.touched" class="text-danger">
-                     endDate is required.
-                  </small>
-                </span>
+                  <span class="col-lg-3">
+                      <small *ngIf="!myForm.controls.endDate.valid && myForm.controls.endDate.touched" class="text-danger">
+                         endDate is required.
+                      </small>
+                    </span>
+                </div>
               </div>
               <br>
               <div class="row"><span class="col-lg-12 font-weight-bold" style="font-size: large">Category Details</span></div>
@@ -59,39 +59,39 @@
                     <div *ngFor="let address of formData.controls; let i=index;" class="panel panel-default">
                       <div [formGroupName]="i">
                           <div class="row" *ngIf="i==0">
-                            <span class="col-lg-4">
+                            <span class="col-lg-4 category">
                               <label class="font-weight-bold">Category Name</label>
                             </span>
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 points">
                               <label class="font-weight-bold">Max Points</label>
                             </span>
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 points">
                               <label class="font-weight-bold">Max Score</label>
                             </span>
                           </div>
-                          <div class="row">
-                            <span class="col-lg-4">
+                          <div class="row" style="margin-bottom: 12px;">
+                            <span class="col-lg-4 category">
                               <input type="text" class="form-control" formControlName="categoryName">
                               <!-- <small [hidden]="myForm.controls.programCategorys.controls[i].controls.categoryName.valid" class="text-danger">
                                 CategoryName is required
                               </small> -->
                             </span>
-                            <span class="col-lg-3">
-                              <input type="text" class="form-control" formControlName="maxPoints">
+                            <span class="col-lg-3 points">
+                              <input type="number" class="form-control" formControlName="maxPoints" min="1" max="100">
                              <!--  <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxPoints.valid" class="text-danger">
                                 Max Points is required
                               </small> -->
                             </span>
-                            <span class="col-lg-3">
-                              <input type="text" class="form-control" formControlName="maxScore">
+                            <span class="col-lg-3 points">
+                              <input type="number" class="form-control" formControlName="maxScore"  min="1" max="100">
                              <!--  <small [hidden]="myForm.controls.programCategorys.controls[i].controls.maxScore.valid" class="text-danger">
                                 Max Score is required
                               </small> -->
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length == i+1">
+                            <span class="col-lg-2 btn-background add" *ngIf="myForm.controls.programCategorys.controls.length == i+1">
                               <button  class="btn btn-secondary" (click)="addCategory()" *ngxPermissionsOnly="['2W']">+</button> 
                             </span>
-                            <span class="col-lg-2 btn-background" *ngIf="myForm.controls.programCategorys.controls.length != i+1">
+                            <span class="col-lg-2 btn-background add" *ngIf="myForm.controls.programCategorys.controls.length != i+1">
                               <button  class="btn btn-secondary" (click)="removeCategory(i)" *ngxPermissionsOnly="['2W']">-</button> 
                             </span>                        
                         </div>
@@ -206,3 +206,6 @@
           </div>
         </div>
        -->
+
+
+       

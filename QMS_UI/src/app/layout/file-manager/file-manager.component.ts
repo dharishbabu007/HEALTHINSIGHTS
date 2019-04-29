@@ -26,6 +26,8 @@ export class FileManagerComponent implements OnInit {
   public myForm: FormGroup;
   SelectedFile: File = null;
   Uploded: boolean;
+  fileuploading = false;
+  rScriptRunning = false;
   constructor(private _fb: FormBuilder,
     private gapsService: GapsService,
     private msgService: MessageService,
@@ -44,7 +46,7 @@ export class FileManagerComponent implements OnInit {
         });
 
         this.cars = [
-          {label: 'Clustering', value: 'persona'},
+          {label: 'Clustering Persona', value: 'persona'},
          // {label: 'Preferred Channel of Communication', value: 'preferredChannelofCommunication'},
          // {label: 'Preferred Rewards', value: 'preferredRewards'},
           {label: 'Likelihood to Enroll', value: 'lhe'},
@@ -95,13 +97,14 @@ this.SelectedFile= <File>event.target.files[0];
 
 
 onUpload() {
-  
+  this.fileuploading = true;
     const fd = new FormData();
     fd.append('file', this.SelectedFile);
-   console.log(fd)
+  // console.log(fd)
     if(this.SelectedFile!= null && this.selectedModel !=null){
-      console.log(this.selectedModel)
+    //  console.log(this.selectedModel)
   this.FileManagerService.Upload(fd,this.selectedModel).subscribe((res: any) => {
+    this.fileuploading = false;
   if (res.status === 'SUCCESS') {
     this.msgService.success('File uploaded successfully');
     this.Uploded = true;
@@ -111,7 +114,7 @@ onUpload() {
 } );
 
 
-console.log(this.Uploded)
+//console.log(this.Uploded)
     }
     else if(this.selectedModel == null){
       this.msgService.error("Please Select a model");
@@ -126,12 +129,26 @@ console.log(this.Uploded)
 }
 
 onRun(){
-
+  this.rScriptRunning = true;
   if(this.selectedModel!=null && this.Uploded==true){
-    console.log(this.selectedModel);
-  this.FileManagerService.Run(this.selectedModel).subscribe( (res: any) => {console.log(res);
+  this.FileManagerService.Run(this.selectedModel).subscribe( (res: any) => {
+    this.rScriptRunning = false;
   if(res.status == "SUCCESS"){
-    this.router.navigateByUrl('/csv1');
+    if(this.selectedModel == "noshow"){
+    this.router.navigate(['/csv1/',this.selectedModel]);
+    }
+    else if(this.selectedModel == "lhe"){
+      this.router.navigate(['/likelihood/',2]);
+    }
+    else if(this.selectedModel == "lhc"){
+      this.router.navigate(['/likelihood/',1]);
+    }
+    else if(this.selectedModel == "nc"){
+      this.router.navigate(['/non-compliance/']);
+    }
+    else if(this.selectedModel == "persona"){
+      this.router.navigate(['/persona-clustering/']);
+    }
 
   }
 }
@@ -147,23 +164,31 @@ else{
 }
 
 TestRun(){
-
-  if(this.selectedModel!=null && this.Uploded==true ){
-    if(this.selectedModel == 'noShow' || this.selectedModel == 'model2'){
-      this.router.navigateByUrl('/csv1');
+  if(this.selectedModel == "noshow"){
+    this.router.navigate(['/csv1/',this.selectedModel]);
     }
-    if(this.selectedModel == 'nonCompliance')
-    {
-      this.router.navigateByUrl('/non-compliance');
+    else if(this.selectedModel == "lhe"){
+      this.router.navigate(['/likelihood/',2]);
     }
+    else if(this.selectedModel == "lhc"){
+      this.router.navigate(['/likelihood/',1]);
+    }
+//   if(this.selectedModel!=null && this.Uploded==true ){
+//     if(this.selectedModel == 'noShow' || this.selectedModel == 'model2'){
+//       this.router.navigateByUrl('/csv1');
+//     }
+//     if(this.selectedModel == 'nonCompliance')
+//     {
+//       this.router.navigateByUrl('/non-compliance');
+//     }
     
-}
-else if( this.Uploded==true && this.selectedModel==null){
-  this.msgService.error("Please Select a model");
-}
-else{
-  this.msgService.error("Please upload a file");
-}
+// }
+// else if( this.Uploded==true && this.selectedModel==null){
+//   this.msgService.error("Please Select a model");
+// }
+// else{
+//   this.msgService.error("Please upload a file");
+// }
 }
 
 }

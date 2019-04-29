@@ -1,10 +1,11 @@
 import { CachedHttpClient } from './cache-httpclient';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable,throwError } from 'rxjs';
 import {  filter, map, catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../../shared/services/http-error-handler.service';
 import { PatScreen } from '../../layout/pat-screen/pat-screen.component';
+import { Intervention } from '../../layout/health/interventions/interventions.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
@@ -17,7 +18,7 @@ const httpOptions = {
 export class GapsService {
     private handleError: HandleError;
     constructor(private http: CachedHttpClient,  httpErrorHandler: HttpErrorHandler, private http1: HttpClient) {
-        this.handleError =  httpErrorHandler.createHandleError('GapsService');
+        this.handleError =  httpErrorHandler.createHandleError();
     }
 
     getGaps(memberID) {
@@ -71,14 +72,14 @@ export class GapsService {
     getCsv2(){
         return this.http.get('http://healthinsight:8082/curis/qms_file/csv_modelSummary');
     }
-    getLikelihoodMeasureDetails() {
+    getlheMeasureDetails() {
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_output`);
     }
     getCommunicationMeasureDetails(){
         return this.http.get('');
     }
     getLikehoodchurnMeasureDetails(){
-        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_output`);    
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhc_member_list`);    
     }
     getSpv(memberId) {
         return this.http.get(`http://healthinsight:8082/curis/qms/spv/hedis/${memberId}`);
@@ -115,7 +116,9 @@ export class GapsService {
             "closeGap": formModel.closeGap,
             "actionCareGap": formModel.actionOnCareGap,
             "uploadList": []
-        }]},headers);
+        }]},headers).pipe(
+            catchError(this.handleError('Logged in user data is null. Please logout and login once.'))
+          );
     }
     uploadCloseGapFiles(file){
         return this.http.post(`http://healthinsight:8082/curis/closeGaps/gic_lifecycle_import/`,file);
@@ -159,18 +162,12 @@ export class GapsService {
         return this.http.get( 'http://healthinsight:8082/curis/user_role/get_user_status_list');
       }
       createRole(roleid, array){
+       //   console.log(array)
         return this.http.post(`http://healthinsight:8082/curis/user_role/add_role_screens`,{
             "roleId": roleid,
-            "screenPermissions": [
-                                            {
-                                            "screenId": array[0].screenid,
-                                            "read":array[0].read,
-                                            "write":array[0].write,
-                                            "download": array[0].download
-                                            }
-                            ]
+            "screenPermissions": array
             }
-            );
+            )
       }
       getUserData(userId){
      return this.http.get(`http://healthinsight:8082/curis/user/get_user_by_id/${userId}`)
@@ -182,8 +179,8 @@ export class GapsService {
     {
         return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_output1`)
     }
-    getlikelihoodmodel(){
-        return this.http.get(`http://healthinsight:8082/curis/member_engagement/modelSummary`)
+    getlhcmodelsummary(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhc_modelSummary`)
     }
     getlikelihoodconfusionmatric(){
         return this.http.get(`http://healthinsight:8082/curis/member_engagement/confusionMatric`)
@@ -260,7 +257,7 @@ export class GapsService {
         return this.http.post(`http://healthinsight:8082/curis//pat//pat_create/`,{
         "measureSk":model.measure,
         "patientId":gaps.memberId,
-        "compliantFlag":gaps.compliant,
+        "compliantFlag":gaps.compliantFlag,
         "lobId":model.population,
         "mrn":mrn,
         "appointmentDate":gaps.nextAppointmentDate,
@@ -272,7 +269,9 @@ export class GapsService {
         "codeType":model.codeType,
         "codes":model.codes,
         "reason":model.reason         
-        });
+        }).pipe(
+            catchError(this.handleError(' cannot insert NULL fields please enter all the values'))
+          );;
     }
     getmrnList(measuresk,query){
         return this.http.get(`http://healthinsight:8082/curis/pat/search_associated_patient_list/${measuresk}/${query}`).toPromise();
@@ -314,7 +313,7 @@ export class GapsService {
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_PHYSICAL_ACTIVITY/GOAL`)
     }
     getPhysicalActivityFrequency(value){
-        return this.http.get(`http://healthinsight:8082/curis/enrollment/getRefPhysicalActivityFrequency/${value}`)
+        return this.http.get(`http://healthinsight:8082/curis/enrollment/getQmsRefPhysicalActivityFrequency/${value}`)
     }
     getCalorieIntakeGoal(){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/dropdown_list/QMS_REF_CALORIE_INTAKE/GOAL`)
@@ -368,7 +367,7 @@ export class GapsService {
     getRewardData(id){
         return this.http.get(`http://healthinsight:8082/curis/enrollment/get_Rewards_File_Output_list/${id}`)
     }
-    getSmvDataGeneral(id){
+    getSmvGeneralData(id){
         return this.http.get(`http://healthinsight:8082/curis/smv/getSMVMemberDetails/${id}`)
     }
     getSmvDataCare(id){
@@ -391,5 +390,78 @@ export class GapsService {
     }
     getLikelihoodToClurnList(){
         return this.http.get(`http://healthinsight:8082/curis/smv/lhcMemberlistView`);
+    }
+    createRewards(model){
+        return this.http.post(`http://healthinsight:8082/curis/enrollment/insert_Rewards_Recommendations`,model)
+    }
+    downloadfile(link){
+        return this.http.get(`http://healthinsight:8082/curis/closeGaps/fileDownload?filePath=${link}`
+        ). pipe(
+        catchError(this.handleError('Upload', link)),
+      )}
+    createIntervention(model: Intervention): Observable<Intervention>{
+        return this.http.post(`http://healthinsight:8082/curis/enrollment/getFactGoalInterventions`,model)
+    }
+    getGoalsRecommendationMemberList(){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getMemberIdList/goalsRecommendations`)
+    }
+    getRewardsRecommendationMemberList(){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getMemberIdList/rewardsRecommendations`)
+    }
+    getSmvData(memberId){
+        return this.http.get(`http://healthinsight:8082/curis/smv/getSmvMember/${memberId}`)
+        
+    }
+    getNcCsv(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/nc_output`)
+    }
+    getLheCsv(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_output`)
+    }
+    getLhcCsv(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhc_member_list`)
+    }
+    getnoshowModelscroe(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_modelScore`)
+    }
+    getnoshowConfusionmetric(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/csv_confusionMatric`)
+    }
+    getHomepageCaregpas(){
+        return this.http.get(`http://healthinsight:8082/curis/memberGapList/getHomePageCareGapsList`)
+    }
+
+    getNonComplianceOutputList(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/nc_output`)
+    }
+    getncModelMetric(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/nc_modelMatric`)
+    }
+    getncModelSummary(){
+        return this.http.get(`http://healthinsight:8082/curis/qms_file/nc_modelSummary`)
+    }
+    getLhcModelMetric(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhc_modelMatric`)
+    }
+    getLheModelMetric(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/lhe_modelMatric`)
+    }
+    getpersonaClustering(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/getCPOutput`)
+    }
+    getpersonaClusteringstats(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/getCPStatistics`)
+    }
+    getpersonaClusteringfeatures(){
+        return this.http.get(`http://healthinsight:8082/curis/member_engagement/getCPFeature`)
+    }
+    getscreensforrole(id){
+        return this.http.get(`http://healthinsight:8082/curis/user_role/getScreensForRole/${id}`)
+    }
+    getselectedpages(id){
+        return this.http.get(`http://healthinsight:8082/curis/user_role/get_role_screens/${id}`)
+    }
+    updateQuickLink(model){
+        return this.http.post(`http://healthinsight:8082/curis/user_role/updateRoleFavourites`,model)
     }
 }

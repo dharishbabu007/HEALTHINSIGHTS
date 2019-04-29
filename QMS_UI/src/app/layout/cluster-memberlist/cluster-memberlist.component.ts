@@ -20,7 +20,7 @@ export class ClusterMemberListComponent implements OnInit {
         { label: 'Persona2', value: 'persona2' }
     ];
     ngOnInit() {
-        this.gapsService.getLikelihoodMeasureDetails().subscribe((data: MemberCareGaps[]) => {
+        this.gapsService.getlheMeasureDetails().subscribe((data: MemberCareGaps[]) => {
             data.forEach(element => {
                 element.age = parseInt(element.age, 10);
             });

@@ -13,7 +13,7 @@
           </div> -->
           <p-tabView>
               <p-tabPanel header="Organization Objectives" ><br>
-                <div class="row col-lg-12" style="display: -webkit-box">
+                <div class="row col-lg-12" style="display: -webkit-box;overflow: auto;">
                   <!-- <div class="col-lg-5 card round-borders" style="padding: 10px;margin-right: 25px;">
                     <div class="col-lg-12">
                       <h4>Enrollments <i class="fa fa-info-circle" aria-hidden="true" style="color: #1C7CD5;"></i></h4>
@@ -45,8 +45,8 @@
 
                       <div class="row col-lg-12  no-padding-class">
                         <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="cliamsChart"  height="20vh"></p-chart></div>
-                        <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1"    width="14vw" height="13vh"></p-chart></div>
-                        <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                        <div class="col-lg-6" style="padding-left: 0px; padding-top: 1vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1" height= "116px"></p-chart></div>
+                        <div class="col-lg-2 updownGraph">
                             <span *ngIf="cliamsyoy > 0">{{cliamsyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
                             <span *ngIf="cliamsyoy < 0">{{cliamsyoy}}% <img src="assets/images/Icon Arrow down.jpg"></span>
                         </div>
@@ -64,17 +64,17 @@
                         </div>
                       <div class="row col-lg-12  no-padding-class">
                         <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="memberHealthChart"  height="20vh"></p-chart></div>
-                        <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="memberHealthChart1"    width="14vw" height="13vh"></p-chart></div>
-                        <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                        <div class="col-lg-6" style="padding-left: 0px; padding-top: 1vh;"><p-chart type="line" [options]="options1" [data]="memberHealthChart1" height= "116px"></p-chart></div>
+                        <div class="col-lg-2 updownGraph">
                           <span *ngIf="memberHealthyoy > 0">{{memberHealthyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
                           <span *ngIf="memberHealthyoy < 0">{{memberHealthyoy}}% <img src="assets/images/Icon Arrow down.jpg"> </span>
                         </div>
                       </div>
-                      <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+                      <!-- <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div> -->
                     </div>
                 </div>
                
-                <div class="row col-lg-12"  style="display: -webkit-box">
+                <div class="row col-lg-12" style="display: -webkit-box;overflow: auto;">
                    
                     <div class="col-lg-5 card round-borders" style="padding: 10px;margin-right: 25px;">
                       <div class="col-lg-12">
@@ -82,18 +82,18 @@
                         <hr class="lineClass">
                       </div>
                       <div class="row col-lg-12" style="margin-top: 10px;">
-                          <div class="col-lg-5"><h5>Positive {{brandLoyaltyPercent}}%</h5> </div>
+                          <div class="col-lg-5"><h5>Loyalty {{brandLoyaltyPercent}}%</h5> </div>
                           <div class="col-lg-6"><h5>Year on Year</h5></div>
                         </div>
                       <div class="row col-lg-12  no-padding-class">
                           <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="brandChart"  height="20vh"></p-chart></div>
-                          <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="brandChart1"    width="14vw" height="13vh"></p-chart></div>
-                          <div class="col-lg-2" style="padding-top: 7vh;padding-right: 0px;padding-left: 0px;font-weight: bold;font-size: 1.2vw;">
+                          <div class="col-lg-6" style="padding-left: 0px; padding-top: 1vh;"><p-chart type="line" [options]="options1" [data]="brandChart1" height= "116px"></p-chart></div>
+                          <div class="col-lg-2 updownGraph">
                               <span *ngIf="brandyoy > 0">{{brandyoy}}% <img src="assets/images/Icon Arrow up.jpg"></span>
                             <span *ngIf="brandyoy < 0">{{brandyoy}}% <img src="assets/images/Icon Arrow down.jpg"></span>
                           </div>
                       </div>
-                      <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+                      <!-- <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div> -->
                     </div>
                     <div class="col-lg-5 card round-borders" style="padding: 10px">
                         <div class="col-lg-12">
@@ -106,10 +106,10 @@
                           </div>
                         <div class="row col-lg-12  no-padding-class">
                             <div class="col-lg-4"><p-chart type="doughnut" [options]="options" [data]="riskChart"  height="20vh"></p-chart></div>
-                            <div class="col-lg-6" style="padding-left: 0px; padding-top: 7vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1"    width="14vw" height="13vh"></p-chart></div>
+                            <div class="col-lg-6" style="padding-left: 0px; padding-top: 1vh;"><p-chart type="line" [options]="options1" [data]="cliamsChart1" height= "116px"></p-chart></div>
                             <div class="col-lg-2"></div>
                         </div>
-                        <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div>
+                        <!-- <div class="col-lg-12"><button type="button" class="btn btn-primary" style="float: right">View Dashboard</button></div> -->
                       </div>
                 </div>
               </p-tabPanel>
@@ -124,15 +124,15 @@
                         <tbody>
                           <tr>
                             <td>Enrollments</td>
-                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/Enrollment_Engagement/EnrollmentDashboard?:embed=y&:ShowAppBanner=false&:ShowShareOptions=true&:Display_count=no&:ShowVizHome=no']"> <i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a></td>
+                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/views/Enrollment_Engagement_v2/EnrollmentDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']"> <i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a></td>
                           </tr>
                           <tr>
-                            <td>Goasl</td>
-                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/GoalsSummary/GoalSetDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></td>
+                            <td>Goals</td>
+                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/views/GoalsSummary/GoalSetSummary?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></td>
                           </tr>
                           <tr>
                             <td>Rewards</td>
-                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/RewardSummary/RewardAnalysisDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a></td>
+                            <td>View Dashboard <a [routerLink]="['/health/frame-url','http://192.168.184.70/views/RewardsDashboard-Copy/RewardAnalysisDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i> </a></td>
                           </tr>
 
                         </tbody>

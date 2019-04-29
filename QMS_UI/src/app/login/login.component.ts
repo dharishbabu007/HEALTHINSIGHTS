@@ -78,7 +78,7 @@ onSubmit(model: Login,isValid:boolean) {
           this.router.navigateByUrl('/reset-password');  
         } 
        else if(res.loginId === model.username && res.resetPassword != 'Y' && res.status === 'Active'){
-         this.msgService.success('Login Succesfull')
+         this.msgService.success('Login Successful')
         this.router.navigateByUrl('/dashboard');
           
         }

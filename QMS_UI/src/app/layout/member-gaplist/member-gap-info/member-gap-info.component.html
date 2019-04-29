@@ -2,10 +2,10 @@
     <app-page-header [heading]="'Close Gaps'" [icon]="'fa-table'"></app-page-header>
     <div class="card">
         <div class="row">
-            <div class="col col-xl-12 col-lg-12">
+            <div class="col col-xl-12 col-lg-12 col-md-12">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <div *ngIf="gaps" class="card-text row">
+                        <div  class="card-text row">
                             <div class="col col-lg-3 col-xl-3 ">
                                 <span class="font-weight-bold" style="font-size: large">Patient Details</span><br>
                                 <hr class="lineClass">
@@ -19,29 +19,29 @@
                            
                             <br><br>
                         </div>
-                        <div *ngIf="gaps" class="card-text row">
+                        <div  class="card-text row">
                              <div class="col col-lg-3 col-xl-3">
-                                <span class="font-weight-bold">Name</span> : <a [routerLink]="['/spv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps.name}}</a>
+                                <span class="font-weight-bold">Name</span> : <a [routerLink]="['/smv', closeGaps.memberId]" *ngxPermissionsOnly="['10W']">{{closeGaps?.name}}</a>
                             </div>
                            
                             <div class="col col-lg-4 col-xl-4">
-                                <span class="font-weight-bold">Care Gap</span> : {{closeGaps.careGap}}
+                                <span class="font-weight-bold">Care Gap</span> : {{closeGaps?.careGap}}
                             </div>
                             <div class="col col-lg-4 col-xl-4">
-                                <span class="font-weight-bold">Open Date</span> : {{closeGaps.openDate | date}}
+                                <span class="font-weight-bold">Open Date</span> : {{closeGaps?.openDate | date}}
                             </div>
                            
                         </div>
                         <br>
-                        <div  *ngIf="gaps" class="row card-text">
+                        <div  class="row card-text">
                              <div class="col col-lg-3 col-xl-3 ">
-                                <span class="font-weight-bold">MID</span> : {{closeGaps.memberId}}
+                                <span class="font-weight-bold">MID</span> : {{closeGaps?.memberId}}
                             </div>
                             <div class="col col-lg-4 col-xl-4">
-                                    <span class="font-weight-bold">Assigned To</span> : {{closeGaps.assignedTo}}
+                                    <span class="font-weight-bold">Assigned To</span> : {{closeGaps?.assignedTo}}
                             </div>
                             <div class="col col-lg-4 col-xl-4"  *ngIf="provider">
-                                <span class="font-weight-bold">Target Closure Date</span> : {{closeGaps.targetDate | date}}
+                                <span class="font-weight-bold">Target Closure Date</span> : {{closeGaps?.targetDate | date}}
                             </div>
                             <div class="col col-lg-4 col-xl-4"  *ngIf="!provider">
                                 <span class="font-weight-bold">Target Closure Date</span> :
@@ -50,25 +50,25 @@
                             
                         </div>
                         <br>
-                        <div  *ngIf="gaps" class="row card-text">
+                        <div   class="row card-text">
                             
                             <div class="col col-lg-1 col-xl-1" style="padding-right: 0px">
-                                <span class="font-weight-bold">Gender</span>:{{closeGaps.gender}}
+                                <span class="font-weight-bold">Gender</span>:{{closeGaps?.gender}}
                             </div>
                             <div class="col col-lg-2 col-xl-2">
                                 <span class="font-weight-bold">DOB </span> :                         
-                                {{closeGaps.dateOfBirth | date}}
+                                {{closeGaps?.dateOfBirth | date}}
                             </div>
                            
                             <div class="col col-lg-4 col-xl-4">
-                                <span class="font-weight-bold">Status</span> : {{closeGaps.status}}
+                                <span class="font-weight-bold">Status</span> : {{closeGaps?.status}}
                             </div>
                             <!-- <div class="col col-lg-3 col-xl-3">
                                 <span class="font-weight-bold">Next Appointment Date</span> :
                             </div>
                              -->
                             <div class="col col-lg-4 col-xl-4">
-                                <span class="font-weight-bold">Last Action date</span> : {{closeGaps.lastActionDate | date}}
+                                <span class="font-weight-bold">Last Action date</span> : {{closeGaps?.lastActionDate | date}}
                             </div>
                         </div>
                     </div>
@@ -87,9 +87,9 @@
                         <hr class="lineClass">
                         <br>
                         <div class="row">
-                                <span class="col-lg-3 font-weight-bold">Priority</span>
-                                <span  class="col-lg-3 font-weight-bold" *ngIf="provider">Action on Care Gap</span> 
-                                <span class="col-lg-5 font-weight-bold" *ngIf="!provider">
+                                <span class="col-lg-3 col-md-3 font-weight-bold">Priority</span>
+                                <span  class="col-lg-3 col-md-3 font-weight-bold" *ngIf="provider">Action on Care Gap</span> 
+                                <span class="col-lg-5  col-md-5 font-weight-bold" *ngIf="!provider">
                                         Close Gap &nbsp;&nbsp;
                                         <label class="switch">
                                             <input type="checkbox" formControlName="closeGap">
@@ -102,26 +102,26 @@
                                 </span>
                             </div>
                             <div class="row">
-                                <span class="col-lg-3">
-                                <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'80%'}"></p-dropdown>
+                                <span class="col-lg-3 col-md-3">
+                                <p-dropdown formControlName="priority" [options]="priorityTypes" [style]="{'width':'80%'}" placeholder="select"></p-dropdown>
                                 </span>
-                                <span class="col-lg-3" *ngIf="provider">
+                                <span class="col-lg-3 col-md-3" *ngIf="provider">
                                 <p-dropdown formControlName="actionOnCareGap" [options]="actionTypes" [style]="{'width':'80%'}" (onChange)="actionCare($event)"></p-dropdown>
                                 </span>
-                                <span class="col-lg-3" *ngIf="mitButton">
-                                        <button pButton type="button" label="MIT" class="ui-button-primary m-2"></button>
+                                <span class="col-lg-3 col-md-3" *ngIf="mitButton">
+                                        <button pButton type="button" label="MIT" class="ui-button-primary m-2" (click)="mitscreen()"></button>
                                 </span>
                         </div>
                         <br>
                         <div class="row">
-                            <span class="col-lg-6 font-weight-bold">Payer Comments </span>
-                            <span class="col-lg-6 font-weight-bold">Provider Comments </span>
+                            <span class="col-lg-6 col-md-6 font-weight-bold">Payer Comments </span>
+                            <span class="col-lg-6 col-md-6 font-weight-bold">Provider Comments </span>
                         </div>
                         <div class="row">
-                            <span class="col-lg-6">
+                            <span class="col-lg-6 col-md-6">
                                 <textarea formControlName="payerComments" rows="3" class="form-control"></textarea>
                             </span>
-                            <span class="col-lg-6">
+                            <span class="col-lg-6 col-md-6">
                                 <textarea formControlName="providerComments" rows="3" class="form-control"></textarea>
                             </span>
                         </div>
@@ -136,7 +136,10 @@
                                     <input type="file" id="file" (change)="myUploader($event)" #fileInput> 
                             </span>
                             <span class="col-lg-6 text-right">
-                                    <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button>
+                                    <!-- <button pButton type="button" (click)="onSubmit(this.closeGapForm.value)" label="Submit" class="ui-button-primary m-2" *ngxPermissionsOnly="['10W']"></button> -->
+                                    <button type="submit" class="btn btn-primary" (click)="onSubmit(this.closeGapForm.value)" *ngxPermissionsOnly="['10W']" >
+                                            <i class="fa fa-dot-circle-o"></i> Submit
+                                    </button>
                             </span>
                         </div>
                         
@@ -219,28 +222,27 @@
             <table class="table table-bordered table-hover responsive" >
                 <thead>
                     <tr>
-                      <th *ngFor="let col of cols" >
-                          <span > 
-                                    {{col.header}}
-                          </span>
-                      </th>
+                      <th width="30%">Payer Comments</th>
+                      <th width="10%">Priority</th>
+                      <th width="30%">Provider Comments</th>
+                      <th width="25%">Action Date</th>
+                      <th width="5%">Attachment</th>
                     </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let gapsElement of remainingrows; let i=index;" >
                             <td *ngFor="let col of cols" >
-                                  <span *ngIf= "col.field == 'priority'" >
-                                       
-                                        {{gapsElement[col.field]}} 
+                                  <span *ngIf= "col.field == 'priority'">
+                                      {{gapsElement[col.field]}} 
                                   </span>
                                 <span *ngIf="col.field == 'providerComments'" >
                                         {{gapsElement[col.field]}}
                                 </span> 
                                 <span *ngIf="col.field == 'payerComments'" >
-                                   {{gapsElement[col.field]}}
+                                    {{gapsElement[col.field]}}
                                 </span>  
-                                <span *ngIf="col.field == 'uploadList'" >
-                                     {{gapsElement[col.field]}}
+                                <span *ngIf="col.field == 'uploadList'" (click)="downloadFile(gapsElement)">
+                                    <span *ngIf="gapsElement.uploadList[0]"><img src="assets/images/attachment.png" width="20px" height="20px"  pTooltip="Attachemnet"></span>
                                 </span>  
                                 <span *ngIf="col.field == 'gapDate'" >
                                    {{gapsElement[col.field] | date}}

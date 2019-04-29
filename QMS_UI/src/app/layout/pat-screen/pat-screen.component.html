@@ -1,5 +1,5 @@
 <div  style="margin: 25px;margin-top: 10px">
-        <app-page-header [heading]="'MIT'" [icon]="'fa-table'"></app-page-header>
+        <app-page-header [heading]="'Measure Improvement Tool '" [icon]="'fa-table'"></app-page-header>
     <div class="card ">
       <div class="row">
         <div class="col-lg-12">
@@ -11,17 +11,24 @@
                     <hr class="lineClass">
                     <br>
                     <div class=" row">
-                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-population">Population</span>
-                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-measure">Measure</span>
+                        <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-population">Population</span>
+                        <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-measure">Measure</span>
                     </div>
                     <div class="row">
-                        <span class="col-lg-3">
+                        <span class="col-lg-3 col-md-3">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="populationList" formControlName="population" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                         </span>
-                        <span class="col-lg-3">
+                        <span class="col-lg-3 col-md-3">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureList" formControlName="measure" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterMeasure($event)"></p-dropdown>
                         </span>
-                    </div> 
+                    </div>
+                    <div class="row">
+                            <span class="col-lg-3 col-md-3">
+                                <small *ngIf="!myForm.controls.population.valid && myForm.controls.population.touched" class="text-danger">
+                                        Population is required.
+                                </small>
+                            </span>
+                        </div> 
                     </div>
                     <hr>
                     <div class="form-group">
@@ -29,19 +36,19 @@
                             <hr class="lineClass">
                             <br>
                             <div class=" row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 col-md-3">
                                     <div class="row">
                                         <span class="col-lg-12 col-form-label font-weight-bold" for="hf-associatedPList">Associated patient list</span>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true"   [suggestions]="memberList" (onSelect)="loadMemberInfo($event)"  (completeMethod)="search($event)" placeholder="Enter Name or MRN"></p-autoComplete>
+                                        <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true"  formControlName="patientId" [suggestions]="memberList" (onSelect)="loadMemberInfo($event)"  (completeMethod)="search($event)" placeholder="Enter Name or MRN"></p-autoComplete>
                                     </div>
                                 </div>
                                 <div   class="col-lg-5">
                                         <span class="col-lg-12 row"><b>Name :</b> {{gaps?.name}}</span>
                                         <span class="col-lg-12 row"><b>MRN :</b> {{mrn}}</span>
                                         <div class="row">
-                                            <span class="col-lg-3"><b>Gender :</b> {{gaps?.gender}}</span>
+                                            <span class="col-lg-3 col-md-3"><b>Gender :</b> {{gaps?.gender}}</span>
                                             <span class="col-lg-5"><b>DoB :</b> {{gaps?.dateOfBirthSk}}</span>
                                         </div>
                                 </div>
@@ -59,35 +66,42 @@
                         <hr class="lineClass">
                         <br>
                         <div class="row">
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-patientStatus">Patient Status</span> 
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-valueSet">Value Set</span>
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-codeType">Code Type</span>
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-codes">Codes</span>
+                            <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-patientStatus">Patient Status</span> 
+                            <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-valueSet">Value Set</span>
+                            <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-codeType">Code Type</span>
+                            <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-codes">Codes</span>
                         </div> 
                         <div class="row">
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 col-md-3">
                                 <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="patientStatusList" formControlName="patientStatus" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterPatientStatus($event)"></p-dropdown>
                             </span>
-                            <span class="col-lg-3">
-                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="valueList" formControlName="valueSet" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                            <span class="col-lg-3 col-md-3">
+                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="valueList" formControlName="valueSet" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterValueSet($event)"></p-dropdown>
                             </span>
-                            <span class="col-lg-3">
-                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="codeTypeList" formControlName="codeType" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                            <span class="col-lg-3 col-md-3">
+                                <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="codeTypeList" formControlName="codeType" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}" (onChange)="filterCodeType($event)"></p-dropdown>
                             </span>
-                            <span class="col-lg-3">
+                            <span class="col-lg-3 col-md-3">
                                 <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="codesList" formControlName="codes" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                             </span>
                        </div>
+                        <div class="row">
+                            <span class="col-lg-3 col-md-3">
+                                <small *ngIf="!myForm.controls.patientStatus.valid && myForm.controls.patientStatus.touched" class="text-danger">
+                                    Patient Status is required.
+                                </small>
+                            </span>
+                        </div>
                        <div class="row">
                             <span class="col-lg-6 col-form-label font-weight-bold" for="hf-reason">Reason</span>
-                            <span class="col-lg-3 col-form-label font-weight-bold" for="hf-patientDeathRate" *ngIf="patientDateRate">Patient Death Rate</span>
+                            <span class="col-lg-3 col-md-3 col-form-label font-weight-bold" for="hf-patientDeathRate" *ngIf="patientDateRate">Patient Death Rate</span>
                        </div>
                        <div class="row">
                            <span class="col-lg-6">
                                 <textarea class="form-control" rows="3" type="text" formControlName="reason"></textarea>
                             </span>
                             
-                            <span class="col-lg-3" *ngIf="patientDateRate">
+                            <span class="col-lg-3 col-md-3" *ngIf="patientDateRate">
                                 <p-calendar formControlName="patientDeathRate" [showIcon]="true" dateFormat="dd-mm-yy" ></p-calendar>
                             </span>
                       </div> 
@@ -129,7 +143,7 @@
                 <ng-template #remainingDataPanel>
                         <p-table #dt  class="table table-bordered table-hover styletable" [scrollable]="false" [value]="patData" [columns]="cols"  selectionMode="single" dataKey="id">
                              <ng-template pTemplate="header">
-                                <tr>
+                                <tr class="header-class">
                                     <th *ngFor="let col of cols" class="header-class">
                                         {{col.header}}
                                     </th>
@@ -137,8 +151,11 @@
                             </ng-template>
                              <ng-template pTemplate="body"  let-rowData let-columns="columns">
                                     <tr>
-                                            <td  *ngFor="let col of columns">
-                                                    {{rowData[col.field]}}
+                                            <td  *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <span *ngSwitchCase="'uploadFilesList'" (click)="downloadFile(rowData)">
+                                                        <span *ngIf="rowData.uploadFilesList[0]"><i class="fa fa-file-excel-o" aria-hidden="true"></i></span>
+                                                </span>
+                                                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>  
                                             </td>
                                         </tr>
                                 

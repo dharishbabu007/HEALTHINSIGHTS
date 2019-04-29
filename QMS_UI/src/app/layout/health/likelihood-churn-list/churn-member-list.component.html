@@ -1,11 +1,11 @@
 <div> 
         <div class="col-lg-12" style="padding: 0px">
             <h2 [ngStyle]="{ 'background-color': '#F26363',
-                'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i>Likelihood To Churn Member List</h2>
+                'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Likelihood To Churn Member List</h2>
        </div>
        <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
         <div class="card">
-            <div class="col col-lg-12">
+            <div class="col-lg-12">
                 <br>
                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
                 <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="churnData" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="Member_Details" dataKey="memberId">

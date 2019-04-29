@@ -1,15 +1,16 @@
 <div class="col-lg-12" style="padding: 0px">
  
-        <h3 [ngStyle]="{ 'background-color': '#FC93A4',
-        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-user-o"></i> Personas</h3>
+        <h2 [ngStyle]="{ 'background-color': '#F26363',
+        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-user-o"></i> Personas</h2>
 </div>
+<!-- '#FC93A4'  light pink backgroundcolor -->
 <div style="margin: 25px">
         <div class="row p-3 align-items-center">
-            <div class="col-lg-12"  style="padding-bottom: 10px;"><h3>Personas</h3><hr class="lineClass"></div>
+            <!-- <div class="col-lg-12"  style="padding-bottom: 10px;"><h3>Personas</h3><hr class="lineClass"></div> -->
             <!-- <div class="col-lg-3" style="padding: 0px"> -->
                    
                 <!-- <hr class="lineclass"> --> 
-                <div class="panel panel-default card"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
+                <div class="panel panel-default card quickview-boxes"  style="background-color: #F5CC4B;border-radius: 10px; padding: 10px;margin-right: 10px;">
                         <div class="row">
                             <div class="col-lg-4">
                                     <img src="/assets/images/lazyPerson.png" width="80px" height="70px" class="user-avatar" />
@@ -38,7 +39,7 @@
                             </span>
                         </div>
                 </div>
-                <div *ngFor="let condRow of clusterLength;let i=index;"class="panel panel-default card"  style="background-color: #F7F8FA;border-radius: 10px; padding: 10px; width: 18vw;margin-right: 10px;">
+                <div *ngFor="let condRow of clusterLength;let i=index;"class="panel panel-default card quickview-boxes"  style="background-color: #F7F8FA;border-radius: 10px; padding: 10px;margin-right: 10px;">
                         <div class="row">
                             <div class="col-lg-4">
                                 <i class="fa fa-5x fa-user-circle-o "></i>
@@ -115,7 +116,7 @@
                     <div class="col-sm-12 col-lg-12" style="padding-top: 10px;">
                         <span class="col-lg-10">
                            <b>Select a cluster &nbsp;</b> 
-                            <p-dropdown placeholder="Cluster" [autoDisplayFirst]="false"  styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)"></p-dropdown>
+                            <p-dropdown [autoDisplayFirst]="false" placeholder="cluster" styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)" [(ngModel)]="selectedClusterId"></p-dropdown>
                            
                         </span>
                         <span class="col-lg-2"> <button class="btn btn-primary"  style="float: right; margin: 5px" (click)="showAllDialog()">&nbsp; View All</button> </span>

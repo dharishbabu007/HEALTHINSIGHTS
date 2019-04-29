@@ -16,8 +16,6 @@ export class RewardsComponent implements OnInit {
   gaps: any;
   personaData: any;
   reward1: any;
-  reward2: any;
-  reward3: any;
   othersList: any;
   rewardsData: any;
   cols: any;
