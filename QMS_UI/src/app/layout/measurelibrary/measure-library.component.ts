@@ -22,7 +22,7 @@ export class MeasurelibraryComponent implements OnInit {
     statusTypes = [{label: 'Active', value: 'Y'}, {label: 'Decommission', value: 'N'}];
     selectedOption=['Y'];
     certifiedData:any;
-    MIPS:boolean = false;
+    HEDIS:boolean = false;
     dropdownOptions =[{label: 'NCQA Certified',value: 'certified'},{label:'All',value:'all'}]
     constructor(private gapsService: GapsService, private route: ActivatedRoute, public router: Router,  private permissionsService: NgxPermissionsService,) {
         this.route.params.subscribe(params => {
@@ -45,8 +45,14 @@ export class MeasurelibraryComponent implements OnInit {
         // let arrayOfValues=['Y'];
         // this.selectedOption = this.statusTypes.filter(a => arrayOfValues.includes(a.value)).map(a => a.value);
        // console.log(this.selectedOption)
-       if(this.programValue == "Merit-Based Incentive Payment System (MIPS) Program"){
-           this.MIPS = true;
+       if(this.programValue == "The Healthcare Effectiveness Data and Information Set (HEDIS)"){
+           this.HEDIS = true;
+       }
+       else if(this.programValue =="test"){
+           this.HEDIS = true;
+       }
+       else{
+           this.HEDIS = false;
        }
        this.certifiedData =[];
         this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: any[]) => {

@@ -464,4 +464,10 @@ export class GapsService {
     updateQuickLink(model){
         return this.http.post(`http://healthinsight:8082/curis/user_role/updateRoleFavourites`,model)
     }
+    getloblist(){
+         return this.http.get(`http://healthinsight:8082/curis/qms/dropdown_namevalue_list/REF_LOB/LOB_ID/LOB`)
+    }
+    getproductlist(){
+        return this.http.get(`http://healthinsight:8082/curis/qms/dropdown_list/DIM_PRODUCT_PLAN/LOB_PRODUCT`)
+    }
 }
