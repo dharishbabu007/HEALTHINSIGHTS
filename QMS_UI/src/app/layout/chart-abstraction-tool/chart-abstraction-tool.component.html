@@ -127,9 +127,9 @@
             <!-- <select  [(ngModel)]="visitPatients.provider">
                 <option value="" selected disabled>Select Provider</option>
                 <option *ngFor="let data of providerList" >{{data.label}}</option>
-            </select>
-            <p-dropdown placeholder="Select Provider" [autoDisplayFirst]="false" styleClass="form-control"  [(ngModel)]="visitPatients.provider" [options]="providerList"  [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}"></p-dropdown> -->
-            <input id="ProviderName" type="text" class="form-control" [(ngModel)]="visitPatients.provider" autocomplete="off"/>
+            </select> -->
+            <p-dropdown placeholder="Select Provider" [autoDisplayFirst]="false" styleClass="form-control"  [(ngModel)]="visitPatients.provider" [options]="providerList"  [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}"></p-dropdown> 
+            <!-- <input id="ProviderName" type="text" class="form-control" [(ngModel)]="visitPatients.provider" autocomplete="off"/> -->
           </div>
           <div class="col-sm-4 form-group">
             <label class="form-label" for="encounterStartDate"><b>Encounter Start Date :</b> </label><input id="encounterStartDate" type="date" class="form-control" [(ngModel)]="visitPatients.encounterStartDate"  (ngModelChange)="validateDate($event)"/>
