@@ -25,6 +25,20 @@ public class QMSDateUtil {
 		return date;
 	}
 	
+	public static java.sql.Date getSQLDate (String dateStr, String dateFormat) {
+		if(dateFormat == null) dateFormat =  "dd-MMM-yy";
+		if(dateStr == null) return null;
+		SimpleDateFormat simpDate = new SimpleDateFormat(dateFormat);
+		java.sql.Date sqlDate = null;
+		try {
+			sqlDate = new java.sql.Date(simpDate.parse(dateStr).getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return sqlDate;
+	}	
+	
 	public static String getPhoenixDate(String date) {
 		try {
 		    return getDate(date, "dd-MMM-yy", "yyyy-MM-dd");

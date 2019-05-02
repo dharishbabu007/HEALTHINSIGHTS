@@ -64,8 +64,8 @@ public class MemberGapListController {
 	@RequestMapping(value = "/findAllMembers", method = RequestMethod.GET )
 	public ResponseEntity<List<MemberCareGapsList>> findAllMembersList() {
 		logger.info("Fetching dimMemberGaps with mid {}");
-		//List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersList();
-		List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersListFromHive();		
+		List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersList();
+		//List<MemberCareGapsList>  memberCareGapsList = memberGapList.findAllMembersListFromHive();		
 		if (memberCareGapsList == null) {
 			logger.error("Not able to find the Members .", memberCareGapsList);
 			return (ResponseEntity<List<MemberCareGapsList>>) new ResponseEntity(new CustomErrorType("dimMemberGaps with mid " + memberCareGapsList 

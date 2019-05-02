@@ -20,4 +20,6 @@ public interface QMSConstants {
 	public static final String ROLE_NURSE     = "Nurse";
 	public static final String ROLE_PAYER 	  = "Payer";
 	public static final String ROLE_PHYSICIAN = "Physician";
+	public static final String ROLE_CARE_COORDINATOR = "Care Coordinator";
+	public static final String ROLE_HI_ADMIN = "HI_Admin";
 }

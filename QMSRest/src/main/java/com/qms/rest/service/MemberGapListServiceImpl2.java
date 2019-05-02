@@ -474,6 +474,98 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 		System.out.println(" Returned memberCareGapsList size " + memberCareGapsList.size());
 		return memberCareGapsList;
 	}	
+	
+	
+	public List<MemberCareGapsList> findAllMembersListFromHiveForLanding() {
+		List<MemberCareGapsList> memberCareGapsList=new ArrayList<MemberCareGapsList>(); 
+		Map<String, MemberCareGapsList> members = new HashMap<String, MemberCareGapsList>();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			User userData = qmsConnection.getLoggedInUser();
+			if(userData == null) {
+				System.out.println(" Logged in user data is not available. ");
+				return memberCareGapsList;
+			}
+			connection = qmsConnection.getHiveConnectionBySchemaName(null, userData.getLoginId(), userData.getPassword());
+			statement = connection.createStatement();
+			
+			String memberCregapList = "select * from HEALTHIN.fact_hedis_close_gap_fav";
+			
+			resultSet = statement.executeQuery(memberCregapList);
+			Map<String, Set<Integer>> countCareGapMap = new HashMap<>(); 
+			while (resultSet.next()) {
+				String member_id =resultSet.getString("MEMBER_ID");
+				String quaMesid =resultSet.getString("QUALITY_MEASURE_ID");
+				String mapKey = member_id+"##"+quaMesid; 
+				
+				Set<Integer> countHashSet = countCareGapMap.get(member_id);
+				if(countHashSet == null) {
+					countHashSet = new HashSet<>();	
+					countCareGapMap.put(member_id, countHashSet);
+				}
+				countHashSet.add(Integer.parseInt(quaMesid));
+					
+				if(!members.containsKey(mapKey)) {
+					MemberCareGapsList memberCareGaps =new MemberCareGapsList();
+					memberCareGaps.setMember_id(member_id);
+					memberCareGaps.setAge(resultSet.getString("AGE"));
+					memberCareGaps.setGender(resultSet.getString("GENDER"));
+					memberCareGaps.setName(resultSet.getString("NAME"));
+					memberCareGaps.setRiskGrade("LOW");
+					memberCareGaps.setCompliancePotential(resultSet.getString("COMPLIANCE_POTENTIAL"));
+					memberCareGaps.setMeasureSK(resultSet.getString("QUALITY_MEASURE_ID"));
+					memberCareGaps.setCountOfCareGaps(1);
+					//For care gaps
+					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
+					memberCareGaps2.setPcp(resultSet.getString("PCP"));
+					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
+					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
+					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
+					memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
+					memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+		
+					memberCareGaps.setMembers(new ArrayList<MemberCareGaps>());
+					memberCareGaps.getMembers().add(memberCareGaps2);
+					members.put(mapKey, memberCareGaps);
+				}
+				else {
+//					MemberCareGaps memberCareGaps2 = new MemberCareGaps();
+//					memberCareGaps2.setPcp(resultSet.getString("PCP"));
+//					memberCareGaps2.setCareGaps(resultSet.getString("CARE_GAPS"));
+//					memberCareGaps2.setPlan(resultSet.getString("PLAN"));
+//					memberCareGaps2.setStatus(resultSet.getString("STATUS"));
+//				    memberCareGaps2.setTimePeriod(resultSet.getString("TIME_PERIOD"));
+//				    memberCareGaps2.setQualityMeasureId(resultSet.getString("QUALITY_MEASURE_ID"));
+					MemberCareGapsList memberCareGaps = members.get(mapKey);
+//					memberCareGaps.getMembers().add(memberCareGaps2);
+//					int carGap = memberCareGaps.getCountOfCareGaps()+1;
+					int carGap = countHashSet.size();
+					memberCareGaps.setRiskGrade(getRiskBasedOnCareGap(carGap));
+					memberCareGaps.setCountOfCareGaps(carGap);
+				}
+			}
+			if(members.size() > 0) {
+				memberCareGapsList.addAll(members.values());
+				
+				for (MemberCareGapsList memberCareGapsList2 : memberCareGapsList) {
+					String memberId = memberCareGapsList2.getMember_id();
+					Set<Integer> countMesIds = countCareGapMap.get(memberId);					
+					int carGap = countMesIds!= null?countMesIds.size():0;
+					memberCareGapsList2.setRiskGrade(getRiskBasedOnCareGap(carGap));
+					memberCareGapsList2.setCountOfCareGaps(carGap);					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			qmsConnection.closeJDBCResources(resultSet, statement, connection);
+		}	
+		
+		System.out.println(" Returned memberCareGapsList size " + memberCareGapsList.size());
+		return memberCareGapsList;
+	}	
 
 	private String getRiskBasedOnCareGap(int carGap) {
 		String risk = "LOW";
@@ -489,7 +581,8 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 
 	@Override
 	public List<MemberCareGapsList> getHomePageCareGapsList() {
-		List<MemberCareGapsList> memberCareGapsList = findAllMembersList();
+		//List<MemberCareGapsList> memberCareGapsList = findAllMembersList();
+		List<MemberCareGapsList> memberCareGapsList = findAllMembersListFromHiveForLanding();
 		List<MemberCareGapsList> memberCareGapsFinalList = new LinkedList<MemberCareGapsList>();
 		Map<String, MemberCareGapsList> memberCareGapsListMap = new LinkedHashMap<>();
 		MemberCareGapsList memberCareGapsListObj = null;
@@ -520,7 +613,10 @@ public class MemberGapListServiceImpl2 implements MemberGapListService {
 			}
 		}
 		memberCareGapsFinalList.addAll(memberCareGapsListMap.values());
-		return memberCareGapsFinalList.subList(0, 3);
+		if(memberCareGapsFinalList.size() > 3)
+			return memberCareGapsFinalList.subList(0, 3);
+		else
+			return memberCareGapsFinalList;
 	}
 
 }
