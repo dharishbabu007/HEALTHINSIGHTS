@@ -94,6 +94,16 @@ loadPatientInfo(memberString) {
                 this.abstrationService.getVisit(this.memberID).subscribe((data: any) => {
                    
                     this.visitPatients = data;
+                    console.log(this.visitPatients)
+                    if(this.visitPatients.provider){
+                        this.abstrationService.getProviderNames().subscribe((data:any)=>{
+                            let temp = data.filter(element =>{
+                                this.visitPatients == element.value
+                            });
+                            console.log(temp)
+                            this.visitPatients.provider = temp[0].value;
+                        })
+                    }
                                       //console.log( this.visitPatients);
                 });
           
