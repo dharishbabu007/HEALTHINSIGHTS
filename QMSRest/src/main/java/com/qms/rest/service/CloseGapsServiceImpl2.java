@@ -261,7 +261,8 @@ public class CloseGapsServiceImpl2 implements CloseGapsService {
 		String roleName = userRoleService.getRole(roleId);
 		String updateStatus = null;
 		System.out.println(roleName + " current status --> " + status);
-		if(roleName.equalsIgnoreCase(QMSConstants.ROLE_PAYER)) {
+		if(roleName.equalsIgnoreCase(QMSConstants.ROLE_CARE_COORDINATOR) || 
+				roleName.equalsIgnoreCase(QMSConstants.ROLE_HI_ADMIN)) {
 			if(closeGap != null && (closeGap.equalsIgnoreCase("Y") || closeGap.equalsIgnoreCase("true")))
 				updateStatus = "Close by Payer";
 			else if(status.equalsIgnoreCase("Open")) 

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qms.rest.exception.QMSException;
 import com.qms.rest.model.LhcMemberView;
 import com.qms.rest.model.LhrMemberListView;
 import com.qms.rest.model.RewardSet;
@@ -90,7 +89,11 @@ public class SMVServiceImpl implements SMVService {
 				memberDetails.setDepartmentName(resultSet.getString("DEPARTMENT_NAME"));
 				memberDetails.setNoShowLikelihood(resultSet.getString("NOSHOW_LIKELIHOOD"));
 				memberDetails.setNoShow(resultSet.getString("NOSHOW"));
-				memberDetails.setSsn(resultSet.getString("SSN"));
+				String ssn = resultSet.getString("SSN");
+				if(ssn != null && ssn.equalsIgnoreCase("Not Authorized"))
+					memberDetails.setSsn("***-**-****");
+				else
+					memberDetails.setSsn(ssn);
 
 				memberDetailsList.add(memberDetails);
 			}

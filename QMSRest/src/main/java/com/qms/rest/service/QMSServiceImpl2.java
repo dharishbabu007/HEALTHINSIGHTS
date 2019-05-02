@@ -126,7 +126,7 @@ public class QMSServiceImpl2 implements QMSService {
 	private String getStringFromList (List<String> values) {
 		if(values == null || values.isEmpty())
 			return null;
-		return values.toString().substring(0, values.toString().length()-1);
+		return values.toString().substring(1, values.toString().length()-1);
 	}
 	
 	@Override
@@ -262,6 +262,10 @@ public class QMSServiceImpl2 implements QMSService {
 	public Set<String> getMeasureDropDownList(String tableName, String columnName) {
 		Set<String> dataSet = new HashSet<>();
 		
+		Set<String> restictRowsSet = new HashSet<>();
+		restictRowsSet.add("REF_MED_VALUE_SET:NDC_CODE");
+		restictRowsSet.add("REF_SDOH:SDOH_PROBLEM");
+		
 		Statement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
@@ -274,7 +278,10 @@ public class QMSServiceImpl2 implements QMSService {
 			while (resultSet.next()) {
 				data = resultSet.getString(columnName);
 				if(data != null && !data.trim().isEmpty() && !data.equalsIgnoreCase("n/a") && !data.equalsIgnoreCase("#n/a"))
-					dataSet.add(data);			
+					dataSet.add(data);	
+				if(restictRowsSet.contains((tableName+":"+columnName).toUpperCase())&&dataSet.size() > 50) {
+					break;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

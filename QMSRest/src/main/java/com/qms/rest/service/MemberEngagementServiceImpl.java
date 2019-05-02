@@ -1079,7 +1079,8 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 		}
 		List<String> rolesList = Arrays.asList(new String[]{"9", "10", "11"});
 		String roleId = userData.getRoleId();
-		if(!rolesList.contains(roleId) && !userData.getLoginId().equalsIgnoreCase("demo_user")) {
+		if(!rolesList.contains(roleId) && !(userData.getLoginId().equalsIgnoreCase("demo_user")||
+				userData.getLoginId().equalsIgnoreCase("admin"))) {
 			System.out.println(" Unauthorized role.. " +roleId);
 			return setOutput;
 		}
@@ -1090,7 +1091,8 @@ public class MemberEngagementServiceImpl implements MemberEngagementService {
 			//connection = qmsConnection.getHiveConnection();
 			connection = qmsConnection.getHiveConnectionBySchemaName(QMSConnection.HIVE_HEALTHIN_SCHEMA);
 			statement = connection.createStatement();
-			if(userData.getLoginId().equalsIgnoreCase("demo_user"))
+			if(userData.getLoginId().equalsIgnoreCase("demo_user") || 
+					userData.getLoginId().equalsIgnoreCase("admin"))
 				resultSet = statement.executeQuery("select * from role_landing_page");
 			else
 				resultSet = statement.executeQuery("select * from role_landing_page where role_id="+roleId);
