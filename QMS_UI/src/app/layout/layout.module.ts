@@ -94,6 +94,10 @@ import {  SmvComponent } from './smv/smv.component';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {CarouselModule} from 'primeng/carousel';
 import {PickListModule} from 'primeng/picklist';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
+import { ChartAbstractionToolComponent } from './chart-abstraction-tool/chart-abstraction-tool.component';
+import { ChartAbstractionToolDetComponent } from './chart-abstraction-tool-det/chart-abstraction-tool-det.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -131,7 +135,8 @@ import {PickListModule} from 'primeng/picklist';
         InputSwitchModule,
         ToggleButtonModule,
         CarouselModule,
-        PickListModule
+        PickListModule,
+        AngularDualListBoxModule
     ],
 
     declarations: [LayoutComponent,
@@ -195,7 +200,9 @@ import {PickListModule} from 'primeng/picklist';
         SmvComponent,
         NcStatsComponent,
         PersonaClusteringComponent,
-        PCStatsComponent],
+        PCStatsComponent,
+        ChartAbstractionToolComponent,
+        ChartAbstractionToolDetComponent],
         
  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
         

@@ -1,0 +1,499 @@
+<app-page-header [heading]="'Chart Abstraction Tool'" [icon]="'fa-table'" class="chart-abstraction-det mar-left-20"></app-page-header>
+<div class="card">
+<div class="chart-abstraction-tool-4">
+        <div class="chart-subheading">Enter Patient Data</div>
+        <div class="chart-action-container">
+          <button type="button" class="ui-button btn btn-primary btn-color float-right mar-left-20" style="padding: 5px 10px" (click)="showSaveDialog()" >Submit</button>
+        </div>
+        <div class="chart-abstraction-form">
+          <div class="row chart-abstraction-form-inpwid">
+            <div class="col-sm-4 form-group">
+              <label class="form-label" for="patientId">Patient ID : </label>
+              <input id="patientId" type="text" [(ngModel)]= "patientDetail.patientId" class="form-control" disabled />
+              
+            </div>
+            <div class="col-sm-4 form-group">
+              <label class="form-label" for="firstName">First Name : </label>
+              <input id="firstName" type="text" [(ngModel)]= "patientDetail.firstName" class="form-control" disabled/>
+            </div>
+            <div class="col-sm-4 form-group">
+              <label class="form-label" for="lastName">Last Name : </label>
+              <input id="lastName" type="text" [(ngModel)]= "patientDetail.lastName" class="form-control" disabled />
+            </div>
+            <div class="col-sm-4 form-group">
+              <label class="form-label" for="chartDateOfBirth">DOB : </label>
+              <input id="chartDateOfBirth" type="text" [(ngModel)]= "patientDetail.dob" class="form-control" disabled />
+            </div>
+            <div class="col-sm-4 form-group">
+              <label class="form-label"  for="chartGender">Gender : </label>
+              <input id="chartGender" type="text" class="form-control" [(ngModel)]= "patientDetail.gender" disabled />
+            </div>
+            <div class="col-sm-4 form-group">
+            </div>
+          </div>
+          
+          <div class="chart-abstraction-form-tab">
+            <p-tabView class="chart-abstraction-form-tab-list" (onChange)="handleChange($event)">
+              <p-tabPanel header="Allergies" >
+                <div class="chart-content">
+                  <table id="chart-abstraction-tab-table">
+                    <tr>
+                      <th style="width:15%">Allergen </th>
+                      <th style="width:15%">Reaction </th>
+                      <th style="width:18%">Start Date </th>
+                      <th style="width:18%">End Date </th>
+                      <th style="width:31%">Notes</th>
+                      <th style="width:3%">Action</th>
+                    </tr>
+      <tr *ngFor="let item of allergies">
+        <td>
+          <p-autoComplete id="hf-member-allergen"  name="hf-member-allergen"   [(ngModel)]="item.allergiesDrug" [forceSelection]="true"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Allergies', 'ALLERGY_NAME')"  placeholder="Search allergen"></p-autoComplete>
+        </td>
+        <td>
+          <p-autoComplete id="hf-member-reaction"  name="hf-member-reaction"  [(ngModel)]="item.allergiesReaction"  [forceSelection]="true" 
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Reactions', 'REACTION')"  placeholder="Search reaction"></p-autoComplete>
+        </td>
+        <td> <input type="date" class="form-control" [(ngModel)]="item.allergiesStartDate" value=""  /></td>
+        <td> <input type="date" class="form-control" [(ngModel)]="item.allergiesEndDate" value="" /></td>
+        <td> <textarea class="form-control" [(ngModel)]="item.allergiesNotes"> </textarea></td>
+        <td class="text-center" (click)= "addRow('allergy')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:18%">Allergen </th>
+      <th style="width:18%">Reaction </th>
+      <th style="width:18%">Start Date </th>
+      <th style="width:18%">End Date </th>
+      <th style="width:18%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td style="width:18%">
+          {{item.allergiesDrug}}
+      </td>
+      <td style="width:18%">
+        {{item.allergiesReaction}}
+      </td>
+      <td>
+        {{item.allergiesStartDate}}
+      </td>
+      <td style="width:18%"> 
+        {{item.allergiesEndDate}}
+      </td>
+      <td style="width:18%"> 
+        {{item.allergiesNotes}}
+      </td>
+     
+      </tr>
+      </table>
+      </div>
+      
+      
+      </p-tabPanel>
+      <p-tabPanel header="Medications"  >
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:9%">NDC Drug Code </th>
+              <th style="width:9%">Days Supplied </th>
+              <th style="width:5%">Quantity </th>
+              <th style="width:8%">Prescription Date</th>
+              <th style="width:8%">Start Date</th>
+              <th style="width:8%">Dispensed Date</th>
+              <th style="width:8%">End Date</th>
+              <th style="width:9%">Provider NPI</th>
+              <th style="width:9%">Pharmacy NPI</th>
+              <th style="width:20%">Notes </th>
+              <th style="width:3%">Action</th>
+              
+              
+      
+            </tr>
+            <tr *ngFor="let item of medications">
+              <td>
+                <p-autoComplete id="hf-member-drugcodename"  name="hf-member-drugcodename"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+                   [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Med_Value_Set', 'NDC_Code')" [(ngModel)]="item.medicationsNdcDrugCodeName"   placeholder="NDC Drug Code"></p-autoComplete>
+              </td>
+              <td>
+                <input type="number" class="form-control"  [(ngModel)]="item.medicationsDaysSupplied" placeholder=" Days supplied" value ="" />
+              </td>
+              <td>
+                <input type="number" class="form-control"  [(ngModel)]="item.medicationsQuantity" placeholder="Quantity" value ="" />
+              </td>
+             
+              <td>
+                <input type="date" class="form-control"  [(ngModel)]="item.medicationsPrescriptionDate"  value ="" />
+              </td>
+              <td>
+                <input type="date" class="form-control"  [(ngModel)]="item.medicationsStartDate"  value ="" />
+                
+              </td>
+              <td>
+                <input type="date" class="form-control"  [(ngModel)]="item.medicationsDispensedDate"  value ="" />
+              </td>
+              <td>
+               <input type="date" class="form-control"  [(ngModel)]="item.medicationsEndDate"  value ="" />
+              </td>
+              <td>
+                 <input type="text" class="form-control"  [(ngModel)]="item.medicationsProviderNpi" placeholder="provider NPI" value ="" />
+              </td>
+              <td>
+                <input type="text" class="form-control"  [(ngModel)]="item.medicationsPharmacyNpi" placeholder="pharmacy NPI" value ="" />
+              </td>
+              <td>
+                  <textarea [(ngModel)]="item.medicationsNotes" class="form-control" value =""></textarea>
+                  
+                 
+                </td>
+                <td class="text-center" (click)= "addRow('medication')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+              
+            </tr>
+          </table>
+        </div>
+        <br/>
+        <h4 class="text-center">History: </h4>
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:150px">NDC Drug Code </th>
+              <th style="width:150px">Days Supplied </th>
+              <th style="width:150px">Quantity </th>
+              <th style="width:150px">Prescription Date</th>
+              <th style="width:150px">Start Date</th>
+              <th style="width:150px">Dispensed Date</th>
+              <th style="width:150px">End Date</th>
+              <th style="width:150px">Provider NPI</th>
+              <th style="width:150px">Pharmacy NPI</th>
+              <th style="width:150px">Notes </th>
+              
+              
+              
+      
+            </tr>
+            <tr *ngFor="let item of patientHistoryData">
+              <td  style="width:150px">
+                  {{item.medicationsNdcDrugCodeName}}
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsDaysSupplied}}
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsQuantity}}
+      
+              </td>
+              
+              <td  style="width:150px">
+                {{item.medicationsPrescriptionDate}}
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsStartDate}}
+              </td>
+              <td  style="width:150px">
+
+                {{item.medicationsDispensedDate}}
+      
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsEndDate}}
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsProviderNpi}}
+              </td>
+              <td  style="width:150px">
+                {{item.medicationsPharmacyNpi}}
+              </td>
+              <td  style="width:150px">
+                  {{item.medicationsNotes}}
+                </td>
+            </tr>
+          </table>
+        </div>
+      
+      
+      </p-tabPanel>
+      <p-tabPanel header="Immunizations" >
+      
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:27%">Immunization Name </th>
+      <th style="width:20%">Start Date </th>
+      <th style="width:20%">End Date </th>
+      <th style="width:30%">Notes</th>
+      <th style="width:3%">Action</th>
+      </tr>
+      <tr *ngFor="let item of immunizations">
+        <td>
+          <p-autoComplete id="hf-member-immun-name"  name="hf-member-immun-name"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Immunizations', 'IMMUNIZATION_NAME')" [(ngModel)]="item.immunizationsName"  placeholder="Search immunization"></p-autoComplete>
+        </td>
+        <td> <input type="date" class="form-control"  [(ngModel)]="item.immunizationsStartDate"  value ="" /></td>
+        <td><input type="date" class="form-control"  [(ngModel)]="item.immunizationsEndDate"  value ="" /></td>
+        <td> <textarea class="form-control"  [(ngModel)]="item.immunizationsNotes"></textarea></td>
+        <td class="text-center" (click)= "addRow('immunization')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:25%">Immunization Name </th>
+      <th style="width:25%">Start Date </th>
+      <th style="width:25%">End Date </th>
+      <th style="width:25%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td>
+            {{item.immunizationsName}}
+        </td>
+        <td>
+            {{item.immunizationsStartDate}}
+        </td>
+        <td>
+            {{item.immunizationsEndDate}}
+        </td>
+        <td>
+            {{item.immunizationsNotes}}
+        </td>
+      
+      </tr>
+      </table>
+      </div>
+      
+      </p-tabPanel>
+      <p-tabPanel header="Diseases" >
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:27%">Disease </th>
+      <th style="width:20%">Diagnosis Date </th>
+      <th style="width:20%">End Date </th>
+      <th style="width:30%">Notes</th>
+      <th style="width:3%">Action</th>
+      </tr>
+      <tr *ngFor="let item of diseases">
+        <td>
+          <p-autoComplete id="hf-member-disease"  name="hf-member-disease"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_ICD', 'CCS_CATEGORY_DESC')" [(ngModel)]="item.disease"  placeholder="Search diseases"></p-autoComplete>
+        </td>
+        <td> 
+        <input type="date" class="form-control" value="" [(ngModel)]="item.diseaseDiagnosisDate"  placeholder="Diagnosis date" />
+        </td>
+        <td> <input type="date" class="form-control" [(ngModel)]="item.diseaseEndDate" value="" placeholder="End Date" /></td>
+        <td> <textarea class="form-control" [(ngModel)]="item.diseaseNotes" placeholder="Notes"> </textarea></td>
+        <td class="text-center" (click)= "addRow('disease')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:25%">Disease </th>
+      <th style="width:25%">Diagnosis Date </th>
+      <th style="width:25%">End Date </th>
+      <th style="width:25%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td>
+          {{item.disease}}
+        </td>
+        <td> {{item.diseaseDiagnosisDate}}</td>
+        <td> {{item.diseaseEndDate}} </td>
+        <td>{{item.diseaseNotes}} </td>
+      
+      </tr>
+      </table>
+      </div>
+      </p-tabPanel>
+      <p-tabPanel header="SDOH" >
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:31%">Category </th>
+      <th style="width:33%">Problems </th>
+      <th style="width:33%">Notes</th>
+      <th style="width:3%">Action</th>
+      </tr>
+      <tr *ngFor="let item of sdohs">
+        <td>
+          <p-autoComplete id="hf-member-sdoh-cat"  name="hf-member-sdoh-cat"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_SDOH', 'SDOH_CATEGORY')" [(ngModel)]="item.sdohCategory"  placeholder="Search Category"></p-autoComplete>
+        </td>
+        <td>
+          <p-autoComplete id="hf-member-sdoh-problem"  name="hf-member-sdoh-problem"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_SDOH', 'SDOH_PROBLEM')" [(ngModel)]="item.sdohProblem"  placeholder="Search Problems"></p-autoComplete>
+        </td>
+        <td> <textarea class="form-control" placeholder="Notes" [(ngModel)]="item.sdohNotes"> </textarea></td>
+        <td class="text-center" (click)= "addRow('sdoh')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:33%">Category </th>
+      <th style="width:33%">Problems </th>
+      <th style="width:33%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td>
+          {{item.sdohCategory}}
+        </td>
+        <td>  
+          {{item.sdohProblem}}
+      
+          <td>
+          {{item.sdohNotes}}
+          </td>
+      
+      </tr>
+      </table>
+      </div>
+      </p-tabPanel>
+      <p-tabPanel header="Substance Use" >
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:31%">Substance </th>
+      <th style="width:33%">Frequency </th>
+      <th style="width:33%">Notes</th>
+      <th style="width:3%">Action</th>
+      </tr>
+      <tr *ngFor="let item of substances">
+        <td>
+          <p-autoComplete id="hf-member-substance"  name="hf-member-substance"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Substance', 'SUBSTANCE')"  [(ngModel)]="item.substanceUse" placeholder="Search Substance"></p-autoComplete>
+        </td>
+        <td>
+          <input type="text" placeholder="Enter frequency" [(ngModel)]="item.substanceFrequency" class="form-control">
+          <td>
+            <textarea class="form-control" placeholder="Notes" [(ngModel)]="item.substanceNotes"> </textarea>
+          </td>
+          <td class="text-center" (click)= "addRow('substance')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:33%">Substance </th>
+      <th style="width:33%">Frequency </th>
+      <th style="width:33%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td>
+          {{item.substanceUse}}
+        </td>
+        <td>
+            {{item.substanceFrequency}}
+        </td>
+        <td>
+            {{item.substanceNotes}}
+         </td>
+      
+      </tr>
+      </table>
+      </div>
+      </p-tabPanel>
+      <p-tabPanel header="Family History" >
+        <div class="chart-content">
+          <table id="chart-abstraction-tab-table">
+            <tr>
+              <th style="width:20%">Relation </th>
+              <th style="width:20%">Status </th>
+              <th style="width:20%">Disease </th>
+              <th style="width:33%">Notes</th>
+              <th style="width:7%">Action</th>
+      </tr>
+      <tr *ngFor="let item of familyhistorys">
+        <td>
+          <p-autoComplete id="hf-member-family-relation"  name="hf-member-family-relation"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Relations', 'RELATION')"  [(ngModel)]="item.familyHistoryRelation"  placeholder="Search Relation"></p-autoComplete>
+        </td>
+        <td>
+           <!-- <select  [(ngModel)]="item.familyHistoryStatus">
+                <option value="" selected disabled>Select any one</option>
+                <option *ngFor="let item of familystatus" >{{item}}</option>
+            </select> -->
+            <p-dropdown placeholder="Select status" [autoDisplayFirst]="false" styleClass="form-control" [(ngModel)]="item.familyHistoryStatus" [options]="statusList" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}"></p-dropdown>
+        
+        </td>
+        <td>
+          <p-autoComplete id="hf-member-family-disease"  name="hf-member-family-disease"  [forceSelection]="true"  (onSelect)="loadPatientInfo($event)"
+             [suggestions]="memberList"  (completeMethod)="search($event, 'Ref_Diseases', 'DISEASE')" [(ngModel)]="item.familyHistoryDisease"  placeholder="Search Disease"></p-autoComplete>
+        </td>
+        <td> <textarea class="form-control" placeholder="Notes" [(ngModel)]="item.familyHistoryNotes"> </textarea></td>
+        <td class="text-center" (click)= "addRow('familyhistory')"> <i class="fa fa-plus" aria-hidden="true"></i> </td>
+      </tr>
+      </table>
+      </div>
+      <br/>
+      <h4 class="text-center">History: </h4>
+      <div class="chart-content">
+        <table id="chart-abstraction-tab-table">
+          <tr>
+            <th style="width:25%">Relation </th>
+      <th style="width:25%">Status </th>
+      <th style="width:25%">Disease </th>
+      <th style="width:25%">Notes</th>
+      
+      </tr>
+      <tr *ngFor="let item of patientHistoryData">
+        <td>
+          {{item.familyHistoryRelation}}
+        </td>
+        <td>
+            {{item.familyHistoryStatus}}
+        </td>
+        <td>
+            {{item.familyHistoryDisease}}
+        </td>
+        <td>
+            {{item.familyHistoryNotes}}
+        </td>
+      
+      </tr>
+      </table>
+      </div>
+      </p-tabPanel>
+      </p-tabView>
+      </div>
+      
+      </div>
+      
+      </div>
+
+</div>
+
+<div class="selection-panel col-lg-12" style>
+<p-dialog #p3 [(visible)]="displayconfirmBox" [modal]="true" [responsive]="true" [minY]="70" 
+[baseZIndex]="10" header="Save Confirmation">
+<div class="col-lg-12">
+Do you want to save the changes?
+<br/>
+<div class="col-lg-12">
+<span style="margin-left:270px;"><button type="button" class="btn btn-primary btn-color " (click) = "submitChartToolData()">OK</button></span>
+<span style="margin-left:5px;"><button type="button" class="btn btn-primary btn-color " (click)="hideSaveDialog()">Cancel</button></span>
+</div>
+</div>
+</p-dialog>
+      

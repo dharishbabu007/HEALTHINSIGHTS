@@ -43,6 +43,9 @@ import {  SmvComponent } from './smv/smv.component';
 import { NcStatsComponent } from './non-compliance-statistics/ncStats.component';
 import { PersonaClusteringComponent } from './persona-clustering/persona-clustering.component';
 import { PCStatsComponent } from './persona-clustering-statistics/pc-stats.component';
+import { ChartAbstractionToolComponent } from './chart-abstraction-tool/chart-abstraction-tool.component';
+import {ChartAbstractionToolDetComponent} from './chart-abstraction-tool-det/chart-abstraction-tool-det.component'
+
 const routes: Routes = [
     {
         path: '',
@@ -134,6 +137,10 @@ const routes: Routes = [
             data: { 
               expectedRole: '4'
             } },
+            { path: 'Measure Editor', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '4'
+            } },
             { path: 'measurecreator/:measureId/:type', component: MeasurecreatorComponent,   canActivate: [RoleGuardService], 
             data: { 
               expectedRole: '4' || '5'
@@ -188,13 +195,25 @@ const routes: Routes = [
             { path: 'pat-screen', component:PatComponent},
             { path: 'pat-screen/:memberId/:measureSK/:plan', component:PatComponent},
             { path: 'pat-screen/:memberId/:measureSK', component:PatComponent},
+            { path: 'MIT', component:PatComponent},
             { path: 'r-studio', component:RStudioComponent},
             { path: 'ncStats', component:NcStatsComponent},
             { path: 'persona-clustering', component:PersonaClusteringComponent},
-            { path: 'pc-stats', component:PCStatsComponent}
+            { path: 'pc-stats', component:PCStatsComponent},
+            { path: 'chart-abstract', component:ChartAbstractionToolComponent,  canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '12'
+            } },
+            { path: 'Chart Abstraction Tool', component:ChartAbstractionToolComponent,  canActivate: [RoleGuardService], 
+            data: { 
+              expectedRole: '12'
+            } },
+            { path: 'chart-abstract-det', component:ChartAbstractionToolDetComponent}
+
         ]
     },
     { path: 'health', loadChildren: './health/health.module#HealthModule' },
+    { path: 'Healthy Me', loadChildren: './health/health.module#HealthModule' },
 ];
 
 @NgModule({

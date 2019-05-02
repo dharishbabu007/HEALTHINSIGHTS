@@ -474,3 +474,20 @@ html[dir="rtl"] {
     height: 100%;
   }
 }
+
+.chart-abstraction-form-tab ul li {
+  padding: 5px 20px !important;
+}
+.chart-abstraction-tool-4 #chart-abstraction-tab-table .ui-autocomplete-panel {
+  bottom: 37px !important;
+  top: inherit !important;
+}
+.chart-abstraction-tool-4 #chart-abstraction-tab-table input {
+  width: 150px !important;
+  margin: 0 auto;
+}
+.chart-abstraction-tool-4 #chart-abstraction-tab-table textarea {
+  width: 220px !important;
+  margin: 0 auto;
+}
+

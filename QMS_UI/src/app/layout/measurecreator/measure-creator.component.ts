@@ -15,6 +15,7 @@ import * as FileSaver from 'file-saver';
   providers: [GapsService]
 })
 export class MeasurecreatorComponent implements OnInit {
+  downloadJsonHref:any;
   value: Date;
   public myForm: FormGroup;
   public myForm1: FormGroup;
@@ -38,6 +39,9 @@ export class MeasurecreatorComponent implements OnInit {
   samplingButton: boolean = false;
   mrssList: any;
   mrssSampleList: any;
+  LobNames:any;
+  ProductNames:any;
+
   dataSoucreTypes = [{label:"Admin",value:1},{label:"ECDS",value:2},{label:"Hybrid",value:3},{label:"Survey",value: 4}];
 
 
@@ -88,7 +92,9 @@ fileUrl:any;
           p50:[],
           p90:[],
           measureSourceId:[],
-          collectionSource:[]
+          collectionSource:[],
+          product:[],
+          payer:[]
         });
         this.myForm1 = this._fb.group({
           sampleSize:[''],
@@ -251,6 +257,7 @@ fileUrl:any;
     cols: any[];
     cols2: any[];
  ngOnInit() {
+  this.ProductNames=[];
   this.gapsService.getDropDownPrograms().subscribe((data: any) => {
     this.programList = [];
     this.Repositry =data;
@@ -274,6 +281,18 @@ fileUrl:any;
     data.forEach(element => {
       this.measureTypes.push({label: element.name, value: element.name});
     });
+  });
+  this.gapsService.getloblist().subscribe((data: any)=>{
+    this.LobNames =[];
+    data.forEach(element =>{
+      this.LobNames.push({label:element.name,value:element.value})
+    })
+  });
+  this.gapsService.getproductlist().subscribe((data:any)=>{
+    this.ProductNames =[];
+    data.forEach(element =>{
+      this.ProductNames.push({label:element,value:element})
+    })
   });
    if (this.measureId) {
     this.gapsService.getMeasureInfo(this.measureId).subscribe((data: any) => {
@@ -308,7 +327,7 @@ fileUrl:any;
   }
  
  setMeasureInfo(measureInfo) {
- //  console.log(measureInfo)
+//  console.log(measureInfo)
    if (measureInfo.isActive === 'N' && this.type== '1') {
     this.myForm.disable();
     this.disableForm = true;
@@ -334,6 +353,8 @@ fileUrl:any;
    this.myForm.controls['collectionSource'].setValue(measureInfo.collectionSource);
    this.myForm1.controls['sampleSize'].setValue(measureInfo.mrss);
    this.myForm1.controls['overSampleRate'].setValue(measureInfo.overFlowRate);
+    this.myForm.controls['payer'].setValue(measureInfo.payer);
+    this.myForm.controls['product'].setValue(measureInfo.product)
    const temp =this.Repositry.filter(element =>element.name == measureInfo.programName);
    this.gapsService.getMeasureCategory(temp[0].value).subscribe((res:any)=> {
     const data = res;
@@ -356,22 +377,36 @@ fileUrl:any;
     this.myForm.controls['id'].setValue(measureInfo.id);
    }
  }
+//  onLobSelection(event){
+//    if(event.value.length <1){
+//     this.gapsService.getproductlist(event.value).subscribe((data:any)=>{
+//       data.forEach(element =>{
+//         this.ProductNames.push({label:element,value:element})
+//       })
+//     })
+//    }
+//    else{
+//      let temp = event.value.length;
+//      let lobid = event.value[temp-1]
+//     this.gapsService.getproductlist(lobid).subscribe((data:any)=>{
+//       data.forEach(element =>{
+//         this.ProductNames.push({label:element,value:element})
+//       })
+//     })
+//    }
+//  }
 downloadForm(event){
   var mediaType = 'text/plain';
   event = JSON.stringify(event);
   event = event.split(/,/g).join('\n');
-  event = event.split("{").join(" ");
-  event = event.split("}").join(" ");
-  event = event.split('"').join(" ");
-  event = event.split('"').join(" ");
-  var blob = new Blob([event], {type: 'application/json'});
- 
-  var filename = 'test.txt';
+  event = event.split("{").join("");
+  event = event.split("}").join("");
+  event = event.split('"').join("");
+  event = event.split('"').join("");
+  var blob = new Blob([event], {type: "text/plain;charset=utf-8"});
+  var filename = 'test.doc';
   FileSaver.saveAs(blob, filename);
 }
-
-
-
 
  validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
@@ -384,9 +419,9 @@ downloadForm(event){
   });
 
 }
-
+temppayer:any;
   submitPc(model: Measurecreator, isValid: boolean) {
-
+this.temppayer =[];
     if (this.myForm.valid) {
   
        this.submitted = true;
@@ -399,6 +434,7 @@ downloadForm(event){
       model.endDate = this.formatDate(model.endDate);
       model.mrss =  this.myForm1.controls['sampleSize'].value;
       model.overFlowRate =  this.myForm1.controls['overSampleRate'].value;
+      // console.log(model)
     this.gapsService.createMeasure(model).subscribe( (res: any) => {
       if (res.status === 'SUCCESS') {
         this.msgService.success('Measure created Successfully');
@@ -535,4 +571,6 @@ export interface Measurecreator {
     datacollection:number;
     mrss:string;
     overFlowRate: string;
+    payer:any;
+    product:any;
    }

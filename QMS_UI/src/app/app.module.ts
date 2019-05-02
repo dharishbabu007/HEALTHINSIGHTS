@@ -24,6 +24,8 @@ import {AnnyangService} from './shared/services/annyang.service';
 
 import {ConfirmationService} from 'primeng/api';
 import { RoleGuardService } from './shared/services/RouteGuard.service';
+import { AbstractionService } from './shared/services/abstraction.service';
+
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,6 +63,7 @@ export const createTranslateLoader = (http: HttpClient) => {
       AnnyangService,
       ConfirmationService,
       RoleGuardService,
+       AbstractionService,
       {provide: LocationStrategy, useClass: HashLocationStrategy},
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
      

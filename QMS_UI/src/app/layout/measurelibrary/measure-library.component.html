@@ -3,7 +3,7 @@
     <div class="card">
     <div class="row" style="margin: 20px">
         <div class="col col-lg-12 ">
-            <p-dropdown placeholder="Select" *ngIf="!MIPS" [autoDisplayFirst]="false" [options]="dropdownOptions" (onChange)="filterCategory($event)" ></p-dropdown>
+            <p-dropdown placeholder="Select" *ngIf="HEDIS" [autoDisplayFirst]="false" [options]="dropdownOptions" (onChange)="filterCategory($event)" ></p-dropdown>
             <button type="button" *ngxPermissionsOnly="['6D']" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right;"></button>
             <br><br>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" exportFilename="Quality_Measures" >
@@ -54,9 +54,10 @@
                         <td >
                             <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']" style="cursor: pointer;" pTooltip="Create Copy"></i>&nbsp;
                             <span [ngSwitch]="rowData['name']">
-                                <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/IMAPerformanceDashboard/MeasureDetails_IMA?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Immunizations for Adolescents'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/IMAPerformanceDashboard/MeasureDetails_IMA?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Immunizations for Adolescents'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
                                 <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CDCPerformanceDashboard/MeasureDetails_CDC?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Comprehensive Diabetes Care'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
-                                <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CBPPerformanceDashboard/MeasureDetails_CBP?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Controlling High Blood Pressure'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/CBPPerformanceDashboard/MeasureDetails_CBP?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Controlling High Blood Pressure'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/BCSPerformanceDashboard/MeasureDetails_BCS?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Breast Cancer Screening'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
                                 <i class="fa fa-pie-chart" *ngSwitchDefault pTooltip="Dashboard"></i>
                             </span>
                           

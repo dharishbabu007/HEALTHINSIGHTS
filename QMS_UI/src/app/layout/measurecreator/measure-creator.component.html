@@ -8,140 +8,148 @@
                   <form [formGroup]="myForm" class="form-horizontal" novalidate >
                       <div class="form-group">
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Program Name* </span>
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Measure Title*  </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Program Name* </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Measure Title*  </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="programList" formControlName="programName" (onChange)="filterCategory($event)" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <input type="text" class="form-control" formControlName="name">
                           </span>
                         </div>
                         <div class="row">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <small *ngIf="!myForm.controls.programName.valid && myForm.controls.programName.touched" class="text-danger">
                             Program Name is required.
                             </small>
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <small *ngIf="!myForm.controls.name.valid && myForm.controls.name.touched" class="text-danger">
                             Measure title is required.
                             </small>
                           </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Description </span>
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Target Age </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Description </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Target Age </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                                 <textarea class="form-control" rows="2" cols="20" type="text" formControlName="description" style="max-height: 40px;"></textarea>
                             <!-- <input type="text" class="form-control" formControlName="description"> -->
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <input type="text" class="form-control" formControlName="targetAge">
                           </span>
                         </div>
                         
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Measure Domain </span>
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Category </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Measure Domain </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Category </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureDomainList" formControlName="measureDomain" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureCategories" formControlName="measureCategory" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                           </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Type </span>
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Clinical Condition  </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Type </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Clinical Condition  </span>
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="measureTypes" formControlName="type" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <input type="text" class="form-control" formControlName="clinocalCondition">
                           </span>
                         </div>
                     
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Denominator </span>
-                          <span class="col-lg-5 col-md-5 font-weight-bold">Denominator Exclusions </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Denominator </span>
+                          <span class="col-lg-6 col-md-6 font-weight-bold">Denominator Exclusions </span>
           
                         </div>
                         <div class="row row-class">
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                               <textarea class="form-control" rows="3" type="text" formControlName="denominator"></textarea>
                           </span>
-                          <span class="col-lg-5 col-md-5">
+                          <span class="col-lg-6 col-md-6">
                             <textarea class="form-control" rows="3" type="text" formControlName="denomExclusions"></textarea>
                           </span>
                         </div>
                         
                     <div class="row row-class">
-                      <span class="col-lg-5 col-md-5 font-weight-bold">Numerator </span>
-                      <span class="col-lg-5 col-md-5 font-weight-bold">Optional Exclusions </span>           
+                      <span class="col-lg-6 col-md-6 font-weight-bold">Numerator </span>
+                      <span class="col-lg-6 col-md-6 font-weight-bold">Optional Exclusions </span>           
                     </div>
                     <div class="row row-class">
-                      <span class="col-lg-5 col-md-5">
+                      <span class="col-lg-6 col-md-6">
                           <textarea class="form-control" rows="3" type="text" formControlName="numerator"></textarea>
                       </span>
-                      <span class="col-lg-5 col-md-5">
+                      <span class="col-lg-6 col-md-6">
                          <textarea class="form-control" rows="3" type="text" formControlName="numeratorExclusions"></textarea>
                       </span>
                     </div>
                     <div class="row row-class">
                         <span class="col-lg-2 col-md-2 font-weight-bold">Target </span>
-                        <span class="col-lg-1 col-md-1 font-weight-bold">P50</span>
-                        <span class="col-lg-1 col-md-1 font-weight-bold">P90</span>  
-                        <span class="col-lg-1 col-md-1 font-weight-bold"></span>  
-                        <span class="col-lg-2 col-md-2 font-weight-bold">Collection Method</span>
-                        <span class="col-lg-2 col-md-2 font-weight-bold">Collection Source </span>
+                        <span class="col-lg-2 col-md-2 font-weight-bold">P50</span>
+                        <span class="col-lg-2 col-md-2 font-weight-bold">P90</span>    
+                        <span class="col-lg-3 col-md-3 font-weight-bold">LOB</span>
+                        <span class="col-lg-3 col-md-3 font-weight-bold">Product</span>
+
                     </div>
                     <div class="row row-class">
                         <span class="col-lg-2 col-md-2">
                          <input type="number" class="form-control"  formControlName="target">
                        </span>
-                       <span class="col-lg-1 col-md-1">
+                       <span class="col-lg-2 col-md-2">
                           <input type="number" class="form-control" formControlName="p50">
                        </span>
-                       <span class="col-lg-1 col-md-1">
+                       <span class="col-lg-2 col-md-2">
                           <input type="number" class="form-control"  formControlName="p90">  
                        </span>
-                       <span class="col-lg-1 col-md-1">
-                         
+                       <span class="col-lg-3 col-md-3">
+                            <p-multiSelect [options]="LobNames" formControlName="payer" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-multiSelect>
                        </span>
-                       <span class="col-lg-2 col-md-2">
-                          <p-dropdown placeholder="Select Source" [autoDisplayFirst]="false"  formControlName="measureSourceId" styleClass="form-control" [options]="dataSoucreTypes" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}" (onChange)="dataSourceSelected($event)"></p-dropdown>
-                        </span>
-                        <span class="col-lg-2 col-md-2">
-                          <input type="text" class="form-control"  formControlName="collectionSource"> 
-                        </span>
-                        <span class="col-lg-2 col-md-2" *ngIf="samplingButton">
-                            <button  class="btn btn-primary" (click)="showDialogBox()">&nbsp; Sampling</button>
-                        </span>
+                       <span class="col-lg-3 col-md-3">
+                            <p-multiSelect [options]="ProductNames" formControlName="product" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-multiSelect>
+                       </span>
+                      
                     </div>
                     <div class="row row-class">
-                      <span class="col-lg-5 col-md-5 font-weight-bold">Start Date</span>
-                       <span class="col-lg-5 col-md-5 font-weight-bold">End Date</span>
+                      <span class="col-lg-3 col-md-3 font-weight-bold">Start Date</span>
+                       <span class="col-lg-3 col-md-3 font-weight-bold">End Date</span>
+                       <span class="col-lg-2 col-md-2 font-weight-bold">Collection Method</span>
+                       <span class="col-lg-2 col-md-2 font-weight-bold">Collection Source </span>
+
                     </div>
                     <div class="row row-class">
-                        <span class="col-lg-5 col-md-5">
+                        <span class="col-lg-3 col-md-3">
                             <p-calendar formControlName="startDate" [showIcon]="true" dateFormat="dd-M-yy"></p-calendar>
                        </span>
-                       <span class="col-lg-5 col-md-5">
+                       <span class="col-lg-3 col-md-3">
                             <p-calendar formControlName="endDate" [showIcon]="true" dataType="string" dateFormat="dd-M-yy" ></p-calendar>
                        </span>
+
+                       <span class="col-lg-2 col-md-2">
+                            <p-dropdown placeholder="Select Source" [autoDisplayFirst]="false"  formControlName="measureSourceId" styleClass="form-control" [options]="dataSoucreTypes" [style]="{'border': '1px solid #ABACAD','width':'100%','padding':'0px'}" (onChange)="dataSourceSelected($event)"></p-dropdown>
+                          </span>
+                          <span class="col-lg-2 col-md-2">
+                            <input type="text" class="form-control"  formControlName="collectionSource"> 
+                          </span>
+                          <span class="col-lg-2 col-md-2" *ngIf="samplingButton">
+                              <button  class="btn btn-primary" (click)="showDialogBox()">&nbsp; Sampling</button>
+                          </span>
                     </div>
                     <div class="row row-class">
-                        <span class="col-lg-5 col-md-5">&nbsp;</span>
-                        <span class="col-lg-5 col-md-5">
+                        <span class="col-lg-3 col-md-3">&nbsp;</span>
+                        <span class="col-lg-3 col-md-3">
                           <small *ngIf="!myForm.controls.endDate.valid && myForm.controls.endDate.touched" class="text-danger">
                           End Date is required.
                           </small>
@@ -152,7 +160,7 @@
                       <button [disabled]="disableForm" (click)="savePc(myForm.value,myForm.valid)" class="btn btn-primary " *ngxPermissionsOnly="['4W']"> <i class="fa fa-floppy-o"></i>&nbsp; Save for Later</button>&nbsp;&nbsp;
                       <button [disabled]="disableForm" (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" *ngxPermissionsOnly="['4W']"> <i class="fa fa-dot-circle-o"></i>&nbsp; Submit for Review</button>&nbsp;&nbsp;
                       <span *ngIf="type=='1'"><button [disabled]="disableOnCopy" (click)="inActiveMeasure(myForm.value)" class="btn btn-danger" *ngxPermissionsOnly="['4W']"><i class="fa fa-ban"></i>&nbsp;Decommission</button></span>&nbsp;&nbsp;
-                      <span *ngIf="type=='1'"><button  (click)="downloadForm(myForm.value)" class="btn btn-primary " >&nbsp;Export</button></span>
+                      <span *ngIf="type=='1'"><button  (click)="downloadForm(myForm.value)" class="btn btn-primary " *ngxPermissionsOnly="['4W']">&nbsp;Export</button></span>
                       </span>
                     </div>
                   </div>

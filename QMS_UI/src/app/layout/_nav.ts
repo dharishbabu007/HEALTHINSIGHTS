@@ -98,7 +98,7 @@ export const navItems = [
         children: [
           {
             name: 'Care Summary',
-            url: 'http://192.168.184.70/t/CurisSite/views/Gaps_in_Care_Dashboard/CareGapSummaryDashboard?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+            url: 'http://192.168.184.70/views/Gaps_in_Care_Dashboard1/CareGapSummaryDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
             icon: 'fa fa-handshake-o'
           },
           {
@@ -119,82 +119,74 @@ export const navItems = [
         ]
       },
       {
-        name: 'PHM',
-        url: '#',
-        icon: 'fa fa-user-o',
-        children: [
-          {
-            name: 'PHM SUMMARY',
-            url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-          {
-            name: 'Risk Assessment',
-            url: 'http://192.168.184.70/views/PHMRiskDashboard_0/PHMRisk_Dashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-          {
-            name: 'Measure Analysis',
-            url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-          // {
-          //   name: 'Membership Analysis',
-          //   url: '#',
-          //   icon: 'fa fa-user-o'
-          // },
-          {
-            name: 'Geo Analysis',
-            url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-          {
-            name: 'Cohort',
-            url: 'http://192.168.184.70/views/FinalDashboardPHM/RiskDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-          // {
-          //   name: 'Utilitzation Analysis',
-          //   url: '#',
-          //   icon: 'fa fa-user-o'
-          // },
-          // {
-          //   name: 'Financial Analysis',
-          //   url: '#',
-          //   icon: 'fa fa-user-o' 
-          // },
-          {
-            name: 'Provider Analysis',
-            url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-            icon: 'fa fa-user-o'
-          },
-        ]
-      },
-      {
-        name: 'Health plan Employer portal',
-        url: '/r-studio',
-        icon: 'fa fa-line-chart',
+        name: 'Chart Abstraction Tool',
+        url: '/chart-abstract',
+        icon: 'fa fa-handshake-o',
+        },
+        
+        
+      // {
+      //   name: 'PHM',
+      //   url: '#',
+      //   icon: 'fa fa-user-o',
+      //   children: [
+      //     {
+      //       name: 'PHM SUMMARY',
+      //       url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //     {
+      //       name: 'Risk Assessment',
+      //       url: 'http://192.168.184.70/views/PHMRiskDashboard_0/PHMRisk_Dashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //     {
+      //       name: 'Measure Analysis',
+      //       url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //     {
+      //       name: 'Geo Analysis',
+      //       url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //     {
+      //       name: 'Cohort',
+      //       url: 'http://192.168.184.70/views/FinalDashboardPHM/RiskDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //     {
+      //       name: 'Provider Analysis',
+      //       url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+      //       icon: 'fa fa-user-o'
+      //     },
+      //   ]
+      // },
+      // {
+      //   name: 'Health plan Employer portal',
+      //   url: 'http://i3lbfsiserver:93/',
+      //   icon: 'fa fa-line-chart',
 
-      },
-      {
-        name: 'Member Engagement',
-        url: '#',
-        icon: 'fa fa-line-chart',
-        children: 
-        [
-          {
-        name: 'Survey',
-        url: 'https://s.surveyanyplace.com/s/ptheqvhs',
-        icon: 'fa fa-line-chart',
-          },
-          {
-            name: 'Healthy Me ',
-            url: '/health/home',
-            icon: 'fa fa-user-o',
-          },
+      // },
+      // {
+      //   name: 'Member Engagement',
+      //   url: '#',
+      //   icon: 'fa fa-line-chart',
+      //   children: 
+      //   [
+      //     {
+      //   name: 'Survey',
+      //   url: 'https://s.surveyanyplace.com/s/ptheqvhs',
+      //   icon: 'fa fa-line-chart',
+      //     },
+      //     {
+      //       name: 'Healthy Me ',
+      //       url: '/health/home',
+      //       icon: 'fa fa-user-o',
+      //     },
 
-        ]
-      }
+      //   ]
+      // }
       // {
       //   name: 'Provider',
       //   url: '#',
@@ -247,22 +239,16 @@ export const navItems = [
     ]
   },
   {
-    name: 'Developer Utilities',
+    name: 'Analytical Utilities',
     url: '#',
     icon: 'fa fa-line-chart',
     children: 
-    [
-      {
-        name: 'Analytics Workbench',
-        url: '#',
-        icon: 'fa fa-line-chart',
-        children: 
-        [  
+    [ 
   
 
           {
             name: 'BI Workbench',
-            url: 'http://192.168.184.70/t/CurisSite/views/CreateyourownAnalysis/Sheet1?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no',
+            url: 'http://192.168.184.70/views/SelfServiceBI/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
             icon: 'fa fa-table',
           
           
@@ -280,7 +266,7 @@ export const navItems = [
             },
             {
             name: 'Jupyter',
-            url: 'http://192.168.184.70:8888',
+            url: 'http://192.168.184.71:8888/tree',
             icon: 'fa fa-line-chart',
             }
             ]
@@ -288,12 +274,10 @@ export const navItems = [
       
           },
           {
-          name: 'Use Cases',
+          name: 'Analytics Marketplace',
           url: '/file-manager',
           icon: 'fa fa-line-chart',
           }
-        ]
-      },
     ]
   },
 
