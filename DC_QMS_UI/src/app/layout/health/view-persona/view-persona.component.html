@@ -1,0 +1,152 @@
+<div class="col-lg-12" style="padding: 0px">
+ 
+        <h3 [ngStyle]="{ 'background-color': '#FC93A4',
+        'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-user-o"></i> Personas > ViewPersona</h3>
+</div>
+
+<div  style="margin: 25px;margin-top: 10px">
+<h3>{{clusterData?.personaName}}</h3>
+<hr class="lineClass">
+<br>
+<div  class="container-fluid h-100">
+<div class="card" style="padding: 18px">
+    <!-- <div class="row col-lg-12">
+               <div class="col-lg-6" style="padding-left: 20px;
+               padding-top: 10px;
+               padding-bottom: 10px;"> 
+                 <span>   <p-dropdown placeholder="Lazy Doer" [autoDisplayFirst]="false"  styleClass="form-control" [options]="personaList"></p-dropdown> </span>
+               </div>
+               <div class="col-lg-6" style="padding-top: 10px">
+                    <button [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn btn-primary" style="float: right"> Member List</button> 
+                </div>
+          
+    </div> -->
+    <!-- <div class="row col-lg-12">
+    <img src="/assets/images/Lazy Doer.jpg" style="width: 83vw;height: 72vh;">
+    </div> -->
+    <!-- <div class="row col-lg-12" class="bg-heading">
+        <h2>Lazy Doer</h2>
+    </div> -->
+    <div class="row col-lg-12" style="padding: 10px;width: inherit;">
+        <div class="col-lg-3 rounded  grey_background">
+            <div class="col-lg-12 no-padding-class">
+                <div class="text-center"><img src="/assets/images/lazyPerson.png"></div><br>
+                <label class="font-weight-bold">Associated Cluster: </label> <a >Cluster {{clusterData?.clusterId}}</a><br>
+            </div>
+            <div class="col-lg-12 no-padding-class">
+                <span class="font-weight-bold">Demographic Details</span><br>
+                <hr class="lineClass"><br>
+                <span class="font-weight-bold headers-color">Age Group</span>: {{clusterData?.demoAgeGroup}}<br><br>
+                <span class="font-weight-bold headers-color">Occupatioon</span>: {{clusterData?.demoOccupation}}<br><br>
+                <span class="font-weight-bold headers-color">Family Size</span>: {{clusterData?.demoFamilySize}}<br><br>
+                <span class="font-weight-bold headers-color">Addictions</span>: {{clusterData?.demoAddictions}}<br><br>
+                <span class="font-weight-bold headers-color">Education</span>: {{clusterData?.demoEducation}}
+            </div>
+        </div>
+               <div class="col-lg-4  grey_background">
+                   <div class="col-lg-12 no-padding-class" style="height: 100%;">
+                       <div class="col-lg-12">
+                                <div class="para-class bio-class">
+                                    <div style="padding: 6px">
+                                        <span class="font-weight-bold">Bio</span><br>
+                                        <hr class="lineClass"><br>
+                                        <p>
+                                                {{clusterData?.bio}}
+                                           <!-- Lazy doers are not proactive in nature. These are people who are not intrinsically motivated. They need partners to encourage them to get involved in health related activities. They are given to make excuses and like to follow the lives of successful people. They feel stressed and seek comfort and security in life. They look for others' opinions and recommendations.  -->
+
+                                        </p>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-lg-12">
+                       
+                                <div class="para-class">
+                                        <span class="font-weight-bold">Barriers</span><br>
+                                        <hr class="lineClass"><br>
+                                       <ul>
+                                           <li>{{clusterData?.barriers}}</li>
+                                           <!-- <li> Fitness level: Low</li>
+                                           <li> The Frequency of excercise: Walking</li>
+                                           <li> Consumption of Healthy food: Never</li>
+                                           <li> Disease & Mental Health: Various ailments with high-stress level</li> -->
+                                       </ul>
+                                </div>
+                         </div>
+                         <div class="col-lg-12">
+                                 <div class="para-class">
+                                        <span class="font-weight-bold">Goals</span><br>
+                                        <hr class="lineClass"><br>
+                                       <ul>
+                                           <li>{{clusterData?.goals}}</li>
+                                             <!-- <li>To avoid diseases</li>
+                                             <li>To live a longer life</li>
+                                             <li>Less interest in setting health goals</li> -->
+                                          
+                                         </ul>
+                                </div>
+                         </div>
+                        </div>
+                </div>
+                <div class="col-lg-4  grey_background">
+                        <div class="col-lg-12">
+                            <div class="para-class">
+                                <span class="font-weight-bold">Motivations</span><br>
+                                <hr class="lineClass"><br>
+                                <span *ngFor="let data of motivations?.x; let i=index">
+                                   {{data}}
+                                <p-progressBar [value]= "motivations?.y[i]" [style]="{height: '4px'}"></p-progressBar>
+                                <br>    
+                                </span>
+                                <br>
+                                <!-- <span>Fear of diseases
+                                <p-progressBar [value]="60" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br>
+                                <span>Need partner
+                                <p-progressBar [value]="70" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br> 
+                                <span>For encouraging loved ones
+                                <p-progressBar [value]="10" [style]="{height: '4px'}"></p-progressBar>
+                                </span>
+                                <br> -->
+                                <br>
+                            </div>              
+                             
+                        </div>
+                  
+                    <div class="col-lg-12" style="padding-bottom: 10px; padding-top: 10px">
+                            <div class="para-class">
+                            <span class="font-weight-bold">Preferrd channels</span><br>
+                            <hr class="lineClass"><br>
+                            <span>SMS/Call
+                            <p-progressBar [value]="40" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>Email
+                            <p-progressBar [value]="70" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>Social Media
+                            <p-progressBar [value]="30" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            <br>
+                            <span>App notifications
+                            <p-progressBar [value]="40" [style]="{height: '4px'}"></p-progressBar>
+                            </span>
+                            </div>
+                </div>
+                    
+              </div>
+    </div>
+    <hr>
+    <div>
+        <button class="btn btn-primary" style="float: right" [routerLink]="['/health/create-persona1']">Edit Persona</button>
+        <!-- <button [routerLink]="['/health/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no#5']" class="btn btn-primary" style="float: right; margin-right: 10px">View Member List</button> -->
+        <button class="btn btn-primary" [routerLink]="['/health/persona-member-list']" style="float: right; margin-right: 10px">View Member List</button>
+    </div>
+    </div>
+    </div>
+</div>
+
+

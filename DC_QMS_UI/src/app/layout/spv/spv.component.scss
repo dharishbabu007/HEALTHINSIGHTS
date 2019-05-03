@@ -1,0 +1,133 @@
+
+
+// .sidenav{
+//    // background:url('/assets/images/bg.jpg') no-repeat;
+//     height: 86vh;
+// }
+     
+.aside {
+height: 20vh;
+}
+
+.naming1{
+float: left;
+}
+        
+.naming{
+ margin-left: 2px;
+}
+
+hr {
+margin: 0px;
+border-color: #dddddd;
+border-style: solid;
+border-width: 1px;
+}
+        
+#left-col{
+ border-style: solid;
+ border-color: black;
+ border-width: 1px;
+}
+
+.leftTable{
+  width: 100%;
+    }
+
+.leftTable tr{
+   border-bottom: 2px solid #DDDDDD;
+}
+        
+.VistTable {
+   font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .VistTable td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .VistTable tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+.numberCircle {
+
+   
+    border-radius: 50%;
+        margin-left: 10px;
+       padding: 5px;
+    background: #09F17D;
+    text-align: center;
+    font: 20px Arial, sans-serif;
+}
+.headings{
+  
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.div1{
+    width: 304px;
+      margin-top: 10px;
+    margin-bottom: 10px;
+}
+#rcorners{
+    border-radius: 25px;
+    background: #dddddd;
+    padding: 20px; 
+        width: 150px;
+    height: 80px;   
+}
+
+.counts{
+border-radius: 5rem !important;
+}
+.p-1 {
+    padding-top: 0rem !important;
+    padding-left: 0.4rem !important;
+    padding-right: 0.4rem !important;
+}
+.left-col-margin{
+margin-left: 51px;
+}
+
+.mrabox{
+height: 81px;
+width: 160px;
+}
+
+ 
+.bg-secondary {
+    background-color: rgb(205, 227, 245) !important;
+}
+.line-sizes{
+    width: 97%;
+    margin-left: 1.5%;
+}
+
+@media(max-width: 991px){
+    .sidenav{
+    height: auto;
+    }
+    
+}
+@media(max-width: 767){
+    .tablescroll{
+    overflow: scroll;
+    }
+        
+}
+@media (max-width: 1100px) {
+.left-col-margin{
+    margin-left: 0px !important;
+    }
+}
+@media (max-width: 991px)  {
+    .mrabox {
+          width: 100% !important;
+    }
+}

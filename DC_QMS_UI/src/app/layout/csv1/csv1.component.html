@@ -1,0 +1,55 @@
+<div style="margin-top: 10px">
+    <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
+    <div class="card">
+    <div class="row"   style="margin: 20px">
+        <div class="col col-lg-12">
+
+            <!-- <button type="button" pButton label="back" [routerLink]="['/file-manager/']" style="float:left" class="btn-space"></button> -->
+
+           <br>
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button> 
+
+            <button type="button" pButton label="Statistics" [routerLink]="['/csv2/']" style="float:right" class="btn-space"></button> 
+
+
+            <a [routerLink]="['/frame-url','http://192.168.184.70/views/NoShowsAnalysisDashboard/No-show?iframeSizedToWindow=true&:embed=y&:ShowAppBanner=false&:Display_count=no&:ShowVizHome=no']"> <button type="button" pButton label="Dashboard" style="float:left" class="btn-space"></button> </a>
+            <button type="button" pButton label="Care Gaps" [routerLink]="['/noshowGapList/']" style="float:right" class="btn-space"></button> 
+   <br><br>
+            <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" [loading]="loading" exportFilename="No_Show_Likelihood">
+                <ng-template pTemplate="header">
+                    <tr class="header-class">
+                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                           <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns"> 
+                    <tr>
+                        <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <span *ngSwitchCase="'patientName'">
+                                    <a [routerLink]="['/smv/',rowData['patientId']]">{{rowData[col.field]}}</a>
+                                </span>
+                                <span *ngSwitchCase="'likelihood'">
+                                  {{rowData[col.field] * 100 | number: '1.0-0' }} %
+                                </span>
+                                <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    </div>
+
+    <!-- <div class="row">
+        <img src="assets/images/Dr Tablet.jpg" >
+    </div>
+-->
+</div>
+

@@ -1,0 +1,49 @@
+.brand-card-body{
+    height: 40vh;
+    overflow-y: scroll;
+}
+.icon-bg{
+    background: url('/assets/images/icon-bg.png') no-repeat;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+    > img {
+        width: 25px;
+        height: 30px;
+        position: absolute;
+        left: 20px;
+        top: 10px;
+    }
+}
+.card {
+    .row{
+        min-height: 80vh;
+    } 
+}
+.text-value{
+        font-size: 1.6rem;
+        color: black;
+}
+
+.list-values{
+    margin-left: 20px;
+}
+.qmstable td{
+    border-top: 1px solid #c8ced3;
+        padding-bottom: 15px;
+            padding-left: 10px;
+}
+.task-box{
+ -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+   
+}
+
+
+
+  
+// /deep/
+// .app-body .main{
+//   font-family: "Amazon Ember",Arial,sans-serif;
+// }

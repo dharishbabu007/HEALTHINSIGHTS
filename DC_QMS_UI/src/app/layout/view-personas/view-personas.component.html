@@ -1,0 +1,408 @@
+<div  style="margin: 25px;margin-top: 10px">
+        <app-page-header [heading]="'Create Personas'" [icon]="'fa-table'"></app-page-header>
+    <div class="card">
+        <div class="row p-3 align-items-center">
+            <div class="col-lg-12">
+                <span class="col-lg-12">Personas</span>
+                <!-- <hr class="lineclass"> -->
+                <form [formGroup]="personaData" novalidate method="post" class="form-horizontal">
+                        <div class="form-group row">
+                            <div formArrayName="conditionList" class="col-md-12">
+                                <div *ngFor="let condRow of formConditionList.controls; let i=index;" class="panel panel-default">
+                                    <div [formGroupName]="i">
+                                        <div class="row">
+                                                                 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+
+            </div>
+            <div class="col-sm-12 col-lg-12">
+
+                 <div class="row" style="padding: 5px">
+                
+                    <span class="col-lg-10">
+                        <p-dropdown placeholder="Select Cluster" [autoDisplayFirst]="false"  styleClass="form-control" [options]="clusterList" (onChange)="clusterSelection($event)"></p-dropdown>
+                       
+                    </span>
+                    <span class="col-lg-2">
+                            
+                    <button [routerLink]="['/view-persona/']" class="btn btn-primary" style="float: right;">&nbsp; View Personas</button>
+                     </span>
+                </div>
+            </div>
+          <div class="col-lg-12">
+            <div class="row">
+            <div class="col-lg-6">
+                   
+                <div class="brand-card  ">
+                       <span> <button class="btn btn-primary"  style="float: right; margin: 5px" (click)="showAllDialog()">&nbsp; View All</button> </span>
+                        <div class="brand-card-header pb-0 bg-secondary">
+                            <div class="text-value">Demographics</div>
+                        </div>
+                <div class="col-sm-12">
+                   <div class="text-black pb-2  margin-table">
+                        <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols1" [columns]="cols1" selectionMode="single" >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Max Frequency</th>
+                                        <th>Histograms</th>
+                                       
+                                    </tr>
+                                    <tr  *ngFor="let col of cols1; let i=index">
+                                            <td>
+                                                    {{cols1[i][0].featureName}}
+                                                   
+                                                </td>
+                                                <td>
+                                                        {{cols1[i][0].maxFrequency}}
+                                                </td>
+                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols1[i][0])"></i></td>
+                                               
+                                               
+                                    </tr>
+                                </ng-template>
+                           
+                        </p-table>
+                      
+                    </div>
+                    <p-dialog [(visible)]="display" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+                     [baseZIndex]="10000">
+                        <span><p-chart type="line" [options]="options" [data]="data"  width="500px" height="400px"></p-chart></span>
+                            
+                    </p-dialog>
+
+                </div>
+            <div class="brand-card-header pb-0 bg-secondary">
+                <div class="text-value">Attributes 
+                  <br>
+               </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="text-black pb-2  margin-table">
+                      <!--
+                        <p-table #dt  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols1" [columns]="cols1" selectionMode="single" dataKey="id" >
+                          
+                            <ng-template pTemplate="body" let-rowData >
+                                    <tr> 
+                                          <td>{{rowData.label}}</td>
+                                          <td>{{rowData.value}}</td>
+                                    </tr>
+                                    
+                                </ng-template>
+                        </p-table>
+                    -->
+                    <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols" [columns]="cols" exportFilename="Model_Score">
+                            <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Max Frequency</th>
+                                        <th>Histograms</th>
+                                       
+                                    </tr>
+                                    <tr  *ngFor="let col of cols; let i=index">
+                                            <td>
+                                                    {{cols[i][0].featureName}}
+                                                   
+                                                </td>
+                                                <td>
+                                                        {{cols[i][0].maxFrequency}}
+                                                </td>
+                                                <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialog(cols[i][0])"></i></td>
+                                               
+                                               
+                                    </tr>
+                                
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <!-- <div class="brand-card-header pb-0 bg-secondary">
+                        <div class="text-value">How frequently do you excercise ?</div>
+                </div>
+                   <div class="col-sm-12">
+                        <div class="text-black pb-2  margin-table">
+                 
+                                <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols2" [columns]="cols2" selectionMode="single" >
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th *ngFor="let col of cols2">
+                                                    {{col.label}}
+                                                   
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                    <td *ngFor="let col of cols2" > {{col.value}}</td>
+                                            </tr>
+                                        </ng-template>
+                                   
+                                    </p-table>
+                         </div>
+                   </div>
+                   <div class="brand-card-header pb-0 bg-secondary">
+                        <div class="text-value">Do you set health goals and try to achieve them ?</div>
+                   </div>
+                        <div class="col-sm-12">
+                            <div class="text-black pb-2  margin-table">
+                                    <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols3" [columns]="cols3" selectionMode="single" >
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th *ngFor="let col of cols3">
+                                                        {{col.label}}
+                                                       
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                        <td *ngFor="let col of cols3" > {{col.value}}</td>
+                                                </tr>
+                                            </ng-template>
+                                       
+                                        </p-table>
+                            </div>
+                        </div>
+                        <div class="brand-card-header pb-0 bg-secondary">
+                                <div class="text-value">What motivates you for your health goals?</div>
+                       </div>
+                        <div class="col-sm-12">
+                                <div class="text-black pb-2  margin-table">
+                                        <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols4" [columns]="cols4" selectionMode="single" >
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th *ngFor="let col of cols4">
+                                                            {{col.label}}
+                                                           
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                            <td *ngFor="let col of cols4" > {{col.value}}</td>
+                                                    </tr>
+                                                </ng-template>
+                                           
+                                            </p-table>
+                                 </div>
+                        </div>
+                        <div class="brand-card-header pb-0 bg-secondary">
+                                <div class="text-value"> Why would you abstain from enrolling ?</div>
+                       </div>  
+                             <div class="col-sm-12">
+                                    <div class="text-black pb-2  margin-table">
+                                            <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols5" [columns]="cols5" selectionMode="single" >
+                                                    <ng-template pTemplate="header">
+                                                        <tr>
+                                                            <th *ngFor="let col of cols5">
+                                                                {{col.label}}
+                                                               
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                                <td *ngFor="let col of cols5" > {{col.value}}</td>
+                                                        </tr>
+                                                    </ng-template>
+                                               
+                                                </p-table>
+                                     </div>
+                            </div>		
+                            <div class="brand-card-header pb-0 bg-secondary">
+                                    <div class="text-value">Do you actively participate in social media?</div>
+                           </div>  
+                                 <div class="col-sm-12">
+                                        <div class="text-black pb-2  margin-table">
+                                                <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols6" [columns]="cols6" selectionMode="single" >
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th *ngFor="let col of cols6">
+                                                                    {{col.label}}
+                                                                   
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td *ngFor="let col of cols6" > {{col.value}}</td>
+                                                            </tr>
+                                                        </ng-template>
+                                                   
+                                                    </p-table>
+                                         </div>
+                                </div>			
+                                <div class="brand-card-header pb-0 bg-secondary">
+                                        <div class="text-value">How many chronic diseases are you suffering from ?</div>
+                               </div>  
+                                     <div class="col-sm-12">
+                                            <div class="text-black pb-2  margin-table">
+                                                    <p-table #dt1 class="table table-bordered table-hover" [scrollable]="false" [value]="cols7" [columns]="cols7" selectionMode="single" >
+                                                            <ng-template pTemplate="header">
+                                                                <tr>
+                                                                    <th *ngFor="let col of cols7">
+                                                                        {{col.label}}
+                                                                       
+                                                                    </th>
+                                                                </tr>
+                                                                <tr>
+                                                                        <td *ngFor="let col of cols7" > {{col.value}}</td>
+                                                                </tr>
+                                                            </ng-template>
+                                                       
+                                                        </p-table>
+                                             </div>
+                                    </div>			 
+                                -->
+
+                 </div>   
+            </div>
+            <div class="col-lg-6">
+                   
+                    <div class="text-black pb-2  margin-table">
+                            <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-personaName">Persona Name</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                            <input type="text" class="form-control" formControlName="personaName">
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-ageGroup">Age-Group</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-education">Education</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="ageGroupList" formControlName="ageGroup" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="educationList" formControlName="education" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-occupation">Occupation</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-familySize">Family Size</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="occupationList" formControlName="occupation" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="familySizeList" formControlName="familySize" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-income">Income</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="incomeList" formControlName="income" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-socialMedia">Social Media</span>
+                                        <span class="col-lg-6 col-form-label font-weight-bold" for="hf-addiction">Addiction</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="socialMediaList" formControlName="socialMedia" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <p-dropdown placeholder="Select" [autoDisplayFirst]="false"  styleClass="form-control" [options]="addictionList" formControlName="addiction" [style]="{'width':'100%', 'border': '1px solid #ABACAD','padding':'0px'}"></p-dropdown>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-goals">Goals</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                            <input type="text" class="form-control" formControlName="goals">
+                                        </span>
+                                    </div>
+                                   <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-motivations">Motivations</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-lg-12">
+                                           <input type="text" class="form-control" formControlName="motivations">
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-barriers">Barriers</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
+                                          <input type="text" class="form-control" formControlName="barriers">
+                                        </span>
+                                    </div>
+                                   
+                                    <div class="row">
+                                        <span class="col-lg-3 col-form-label font-weight-bold" for="hf-bio">Bio</span>
+                                    </div>
+                                    <div class="row">
+                                        <span class="col-md-12">
+                                            <input type="text" class="form-control" formControlName="bio">
+                                        </span>
+                                    </div>
+                                </div>
+                                    <div class="form-group row p-2">
+                                        <span class="col-lg-12 text-right">
+                                            <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onBasicUpload($event)" chooseLabel="Image"></p-fileUpload>
+                                                <!-- <input type="file" id="file" (change)="handleFileInput($event)" #fileInput>  -->
+                                                <br><br>
+                                           <button (click)=" submitPc(myForm.value,myForm.valid)" class="btn btn-primary" > <i class="fa fa-dot-circle-o"></i>&nbsp; Submit</button>
+                                        </span>
+                                   </div>
+                            </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+
+<p-dialog [(visible)]="displayAllData" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+[baseZIndex]="10000">
+<div class="col-lg-12" style="width: 700px;height: 700px;">
+                   
+        <div class="brand-card  ">
+                <div class="brand-card-header pb-0 bg-secondary">
+                    <div class="text-value">Attributes</div>
+                </div>
+        <div class="col-sm-12">
+           <div class="text-black pb-2  margin-table">
+                <p-table #dt2  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="cols2" [columns]="cols2" exportFilename="Model_Score">
+                        <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Max Frequency</th>
+                                    <th>Histogram</th>
+                                   
+                                </tr>
+                                </ng-template> 
+                        <ng-template pTemplate="body" let-rowData >
+                            <tr> 
+                               <td>{{rowData.featureName}}</td>
+                               <td>{{rowData.maxFrequency}}</td>
+                               <td><i class="fa fa-bar-chart" aria-hidden="true" (click)="showDialogModal(rowData)"></i></td>
+
+                          
+                                  <!--<td>  <button class="btn btn-primary">Histogram</button></td>-->
+                            </tr>
+                            
+                        </ng-template>
+                    </p-table>
+                    <p-dialog [(visible)]="displayModal" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+                    [baseZIndex]="10000">
+                       <span><p-chart type="line" [options]="options" [data]="data"  width="500px" height="400px"></p-chart></span>
+                           
+                   </p-dialog>
+            </div>
+        </div>
+        </div>
+
+        </div>
+       
+</p-dialog>

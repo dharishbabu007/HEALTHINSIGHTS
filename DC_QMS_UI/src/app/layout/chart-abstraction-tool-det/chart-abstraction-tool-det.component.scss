@@ -1,0 +1,64 @@
+.chart-abstraction-tool-4 {
+    padding: 50px;
+    margin: 15px;
+}
+.chart-subheading {
+    font-size: 22px;
+    position: relative;
+    top: -40px;
+}
+.chart-content {
+    overflow-x : auto;
+}
+div.chart-abstraction-form-tab-list ul li{
+   padding: 10px !important;
+}
+
+.mar-left-20 {
+    margin-left: 20px;
+}
+.clear {
+    clear: both
+}
+.chart-action-container {
+    position: relative;
+    top: -33px;
+}
+
+#chart-abstraction-tab-table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+
+#chart-abstraction-tab-table td, #chart-abstraction-tab-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+#chart-abstraction-tab-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#chart-abstraction-tab-table tr:hover {background-color: #ddd;}
+
+#chart-abstraction-tab-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #0275d8;
+  color: white;
+}
+.chart-abstraction-form-inpwid label { 
+  font-weight: bold;
+}
+.chart-abstraction-form-inpwid input {
+    width: 250px !important;
+}
+#chart-abstraction-tab-table .fa-plus {
+    cursor: pointer;
+}
+.chart-abstraction-det h2 {
+    margin-left: 20px;
+}
+

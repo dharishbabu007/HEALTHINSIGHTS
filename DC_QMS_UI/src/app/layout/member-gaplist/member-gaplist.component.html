@@ -1,0 +1,83 @@
+<div class="row"  style="margin: 25px;margin-top: 10px">
+    <div class="col col-xl-12 col-lg-12">
+            <app-page-header [heading]="'Member Gaps List'" [icon]="'fa-table'"></app-page-header>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class=" card-text">
+                    <div class="form-group row"> <!-- put *ngIf =!gaps for not showing it while coming from gaps registry-->
+                        <label class="col-sm-2 col-form-label" for="hf-member">Search Member:</label>
+                        <div class="col-sm-8">
+                            <p-autoComplete id="hf-member" name="hf-member" [forceSelection]="true" (onSelect)="loadMemberInfo($event)"  [suggestions]="memberList"  (completeMethod)="search($event)" placeholder="Enter Name or ID"></p-autoComplete>
+                        </div>
+                    </div>
+                    <div *ngIf="gaps" class="form-group row">
+                        <div class="col col-lg-2 col-xl-2 ">
+                            <span class="font-weight-bold">MID</span> :
+                            {{gaps.memberId}}
+                        </div>
+                        <div class="col col-lg-3 col-xl-3">
+                            <span class="font-weight-bold">Name</span> : 
+                            <a [routerLink]="['/smv', gaps.memberId]">{{gaps.name}} </a>
+                        </div>
+                        <div class="col col-lg-4 col-xl-4">
+                            <span class="font-weight-bold">Next Appointement Date</span> : 
+                           {{gaps.nextAppointmentDate | date}}
+                        </div>
+                    </div>
+                    <div  *ngIf="gaps" class="row card-text">
+                        <div class="col col-lg-2 col-xl-2">
+                                <span class="font-weight-bold">Gender</span> : 
+                            {{gaps.gender}}
+                        </div>
+                        <div class="col col-lg-2 col-xl-2">
+                                <span class="font-weight-bold">DOB </span> :                         
+                                {{gaps.dateOfBirthSk| date}}
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="gaps">
+                        <div class="col col-lg-12">
+                            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" *ngxPermissionsOnly="['11D']"></button>
+                            <br><br>
+                            <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="gaps.qmsGicLifecycle" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Member_Gaps_List">
+                                <ng-template pTemplate="header" >
+                                    <tr>
+                                        <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-color">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th *ngFor="let col of cols" [ngSwitch]="col.field" >
+                                            <!-- <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
+                                            <p-dropdown *ngSwitchCase="'status'"  placeholder="select" [options]="statusTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                                            <p-dropdown *ngSwitchCase="'priority'"  placeholder="select" [options]="priorityTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr>
+                                        <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <a *ngSwitchCase="'measureTitle'" [routerLink]="['/member-gap/', rowData.qualityMeasureId, memberID]">
+                                                {{rowData[col.field]}}
+                                            </a>
+                                            <span *ngSwitchCase="'start_date'">
+                                                    {{rowData[col.field] | date}}
+                                            </span>
+                                            <span *ngSwitchCase="'end_date'">
+                                                    {{rowData[col.field] | date}}
+                                            </span>
+                                            <span *ngSwitchDefault>
+                                                    {{rowData[col.field]}}
+                                            </span>
+                                        
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

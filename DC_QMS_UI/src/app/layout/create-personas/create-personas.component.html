@@ -1,0 +1,61 @@
+<div  style="margin: 25px;margin-top: 10px">
+        <app-page-header [heading]="'Create Persona'" [icon]="'fa-table'"></app-page-header>
+        <div class="card">
+        <div class="row">
+            <div class="col col-lg-12 ">
+                  <!--  <button class="btn btn-primary" (click)="save(dt.value)" >Submit</button> -->
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" >
+                        <ng-template pTemplate="header">
+                                <tr class="header-class">
+                                    <th>persona</th>
+                                    <th>description</th>
+                                    <th>cluster</th>
+                                    <th>attr1</th>
+                                    <th>attr2</th>
+                                    <th>attr3</th>
+                                  
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData>
+                                <tr>
+                                    <td pEditableColumn  pTooltip="Click to Edit">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="rowData.persona">
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{rowData.persona}}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td pEditableColumn  pTooltip="Click to Edit">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="rowData.description">
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{rowData.description}}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td>
+                                    {{rowData.cluster}}
+                                    </td>
+                                    <td>
+                                        {{rowData.attr1}}
+                                    </td>
+                                    <td>
+                                            {{rowData.attr2}}
+                                    </td>
+                                    <td>
+                                            {{rowData.attr3}}
+                                    </td>
+                             
+                                </tr>
+                            </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    </div>
+    

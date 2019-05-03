@@ -1,0 +1,21 @@
+<div  style="margin: 25px;margin-top: 10px">
+        <app-page-header [heading]="'Communication To Enroll'" [icon]="'fa-table'"></app-page-header>
+
+<div  class="container-fluid h-100">
+    <!-- <h2 class="text-muted">Dashboard </h2> -->
+    <div class="card row p-3 align-items-center">
+        <div class="row  col-lg-12">
+        <div>
+            <button type="button" pButton label="Statistics" [routerLink]="['/communication-stats/']"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
+            <button type="button" pButton label="Member List" [routerLink]="['/member-list/',2]" class="btn-space"></button> 
+            <br><br>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 col-lg-12 justify-content-center h-100">
+            <iframe class="embed-responsive-item" [src]="externalURL" allowfullscreen>
+            </iframe>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+

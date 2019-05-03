@@ -1,0 +1,43 @@
+// .dashboard{
+//    // background:url('/assets/images/Dr Tablet.jpg') no-repeat;
+//    // background-size: cover;
+
+// }
+.lineClass{
+    margin: 0px;
+    border-top: 2px solid #20A8D8;
+    width: 35px;
+    float: left;
+}
+.row-class{
+    margin: 5px;
+}
+.spv-images
+{
+    max-width: none;
+}
+// .carasoulImage{
+//     width:463px;
+// }
+// /deep/
+// .ui-carousel .ui-carousel-viewport .ui-carousel-items .ui-carousel-item {
+//     width: 463px !important;
+// }
+
+/deep/
+.ui-picklist-source-controls {
+    display: none !important;
+  }
+  /deep/
+  .ui-picklist-target-controls {
+    display: none !important;
+  }
+/deep/
+  .ui-dialog-content{
+    width: 700px;
+  }
+  
+//   /deep/
+//   .app-body .main{
+//     font-family: "Heebo";
+//   }

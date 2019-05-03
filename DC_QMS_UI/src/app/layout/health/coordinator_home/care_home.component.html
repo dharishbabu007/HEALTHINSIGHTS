@@ -1,0 +1,131 @@
+
+  <!-- <app-page-header [heading]="'Home'" [icon]="'fa fa-home'"></app-page-header> -->
+  <div class="col-lg-12" style="padding: 0px">
+ 
+      <h2 [ngStyle]="{ 'background-color': '#F26363',
+      'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-home"></i> Home</h2>
+  </div>
+  
+  <div class="row p-3 align-items-center">
+    <div class="row col-lg-12"  style=" margin-left: 13px;">
+        <div class="row col-lg-12">
+          <h2>Snapshot</h2>
+        </div>
+        <div class="row col-lg-12" style="margin-bottom: 15px">
+          <div class="col-lg-4 ">
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12 images-heightClass" style="background-color: #61AEF3;
+            color: black;
+            border-radius: 25px;height: 33vh;">
+              <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>ENROLLMENTS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Enrollments" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}}
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}
+                </div>
+              </div>
+                  <a [routerLink]="['/health/enrollments']"><button type="submit" class="btn btn-primary btn-style">Manage</button></a>
+              </div>
+          </div>
+          <div class="col-lg-4" >
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12 " style="background-color: #BFBFBF;
+            color: black;
+            border-radius: 25px;height: 33vh;">
+            <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>GOALS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Goals" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}  
+                </div>
+              </div>
+              <a [routerLink]="['/health/goals']"><button type="submit" class="btn btn-primary btn-style">Recommend</button></a>
+              </div>
+          </div>
+          <div class="col-lg-4" >
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12 " style="background-color: #61AEF3;
+            color: black;
+            border-radius: 25px;height: 33vh;">
+            <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>REWARDS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Rewards" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}  
+                </div>
+            </div>
+            <a [routerLink]="['/health/rewards']"> <button type="submit" class="btn btn-primary btn-style">Recommend</button></a>
+            </div>
+        </div>
+      </div>
+        <br>
+        <div class="row col-lg-12">
+          <div class="col-lg-4 " >
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12 " style="background-color: #BFBFBF;
+            color: black;
+            border-radius: 25px;height: 33vh;">
+            <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>PROGRESS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Progress" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}  
+                </div>
+              </div>
+              <a [routerLink]="['/health/frame-url','http://192.168.184.70/views/GoalPerformanceTracking/GoalPerformanceTracking?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']"><button type="submit" class="btn btn-primary btn-style" style="    right: 96px;">Tracking</button></a>
+              <a [routerLink]="['/health/churn-member-list']"><button type="submit" class="btn btn-primary btn-style">Churn</button></a>
+              </div>
+          </div>
+          <div class="col-lg-4">
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12 " style="background-color: #61AEF3;
+            color: black;
+            border-radius: 25px;height: 33vh;">
+            <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>INTERVENTIONS</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Interventions" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}  
+                </div>
+              </div>
+              <a [routerLink]="['/health/intervention']"> <button type="submit" class="btn btn-primary btn-style">Recommend</button></a>
+              </div>
+          </div>
+          <div class="col-lg-4">
+              <div class="col-lg-12 " style="background-color: #BFBFBF;
+              color: black;
+              border-radius: 25px;height: 33vh;">
+            <!-- <button type="submit" class="btn btn-primary">Manage</button> -->
+            <div class="col-lg-12" style="padding-top: 23px;color: black;">
+                <h4>SATISFACTION</h4></div>
+              <div class="col-lg-12 row" *ngFor="let data of Satisfaction" style="color: black">
+                <div class="col-lg-10 mainline">
+                    {{data?.title}} 
+                </div>
+                <div class="col-lg-2 secondline">
+                  {{data?.value}}  
+                </div>
+              </div>
+              <a [routerLink]="['/health/recommend-member-list']"> <button type="submit" class="btn btn-primary btn-style">View</button></a>
+              </div>
+          </div>
+        </div>  
+    </div>
+  </div>
+
+
