@@ -1,0 +1,85 @@
+<div> 
+        <div class="col-lg-12" style="padding: 0px">
+            <h2 [ngStyle]="{ 'background-color': '#F26363',
+                'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Likelihood To Churn Member List</h2>
+       </div>
+       <div class="row col-lg-12" style="padding-left: 47px; padding-top: 20px;">
+        <div class="card">
+            <div class="col-lg-12">
+                <br>
+                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="churnData" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="Member_Details" dataKey="memberId">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                            <th style="width: 15vw;">Member Details</th>
+                            <th style="width: 12vw;">Motivations</th>
+                            <th>Goals</th>
+                            <th style="width: 8vw;">Reward</th>
+                            <th style="width: 10vw;">Likelihood To Churn</th>
+                            <th style="width: 7vw;">Churn</th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of cols" >
+                            <input pInputText type="text" (input)="dt.filter($event.target.value, col.field[1], 'contains')">
+                            </th>    
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td  *ngFor="let col of columns"  [ngSwitch]="col.header">
+                                <span  *ngSwitchCase="'Member Details'">
+                                        {{rowData[col.field[0]]}} <span class="vl"></span>
+                                        {{rowData[col.field[2]]}} <span class="vl"></span>
+                                        {{rowData[col.field[3]]}} <span class="vl"></span><br>
+                                        <span style="font-size: 13px;"><b style="color: #1876C6">MemberId: </b><b style="font-weight: 400;opacity: 0.5;"><a [routerLink]="['/health/smv/',rowData[col.field[1]]]">{{rowData[col.field[1]]}} </a> </b></span>
+                                </span>
+                                <span  *ngSwitchCase="'Goals'">
+                                        <div class="col-lg-12 row no-padding-class goals-height">
+                                            <div class="col-lg-6 row " style="padding-right: 0;">
+                                                <span class="col-lg-12">Physical Activity Goal</span>
+                                                <span class="col-lg-12">Physical Activity Frequency</span>
+                                                <span class="col-lg-12">Physical Activity Date</span>
+                                            </div>
+                                            <div class="col-lg-6 row" style="padding-right: 0;">
+                                                <span class="col-lg-12"> {{rowData[col.field[0]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[1]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[2]]  | date}} </span>
+                                            </div>
+                                        </div> 
+                                        <hr>
+                                        <div class="col-lg-12 row no-padding-class goals-height">
+                                            <div class="col-lg-6 row" style="padding-right: 0;">
+                                                <span class="col-lg-12">Calorie Intake Goal</span>
+                                                <span class="col-lg-12">Calorie Intake Frequency</span>
+                                                <span class="col-lg-12">Calorie IntakeDate</span>
+                                            </div>
+                                            <div class="col-lg-6 row" style="padding-right: 0;">
+                                                <span class="col-lg-12"> {{rowData[col.field[3]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[4]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[5]]  | date}} </span>
+                                            </div>
+                                        </div> 
+                                        <hr>
+                                        <div class="col-lg-12 row no-padding-class goals-height">
+                                            <div class="col-lg-6 row" style="padding-right: 0;">
+                                                <span class="col-lg-12">CareGap</span>
+                                                <span class="col-lg-12">CareGap Date</span>
+                                            </div>
+                                            <div class="col-lg-6 row" style="padding-right: 0;">
+                                                <span class="col-lg-12"> {{rowData[col.field[6]]}} </span>
+                                                <span class="col-lg-12"> {{rowData[col.field[7]]}} </span>
+                                            </div>
+                                        </div> 
+                                </span>
+                                <span *ngSwitchDefault>
+                                        {{rowData[col.field]}}
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>       
+        </div>
+        </div>
+    </div>
+    

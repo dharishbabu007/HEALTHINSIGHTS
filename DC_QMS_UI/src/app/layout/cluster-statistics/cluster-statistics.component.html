@@ -1,0 +1,99 @@
+<div  style="margin: 25px;margin-top: 10px">
+        <app-page-header [heading]="'Clustering Statistics'" [icon]="'fa-table'"></app-page-header>
+        <div class="card">
+        <div class="row p-3 align-items-center">
+            <div class="col col-lg-12 ">
+    
+         
+                <p-table #dt  class="table table-bordered table-hover styletable" [scrollable]="false" [value]="membergaps" [columns]="cols"  selectionMode="single" dataKey="id">
+                    <!-- <ng-template pTemplate="header">
+                        <tr>
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr> 
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData >
+                        <tr>
+                            <td *ngFor="let col of cols" style="cursor: pointer;"  [ngSwitch]="rowData[col.field]" style="width: 11.6vw;">
+                                     <span *ngSwitchCase="'average.within'" pTooltip="Average of within-cluster sum of squares"  >
+                                            {{rowData[col.field]}}
+                                     </span>
+                                     <span *ngSwitchCase="'cluster.number'" pTooltip="Number of cluster in each iterations"  >
+                                            {{rowData[col.field]}}
+                                     </span>
+                                     <span *ngSwitchCase="'within.cluster.ss'" pTooltip="Vector of within-cluster sum of squares, one component per cluster"  >
+                                            {{rowData[col.field]}}
+                                     </span>
+                                     <span *ngSwitchCase="'average.between'" pTooltip="Average of between-cluster sum of squares." >
+                                            {{rowData[col.field]}}
+                                     </span>
+                                     <span *ngSwitchCase="'avg.silwidth'" pTooltip="Average of Silhouette width">
+                                            {{rowData[col.field]}}
+                                     </span>
+                                    <span *ngSwitchDefault>
+                                        {{rowData[col.field]}}
+                                    </span>
+                            </td>
+                        </tr>
+                    </ng-template> -->
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th *ngFor="let col of cols1" class="header-class">
+                                {{col}}
+                            </th>
+                        </tr>           
+                        <tr>
+                            <td  *ngFor="let col of cols2 ">
+                                {{col}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  *ngFor="let col of cols3 ">
+                                {{col}}
+                            </td>
+                        </tr> 
+                           
+                    </ng-template>
+                    <ng-template pTemplate="body">
+
+                        </ng-template>
+                </p-table>
+                <!-- <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols1" selectionMode="single" dataKey="id" >
+                        
+                        <ng-template pTemplate="header" >
+                                <tr>
+                                    <td *ngFor="let col of cols1"  style="width: 11.6vw;" >
+                                          {{col.aggStage}}
+                                            
+                                    </td>
+                                     <td  *ngFor="let col of cols1" colspan="5" class="text-center align-middle" >
+                                            {{col.test1}}
+                                     </td>
+                                    
+                                </tr>
+                            </ng-template>
+                    </p-table>
+                    <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols2" selectionMode="single" dataKey="id" >
+                            <ng-template pTemplate="body">
+                                    <tr *ngFor="let col of cols2; let i=index">
+                                        <td>{{col[i]}}</td>
+                                    </tr>
+                                </ng-template>
+                    </p-table> -->
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row col-lg-12">
+                <div class="col col-lg-6 ">
+                    <img src="assets/images/Clustering Statistics Silhouette Image.jpg" height="500px" width="500px">
+                </div>
+                <div class="col col-lg-6 ">
+                    <img src="assets/images/Kmean_elbow_validation.jpg" height="500px" width="500px">
+                </div>
+        </div>
+    </div>
+    </div>
+    

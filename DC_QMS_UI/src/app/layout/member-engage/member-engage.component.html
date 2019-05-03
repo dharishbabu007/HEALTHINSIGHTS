@@ -1,0 +1,122 @@
+<div  style="margin: 25px;margin-top: 10px">
+    <app-page-header [heading]="'Member Enagagement'" [icon]="'fa-table'"></app-page-header>
+    <div class="card">
+
+    <div class="row p-3 align-items-center">
+        <div class="col-sm-12 col-lg-4 ">
+            <div class="brand-card  card-block">
+                <div class="brand-card-header text-white pb-0 bg-secondary">
+                    <div class="text-value">Know Your Customer</div>
+                </div>
+                <div class="brand-card-body text-black pb-2">
+                       <div *ngIf="showMainContent">
+                            <img src="assets/images/Know your customer.jpg" width="100%" label="Show" (mouseenter)="ShowHideButton()" style="cursor: pointer;" class="imgclass">
+                       </div>
+                       
+                       <div  *ngIf="!showMainContent"  (mouseleave)="ShowHideButton()">
+                            <ng-template #popContent>
+                                    <span class="text-left list-values" [routerLink]="['/cluster-analysis/']" style="cursor: pointer;">
+                                        Clustering
+                                   </span>
+                                   <hr>
+                                <span class="text-left list-values"  [routerLink]="['/create-persona/']" style="cursor: pointer;">
+                                     Create Personas
+                                </span>
+                            <hr>
+                                <span class="text-left list-values" [routerLink]="['/view-persona/']" style="cursor: pointer;">
+                                     View Personas
+                                </span>
+                                <hr>
+                                <span class="text-left list-values" [routerLink]="['/member-list/']"  style="cursor: pointer;"> <!--  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Clustering-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" -->
+                                    View Member List
+                               </span>
+                                
+                        
+                               
+                            </ng-template>
+                           
+                             <table class="qmstable" style="width:100%;height:100%">
+                                    <tr>
+                                        <td class="text-left list-values" [ngbPopover]="popContent" placement="right" style="cursor: pointer;">Personas</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left list-values" >Single Member View</td>
+                                    </tr>
+                                </table>
+                       </div>
+                      
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-4 ">
+            <div class="brand-card  card-block"> 
+                <div class="brand-card-header text-white pb-0 bg-secondary">
+                    <div class="text-value">Engage With Customer</div>
+                </div>
+                <div class="brand-card-body text-black pb-2">
+                    <div *ngIf="showMainContent1">
+                    <img src="assets/images/Engage with Customer.jpg" width="100%" style="cursor: pointer;" (mouseenter)="ShowHideButton1()" class="imgclass" > </div>
+                    <div  *ngIf="!showMainContent1" (mouseleave)="ShowHideButton1()" >
+                            <table class="qmstable" style="width:100%;height:100%">
+                                    <tr>
+                                        <td class="text-left list-values" [routerLink]="['/likelihood/',2]" style="cursor: pointer;">Likelihood To Enroll</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left list-values" [routerLink]="['/communication-enroll/']" style="cursor: pointer;">Communication to Enroll</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left list-values">Track Progress</td>
+                                    </tr>
+                                    <tr>
+                                         <td class="text-left list-values">Recommend Goals</td>
+                                     </tr>
+                                     <tr>
+                                            <td class="text-left list-values">Recommend Rewards</td>
+                                        </tr>
+                                        <tr>
+                                                <td class="text-left list-values">Recommend Interventions</td>
+                                            </tr>
+                                </table>
+                            <!--<p-tieredMenu [model]="items" [style]="{'border':'none','width':'10.5em','padding':'20px','text-color': 'black'}" overlay={popoverLeft}></p-tieredMenu> -->
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-4 ">
+            <div class="brand-card  card-block">
+                <div class="brand-card-header text-white pb-0 bg-secondary">
+                    <div class="text-value">Evaluate Customer Relationship</div>
+                </div>
+                <div class="brand-card-body text-black pb-2">
+                        <div *ngIf="showMainContent2">
+                              
+                    <img src="assets/images/Evaluate relationship with customer.jpg" width="100%" style="cursor: pointer;" (mouseenter)="ShowHideButton2()"  class="imgclass">
+                    </div>
+                    <div  *ngIf="!showMainContent2" (mouseleave)="ShowHideButton2()" >
+
+                            <table class="qmstable" style="width:100%;height:100%">
+                                   <tr>
+                                       <td class="text-left list-values" [routerLink]="['/likelihood/',1]"  style="cursor: pointer;">Likelihood To Churn</td>
+                                   </tr>
+                                   <tr>
+                                       <td class="text-left list-values">Customer Lifetime Value</td>
+                                   </tr>
+                                   <tr>
+                                       <td class="text-left list-values">Likelihood to recommend</td>
+                                   </tr>
+                                   <tr>
+                                        <td class="text-left list-values">Likelihood to Safety</td>
+                                    </tr>
+                               </table>
+                         
+                      </div>
+                     
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    </div>

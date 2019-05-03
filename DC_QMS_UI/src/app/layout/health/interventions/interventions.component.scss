@@ -1,0 +1,38 @@
+.lineClass{
+    margin: 0px;
+        border-top: 2px solid #0275d8;
+        width: 35px;
+        float: left;
+}
+.no-padding-class{
+    padding: 0px
+}
+.headings
+{background-color: #0168C1;
+    color: white;}
+
+ /deep/   .ui-calendar.ui-calendar-w-btn input{
+    width: 138px;
+    }
+    .position-test{
+        padding: 20px;
+        border: 2px dashed red;
+    }
+
+    .form-control{
+        border: 1px solid #ABACAD;
+    }
+    .ui-inputtext {
+        border: 1px solid #ABACAD;
+    }
+    .table-background{
+        background-color: #F1F1F1;
+        border-radius: 7px;
+    }
+    .table-bordered td {
+        border: none;
+        height: 40px;
+    }
+    .table-bordered{
+        border: none;
+    }

@@ -1,0 +1,271 @@
+<div  style="margin: 25px;margin-top: 10px">
+    <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
+    <div class="card row p-3">
+
+        <div class="row p-3 align-items-center" *ngIf="type==1">
+            <div class="col-lg-12">
+                    <span class="col-lg-6">
+                            <h4>Model Summary</h4>
+                          </span>
+               
+               <!-- <button type="button" pButton label="back" [routerLink]="['/likelihoodChurn/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
+           
+
+                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
+
+                 <br><br>
+                <p-table #dt class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhc" [columns]="cols" [paginator]="true" [rows]="5" exportFilename="Model_Summary">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                            <th *ngFor="let col of cols" [pSortableColumn]="col.field" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns" >
+                             
+                                <span >{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+           </div>
+    
+            <div class="col-lg-12 ">
+                    <span class="col-lg-6">
+                            <h4>Confusion Matrix</h4>
+                            </span>
+                <br>
+                <span class="row"></span>
+                <table class="table table-bordered table-hover" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2"></th>
+                                <th colspan="2" style="text-align: center">Actual</th>
+                            </tr>
+                            <tr class="header-class">
+                                <th></th><th></th>
+                                <th>Positive</th>
+                                <th>Negative</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2" style="font-weight: bold;">Predicted</td>
+                                <td style="font-weight: bold;">Positive</td>
+                                <td>{{tp}}</td>
+                                <td>{{fp}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Negative</td>
+                                <td>{{fn}}</td>
+                                <td>{{tn}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+                <div class="col-lg-12 ">
+                <span class="col-lg-6">
+                        <h4>Model Score</h4>
+                </span>        
+                    <!-- <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt2.exportCSV()" style="float:left"></button> -->
+                    <br>
+                    <table class="table table-bordered table-hover" style="width: 100%;text-align: center">
+                            <thead>
+                                <tr class="header-class">
+                                    <th>ModelScore</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ModelScore}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+        <span class="col-lg-6" style="margin-top: 10px">
+        <h4 >Model Performance</h4>
+        </span>
+        <br><br>
+        <div class="row col-lg-12">
+
+            <div class="col-lg-6 ">
+            <img src="http://healthinsight:8082/lhc/FourFoldPlot.jpeg">
+            </div>
+            <div class="col-lg-6">
+            <img src="http://healthinsight:8082/lhc/ROCplot.jpeg">
+            </div>
+        </div>
+    </div>
+<p-tabView *ngIf="type==2">
+              
+                 <p-tabPanel header="Likelihood to enroll"  leftIcon="pi pi-calendar" >
+                  
+               
+       <div class="row p-3 align-items-center" *ngIf="type==2">
+            <div class="col-lg-12">
+                    <span class="col-lg-6">
+                            <h4>Model Summary </h4>
+                          </span>
+               
+               <!-- <button type="button" pButton label="back" [routerLink]="['/likelihoodChurn/']" style="float:left" class="btn-space"></button>  &nbsp;&nbsp; -->
+           
+
+                 <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right" class="btn-space"></button>  &nbsp;&nbsp;
+                 <br><br>
+
+    
+                <p-table #dt3 class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhe" [columns]="LHEModelSummary" [paginator]="true" [rows]="5" exportFilename="LHEModelSummary">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                            <th *ngFor="let col of LHEModelSummary" [pSortableColumn]="col.field" >
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th *ngFor="let col of LHEModelSummary" [ngSwitch]="col.field">
+                            <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns" >
+                             
+                                <span >{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+           </div>
+       
+            <div class="col-lg-12">
+                    <span class="col-lg-6">
+                            <h4>Confusion Metric </h4>
+                          </span>
+                 <br>
+                 <table class="table table-bordered table-hover" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2"></th>
+                                <th colspan="2" style="text-align: center">Actual</th>
+                            </tr>
+                            <tr class="header-class">
+                                <th></th><th></th>
+                                <th>Positive</th>
+                                <th>Negative</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2" style="font-weight: bold;">Predicted</td>
+                                <td style="font-weight: bold;">Positive</td>
+                                <td>{{tplhe}}</td>
+                                <td>{{fplhe}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Negative</td>
+                                <td>{{fnlhe}}</td>
+                                <td>{{tnlhe}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+           </div>
+
+                <div class="col-lg-12 ">
+                <span class="col-lg-6">
+                        <h4>Model Score</h4>
+                </span>        
+                    <br>
+                    <table class="table table-bordered table-hover" style="width: 100%;text-align: center">
+                            <thead>
+                                <tr class="header-class">
+                                    <th>ModelScore</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ModelScorelhe}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+        <span class="col-lg-6" style="margin-top: 10px">
+        <h4 *ngIf="type==2">Model Performance</h4>
+        </span>
+        <br><br>
+        <div class="row col-lg-12" *ngIf="type==2">
+
+             <div class="col-lg-6 ">
+            <img src="http://healthinsight:8082/lhe/FourFoldPlot.jpeg">
+            </div>
+            <div class="col-lg-6">
+            <img src="http://healthinsight:8082/lhe/ROCplot.jpeg">
+            </div>
+        </div>
+    </div>
+</p-tabPanel>
+    <p-tabPanel header="Reason to not enroll" leftIcon="pi pi-calendar">
+            <div class="row p-3 align-items-center" *ngIf="type==2">
+                  
+                    <span class="col-lg-6">
+                            <h4>Cluster Analysis</h4>
+                    </span>   
+                    <span class="col-lg-12" style="text-align: center;"><img src="http://healthinsight:8082/lhe/Kmean_clustering.png" height="500px" width="600px"></span>     
+                    
+                  
+            </div>
+            <div class="row p-3 align-items-center">
+                    <div class="col-lg-12 ">
+                    <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt3.exportCSV()" style="float:right"></button>
+                        <br><br>
+                        <p-table #dt3  class="table table-bordered table-hover ui-state-default1" [scrollable]="false" [value]="membergaps2" [columns]="cols1" exportFilename="Cluster_Analysis">
+                               <ng-template pTemplate="header">
+                                            <tr class="header-class">
+                                                <th  *ngFor="let col of cols1[0] ">
+                                                        {{col}}
+                                                    </th>
+                                                </tr>
+                                            <tr *ngFor="let col of cols1;let i=index">
+                                                <td  *ngFor="let col of cols1[i+1] ">
+                                                    {{col}}
+                                                </td>
+                                            </tr>
+                                </ng-template>
+                                <ng-template pTemplate="footer">
+                                        <tr *ngFor="let col of mergeCols" style="height: 42px;">
+                                            <td>{{col[0]}}</td>
+                                            <td  colspan="5">{{col[1]}}</td>
+                                        </tr>
+                                    </ng-template>
+                            </p-table>
+                        </div>
+            </div>
+            <br>
+            <div class="row col-lg-12">
+                    <span class="col-lg-12">
+                            <h4>Cluster Validation</h4>
+                    </span>
+                    <br><br>
+                    <div class="col-lg-6 ">
+                            <img src="http://healthinsight:8082/lhe/Kmean_silhouette_validation.png" height="500px" width="500px">
+                    </div>
+                    <div class="col-lg-6 ">
+                            <img src="http://healthinsight:8082/lhe/Kmean_elbow_validation.png" height="500px" width="500px">
+                    </div>
+            </div>
+
+    </p-tabPanel>    
+</p-tabView>
+</div>
+
+</div>

@@ -1,0 +1,44 @@
+/deep/.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    padding: 0px !important;
+}
+input {
+    width: 100%;
+}
+.table-bordered{
+    border: none;
+}
+.header-class{
+    background-color: #0275D8;
+    color: white
+}
+.vl{
+    border-left: 1px solid #EEF2F5;
+    height: 20px;
+}
+.vl1{
+    border-left: 1px solid black;
+    height: 120px;
+
+}
+.no-padding{
+    padding: 0;
+}
+/deep/
+body .ui-multiselect {
+    background: #ffffff;
+    padding: 0;
+}
+
+td:nth-child(3) {
+    background-color: #DEF5DF;
+  }
+  td:nth-child(4){
+    background-color: aliceblue;
+  }
+  .goalCategoryHeading{
+    font-weight: 600;
+    color: #989898;
+}
+.mainClass{
+    min-height: inherit;
+}

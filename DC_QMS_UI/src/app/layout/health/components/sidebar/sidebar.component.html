@@ -1,0 +1,324 @@
+<!-- <div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown" ngbDropdown>
+            <a class="nav-link nav-dropdown-toggle" ngbDropdownToggle>
+            <i class="nav-icon "></i> Base</a>
+            <ul class="nav-dropdown-items" ngbDropdownMenu>
+                <li class="nav-item">
+                    <a class="nav-link" href="base/breadcrumb.html">
+                    <i class="nav-icon "></i> Breadcrumb</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="base/cards.html">
+                    <i class="nav-icon "></i> Cards</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-cursor"></i> Buttons</a>
+            <ul class="nav-dropdown-items">
+            <li class="nav-item">
+                <a class="nav-link" href="buttons/buttons.html">
+                <i class="nav-icon icon-cursor"></i> Buttons</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="buttons/button-group.html">
+                <i class="nav-icon icon-cursor"></i> Buttons Group</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="buttons/dropdowns.html">
+                <i class="nav-icon icon-cursor"></i> Dropdowns</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="buttons/brand-buttons.html">
+                <i class="nav-icon icon-cursor"></i> Brand Buttons</a>
+            </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="charts.html">
+            <i class="nav-icon icon-pie-chart"></i> Charts</a>
+        </li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-star"></i> Icons</a>
+            <ul class="nav-dropdown-items">
+            <li class="nav-item">
+                <a class="nav-link" href="icons/coreui-icons.html">
+                <i class="nav-icon icon-star"></i> CoreUI Icons
+                <span class="badge badge-success">NEW</span>
+                </a>
+                <a class="nav-link" href="icons/flags.html">
+                <i class="nav-icon icon-star"></i> Flags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="icons/font-awesome.html">
+                <i class="nav-icon icon-star"></i> Font Awesome
+                <span class="badge badge-secondary">4.7</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="icons/simple-line-icons.html">
+                <i class="nav-icon icon-star"></i> Simple Line Icons</a>
+            </li>
+            </ul>
+        </li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-bell"></i> Notifications</a>
+            <ul class="nav-dropdown-items">
+            <li class="nav-item">
+                <a class="nav-link" href="notifications/alerts.html">
+                <i class="nav-icon icon-bell"></i> Alerts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="notifications/badge.html">
+                <i class="nav-icon icon-bell"></i> Badge</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="notifications/modals.html">
+                <i class="nav-icon icon-bell"></i> Modals</a>
+            </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="widgets.html">
+            <i class="nav-icon icon-calculator"></i> Widgets
+            <span class="badge badge-primary">NEW</span>
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li class="nav-title">Extras</li>
+        <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon icon-star"></i> Pages</a>
+            <ul class="nav-dropdown-items">
+            <li class="nav-item">
+                <a class="nav-link" href="login.html" target="_top">
+                <i class="nav-icon icon-star"></i> Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="register.html" target="_top">
+                <i class="nav-icon icon-star"></i> Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="404.html" target="_top">
+                <i class="nav-icon icon-star"></i> Error 404</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="500.html" target="_top">
+                <i class="nav-icon icon-star"></i> Error 500</a>
+            </li>
+            </ul>
+        </li>
+
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>
+<!-- <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+    <div class="list-group">
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('qms')">
+                <i class="fa fa-line-chart"></i>&nbsp;
+                <span>{{ 'Quality Management' | translate }}</span>
+                <i class="fa  float-right" [ngClass]="{
+                    'fa-caret-right ':showMenu !== 'qms',
+                    'fa-caret-down ':showMenu === 'qms'
+                  }"></i>
+            </a>
+            <li class="nested" [class.expand]=" showMenu === 'qms' || showMenu === 'qps' || showMenu === 'config' ">
+                <ul class="submenu">
+                    <li>
+                        <a href="http://healthinsight:8082/curis/hleft.jsp#!/" target="_blank">
+                            <span>{{ 'Quality Central' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="nested-menu">
+                            <a class="list-group-item" (click)="addExpandClass('qps','qms')">
+                                <span>{{ 'Quality Program' | translate }}</span>
+                                <i class="fa  float-right" [ngClass]="{
+                                    'fa-caret-right ':showMenu !== 'qps',
+                                    'fa-caret-down ':showMenu === 'qps'
+                                    }"></i>
+                            </a>
+                            <li class="nested" [class.expand]="showMenu === 'qps'" >
+                                <ul class="submenu">
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/MIPS.html"  target="_blank">
+                                            <span>{{ 'MIPS' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/Hedis.html"  target="_blank">
+                                            <span>{{ 'HEDIS' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            <span>{{ 'OHA' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/CMS_Stars.html"  target="_blank">
+                                            <span>{{ 'CMS STAR' | translate }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="http://healthinsight:8082/curis/hleft.jsp#!/Measure_Library" target="_blank">
+                            <span>{{ 'Quality Measures' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="nested-menu">
+                            <a class="list-group-item" (click)="addExpandClass('config','qms')">
+                                <span>{{ 'Configuration' | translate }}</span>
+                                <i class="fa  float-right" [ngClass]="{
+                                    'fa-caret-right ':showMenu !== 'config',
+                                    'fa-caret-down ':showMenu === 'config'
+                                    }"></i>
+                            </a>
+                            <li class="nested" [class.expand]="showMenu === 'config'" >
+                                <ul class="submenu">
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/hleft.jsp#!/Final_Creator" target="_blank">
+                                            <span>{{ 'Measure Creator' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/programcreator']" [routerLinkActive]="['router-link-active']">
+                                            <span>{{ 'Program Creator' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/hleft.jsp#!/Measure_Configurator" target="_blank"> 
+                                            <span>{{ 'Configurator' | translate }}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="http://healthinsight:8082/curis/hleft.jsp#!/Measure_Worklist" target="_blank">
+                                            <span>{{ 'My Measures' | translate }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </div>
+       
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('gaps')">
+                <i class="fa fa-handshake-o"></i>&nbsp;
+                <span>{{ 'Gaps in Care' | translate }}</span>
+                <i class="fa  float-right" [ngClass]="{
+                    'fa-caret-right ':showMenu !== 'gaps',
+                    'fa-caret-down ':showMenu === 'gaps'
+                  }"></i>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'gaps'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Care Summary' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/member-care-gap-list']" [routerLinkActive]="['router-link-active']">
+                            <span>{{ 'Gaps List' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a >
+                            <span>{{ 'Close Patient Gap' | translate }}<br>
+                                <p-autoComplete [minLength]="3" placeholder="ID or Name" size="7"  [suggestions]="memberList" (onSelect)="redirect($event)" (completeMethod)="search($event)" ></p-autoComplete>
+                                </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>   
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('phm')">
+                <i class="fa fa-user-o"></i>&nbsp;
+                <span>{{ 'PHM' | translate }}</span>
+                <i class="fa  float-right" [ngClass]="{
+                    'fa-caret-right ':showMenu !== 'phm',
+                    'fa-caret-down ':showMenu === 'phm'
+                    }"></i>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'phm'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'PHM SUMMARY' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Risk Assessment' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Measure Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Membership Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Geo Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Utilitzation Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Financial Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <span>{{ 'Provider Analysis' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>   
+        <div class="header-fields">
+            <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('profile')">
+                    <span><i class="fa fa-user"></i>&nbsp; John Smith</span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'profile'">
+                    <ul class="submenu">
+                        <li>
+                            <a [routerLink]="['/login']" (click)="onLoggedout()">
+                                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+    <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+        <i class="fa fa-fw fa-angle-double-left"></i>&nbsp;
+        <span>{{ 'Collapse Sidebar' | translate }}</span>
+    </div>
+</nav> -->

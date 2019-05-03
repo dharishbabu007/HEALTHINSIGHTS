@@ -1,0 +1,68 @@
+<div  style="margin: 25px;margin-top: 10px">
+    <app-page-header [heading]="'User Mapping'" [icon]="'fa-user'"></app-page-header>
+    <div class="card ">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <form [formGroup]="myForm" novalidate method="post" class="form-horizontal">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label font-weight-bold" for="hf-userName">User Name *</label>
+                    <div class="col-md-9">
+
+                            <p-autoComplete  [suggestions]="filteredusers" (completeMethod)="filteredUsers($event)" [size]="30"
+                           placeholder="select/search user" [dropdown]="true" (onSelect)="getUserValues($event)" formControlName="user">
+                            <ng-template let-user pTemplate="item" >
+                               <div><span>{{user.name}}</span>
+                            <span class="NameStyle">{{user.value}}</span></div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <small *ngIf="!myForm.controls.user.valid && myForm.controls.user.touched" class="text-danger">
+                                User is required.
+                              </small>
+
+                            
+                       <!-- <p-dropdown placeholder="Select a User" [style]="{'width':'250px'}" [autoDisplayFirst]="false"  styleClass="form-control" [options]="userList" formControlName="userName"></p-dropdown>
+                        <small *ngIf="!myForm.controls.userName.valid && myForm.controls.userName.touched" class="text-danger">
+                          User Name is required.
+                        </small>
+                        -->
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                        <label class="col-md-3 col-form-label font-weight-bold" for="hf-status">Status *</label>
+                        <div class="col-md-9">
+                            <p-dropdown placeholder="Select a status" [style]="{'width':'250px'}" [autoDisplayFirst]="false"  styleClass="form-control" [options]="statusList" formControlName="status" ></p-dropdown> <!-- (ngModelChange)="onChangeList($event)"-->
+                            <small *ngIf="!myForm.controls.status.valid && myForm.controls.status.touched" class="text-danger">
+                                status is required.
+                            </small>
+                        </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label font-weight-bold" for="hf-roleName">RoleName *</label>
+                    <div class="col-md-9">
+                        <p-dropdown placeholder="Select a Role" [style]="{'width':'250px'}" [autoDisplayFirst]="false"  styleClass="form-control" [options]="roleList" formControlName="roleName"></p-dropdown>
+                        <small *ngIf="!myForm.controls.roleName.valid && myForm.controls.roleName.touched" class="text-danger">
+                          Role Name is required.
+                          </small>
+                    </div>
+                </div>
+
+
+               </form>
+            </div>
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-primary" (click)="onSubmit(myForm.value,myForm.valid)" >
+                  <i class="fa fa-dot-circle-o"></i> Submit
+                </button>&nbsp;&nbsp;
+         
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    
+    

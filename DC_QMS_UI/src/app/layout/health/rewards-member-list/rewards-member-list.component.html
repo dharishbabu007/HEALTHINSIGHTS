@@ -1,0 +1,99 @@
+<div>
+    <div class="col-lg-12 no-padding mainClass" style="padding: 0px">
+        <h2 [ngStyle]="{ 'background-color': '#F26363',
+            'height': '59px','color':'white','padding': '10px'}"> <i class="fa fa-list"></i> Rewards Member List</h2>
+   </div>
+   <div class="row col-lg-12 no-padding mainClass" style="padding-left: 47px; padding-top: 20px;">
+    <div class="card">
+        <div class="col-lg-12 no-padding">
+            <br>
+            <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float: right"></button><br><br>
+                <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="goalsData" [columns]="cols" [paginator]="true" [rows]="20"  exportFilename="rewards_member_list" dataKey="memberId">
+                    <ng-template pTemplate="header">
+                        <tr class="header-class">
+                                <th style="width: 3em"></th>
+                                <th>Member Details</th>
+                                <th>Recommendations</th> 
+                                <th>Rewards Set</th>
+                                <th style="width: 19vw;">Goal Category Heading</th>
+                                <th>Goals Set</th>
+                                
+                        </tr>
+                        <tr>
+                                <th></th>   
+                            <th *ngFor="let col of cols" [ngSwitch]="col.header">
+                                <input *ngSwitchCase="'Member Details'" pInputText type="text" (input)="dt.filter($event.target.value, col.field[1], 'contains')" style="height: 100%;padding-top: 0;">
+                                <p-multiSelect *ngSwitchCase="'Reccomendations'"  [filter]="false" placeholder="select" [options]="rewardTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-multiSelect>
+                                <p-multiSelect *ngSwitchCase="'Rewards Set'"  [filter]="false" placeholder="select" [options]="rewardTypes" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-multiSelect>
+                            </th>  
+                           
+                        </tr>
+
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData  let-expanded="expanded" let-columns="columns">
+                        <tr>
+                                <td>
+                                        <a href="#" [pRowToggler]="rowData">
+                                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                        </a>
+                                    </td>
+                            <td *ngFor="let col of columns"  [ngSwitch]="col.header"  style="padding-top: 0;padding-bottom: 0;">
+                                    <span  *ngSwitchCase="'Member Details'">
+                                         
+                                                {{rowData[col.field[0]]}} <span class="vl"></span>
+                                                {{rowData[col.field[2]]}} <span class="vl"></span>
+                                            {{rowData[col.field[3]]}} <span class="vl"></span><br>
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">MemberId:</b><b style="font-weight: 400;opacity: 0.5;"><a [routerLink]="['/health/smv/',rowData[col.field[1]]]">{{rowData[col.field[1]]}} </a>  </b></span>
+                                            
+                                    </span>
+                                    <span *ngSwitchCase="'Goal Category Heading'">
+                                            <div class="col-lg-12 row no-padding goalCategoryHeading" style="text-align: right">
+                                                <span class="col-lg-12 no-padding">Physical Activity Goal</span>
+                                                <span class="col-lg-12 no-padding">Physical Activity Frequency</span>
+                                                <span class="col-lg-12 no-padding">Physical Activity Date</span>
+                                            </div>
+                                        </span>
+                                        <span  *ngSwitchCase="'Goals Set'">
+                                                {{rowData[col.field[0]]}}<br>
+                                                {{rowData[col.field[1]]}}
+                                        </span>
+
+                                    <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                                 
+                            </td>
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                            <tr>
+                                <td></td>
+                                <td [attr.colspan]="columns.length " style="background-color: rgb(253, 247, 247);">
+                                    <div class="col-lg-12 row">
+                                        <div class="col-lg-4 no-padding">
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">Persona:</b></span>{{rowData.persona}}
+                                        </div>
+                                        <div class="col-lg-4 no-padding" style="padding-left: 10px">
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">Motivations:</b></span> {{rowData.motivations}}
+                                        </div>
+                                        <div class="col-lg-4" style="padding-left: 22px">
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">Category:</b></span>   {{rowData.category}}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 row">
+                                       
+                                        <div class="col-lg-4 no-padding">
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">Goal:</b></span> {{rowData.goal}}
+                                        </div>
+                                        <div class="col-lg- no-padding" style="padding-left: 10px">
+                                            <span style="font-size: 13px;"><b style="color: #1876C6">Frequency:</b></span>   {{rowData.frequency}}
+                                        </div>
+                                    </div>             
+                                </td>
+                               
+                            </tr>
+                    </ng-template>
+                </p-table>
+        </div>       
+    </div>
+    </div>
+</div>

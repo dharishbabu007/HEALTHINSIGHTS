@@ -1,0 +1,39 @@
+ <div class="form-group">
+              <div class="mb-3">
+                <div class="row">
+                  <span class="col-lg-6">
+                    <h4>Select Model</h4>
+                  </span>
+                </div>
+              <div class="row">
+                <span class="col-lg-6">
+                    
+                    <button class="btn btn-block" (click)="noShow()"> No Show Appointment prediction </button>
+                </span>
+              </div>
+              </div>
+              <div class="row mb-3">
+                <span class="col-lg-6">
+                 
+                    <button class="btn btn-block" > Model 1 </button>
+                </span>
+              </div>
+
+              <div class="row mb-3">
+                <span class="col-lg-6">
+                
+                   <button class="btn btn-block" > Model 2 </button>
+                </span>
+              </div>
+
+
+
+               <!--   
+              <div class="row">
+                  <span class="col-lg-5">
+                    <small *ngIf="!myForm.controls.name.valid && myForm.controls.name.touched" class="text-danger">
+                    Measure title is required.
+                    </small>
+                  </span>
+              </div> -->
+

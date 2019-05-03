@@ -1,0 +1,30 @@
+/deep/.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    padding: 0px !important;
+}
+input {
+    width: 100%;
+}
+.header-class{
+    background-color: #0275D8;
+    color: white
+}
+.table-bordered{
+    border: none;
+}
+.ui-widget-overlay.override  {
+    opacity: 0.05 !important;
+}
+@media(max-width:1120px){
+    /deep/
+    .ui-button-text-only .ui-button-text {
+         padding: 0; 
+    }
+}
+
+// /deep/
+// .app-body .main{
+//   font-family: "Open Sans";
+// }
+.table-bordered td{
+    font-family: "Amazon Ember",Arial,sans-serif;
+    }

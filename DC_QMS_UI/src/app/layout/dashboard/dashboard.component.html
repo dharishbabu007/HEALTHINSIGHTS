@@ -1,0 +1,125 @@
+<div  class="dashboard"  style="margin: 25px;margin-top: 10px">
+    <!-- <app-page-header [heading]="'Home'" [icon]="'fa-table'"></app-page-header> -->
+    <div class="row" class="dashboard">
+        <div class="col-lg-12 row">
+            <div class="col-lg-6">
+                <h2>Actions</h2>
+                <hr class="lineClass">
+                <br>
+                <div class="card" style="border-radius: 10px;height: 460px;max-height: 460px;overflow: auto;padding-top: 10px;">
+                    <div class="col-lg-12">
+                      <div class="row row-class">
+                          <span class="col-lg-12 font-weight-bold" style="font-size: large"><i class="fa fa-id-card"></i> &nbsp;Close Gaps</span>
+                       </div>
+                        <br>
+                        <div *ngFor="let care of careGaps;let i=index">
+                            <div  class="row row-class">
+                                <div class="col-lg-8 ">
+                                    <div class="row" style="padding-bottom: 5px">
+                                     <span class="col-lg-12" style="padding-right: 0px">
+                                        <b><a [routerLink]="['/smv/',care?.member_id]"> {{care?.name}} </a> </b> |
+                                        {{care?.age}}  |
+                                        {{care?.gender}}
+                                     </span>
+                                    </div>
+                                    <div class="row" style="padding-bottom: 5px"><span class="col-lg-12"><b>Member Id: </b>{{care?.member_id}} </span> </div>
+                                    <div class="row" style="padding-bottom: 5px"><span class="col-lg-12"><b>Care Gap: </b>{{care.careGaps[0]}}</span></div>
+                                </div>
+                                <div class="col-lg-4 font-weight-bold">
+                                     <a [routerLink]="['/member-gap-list/',care?.member_id]">Open record &nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                                <hr *ngIf="i < length-1">
+                        </div>
+
+                    </div>
+                  
+                      
+                </div>
+            </div>
+            <div class="col-lg-6">
+                    <h2>Favourites</h2>
+                    <hr class="lineClass">
+                    <br>
+                    <div class="card" style="border-radius: 10px;height: 279px;max-height: 300px;overflow: auto;margin-bottom: 10px;padding-top: 10px;">
+                        <div class="col-lg-12">
+                                <div class="row row-class" style="height: 250px;">
+                                    <div class="col-lg-12 col-md-12" style="    padding: 0;">
+                                        <p-carousel [value]="images" numVisible="1"  easing="easeOutStrong" circular="circular" autoplayInterval="5000">
+                                            <ng-template let-item pTemplate="item">
+                                                <img src={{item.source}} height="200px" width="100%">
+                                            </ng-template>
+                                        </p-carousel>
+                                    </div>
+                                </div>
+                        <!-- <div class="row row-class">
+                            <span class="col-lg-12 font-weight-bold" style="font-size: large"><i class="fa fa-id-card"></i> &nbsp; Single Patient View</span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-lg-3 spv-images"><a [routerLink]="['/spv',2018305]"><img src="assets/images/SPV_1.png"></a><br><span class="font-weight-bold">Guillema Paule MacConnal</span></div>
+                            <div class="col-lg-3 spv-images"><a [routerLink]="['/spv',2014070]"><img src="assets/images/SPV_2.png"></a><br><span class="font-weight-bold">Reinwald Garrard Withers</span></div>
+                            <div class="col-lg-3 spv-images"><a [routerLink]="['/spv',2018136]"><img src="assets/images/SPV_3.png"></a><br><span class="font-weight-bold">Dudley Edvard Bow</span></div>
+                            <div class="col-lg-3 spv-images"><a [routerLink]="['/spv',2015515]"><img src="assets/images/SPV_1.png"></a><br><span class="font-weight-bold">Derward Tabby Heales</span></div>
+                        </div>
+                        <br> -->
+                        <!-- <hr> -->
+                    
+                    </div>
+                          
+                              
+                    </div>
+                    <div class="card" style="border-radius: 10px;overflow: auto;height: 172px;max-height: 300px;padding-top: 10px;">
+                            <div class="col-lg-12">
+                                <div class="row row-class">
+                                    <span class="col-lg-11 col-md-10 font-weight-bold" style="font-size: large"><i class="fa fa-link" aria-hidden="true"></i> &nbsp; Quick Links</span>   
+                                    <span class="col-lg-1 col-md-2" (click)="showDialog()">
+                                        <img src="assets/images/HealthyMe_DesignAssets_V1/Carecoordinator_Home/settings.png"  height="20px" style="cursor: pointer;" /> &nbsp;
+                                    </span>
+                                </div>
+                                
+                                <div class="row row-class col-lg-12"  >
+                                    <span class="col-lg-6 col-md-6" *ngFor="let data of actualtargetPages">
+                                        <a style="color: #42A8D8; cursor: pointer;"  (click)="quickLink(data.label)">{{data.label}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span>
+                                </div>
+                                    <!-- <span class="col-lg-6 col-md-6" *ngIf="data.label == 'Quality Central'">
+                                        <a [routerLink]="['/Quality Central']">Quality Central <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span>
+                                    <span class="col-lg-6 col-md-6" *ngIf="data.label == 'Members GapList'">
+                                        <a [routerLink]="['/member-gap-list']">Members GapList <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span>
+                                    <span class="col-lg-6 col-md-6" *ngIf="data.label == 'Program Creator'">
+                                        <a [routerLink]="['/programcreator']">Program Creator <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span>
+                                    <span class="col-lg-6 col-md-6" *ngIf="data.label == 'Program Editor'">
+                                        <a [routerLink]="['/programeditor']">Program Editor<i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span>
+                                    <span class="col-lg-6 col-md-6" *ngIf="data.label == 'Quality Measures'">
+                                        <a [routerLink]="['/measurelibrary']">Quality Measures <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                    </span> -->
+                            </div>
+           
+                    </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <p-dialog #pl [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [style]="{width: '350px', minWidth: '200px'}" [minY]="70" 
+    [baseZIndex]="10000">
+    <div class="col-lg-12 font-weight-bold" style="color: orange;" *ngIf="onTargetChange">Please select only upto 4 QuickLinks</div>
+    <br>
+        <p-pickList [source]="sourcePages" [target]="targetPages" sourceHeader="All Pages" targetHeader="Selected Pages" [responsive]="true"
+                dragdrop="true"[sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}" (onMoveToTarget)="movedElements($event.items)" (onMoveToSource)="movedElementsToSource()">
+            <ng-template let-car pTemplate="item">
+                <div class="ui-helper-clearfix">
+                    <div>{{car.label}}</div>
+                </div>
+            </ng-template>
+        </p-pickList>
+        <br>
+        <button type="button" [disabled]="disableOnTargetLength" pButton label="Save Changes" (click)="saveChanges(targetPages)"></button>
+    </p-dialog>
+</div>

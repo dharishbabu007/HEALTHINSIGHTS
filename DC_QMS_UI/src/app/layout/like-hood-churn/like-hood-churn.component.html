@@ -1,0 +1,107 @@
+<div  style="margin-top: 10px" >
+        <app-page-header [heading]="title" [icon]="'fa-table'"></app-page-header>
+
+
+    <!-- <h2 class="text-muted">Dashboard </h2> -->
+    <div class="card">
+     
+        <!-- <div>
+            <br>
+            
+           
+            <button *ngIf="type==1" type="button" pButton label="Member List" [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/Churn-MemberList/MemberListDash?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+         
+          
+         <button *ngIf="type==2" type="button" pButton label="Member List" [routerLink]="['/member-list/',1]" class="btn-space"></button> 
+            <br><br>
+        </div>
+       <div class="embed-responsive embed-responsive-16by9 col-lg-12 justify-content-center h-100">
+            <iframe class="embed-responsive-item" [src]="externalURL" allowfullscreen>
+            </iframe>
+        </div> --> 
+
+           <div *ngIf="type==2" style="margin: 20px;">
+               <br>
+                <button type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
+                <button type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',2]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
+                <button type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/views/ME_LikelihoodtoEnrollDashboard/LHEDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+                <br><br>
+                    <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhe" [columns]="cols" [paginator]="true" [loading]="loadinglhe" [rows]="20" exportFilename="Member_Details">
+                        <ng-template pTemplate="header">
+                            <tr class="header-class">
+                                <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th *ngFor="let col of cols" [ngSwitch]="col.field">
+                                        <div *ngSwitchCase="'age'">
+                                                Age > {{ageFilter}}
+                                                <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
+                                                <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
+                                            </div>
+                                    <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td *ngFor="let col of columns"[ngSwitch]="col.field">
+                                    <span *ngSwitchCase="'memberName'"> 
+                                        <a [routerLink]="['/smv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
+                                    <span *ngSwitchDefault>
+                                            {{rowData[col.field]}}
+                                    </span>
+                                   
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div *ngIf="type==1" style="margin: 20px;">
+                        <br>
+                        <button  type="button" pButton icon="fa fa-download" label="Export" (click)="dt.exportCSV()" style="float:right"></button>  &nbsp;&nbsp;&nbsp;
+                        <button  type="button" pButton label="Statistics" [routerLink]="['/likelihood-statistics/',1]"  class="btn-space"></button> &nbsp;&nbsp;&nbsp;
+                        <button  type="button" pButton label="Dashboard" [routerLink]="['/frame-url','http://192.168.184.70/views/ChurnModeling/Churn?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" class="btn-space"></button> 
+                        <br><br>
+                        <!-- <div class="embed-responsive embed-responsive-16by9 col-lg-12 justify-content-center h-100">
+                                <iframe class="embed-responsive-item" [src]="externalURL" allowfullscreen>
+                                </iframe>
+                        </div> -->
+                        <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergapslhc" [columns]="cols1" [paginator]="true" [loading]="loading" [rows]="20"  exportFilename="Member_Details">
+                            <ng-template pTemplate="header">
+                                <tr class="header-class">
+                                    <th *ngFor="let col of cols1" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let col of cols1" [ngSwitch]="col.field">
+                                            <div *ngSwitchCase="'age'">
+                                                    Age > {{ageFilter}}
+                                                    <i class="fa fa-close" (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
+                                                    <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100" (onChange)="dt.filter($event.value, 'age', 'gt');"></p-slider>
+                                                </div>
+                                        <input *ngSwitchDefault pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td *ngFor="let col of columns"[ngSwitch]="col.field">
+                                        <span *ngSwitchCase="'memberName'"> 
+                                            <a [routerLink]="['/smv/',rowData['memberId']]">{{rowData[col.field]}}</a></span>
+                                        <span *ngSwitchDefault>
+                                                {{rowData[col.field]}}
+                                        </span>
+                                       
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+        </div>
+</div>
+
