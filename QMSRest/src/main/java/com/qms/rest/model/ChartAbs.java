@@ -22,6 +22,7 @@ public class ChartAbs {
 	private String dob;
 	private String gender;
 	private String provider;
+	private String provId;
 	private String encounterStartDate;
 	private String encounterEndDate;
 	private List<String> encounterCode;
