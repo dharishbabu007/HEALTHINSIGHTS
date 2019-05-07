@@ -250,11 +250,11 @@ public class ChartAbstractionServiceImpl implements ChartAbstractionService{
 					+ "SDOH_CATEGORY,SDOH_CATEGORY_CODE,SDOH_PROBLEM,SDOH_PROBLEM_CODE,SDOH_NOTES,"
 					+ "SUBSTANCE_USE,SUBSTANCE_USE_CODE,SUBSTANCE_FREQUENCY,SUBSTANCE_NOTES,"
 					+ "FAMILY_HISTORY_RELATION,FAMILY_HISTORY_STATUS,FAMILY_HISTORY_DISEASE,"
-					+ "FAMILY_HISTORY_DISEASE_CODE,FAMILY_HISTORY_NOTES,CHART_TYPE,"
+					+ "FAMILY_HISTORY_DISEASE_CODE,FAMILY_HISTORY_NOTES,CHART_TYPE,PROV_ID,"
 					+ "CURR_FLAG,REC_CREATE_DATE,REC_UPDATE_DATE,LATEST_FLAG,"
 					+ "ACTIVE_FLAG,INGESTION_DATE,SOURCE_NAME,USER_NAME) "
 					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-					+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			
 			statement = connection.prepareStatement(sqlStatementInsert);
 			for (ChartAbs chartAbs : chartAbsList) {
@@ -325,7 +325,8 @@ public class ChartAbstractionServiceImpl implements ChartAbstractionService{
 		    	statement.setString(++i, chartAbs.getFamilyHistoryDisease());
 		    	statement.setString(++i, chartAbs.getFamilyHistoryDiseaseCode());
 		    	statement.setString(++i, chartAbs.getFamilyHistoryNotes());
-		    	statement.setString(++i, chartAbs.getChartType());		    	
+		    	statement.setString(++i, chartAbs.getChartType());
+		    	statement.setString(++i, chartAbs.getProvId());
 		    	//tabs end
 				
 				Date date = new Date();				
@@ -481,6 +482,7 @@ public class ChartAbstractionServiceImpl implements ChartAbstractionService{
 	    	output.setFamilyHistoryDiseaseCode(resultSet.getString("FAMILY_HISTORY_DISEASE_CODE"));
 	    	output.setFamilyHistoryNotes(resultSet.getString("FAMILY_HISTORY_NOTES"));		    	
 	    	output.setChartType(resultSet.getString("CHART_TYPE"));
+	    	output.setProvId(resultSet.getString("PROV_ID"));
 	    	
 		    setOutput.add(output);
 		}	
