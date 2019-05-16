@@ -49,6 +49,7 @@ public class QMSServiceImpl2 implements QMSService {
 		HashMap<String, String> typeMap = getIdNameMap("QMS_MEASURE_TYPE", "MEASURE_TYPE_ID", "MEASURE_TYPE_NAME");
 		HashMap<String, String> stewardMap = getIdNameMap("QMS_MEASURE_STEWARD", "MEASURE_STEWARD_ID", "MEASURE_STEWARD_NAME");
 		HashMap<String, String> statusMap = getIdNameMap("QMS_MEASURE_STATUS", "MEASURE_STATUS_ID", "MEASURE_STATUS_NAME");
+		HashMap<String, String> categoryMap = getIdNameMap("QMS_QUALITY_PROGRAM", "QUALITY_PROGRAM_ID", "CATEGORY_NAME");
 		
 		String whereClause = "where (MEASURE_STATUS_ID=5 or MEASURE_STATUS_ID=8)";
 		if(programName.equalsIgnoreCase("Reimbursement")) {
@@ -94,6 +95,8 @@ public class QMSServiceImpl2 implements QMSService {
 				measureCreator.setEndDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("END_DATE")));				
 				measureCreator.setStatus(statusMap.get(resultSet.getString("MEASURE_STATUS_ID")));
 				measureCreator.setOptionalExclusion(resultSet.getString("OPT_EXCLUSION"));
+				measureCreator.setDescription(resultSet.getString("description"));
+				measureCreator.setMeasureCategory(categoryMap.get(resultSet.getString("QUALITY_PROGRAM_ID")));
 				measureCreator.setCertified(resultSet.getString("CERTIFIED"));
 				if(resultSet.getDate("END_DATE") != null) {
 					LocalDate localDate = resultSet.getDate("END_DATE").toLocalDate();
@@ -141,8 +144,9 @@ public class QMSServiceImpl2 implements QMSService {
 		try {						
 			connection = qmsConnection.getOracleConnection();
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS_QUALITY_MEASURE qm, QMS_QUALITY_PROGRAM qqp where qm.QUALITY_MEASURE_ID='"+id+"' and qm.MEASURE_STATUS_ID='5' and qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");			
-			
+			resultSet = statement.executeQuery("select qm.*,qqp.PROGRAM_NAME,qqp.CATEGORY_NAME from QMS_QUALITY_MEASURE qm, "
+					+ "QMS_QUALITY_PROGRAM qqp where qm.QUALITY_MEASURE_ID='"+id+"' and qm.MEASURE_STATUS_ID='5' and "
+					+ "qm.IS_ACTIVE='Y' and qm.QUALITY_PROGRAM_ID=qqp.QUALITY_PROGRAM_ID");
 			while (resultSet.next()) {
 				measureCreator = new MeasureCreator();
 				measureCreator.setClinocalCondition(resultSet.getString("clinical_conditions"));
