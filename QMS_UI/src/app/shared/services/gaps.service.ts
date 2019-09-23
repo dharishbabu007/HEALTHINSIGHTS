@@ -62,6 +62,7 @@ export class GapsService {
     }
     getLibrary(programType, programValue) {
         return this.http.get(`http://healthinsight:8082/curis/qms/measure_list/${programType}/${programValue}`);
+        
     }
 
     getCsv(){
