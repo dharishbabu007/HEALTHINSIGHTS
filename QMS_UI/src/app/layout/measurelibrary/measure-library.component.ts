@@ -36,6 +36,7 @@ export class MeasurelibraryComponent implements OnInit {
     }
     membergaps: any[];
     cols: any[];
+    cmsReportFlag: boolean;
 
     ngOnInit() {
         this.dt.filters = {
@@ -57,16 +58,30 @@ export class MeasurelibraryComponent implements OnInit {
        this.certifiedData =[];
         this.gapsService.getLibrary(this.programType, this.programValue).subscribe((data: any[]) => {
             this.membergaps = data;
+            if(this.membergaps[0].programName == 'CMS Reporting') {
+                this.cmsReportFlag = true;
+                this.cols = [
+                    { field: 'id', header: 'Report ID' },
+                    { field: 'name', header: 'Report Name' },
+                    { field: 'description', header: 'Category Description' },
+                    { field: 'measureCategory', header: 'Category Type' },
+                    { field: 'isActive', header: 'Status'},
+                ];
+            }
+            else {
+                this.cmsReportFlag = false;
+                this.cols = [
+                    { field: 'id', header: 'Measure ID' },
+                    { field: 'name', header: 'Measure Name' },
+                    { field: 'programName', header: 'Program Name' },
+                    { field: 'type', header: 'Measure Type' },
+                    { field: 'steward', header: 'Measure Steward' },
+                    { field: 'clinocalCondition', header: 'Clinical Condition' },
+                    { field: 'isActive', header: 'Status'},
+                ];
+            }
         });
-        this.cols = [
-            { field: 'id', header: 'Measure ID' },
-            { field: 'name', header: 'Measure Name' },
-            { field: 'programName', header: 'Program Name' },
-            { field: 'type', header: 'Measure Type' },
-            { field: 'steward', header: 'Measure Steward' },
-            { field: 'clinocalCondition', header: 'Clinical Condition' },
-            { field: 'isActive', header: 'Status'},
-        ];
+        
         this.permissionsService.permissions$.subscribe((permissions) => {
           this.perms = permissions;
         });

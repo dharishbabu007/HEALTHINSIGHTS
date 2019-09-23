@@ -125,68 +125,109 @@ export const navItems = [
         },
         
         
-      // {
-      //   name: 'PHM',
-      //   url: '#',
-      //   icon: 'fa fa-user-o',
-      //   children: [
-      //     {
-      //       name: 'PHM SUMMARY',
-      //       url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //     {
-      //       name: 'Risk Assessment',
-      //       url: 'http://192.168.184.70/views/PHMRiskDashboard_0/PHMRisk_Dashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //     {
-      //       name: 'Measure Analysis',
-      //       url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //     {
-      //       name: 'Geo Analysis',
-      //       url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //     {
-      //       name: 'Cohort',
-      //       url: 'http://192.168.184.70/views/FinalDashboardPHM/RiskDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //     {
-      //       name: 'Provider Analysis',
-      //       url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
-      //       icon: 'fa fa-user-o'
-      //     },
-      //   ]
-      // },
+      {
+        name: 'PHM',
+        url: '#',
+        icon: 'fa fa-user-o',
+        children: [
+          {
+            name: 'PHM SUMMARY',
+            url: 'http://192.168.184.70/views/PHMsummary/SummaryDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+          {
+            name: 'Risk Assessment',
+            url: 'http://192.168.184.70/views/PHMRiskDashboard_0/PHMRisk_Dashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+          {
+            name: 'Measure Analysis',
+            url: 'http://192.168.184.70/views/PHMMeasuressDashboard/Measures?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+          {
+            name: 'Geo Analysis',
+            url: 'http://192.168.184.70/views/Location_Dashboard/Template_2?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+          {
+            name: 'Cohort',
+            url: 'http://192.168.184.70/views/FinalDashboardPHM/RiskDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+          {
+            name: 'Provider Analysis',
+            url: 'http://192.168.184.70/views/Provider_Dashboard/ProviderDashboard?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+            icon: 'fa fa-user-o'
+          },
+        ]
+      },
       // {
       //   name: 'Health plan Employer portal',
       //   url: 'http://i3lbfsiserver:93/',
       //   icon: 'fa fa-line-chart',
 
       // },
-      // {
-      //   name: 'Member Engagement',
-      //   url: '#',
-      //   icon: 'fa fa-line-chart',
-      //   children: 
-      //   [
-      //     {
-      //   name: 'Survey',
-      //   url: 'https://s.surveyanyplace.com/s/ptheqvhs',
-      //   icon: 'fa fa-line-chart',
-      //     },
-      //     {
-      //       name: 'Healthy Me ',
-      //       url: '/health/home',
-      //       icon: 'fa fa-user-o',
-      //     },
+      {
+        name: 'CMS Reporting',
+        url: '#',
+        icon: 'fa fa-line-chart',
+        children: 
+        [
+          {
+            name: 'Part C',
+            icon: 'fa fa-line-chart',
+            children: [
+              {
+                name: 'Direct Member Reimbursement',
+                url: 'http://192.168.184.70/views/DirectMemberReimbursementDMRRequestsPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+                icon: 'fa fa-line-chart'
+              },
+              {
+                name: 'Expedited Pre Service Organization Determinations',
+                url: 'http://192.168.184.70/views/ExpeditedPre-serviceOrganizationDeterminationsEODPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+                icon: 'fa fa-line-chart'
+              }
+            ]
+          },
+          {
+            name: 'Part D',
+            icon: 'fa fa-line-chart',
+            children: [
+              {
+                name: 'Standard Coverage Determinations',
+                url: 'http://192.168.184.70/views/StandardCoverageDeterminationsSCDPartDReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+                icon: 'fa fa-line-chart'
+              },
+              {
+                name: 'Standard Grievances',
+                url: 'http://192.168.184.70/views/StandardGrievancesPartDSGDPartDReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no',
+                icon: 'fa fa-line-chart'
+              }
+            ]
+          }
 
-      //   ]
-      // }
+        ]
+      },
+      {
+        name: 'Member Engagement',
+        url: '#',
+        icon: 'fa fa-line-chart',
+        children: 
+        [
+          {
+        name: 'Survey',
+        url: 'https://s.surveyanyplace.com/s/ptheqvhs',
+        icon: 'fa fa-line-chart',
+          },
+          {
+            name: 'Healthy Me ',
+            url: '/health/home',
+            icon: 'fa fa-user-o',
+          },
+
+        ]
+      }
       // {
       //   name: 'Provider',
       //   url: '#',

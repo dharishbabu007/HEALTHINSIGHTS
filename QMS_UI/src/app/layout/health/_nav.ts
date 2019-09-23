@@ -98,7 +98,7 @@ export const demoRole = [
     icon: 'fa fa-home',
   },
   {
-    name: 'Business Analyst',
+    name: 'Data Scientist',
     url: '/health/analyst_home',
     icon: 'fa fa-home',
   },

@@ -1,5 +1,6 @@
 <div style="margin-top: 10px">
-    <app-page-header [heading]="'Quality Measures'" [icon]="'fa-table'"></app-page-header>
+    <app-page-header [heading]="'Quality Measures'" [icon]="'fa-table'" *ngIf="!cmsReportFlag"></app-page-header>
+    <app-page-header [heading]="'Reports'" [icon]="'fa-table'" *ngIf="cmsReportFlag"></app-page-header>
     <div class="card">
     <div class="row" style="margin: 20px">
         <div class="col col-lg-12 ">
@@ -8,7 +9,7 @@
             <br><br>
             <p-table #dt  class="table table-bordered table-hover" [scrollable]="false" [value]="membergaps" [columns]="cols" [paginator]="true" [rows]="20" selectionMode="single" dataKey="id" exportFilename="Quality_Measures" >
                 <ng-template pTemplate="header">
-                    <tr class="text-center align-middle header-class">
+                    <tr class="text-center align-middle header-class" *ngIf="!cmsReportFlag">
                         <!-- <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" [ngSwitch]="col.header" >
                                     {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -19,6 +20,18 @@
                         <th [pSortableColumn]="'type'"style="width:9.5vw">Measure Type <p-sortIcon [field]="'type'"></p-sortIcon></th>
                         <th [pSortableColumn]="'steward'" width="">Measure Steward <p-sortIcon [field]="'steward'"></p-sortIcon></th>
                         <th [pSortableColumn]="'clinocalCondition'" style="width:11.5vw">Clinical Condition <p-sortIcon [field]="'clinocalCondition'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'isActive'" style="width:7.6vw"> Status<p-sortIcon [field]="'isActive'"></p-sortIcon></th>
+                        <th style="width:5vw" class="header-class"></th>
+                    </tr>
+                    <tr class="text-center align-middle header-class" *ngIf="cmsReportFlag">
+                        <!-- <th *ngFor="let col of cols" [pSortableColumn]="col.field" class="text-center align-middle header-class" [ngSwitch]="col.header" >
+                                    {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th> -->
+                        <th [pSortableColumn]="'id'" style="width:8.5vw">Report ID <p-sortIcon [field]="'id'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'name'" width=""> Report Name<p-sortIcon [field]="'name'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'description'" style="width:35vw">Report Description <p-sortIcon [field]="'description'"></p-sortIcon></th>
+                        <th [pSortableColumn]="'measureCategory'" style="width:12vw">Report  Category <p-sortIcon [field]="'measureCategory'"></p-sortIcon></th>
                         <th [pSortableColumn]="'isActive'" style="width:7.6vw"> Status<p-sortIcon [field]="'isActive'"></p-sortIcon></th>
                         <th style="width:5vw" class="header-class"></th>
                     </tr>
@@ -38,7 +51,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr>
+                    <tr *ngIf="!cmsReportFlag">
                         <td *ngFor="let col of columns" style="cursor: pointer;" (click)="copytoCreator(rowData['id'], 1)" [ngSwitch]="col.field" pTooltip="Click to open in editor">
                                 <span *ngSwitchCase="'isActive'" >
                                     <i class="text-primary" *ngIf="rowData['isActive'] != 'N'">Active</i>
@@ -52,7 +65,7 @@
                                 </span>     
                         </td>
                         <td >
-                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']" style="cursor: pointer;" pTooltip="Create Copy"></i>&nbsp;
+                            <i class="fa fa-copy" (click)="copytoCreator(rowData['id'], 2)" *ngxPermissionsOnly="['6W']"  style="cursor: pointer;" pTooltip="Create Copy"></i>&nbsp;
                             <span [ngSwitch]="rowData['name']">
                                 <a  [routerLink]="['/frame-url','http://192.168.184.70/views/IMAPerformanceDashboard/MeasureDetails_IMA?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Immunizations for Adolescents'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
                                 <a  [routerLink]="['/frame-url','http://192.168.184.70/t/CurisSite/views/CDCPerformanceDashboard/MeasureDetails_CDC?:embed=y&:showAppBanner=false&:showShareOptions=true&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Comprehensive Diabetes Care'"><i class="fa fa-pie-chart" pTooltip="Dashboard"></i></a>
@@ -63,7 +76,34 @@
                           
                         </td>
                     </tr>
+                    <tr *ngIf="cmsReportFlag">
+                        <td *ngFor="let col of columns" style="cursor: pointer;"  [ngSwitch]="col.field" >
+                                <span *ngSwitchCase="'isActive'" >
+                                    <i class="text-primary" *ngIf="rowData['isActive'] != 'N'">Active</i>
+                                    <i class="text-danger" *ngIf="rowData['isActive'] == 'N'">Decommission</i>
+                                </span>
+                                <span *ngSwitchCase="'name'">
+                                        {{rowData[col.field]}} <img *ngIf="rowData['certified'] == 'Y'" src="assets/images/certificate.png" width="17px" height="17px">
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{rowData[col.field]}}
+                                </span>     
+                        </td>
+                        <td >
+                            <span [ngSwitch]="rowData['name']">
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/SummaryGrievancesPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Summary Grievances'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/StandardPre-serviceOrganizationDeterminationsSODPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Standard Pre-service Organization Determinations (SOD)'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/ExpeditedPre-serviceOrganizationDeterminationsEODPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Expedited Pre-service Organization Determinations (EOD)'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/StandardCoverageDeterminationsSCDPartDReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Standard Coverage Determinations (SCD) Record Layout'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/StandardGrievancesPartDSGDPartDReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Standard Grievances Part D (SGD)'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <a  [routerLink]="['/frame-url','http://192.168.184.70/views/DirectMemberReimbursementDMRRequestsPartCReportingDashboard/Dashboard1?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no']" [attr.target]="target"  *ngSwitchCase="'Direct Member Reimbursement (DMR) Requests'"><i class="fa fa-pie-chart" pTooltip="Report"></i></a>
+                                <i class="fa fa-pie-chart" *ngSwitchDefault pTooltip="Report"></i>
+                            </span>
+                          
+                        </td>
+                    </tr>
                 </ng-template>
+                
             </p-table>
         </div>
     </div>
