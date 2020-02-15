@@ -44,7 +44,7 @@
         "rxjs": "^6.1.0",
         "symbol-observable": "^1.2.0",
         "xlsx": "^0.14.2",
-        "yarn": "^1.6.0",
+        "yarn": "^1.22.0",
         "zone.js": "^0.8.26"
     },
     "devDependencies": {
