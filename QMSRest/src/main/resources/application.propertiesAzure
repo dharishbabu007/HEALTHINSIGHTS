@@ -24,11 +24,6 @@ qms.hiveUserName=admin
 qms.hivePassword=Passw0rd$123
 qms.phoenixJDBCUrl=jdbc:phoenix:192.168.184.66,192.168.184.68,192.168.184.69:2181:/hbase-unsecure:AutoCommit=true
 
-qms.userStatusList=New,Verified,Active,Inactive
-qms.adminEMailId=raghunadha.konda@itcinfotech.com
-#In Minutes
-qms.passwordExpiryTime=240
-
 #oracle connection pooling
 data.oracleDataSource.url=jdbc:oracle:thin:@HealthInsight:1521:healthin
 data.oracleDataSource.username=admin
