@@ -324,18 +324,20 @@ public class UserServiceImpl2 implements UserService {
 		PreparedStatement statement = null;
 		Connection connection = null;
 		RestResult restResult = null;
-		Statement statementObj = null;
 		ResultSet resultSet = null;
 		try {	
 			connection = qmsConnection.getOracleConnection();	
 			
-			statementObj = connection.createStatement();			
-			resultSet = statementObj.executeQuery("select * from QMS_USER_MASTER where USER_EMAIL='"+email+"'");
+			String selectSql = "select * from QMS_USER_MASTER where USER_EMAIL = ?";
+			statement = connection.prepareStatement(selectSql);
+			statement.setString(1, email);
+			resultSet = statement.executeQuery();
 			String userLoginId = null;
 			if (resultSet.next()) {
 				userLoginId = resultSet.getString("USER_LOGINID"); 				
 			}						
-			resultSet.close();			
+			resultSet.close();
+			resultSet = null;
 			if(userLoginId == null) {
 				return RestResult.getFailRestResult("User not found with the entered email id. Please enter valid email id.");
 			}
@@ -346,6 +348,8 @@ public class UserServiceImpl2 implements UserService {
 			Timestamp updateTimestamp = new Timestamp(date.getTime());
 			
 			String sqlStatementInsert = "update QMS_USER_MASTER set PASSWORD=?,RESET_PASSWORD=?,REC_UPDATE_DATE=? WHERE USER_LOGINID=?";		
+			// Reuse the same PreparedStatement for the update
+			statement.close();
 			statement = connection.prepareStatement(sqlStatementInsert);
 			int i=0;							
 			statement.setString(++i, temporaryPassword);			
@@ -360,7 +364,7 @@ public class UserServiceImpl2 implements UserService {
 			e.printStackTrace();
 		}
 		finally {
-			qmsConnection.closeJDBCResources(resultSet, statementObj, null);
+			qmsConnection.closeJDBCResources(resultSet, null, null);
 			qmsConnection.closeJDBCResources(null, statement, connection);
 		}	
 		return restResult;		
