@@ -6,7 +6,7 @@ $('#search').keyup(function() {
     var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
     var matchesSearch = true;
     $(val).each(function(index, value) {
-      matchesSearch = (!matchesSearch) ? false : ~text.indexOf(value);
+      matchesSearch = (!matchesSearch) ? false : text.indexOf(value) > -1;
     });
     return matchesSearch;
   }).show();
