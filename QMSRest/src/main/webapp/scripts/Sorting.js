@@ -1,57 +1,41 @@
-
-    $(document).ready(function () {
-
-        //grab all header rows
-        $('th.sortable').each(function () {
-            //$(this).addClass('sortable').click(function () {
-              //      var findSortKey = function ($cell) {
-                //        return $cell.find('.sort-key').text().toUpperCase()+ ' ' + $cell.text().toUpperCase();
-
-                  //  };
-                    var sortDirection = $(this).is('.sorted-asc') ? -1 : 1;
-                    var $rows = $(this).parent().parent().parent().find('tbody tr').get();
-                    var bob = 0;
-                    //loop through all the rows and find
-                    $.each($rows, function (index, row) {
-                        row.sortKey = findSortKey($(row).children('td').eq(column));
-                    });
-
-                    //compare and sort the rows alphabetically or numerically
-                    $rows.sort(function (a, b) {                       
-                        if (a.sortKey.indexOf('-') == -1 && (!isNaN(a.sortKey) && !isNaN(a.sortKey))) {
-                             //Rough Numeracy check                          
-                                
-                                if (parseInt(a.sortKey) < parseInt(b.sortKey)) {
-                                    return -sortDirection;
-                                }
-                                if (parseInt(a.sortKey) > parseInt(b.sortKey)) {                                
-                                    return sortDirection;
-                                }
-
-                        } else {
-                            if (a.sortKey < b.sortKey) {
-                                return -sortDirection;
-                            }
-                            if (a.sortKey > b.sortKey) {
-                                return sortDirection;
-                            }
-                        }
-                        return 0;
-                    });
-
-                    //add the rows in the correct order to the bottom of the table
-                    $.each($rows, function (index, row) {
-                        $('tbody').append(row);
-                        row.sortKey = null;
-                    });
-
-                    //identify the collumn sort order
-                    $('th.sortable').removeClass('sorted-asc sorted-desc');
-                    var $sortHead = $('th.sortable').filter(':nth-child(' + (column + 1) + ')');
-                    sortDirection == 1 ? $sortHead.addClass('sorted-asc') : $sortHead.addClass('sorted-desc');
-
-                    //identify the collum to be sorted by
-                    $('td').removeClass('sorted').filter(':nth-child(' + (column + 1) + ')').addClass('sorted');
-                });
-            });
+$(document).ready(function () {
+    $('th.sortable').on('click', function () {
+        const $th = $(this);
+        const columnIndex = $th.index();
+        const isAscending = $th.is('.sorted-asc');
+        const sortDirection = isAscending ? -1 : 1;
+        
+        // Use closest() for cleaner DOM navigation
+        const $table = $th.closest('table');
+        const $rows = $table.find('tbody tr').get();
+        
+        // Sort rows with a single comparison function
+        $rows.sort((a, b) => {
+            const aValue = $(a).children('td').eq(columnIndex).text().trim();
+            const bValue = $(b).children('td').eq(columnIndex).text().trim();
+            
+            // Try numeric comparison first
+            const aNum = parseFloat(aValue);
+            const bNum = parseFloat(bValue);
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * sortDirection;
+            }
+            
+            // Fall back to string comparison
+            return aValue.localeCompare(bValue) * sortDirection;
         });
+        
+        // Re-append sorted rows
+        const $tbody = $table.find('tbody');
+        $rows.forEach(row => $tbody.append(row));
+        
+        // Update visual indicators
+        $table.find('th.sortable').removeClass('sorted-asc sorted-desc');
+        $th.addClass(isAscending ? 'sorted-desc' : 'sorted-asc');
+        
+        $table.find('td').removeClass('sorted')
+            .filter(':nth-child(' + (columnIndex + 1) + ')')
+            .addClass('sorted');
+    });
+});
