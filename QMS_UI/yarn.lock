@@ -6075,9 +6075,9 @@ primeicons@^1.0.0-beta.9:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-1.0.0.tgz#90061f168ef6227f21f0a7db8204ffa85cd27aec"
 
-primeng@^6.0.0:
-  version "6.1.7"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-6.1.7.tgz#59d115230af895460867d4aefe1347912dd60efc"
+primeng@^17.18.14:
+  version "17.18.14"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.14.tgz#2c23ef60f3d2dda5c14b971a85d8af9f776229a7"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
