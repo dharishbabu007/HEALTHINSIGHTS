@@ -106,11 +106,11 @@
     "@angular-devkit/core" "0.8.9"
     rxjs "6.2.2"
 
-"@angular/animations@^6.0.0":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-6.1.10.tgz#4ab9b9a6c25e0cca781588700daa9efc33a722e4"
+"@angular/animations@^22.2.3":
+  version "22.2.3"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-22.2.3.tgz#bd9e8c043c0672d485c669292964d217bed25f63"
   dependencies:
-    tslib "^1.9.0"
+    tslib "^2.3.0"
 
 "@angular/cli@^6.0.0":
   version "6.2.9"
