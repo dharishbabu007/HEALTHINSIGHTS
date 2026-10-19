@@ -3886,14 +3886,7 @@ is-data-view@^1.0.1, is-data-view@^1.0.2:
     get-intrinsic "^1.2.6"
     is-typed-array "^1.1.13"
 
-is-date-object@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/is-date-object/-/is-date-object-1.1.0.tgz#ad85541996fc7aa8b2729701d27b7319f95d82f7"
-  dependencies:
-    call-bound "^1.0.2"
-    has-tostringtag "^1.0.2"
-
-is-date-object@^1.1.0:
+is-date-object@^1.0.1, is-date-object@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-date-object/-/is-date-object-1.1.0.tgz#ad85541996fc7aa8b2729701d27b7319f95d82f7"
   dependencies:
@@ -6979,11 +6972,7 @@ side-channel@^1.1.0, side-channel@^1.1.1:
     side-channel-map "^1.0.1"
     side-channel-weakmap "^1.0.2"
 
-signal-exit@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-
-signal-exit@^3.0.7:
+signal-exit@^3.0.0, signal-exit@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.7.tgz#a9a1767f8af84155114eaabd73f99273c8f59ad9"
 
