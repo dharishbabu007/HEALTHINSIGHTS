@@ -3442,7 +3442,7 @@ hasown@^2.0.0, hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-hasown@^2.0.4:
+hasown@^2.0.3, hasown@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/hasown/-/hasown-2.0.4.tgz#8c62d8cb90beb2aad5d0a5b67581ad9854c3f003"
   dependencies:
@@ -3775,17 +3775,11 @@ is-absolute-url@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/is-absolute-url/-/is-absolute-url-3.0.2.tgz#554f2933e7385cc46e94351977ca2081170a206e"
 
-is-accessor-descriptor@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/is-accessor-descriptor/-/is-accessor-descriptor-0.1.6.tgz#a9e12cb3ae8d876727eeef3843f8a0897b5c98d6"
+is-accessor-descriptor@^1.0.1, is-accessor-descriptor@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/is-accessor-descriptor/-/is-accessor-descriptor-1.0.2.tgz#fff67ca43f7acc57edbc557335c2e2c62b98e41e"
   dependencies:
-    kind-of "^3.0.2"
-
-is-accessor-descriptor@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/is-accessor-descriptor/-/is-accessor-descriptor-1.0.0.tgz#169c2f6d3df1f992618072365c9b0ea1f6878656"
-  dependencies:
-    kind-of "^6.0.0"
+    hasown "^2.0.3"
 
 is-arguments@^1.0.4:
   version "1.0.4"
@@ -3858,14 +3852,7 @@ is-core-module@^2.5.0:
   dependencies:
     has "^1.0.3"
 
-is-data-descriptor@^0.1.4:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/is-data-descriptor/-/is-data-descriptor-0.1.5.tgz#0907e763b9989b5b01c10a5aa5d09469bbae392e"
-  dependencies:
-    gopd "^1.0.1"
-    hasown "^2.0.0"
-
-is-data-descriptor@^1.0.0:
+is-data-descriptor@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-data-descriptor/-/is-data-descriptor-1.0.1.tgz#2109164426166d32ea38c405c1e0945d9e6a4eeb"
   dependencies:
@@ -3891,20 +3878,18 @@ is-date-object@^1.1.0:
     has-tostringtag "^1.0.2"
 
 is-descriptor@^0.1.0:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/is-descriptor/-/is-descriptor-0.1.6.tgz#366d8240dde487ca51823b1ab9f07a10a78251ca"
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/is-descriptor/-/is-descriptor-0.1.8.tgz#c1ea9d2fb20cd51e812e438a455a7f78443a5a17"
   dependencies:
-    is-accessor-descriptor "^0.1.6"
-    is-data-descriptor "^0.1.4"
-    kind-of "^5.0.0"
+    is-accessor-descriptor "^1.0.1"
+    is-data-descriptor "^1.0.1"
 
 is-descriptor@^1.0.0, is-descriptor@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/is-descriptor/-/is-descriptor-1.0.2.tgz#3b159746a66604b04f8c81524ba365c5f14d86ec"
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/is-descriptor/-/is-descriptor-1.0.4.tgz#7934d74f609d0dbe754b80186d501026a78739b5"
   dependencies:
-    is-accessor-descriptor "^1.0.0"
-    is-data-descriptor "^1.0.0"
-    kind-of "^6.0.2"
+    is-accessor-descriptor "^1.0.2"
+    is-data-descriptor "^1.0.1"
 
 is-directory@^0.3.1:
   version "0.3.1"
