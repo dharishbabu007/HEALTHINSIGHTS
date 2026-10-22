@@ -1974,8 +1974,8 @@ data-view-byte-offset@^1.0.1:
     is-data-view "^1.0.1"
 
 date-format@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/date-format/-/date-format-4.0.3.tgz#f63de5dc08dc02efd8ef32bf2a6918e486f35873"
+  version "4.0.14"
+  resolved "https://registry.yarnpkg.com/date-format/-/date-format-4.0.14.tgz#7a8e584434fb169a521c8b7aa481f355810d9400"
 
 date-now@^0.1.4:
   version "0.1.4"
