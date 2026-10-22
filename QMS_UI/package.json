@@ -30,7 +30,7 @@
         "@ngx-translate/http-loader": "^17.0.0",
         "@types/annyang": "^2.6.1",
         "@types/file-saver": "^2.0.7",
-        "angular-dual-listbox": "^4.7.0",
+        "angular-dual-listbox": "^7.0.0",
         "angular2-query-builder": "^0.6.2",
         "annyang": "^2.6.1",
         "chart.js": "^2.9.4",
