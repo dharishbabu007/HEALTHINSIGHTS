@@ -8279,8 +8279,8 @@ which-collection@^1.0.2:
     is-weakset "^2.0.3"
 
 which-module@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/which-module/-/which-module-2.0.0.tgz#d9ef07dce77b9902b8a3a8fa4b31c3e3f7e6e87a"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/which-module/-/which-module-2.0.1.tgz#776b1fe35d90aebe99e8ac15eb24093389a4a409"
 
 which-typed-array@^1.1.16, which-typed-array@^1.1.19:
   version "1.1.24"
