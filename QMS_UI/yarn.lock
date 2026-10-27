@@ -2884,8 +2884,8 @@ find-up@^4.1.0:
     path-exists "^4.0.0"
 
 flatted@^3.2.4:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.4.2.tgz#f5c23c107f0f37de8dbdf24f13722b3b98d52726"
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.4.4.tgz#aeeca2a506303f0cee61c59e6c9f2a88d2f29fc6"
 
 flush-write-stream@^1.0.0:
   version "1.0.2"
