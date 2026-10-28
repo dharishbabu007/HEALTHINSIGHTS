@@ -631,8 +631,8 @@ are-we-there-yet@^3.0.0:
     readable-stream "^3.6.0"
 
 are-we-there-yet@~1.1.2:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/are-we-there-yet/-/are-we-there-yet-1.1.5.tgz#4b35c2944f062a8bfcda66410760350fe9ddfc21"
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/are-we-there-yet/-/are-we-there-yet-1.1.7.tgz#b15474a932adab4ff8a50d9adfa7e4e926f21146"
   dependencies:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
