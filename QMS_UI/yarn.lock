@@ -2487,10 +2487,10 @@ encodeurl@~2.0.0:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-2.0.0.tgz#7b8ea898077d7e409d3ac45474ea38eaf0857a58"
 
 encoding@^0.1.12, encoding@^0.1.13:
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.14.tgz#47d9de5315bdfd36258c9bde2146592acf061328"
   dependencies:
-    iconv-lite "^0.6.2"
+    iconv-lite "0.7.3"
 
 end-of-stream@^1.0.0:
   version "1.4.0"
@@ -3749,13 +3749,7 @@ iconv-lite@0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-iconv-lite@^0.6.2:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
-  dependencies:
-    safer-buffer ">= 2.1.2 < 3.0.0"
-
-iconv-lite@^0.7.2:
+iconv-lite@0.7.3, iconv-lite@^0.7.2:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.7.3.tgz#84ee12f963e7de50bc01a13e160a078b3b0f415f"
   dependencies:
