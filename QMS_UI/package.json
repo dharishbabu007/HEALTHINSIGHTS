@@ -33,7 +33,7 @@
         "angular-dual-listbox": "^7.0.0",
         "angular2-query-builder": "^0.6.2",
         "annyang": "^2.6.1",
-        "chart.js": "^2.9.4",
+        "chart.js": "^4.6.1",
         "core-js": "^2.5.5",
         "file-saver": "^2.0.5",
         "font-awesome": "^4.7.0",
