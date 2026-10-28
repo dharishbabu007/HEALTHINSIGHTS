@@ -45,7 +45,7 @@
         "symbol-observable": "^1.2.0",
         "xlsx": "^0.18.5",
         "yarn": "^1.22.13",
-        "zone.js": "^0.8.26"
+        "zone.js": "^0.16.3"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.6.0",
