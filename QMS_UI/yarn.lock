@@ -3734,8 +3734,8 @@ iconv-lite@0.7.3, iconv-lite@^0.7.2:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
 ieee754@^1.1.4:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
 
 iferr@^0.1.5:
   version "0.1.5"
