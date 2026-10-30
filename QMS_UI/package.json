@@ -42,7 +42,7 @@
         "primeicons": "^1.0.0-beta.9",
         "primeng": "^17.18.14",
         "rxjs": "^6.1.0",
-        "symbol-observable": "^1.2.0",
+        "symbol-observable": "^4.0.0",
         "xlsx": "^0.18.5",
         "yarn": "^1.22.13",
         "zone.js": "^0.16.3"
