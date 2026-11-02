@@ -5291,13 +5291,9 @@ mute-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-3.0.0.tgz#cd8014dd2acb72e1e91bb67c74f0019e620ba2d1"
 
-nan@^2.12.1, nan@^2.13.2:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
-
-nan@^2.17.0:
-  version "2.29.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.29.0.tgz#95bace50f153289240573c08401acc63a30659d4"
+nan@^2.12.1, nan@^2.13.2, nan@^2.17.0:
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.30.0.tgz#66d75ca6db19616b3f58a6229f06c806c05d4661"
 
 nanomatch@^1.2.9:
   version "1.2.13"
