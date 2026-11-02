@@ -41,7 +41,7 @@
         "node-sass": "^9.0.0",
         "primeicons": "^1.0.0-beta.9",
         "primeng": "^17.18.14",
-        "rxjs": "^6.1.0",
+        "rxjs": "^6.6.7",
         "symbol-observable": "^4.0.0",
         "xlsx": "^0.18.5",
         "yarn": "^1.22.13",
