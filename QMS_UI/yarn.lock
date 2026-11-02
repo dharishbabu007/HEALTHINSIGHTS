@@ -6119,9 +6119,9 @@ pretty-error@^2.0.2:
     lodash "^4.17.20"
     renderkid "^2.0.4"
 
-primeicons@^1.0.0-beta.9:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-1.0.0.tgz#90061f168ef6227f21f0a7db8204ffa85cd27aec"
+primeicons@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-8.0.2.tgz#2bdcc8a9679791e7dd20b65c2c32121cd1aa5b38"
 
 primeng@^17.18.14:
   version "17.18.14"
