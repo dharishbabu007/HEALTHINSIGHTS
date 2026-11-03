@@ -69,7 +69,7 @@ public class MeasureConfiguratorController {
 	public ResponseEntity<RestResult> updateMeasureConfig(@PathVariable("measure_id") String measureId,
 			@PathVariable("category") String category,
 			@RequestBody List<MeasureConfig> measureConfigList) {
-		logger.info("Updating MeasureCreator with id {}", measureId);
+		logger.info("Updating MeasureCreator with id {}", sanitizeForLog(measureId));
 		
 		List<MeasureConfig> existMeasureConfigs = measureConfigService.getMeasureConfigById(measureId, category);
 		System.out.println(" Existing Measure Configs in DB --> " + existMeasureConfigs);
