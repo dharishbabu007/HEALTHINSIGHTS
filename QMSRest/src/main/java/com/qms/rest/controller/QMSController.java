@@ -171,7 +171,8 @@ public class QMSController {
 	
 	@RequestMapping(value = "/spv/{programType}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getSPVDetails(@PathVariable("programType") String programType, @PathVariable("id") String id) {
-		logger.info("Fetching SPV details with id {}", id);
+		String safeId = id == null ? null : id.replace('\n', '_').replace('\r', '_');
+		logger.info("Fetching SPV details with id {}", safeId);
 		DimPatient dimPatient = null;
 		if(programType.equalsIgnoreCase("mips"))
 			dimPatient = patientService.getPatientById(id);
@@ -179,7 +180,7 @@ public class QMSController {
 			dimPatient = patientService.getMemberById(id);
 		
 		if (dimPatient == null) {
-			logger.error("SPV details with id {} not found.", id);
+			logger.error("SPV details with id {} not found.", safeId);
 			return new ResponseEntity(new CustomErrorType("SPV details with id " + id + " not found"), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<DimPatient>(dimPatient, HttpStatus.OK);
