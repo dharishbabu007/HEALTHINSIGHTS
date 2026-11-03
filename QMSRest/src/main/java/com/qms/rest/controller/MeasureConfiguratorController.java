@@ -88,7 +88,7 @@ public class MeasureConfiguratorController {
 	@RequestMapping(value = "/{measure_id}/{category}", method = RequestMethod.GET)
 	public ResponseEntity<List<MeasureConfig>> getMeasureConfig(@PathVariable("measure_id") String measureId, 
 			@PathVariable("category") String category) {
-		logger.info("Updating MeasureCreator with id {}", measureId);
+		logger.info("Updating MeasureCreator with id {}", sanitizeForLog(measureId));
 		
 		List<MeasureConfig> existMeasureConfigs = measureConfigService.getMeasureConfigById(measureId, category);
 		if (existMeasureConfigs.isEmpty()) {
