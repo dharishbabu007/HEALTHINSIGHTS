@@ -41,7 +41,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/reset_password/", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> resetUserPassword(@RequestBody ResetPassword resetPassword, UriComponentsBuilder ucBuilder) {
-		logger.info("Resetting password for user id : {}", resetPassword.getUserId());
+		logger.info("Resetting password request received");
 		
 		RestResult restResult = userService.resetPassword(resetPassword);
 		if(RestResult.isSuccessRestResult(restResult)) {
