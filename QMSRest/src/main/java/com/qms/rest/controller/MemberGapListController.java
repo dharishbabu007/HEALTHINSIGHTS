@@ -55,7 +55,10 @@ public class MemberGapListController {
 		try {
 			return new ResponseEntity((QMSMemberReq) memberGapList.editMembergapListByQMS(qMSMemberReq), HttpStatus.OK);
 		} catch (QMSException e) {
-			logger.error("editMemberGapQMSList insertion process failed."+ e.getMessage(), qMSMemberReq.getCareGapsId());
+			String careGapsIdForLog = qMSMemberReq != null && qMSMemberReq.getCareGapsId() != null
+					? qMSMemberReq.getCareGapsId().replace('\n', '_').replace('\r', '_')
+					: "null";
+			logger.error("editMemberGapQMSList insertion process failed. message: {}, careGapsId: {}", e.getMessage(), careGapsIdForLog);
 			return new ResponseEntity(new CustomErrorType("editMemberGapQMSList insertion process failed."), HttpStatus.BAD_REQUEST);
 		}
 		
