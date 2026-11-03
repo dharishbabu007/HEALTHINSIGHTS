@@ -1,6 +1,7 @@
 package com.qms.rest.service;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -437,14 +438,16 @@ public class PatientServiceImpl2 implements PatientService {
 	@Override
 	public User getUserInfo(String userName, String password) {
 		
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		User user = null;
 		try {						
 			connection = qmsConnection.getOracleConnection();
-			statement = connection.createStatement();			
-			resultSet = statement.executeQuery("select * from QMS_USER_MASTER where USER_LOGINID='"+userName+"' and PASSWORD='"+password+"'");
+			statement = connection.prepareStatement("select * from QMS_USER_MASTER where USER_LOGINID=? and PASSWORD=?");
+			statement.setString(1, userName);
+			statement.setString(2, password);
+			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				user = new User();
 				user.setEmail(resultSet.getString("USER_EMAIL"));
