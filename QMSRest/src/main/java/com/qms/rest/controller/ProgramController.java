@@ -35,7 +35,7 @@ public class ProgramController {
 	@ResponseBody
 	public ResponseEntity<RestResult> createProgram(@RequestBody Program program) {
 		String response = "Program created successfully for ProgramName : "+program.getProgramName();
-		logger.info("About to create program :  " + program);
+		logger.info("About to create program : {}", sanitizeForLog(program));
 		programService.createProgram(program);
 		
 		RestResult restResult = RestResult.getSucessRestResult(response);		
@@ -71,5 +71,12 @@ public class ProgramController {
 		else	
 			return new ResponseEntity<RestResult>(restResult, HttpStatus.BAD_REQUEST);
 	}	
+	
+	private String sanitizeForLog(Object value) {
+		if (value == null) {
+			return "null";
+		}
+		return String.valueOf(value).replace('\n', '_').replace('\r', '_');
+	}
 	
 }
