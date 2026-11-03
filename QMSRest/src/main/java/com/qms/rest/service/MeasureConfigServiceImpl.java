@@ -49,13 +49,15 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 		Set<String> tableNamesSet = getAllTableNames();
 		Set<TableData> tableDataSet = new TreeSet<>();
 		Connection connection = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;		
 		try {
 			//connection = getConnection(schemaName, password);
 			//connection = qmsConnection.getOracleConnection(schemaName, password);
 			connection = qmsConnection.getOracleMeasureConfigConnection();
-			stmt = connection.createStatement();
+			stmt = connection.prepareStatement("SELECT column_name, data_type, data_length"
+			            + " FROM user_tab_columns"
+			            + " WHERE table_name = ? order by column_name");
 			TableData tableData = null;
 			Set<ColumnData> columnsData = null;
 			
@@ -64,9 +66,8 @@ public class MeasureConfigServiceImpl implements MeasureConfigService {
 				tableData.setName(tableName);
 				columnsData = new HashSet<>();
 				tableData.setColumnList(columnsData);
-				rs = stmt.executeQuery("SELECT column_name, data_type, data_length"
-			            + " FROM user_tab_columns"
-			            + " WHERE table_name = '"+tableName+"' order by column_name");
+				stmt.setString(1, tableName);
+				rs = stmt.executeQuery();
 				ColumnData columnData = null;
 			    while (rs.next()) {
 			    	columnData = new ColumnData();				    	
