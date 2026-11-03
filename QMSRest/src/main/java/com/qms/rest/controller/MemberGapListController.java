@@ -98,10 +98,11 @@ public class MemberGapListController {
 			System.out.println("Fetching dimMemberGaps with mid {}"+ search);
 			logger.info("Fetching dimMemberGaps with mid {}", search);
 			search = search.substring(0, 1).toUpperCase()+search.substring(1);
+			String sanitizedSearchForLog = search.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ');
 			List<DimMemberGapListSearch> dimMemberGapListSearch = memberGapList.findSearchMembergapList(search);
 			if (dimMemberGapListSearch == null) {
-				logger.error("MeasureCreator with id {} not found.", search);
-				return new ResponseEntity(new CustomErrorType("dimMemberGapListSearch  " + search 
+				logger.error("MeasureCreator with id {} not found.", sanitizedSearchForLog);
+				return new ResponseEntity(new CustomErrorType("dimMemberGapListSearch  " + sanitizedSearchForLog 
 						+ " not found"), HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<List<DimMemberGapListSearch>>((List<DimMemberGapListSearch>) dimMemberGapListSearch, HttpStatus.OK);
