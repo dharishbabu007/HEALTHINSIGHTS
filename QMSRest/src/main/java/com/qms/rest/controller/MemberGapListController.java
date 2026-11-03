@@ -38,11 +38,12 @@ public class MemberGapListController {
 		
 	@RequestMapping(value = "/member/{mid}", method = RequestMethod.GET)
 	public ResponseEntity<DimMemeberList> getMemberGapList(@PathVariable("mid") String mid) {
-		System.out.println("Fetching dimMemberGaps with mid {}"+ mid);
-		logger.info("Fetching dimMemberGaps with mid {}", mid);
+		String midForLog = mid != null ? mid.replace('\n', '_').replace('\r', '_') : "null";
+		System.out.println("Fetching dimMemberGaps with mid {}"+ midForLog);
+		logger.info("Fetching dimMemberGaps with mid {}", midForLog);
 		DimMemeberList dimMemberGaps = memberGapList.findMembergapListByMid(mid);
 		if (dimMemberGaps == null) {
-			logger.error("MeasureCreator with id {} not found.", mid);
+			logger.error("MeasureCreator with id {} not found.", midForLog);
 			return new ResponseEntity(new CustomErrorType("dimMemberGaps with mid " + mid 
 					+ " not found"), HttpStatus.NOT_FOUND);
 		}
