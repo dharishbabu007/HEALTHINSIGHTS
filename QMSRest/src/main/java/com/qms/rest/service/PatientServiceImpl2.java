@@ -132,7 +132,7 @@ public class PatientServiceImpl2 implements PatientService {
 			"FIRST_NAME ||' '|| MIDDLE_NAME ||' '|| LAST_NAME AS \"Name\","+
 			"ADDRESS1 ||', '|| ADDRESS2 ||', '|| CITY ||', '|| STATE ||', '|| ZIP AS \"Address\","+ 
 			"FLOOR(TRUNC(SYSDATE - (To_date(substr(ENC.DATE_OF_BIRTH_SK, 1, 4) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 5,2) || '-' || substr(ENC.DATE_OF_BIRTH_SK, 7,2),'YYYY-MM-DD')))/365.25) as \"Age\" "+ 
-			"FROM DIM_MEMBER ENC where MEMBER_ID='"+memberId+"'";
+			"FROM DIM_MEMBER ENC where MEMBER_ID=?";
 			
 //			//HIVE query			
 //			String memberSQL = "SELECT MEMBER_ID,EMAIL_ADDRESS,PHONE,ETHNICITY,GENDER,"+
@@ -173,8 +173,10 @@ public class PatientServiceImpl2 implements PatientService {
 			"FROM FACT_MEMBERSHIP FM "+
 			"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_SK = FM.MEMBER_SK "+
 			"INNER JOIN DIM_PAYER DP ON DP.PAYER_SK = FM.PRIMARY_PAYER_SK "+
-			"WHERE DM.MEMBER_ID = '"+memberId+"'";			
-			resultSet = statement.executeQuery(memberSQL);
+			"WHERE DM.MEMBER_ID = ?";			
+			PreparedStatement preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				dimPatient.setPrimaryPayer(resultSet.getString("PAYER_NAME"));
 			}			
@@ -183,8 +185,10 @@ public class PatientServiceImpl2 implements PatientService {
 			memberSQL = "SELECT DM.MEMBER_ID, cci_score AS MRA_Score "+
 			"FROM fact_cci_risk_score FHS "+
 			"INNER JOIN DIM_MEMBER DM ON DM.MEMBER_SK = FHS.MEMBER_SK "+
-			"WHERE DM.MEMBER_ID = '"+memberId+"'";
-			resultSet = statement.executeQuery(memberSQL);
+			"WHERE DM.MEMBER_ID = ?";
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {				
 				dimPatient.setMraScore(resultSet.getString("MRA_Score"));
 				//int mraScore = Integer.parseInt(resultSet.getString("MRA_Score"));
@@ -204,8 +208,10 @@ public class PatientServiceImpl2 implements PatientService {
 			//Comorbidities
 			resultSet.close();
 			memberSQL = "select fmc.* from fact_mem_comorbidity fmc, dim_member dm where "
-					+ "fmc.member_sk = dm.member_sk and dm.member_id = '"+memberId+"'";
-			resultSet = statement.executeQuery(memberSQL);
+					+ "fmc.member_sk = dm.member_sk and dm.member_id = ?";
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			Set<String> comorbidities = new TreeSet<>();
 			ResultSetMetaData rsmd = resultSet.getMetaData();
 			String colName = null;
@@ -230,10 +236,12 @@ public class PatientServiceImpl2 implements PatientService {
 			memberSQL = "select dqm.measure_name, qgl.status, qgl.COMPLIANCE_POTENTIAL, qgl.gap_date "+
 			"from qms_quality_measure dqm "+
 			"inner join qms_gic_lifecycle qgl on dqm.quality_measure_id = qgl.quality_measure_id "+
-			"where qgl.status <> 'closed' and qgl.member_id = '"+memberId+"' and rownum < 2 order by qgl.gap_date desc";			
+			"where qgl.status <> 'closed' and qgl.member_id = ? and rownum < 2 order by qgl.gap_date desc";			
 			
 			Set<String[]> careGaps = new HashSet<>();
-			resultSet = statement.executeQuery(memberSQL);
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			Set<String> careGapNameSet = new HashSet<>();
 			String gapName = null;
 			while (resultSet.next()) {
@@ -280,7 +288,7 @@ public class PatientServiceImpl2 implements PatientService {
 			"INNER JOIN DIM_DEPARTMENT DD ON DD.DEPARTMENT_SK = FA.DEPARTMENT_SK "+ 
 			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+ 
 			"WHERE DDA.CALENDAR_DATE>SYSDATE) B "+
-			"ON A.MEMBER_ID=B.MEMBER_ID WHERE A.MEMBER_ID = '"+memberId+"'";
+			"ON A.MEMBER_ID=B.MEMBER_ID WHERE A.MEMBER_ID = ?";
 			
 			
 			Set<CareGapAlert> careGapsAlrts = new TreeSet<>();
@@ -310,8 +318,10 @@ public class PatientServiceImpl2 implements PatientService {
 			//PCP Name, NPI, NPI, Speciality, address 
 			resultSet.close();
 			memberSQL = "select dp.* from fact_mem_attribution fa, dim_provider dp, dim_member dm "
-					+ "where dm.member_sk = fa.member_sk and fa.provider_sk = dp.provider_sk and dm.member_id='"+memberId+"'";
-			resultSet = statement.executeQuery(memberSQL);
+					+ "where dm.member_sk = fa.member_sk and fa.provider_sk = dp.provider_sk and dm.member_id=?";
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				dimPatient.setProviderFirstName(resultSet.getString("first_name"));
 				dimPatient.setProviderLastName(resultSet.getString("last_name"));
@@ -329,8 +339,10 @@ public class PatientServiceImpl2 implements PatientService {
 			"INNER JOIN DIM_PROVIDER DP ON DP.PROVIDER_SK = FA.PROVIDER_SK "+
 			"INNER JOIN DIM_DATE DDA ON DDA.DATE_SK=FA.APPOINTMENT_DATE_SK "+
 			"INNER JOIN DIM_PATIENT DPA ON DPA.PATIENT_SK=FA.PATIENT_SK "+
-			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID='"+memberId+"'";			
-			resultSet = statement.executeQuery(memberSQL);
+			"WHERE DDA.CALENDAR_DATE>SYSDATE AND DPA.PAT_ID=?";			
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				dimPatient.setNextAppointmentDate(QMSDateUtil.getSQLDateFormat(resultSet.getDate("Next_Appointment_Date")));
 				//dimPatient.setNextAppointmentDate(resultSet.getString("Next_Appointment_Date"));
@@ -352,9 +364,11 @@ public class PatientServiceImpl2 implements PatientService {
 			"FROM DIM_MEMBER DM "+
 			"INNER JOIN FACT_CLAIMS FC ON FC.MEMBER_SK = DM.MEMBER_SK "+
 			"INNER JOIN REF_BILL_TYPE RBY ON RBY.BILL_TYPE_ID = FC.BILL_TYPE_ID "+
-			"WHERE DM.MEMBER_ID = '"+memberId+"' "+
+			"WHERE DM.MEMBER_ID = ? "+
 			"GROUP BY DM.MEMBER_ID";			
-			resultSet = statement.executeQuery(memberSQL);
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				dimPatient.setIpVisitsCount(resultSet.getString("IP_VISIT"));
 				dimPatient.setOpVisitsCount(resultSet.getString("OP_VISIT"));
@@ -367,9 +381,11 @@ public class PatientServiceImpl2 implements PatientService {
 			"FROM DIM_PATIENT DP "+
 			"INNER JOIN FACT_PROCEDURE FP ON FP.PATIENT_SK = DP.PATIENT_SK "+
 			"INNER JOIN REF_PROCEDURES RP ON RP.PROCEDURE_ID = FP.PROCEDURE_ID "+
-			"WHERE DM.MEMBER_ID = '"+memberId+"' "+
+			"WHERE DM.MEMBER_ID = ? "+
 			"GROUP BY DP.PATIENT_ID";			
-			resultSet = statement.executeQuery(memberSQL);
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				
 			}
@@ -380,9 +396,11 @@ public class PatientServiceImpl2 implements PatientService {
 			"FROM DIM_PATIENT DP "+
 			"INNER JOIN FACT_MEDICATION FM ON FM.PATIENT_SK = DP.PATIENT_SK "+
 			"INNER JOIN MEDICATIONS M ON M.NDC_CODE = FM.NDC "+
-			"WHERE DP.PAT_ID = '"+memberId+"' "+
+			"WHERE DP.PAT_ID = ? "+
 			"GROUP BY DP.PATIENT_ID, M.MEDICATION_NAME";			
-			resultSet = statement.executeQuery(memberSQL);
+			preparedStatement = statement.getConnection().prepareStatement(memberSQL);
+			preparedStatement.setString(1, memberId);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				
 			}			
