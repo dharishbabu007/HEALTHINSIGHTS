@@ -587,6 +587,18 @@ public class ImportExportServiceImpl implements ImportExportService {
 	}
 
 	@Override
+	private String toSafeHivePathLiteral(String inputFilePath) {
+		if (inputFilePath == null || inputFilePath.trim().isEmpty()) {
+			throw new IllegalArgumentException("Input file path is empty.");
+		}
+		if (inputFilePath.contains("\n") || inputFilePath.contains("\r") || inputFilePath.contains(";")
+				|| inputFilePath.contains("--") || inputFilePath.contains("/*") || inputFilePath.contains("*/")
+				|| inputFilePath.contains("\\")) {
+			throw new IllegalArgumentException("Invalid characters in input file path.");
+		}
+		return inputFilePath.replace("'", "''");
+	}
+
 	public RestResult callHivePatitioning(String model) {
 		Statement statement = null;
 		ResultSet resultSet = null;		
@@ -612,17 +624,18 @@ public class ImportExportServiceImpl implements ImportExportService {
 				connection = qmsConnection.getHiveConnection();
 				statement = connection.createStatement();	
 		    	String inputFilePath = getUploadPath(model)+fileId+"/"+fileId+".csv";
+		    	String safeInputFilePath = toSafeHivePathLiteral(inputFilePath);
 		    	String loadSQL = null;
 		    	if(model.equals("noshow"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
 		    	 else if(model.equals("lhe"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
 		    	 else if(model.equals("lhc"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
 		    	 else if(model.equals("persona"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE CP_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE CP_FILE_INPUT PARTITION (fid="+fileId+")";	    		
 		    	 else if(model.equals("nc")) 
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+inputFilePath+"' INTO TABLE NC_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE NC_FILE_INPUT PARTITION (fid="+fileId+")";	    		
 				System.out.println("Loading the file in hive --> " + inputFilePath);
 				statement.executeUpdate(loadSQL);
 			}
