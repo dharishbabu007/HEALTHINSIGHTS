@@ -212,7 +212,8 @@ public class QMSController {
 	@RequestMapping(value = "/members/{dimMemberId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> findDimMember(@PathVariable("dimMemberId") String dimMemberId) {
-		logger.info("About to get dim member for id :  " + dimMemberId);
+		String sanitizedDimMemberId = dimMemberId == null ? null : dimMemberId.replace('\n', '_').replace('\r', '_');
+		logger.info("About to get dim member for id :  " + sanitizedDimMemberId);
 		List<DimMember> dimMemberList = memberService.findDimMembers(dimMemberId);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<Object>(dimMemberList, headers, HttpStatus.OK);
