@@ -614,11 +614,12 @@ public class ImportExportServiceImpl implements ImportExportService {
 		try {	
 			if(deployEnv != null && deployEnv.equalsIgnoreCase("AZURE")) {			
 				String hdfsInputLocation = getUploadPath(model)+fileId;
+				String safeHdfsInputLocation = toSafeHivePathLiteral(hdfsInputLocation);
 				System.out.println(" callHivePatitioning hdfsInputLocation " + hdfsInputLocation);
 				connection = qmsConnection.getHiveThriftConnection();
 				statement = connection.createStatement();			
 				//String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
-				statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+hdfsInputLocation+"'");
+				statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+safeHdfsInputLocation+"'");
 				System.out.println(" callHivePatitioning after " + hdfsInputLocation);
 			} else if(deployEnv != null && deployEnv.equalsIgnoreCase("DC")) {
 				connection = qmsConnection.getHiveConnection();
