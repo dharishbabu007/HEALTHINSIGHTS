@@ -52,13 +52,13 @@ public class MemberGapListController {
 
 	@RequestMapping(value = "/memberQMS", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON)
 	public ResponseEntity<QMSMemberReq> editMemberGapQMSList(@RequestBody QMSMemberReq qMSMemberReq) {
-		logger.info("updating data with dimMemberGaps with mid {}", qMSMemberReq);
+		String careGapsIdForLog = qMSMemberReq != null && qMSMemberReq.getCareGapsId() != null
+				? qMSMemberReq.getCareGapsId().replace('\n', '_').replace('\r', '_')
+				: "null";
+		logger.info("updating data with dimMemberGaps with careGapsId {}", careGapsIdForLog);
 		try {
 			return new ResponseEntity((QMSMemberReq) memberGapList.editMembergapListByQMS(qMSMemberReq), HttpStatus.OK);
 		} catch (QMSException e) {
-			String careGapsIdForLog = qMSMemberReq != null && qMSMemberReq.getCareGapsId() != null
-					? qMSMemberReq.getCareGapsId().replace('\n', '_').replace('\r', '_')
-					: "null";
 			logger.error("editMemberGapQMSList insertion process failed. message: {}, careGapsId: {}", e.getMessage(), careGapsIdForLog);
 			return new ResponseEntity(new CustomErrorType("editMemberGapQMSList insertion process failed."), HttpStatus.BAD_REQUEST);
 		}
