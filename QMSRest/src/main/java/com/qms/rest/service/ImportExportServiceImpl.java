@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
@@ -601,6 +602,7 @@ public class ImportExportServiceImpl implements ImportExportService {
 
 	public RestResult callHivePatitioning(String model) {
 		Statement statement = null;
+		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;		
 		Connection connection = null;
 		
@@ -617,28 +619,36 @@ public class ImportExportServiceImpl implements ImportExportService {
 				String safeHdfsInputLocation = toSafeHivePathLiteral(hdfsInputLocation);
 				System.out.println(" callHivePatitioning hdfsInputLocation " + hdfsInputLocation);
 				connection = qmsConnection.getHiveThriftConnection();
-				statement = connection.createStatement();			
-				//String hdfsInputLocation = "/"+qmsHDFSProperty.getWritePath()+fileId;			
-				statement.executeQuery("ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid="+fileId+") LOCATION '"+safeHdfsInputLocation+"'");
+				String alterSql = "ALTER TABLE NS_FILE_INPUT ADD PARTITION (fid=?) LOCATION ?";
+				preparedStatement = connection.prepareStatement(alterSql);
+				preparedStatement.setInt(1, fileId);
+				preparedStatement.setString(2, safeHdfsInputLocation);
+				preparedStatement.executeUpdate();
 				System.out.println(" callHivePatitioning after " + hdfsInputLocation);
 			} else if(deployEnv != null && deployEnv.equalsIgnoreCase("DC")) {
 				connection = qmsConnection.getHiveConnection();
-				statement = connection.createStatement();	
 		    	String inputFilePath = getUploadPath(model)+fileId+"/"+fileId+".csv";
 		    	String safeInputFilePath = toSafeHivePathLiteral(inputFilePath);
-		    	String loadSQL = null;
+		    	String tableName = null;
 		    	if(model.equals("noshow"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE NS_FILE_INPUT PARTITION (fid="+fileId+")"; 
+		    		tableName = "NS_FILE_INPUT"; 
 		    	 else if(model.equals("lhe"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE LHE_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    		tableName = "LHE_FILE_INPUT";	    		
 		    	 else if(model.equals("lhc"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE LHC_FILE_INPUT PARTITION (fid='"+fileId+"')";	    		
+		    		tableName = "LHC_FILE_INPUT";	    		
 		    	 else if(model.equals("persona"))  
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE CP_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+		    		tableName = "CP_FILE_INPUT";	    		
 		    	 else if(model.equals("nc")) 
-		    		loadSQL = "LOAD DATA LOCAL INPATH '"+safeInputFilePath+"' INTO TABLE NC_FILE_INPUT PARTITION (fid="+fileId+")";	    		
+		    		tableName = "NC_FILE_INPUT";
+		    	else
+		    		return RestResult.getFailRestResult(" Unsupported model. ");
+
+				String loadSQL = "LOAD DATA LOCAL INPATH ? INTO TABLE " + tableName + " PARTITION (fid=?)";
 				System.out.println("Loading the file in hive --> " + inputFilePath);
-				statement.executeUpdate(loadSQL);
+				preparedStatement = connection.prepareStatement(loadSQL);
+				preparedStatement.setString(1, safeInputFilePath);
+				preparedStatement.setInt(2, fileId);
+				preparedStatement.executeUpdate();
 			}
 			
 			System.out.println(" Alter table success for file id --> " + fileId);
@@ -648,6 +658,13 @@ public class ImportExportServiceImpl implements ImportExportService {
 			return RestResult.getFailRestResult(e.getMessage());
 		}
 		finally {
+			if(preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			qmsConnection.closeJDBCResources(resultSet, statement, connection);
 		}		
 	}
