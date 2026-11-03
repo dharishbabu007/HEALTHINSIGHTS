@@ -64,14 +64,15 @@ public class UserController {
 	
 	@RequestMapping(value = "/login/{loginId}/{password}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserDetails(@PathVariable("loginId") String loginId, @PathVariable("password") String password) {
-		logger.info("Fetching user details for loginId {}", loginId);
-		System.out.println("Fetching user details for loginId " + loginId);
+		String safeLoginIdForLog = loginId == null ? null : loginId.replace('\n', '_').replace('\r', '_');
+		logger.info("Fetching user details for loginId {}", safeLoginIdForLog);
+		System.out.println("Fetching user details for loginId " + safeLoginIdForLog);
 		User user=null;
 		try {
 			user = userService.getUserInfo(loginId, password);
 			if(user != null) {
 				httpSession.setAttribute(QMSConstants.SESSION_USER_OBJ, user);
-				System.out.println("Returned user name for loginId " + loginId + " : " + user.getFirstName());
+				System.out.println("Returned user name for loginId " + safeLoginIdForLog + " : " + user.getFirstName());
 				return new ResponseEntity<User>(user, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(new CustomErrorType("User details not found. "), HttpStatus.NOT_FOUND);	
