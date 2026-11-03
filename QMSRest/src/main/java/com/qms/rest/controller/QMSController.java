@@ -107,9 +107,19 @@ public class QMSController {
 		return new ResponseEntity<MeasureCreator>(measureCreator, HttpStatus.OK);
 	}	
 	
+	private String sanitizeForLog(Object value) {
+		if (value == null) {
+			return "null";
+		}
+		return value.toString()
+				.replace('\n', '_')
+				.replace('\r', '_')
+				.replace('\t', '_');
+	}
+
 	@RequestMapping(value = "/work_list/", method = RequestMethod.POST)
 	public ResponseEntity<RestResult> createMeasureCreater(@RequestBody MeasureCreator measureCreator, UriComponentsBuilder ucBuilder) {
-		logger.info("Creating MeasureCreator : {}", measureCreator);
+		logger.info("Creating MeasureCreator : {}", sanitizeForLog(measureCreator));
 		System.out.println(" Creating MeasureCreator with status --> " + measureCreator.getStatus());
 		RestResult restResult = qmsService.insertMeasureCreator(measureCreator);
 
