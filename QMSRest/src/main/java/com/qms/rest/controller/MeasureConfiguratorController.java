@@ -46,7 +46,7 @@ public class MeasureConfiguratorController {
 			@PathVariable("category") String category, 
 			@RequestBody List<MeasureConfig> measureConfigList, 
 			UriComponentsBuilder ucBuilder) {
-		logger.info("Creating MeasureConfigs : {}", measureConfigList);
+		logger.info("Creating MeasureConfigs : {}", sanitizeForLog(String.valueOf(measureConfigList)));
 		System.out.println(" Creating MeasureConfigs --> " + measureConfigList);
 		if(measureConfigList == null || measureConfigList.isEmpty()) {
 			return new ResponseEntity(new CustomErrorType(" Measure configuration list is null. "), HttpStatus.BAD_REQUEST);			
@@ -97,5 +97,12 @@ public class MeasureConfiguratorController {
 		
 		return new ResponseEntity<List<MeasureConfig>>(existMeasureConfigs, HttpStatus.OK);
 	}	
+
+	private static String sanitizeForLog(String value) {
+		if (value == null) {
+			return null;
+		}
+		return value.replace('\n', '_').replace('\r', '_');
+	}
 
 }
