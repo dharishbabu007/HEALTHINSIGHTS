@@ -389,9 +389,20 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			typeIds.add(typeId);
 		}
 		
-		String glcIds = typeIds.toString().substring(1, (typeIds.toString().length()-1));
-		ResultSet resultSet = statement.executeQuery("select TYPE_ID,PATH,FILE_NAME from "
-				+ "QMS.QMS_FILE_UPLOAD where TYPE='"+type+"' AND TYPE_ID in('"+glcIds+"')");
+		StringBuilder inClausePlaceholders = new StringBuilder();
+		for (int i = 0; i < typeIds.size(); i++) {
+			if (i > 0) {
+				inClausePlaceholders.append(",");
+			}
+			inClausePlaceholders.append("?");
+		}
+		PreparedStatement preparedStatement = statement.getConnection().prepareStatement(
+				"select TYPE_ID,PATH,FILE_NAME from QMS.QMS_FILE_UPLOAD where TYPE=? AND TYPE_ID in(" + inClausePlaceholders + ")");
+		preparedStatement.setString(1, type);
+		for (int i = 0; i < typeIds.size(); i++) {
+			preparedStatement.setInt(i + 2, typeIds.get(i));
+		}
+		ResultSet resultSet = preparedStatement.executeQuery();
 		int typeIdLocal = 0;
 		List<String> fileNames = null;
 		while (resultSet.next()) {
@@ -406,7 +417,7 @@ public class CloseGapsServiceImpl implements CloseGapsService {
 			} 
 			fileNames.add(resultSet.getString("PATH")+resultSet.getString("TYPE_ID")+"/"+resultSet.getString("FILE_NAME"));			
 		}		
-		qmsConnection.closeJDBCResources(resultSet, null, null);
+		qmsConnection.closeJDBCResources(resultSet, preparedStatement, null);
 		return typeIdFileNameMap;
 	}
 
