@@ -151,11 +151,11 @@
     reflect-metadata "^0.1.2"
     tsickle "^0.32.1"
 
-"@angular/compiler@^6.0.0":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-6.1.10.tgz#6ab35c8584fbda13a6708df14b8b03cc8f849a94"
+"@angular/compiler@^20.3.28":
+  version "20.3.28"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-20.3.28.tgz#d5f6c12a7686fcd4ddb197771b19749eef1c7d79"
   dependencies:
-    tslib "^1.9.0"
+    tslib "^2.3.0"
 
 "@angular/core@^20.3.28":
   version "20.3.28"
@@ -191,11 +191,11 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/router@^6.0.0":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-6.1.10.tgz#c7ee00897f6659b08378ea08d153d6f4c718004e"
+"@angular/router@^20.3.33":
+  version "20.3.33"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-20.3.33.tgz#714f0e031d370859db29f9f793cca06e297bfea4"
   dependencies:
-    tslib "^1.9.0"
+    tslib "^2.3.0"
 
 "@babel/code-frame@^7.0.0":
   version "7.29.7"
