@@ -157,9 +157,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^20.3.28":
-  version "20.3.28"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-20.3.28.tgz#ece2fdf6bf0af1b4d76e768eacb3d0bf90cb419c"
+"@angular/core@^22.2.4":
+  version "22.2.4"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-22.2.4.tgz#997f9837129a56f36aa51dda1ef7a3837dc65dbe"
   dependencies:
     tslib "^2.3.0"
 
