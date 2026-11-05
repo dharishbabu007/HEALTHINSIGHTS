@@ -968,6 +968,10 @@ ansi-styles@^6.2.1, ansi-styles@^6.2.3:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
 
+ansi-styles@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-7.0.0.tgz#859089a725560e235a41fecde8999196df6c78c0"
+
 anymatch@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-2.0.0.tgz#bcb24b4f37934d9aa7ac17b4adaf89e7c76ef2eb"
@@ -1859,11 +1863,11 @@ cli-spinners@^3.2.0:
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-3.4.0.tgz#1f11f6d48c4e5bc6849fcb4efa0dc98f9e7299ea"
 
 cli-truncate@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/cli-truncate/-/cli-truncate-6.1.1.tgz#35ae66a040eef357aedcfffd6149d847bf7a2eb1"
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/cli-truncate/-/cli-truncate-6.2.0.tgz#d82f0601a62cd11c4fea53c67fd0b02b541f9d5b"
   dependencies:
-    slice-ansi "^9.0.0"
-    string-width "^8.2.0"
+    slice-ansi "^10.0.0"
+    string-width "^8.3.0"
 
 cli-width@^4.1.0:
   version "4.1.0"
@@ -6933,6 +6937,13 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
+slice-ansi@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-10.0.0.tgz#4b8db63bb7fa6dec3ccc650158d4597e567ebc59"
+  dependencies:
+    ansi-styles "^7.0.0"
+    string-width "^8.3.0"
+
 slice-ansi@^9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-9.0.1.tgz#6754918812fed4460e215ea8ee24abedaca435c3"
@@ -7297,7 +7308,7 @@ string-width@^7.0.0, string-width@^7.2.0:
     get-east-asian-width "^1.0.0"
     strip-ansi "^7.1.0"
 
-string-width@^8.1.0, string-width@^8.2.0, string-width@^8.2.1:
+string-width@^8.1.0, string-width@^8.2.0, string-width@^8.2.1, string-width@^8.3.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-8.3.0.tgz#f1e85ca6d276ed9226c979c3651fb7abf548fbbe"
   dependencies:
