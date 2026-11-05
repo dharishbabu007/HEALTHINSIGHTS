@@ -566,9 +566,11 @@
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.4.tgz#0b92dcc0cc1c81f6f306a381f28e31b1a56536e9"
 
-"@types/annyang@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@types/annyang/-/annyang-2.6.1.tgz#7e15323eb51c30f628b7e4711b839810c1036cee"
+"@types/annyang@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/annyang/-/annyang-3.0.0.tgz#a72a2999424709e8dcfcd3d6f07642ac660f66a8"
+  dependencies:
+    annyang "*"
 
 "@types/cors@^2.8.12":
   version "2.8.19"
@@ -765,9 +767,9 @@ angular2-query-builder@^0.6.2:
   dependencies:
     tslib "^1.10.0"
 
-annyang@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/annyang/-/annyang-2.6.1.tgz#93140d7014f268a9d6c4319505715b0469dec856"
+annyang@*, annyang@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/annyang/-/annyang-3.1.1.tgz#cbb101fddb5f59cb70a8fda247075369cfdedd0e"
 
 ansi-colors@^3.0.0:
   version "3.2.4"
