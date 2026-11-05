@@ -2,11 +2,11 @@
 # yarn lockfile v1
 
 
-"@angular-devkit/architect@0.2202.4":
-  version "0.2202.4"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2202.4.tgz#680d90e9c81085cfb19d738493f56b6099feeb82"
+"@angular-devkit/architect@0.2202.5":
+  version "0.2202.5"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2202.5.tgz#495b50da910f46c855006fca4e7b10a5c8f3abcf"
   dependencies:
-    "@angular-devkit/core" "22.2.4"
+    "@angular-devkit/core" "22.2.5"
     rxjs "7.8.2"
 
 "@angular-devkit/architect@0.6.0":
@@ -90,9 +90,9 @@
     rxjs "^6.0.0"
     source-map "^0.5.6"
 
-"@angular-devkit/core@22.2.4":
-  version "22.2.4"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.4.tgz#062f946ebdb4fa12483f60fc11aadd073584fbb7"
+"@angular-devkit/core@22.2.5":
+  version "22.2.5"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.5.tgz#751fab1995ed105d2f9359d3db5caf6302402cef"
   dependencies:
     ajv "8.20.0"
     ajv-formats "3.0.1"
@@ -101,11 +101,11 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/schematics@22.2.4":
-  version "22.2.4"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.4.tgz#045e1400b48bd2254e98daf95cbb2fb315add9f2"
+"@angular-devkit/schematics@22.2.5":
+  version "22.2.5"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.5.tgz#fa28b3fe64a3c1984509ec24cb3582d529122429"
   dependencies:
-    "@angular-devkit/core" "22.2.4"
+    "@angular-devkit/core" "22.2.5"
     jsonc-parser "3.3.1"
     magic-string "1.4.1"
     ora "9.4.1"
@@ -117,17 +117,17 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/cli@^22.2.4":
-  version "22.2.4"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.2.4.tgz#4668160c3dc0ff804ef1cd7925ffd7f71cfc92d0"
+"@angular/cli@^22.2.5":
+  version "22.2.5"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.2.5.tgz#b61cf5c3a39e86bd081591cd42ab2bdca6303b2b"
   dependencies:
-    "@angular-devkit/architect" "0.2202.4"
-    "@angular-devkit/core" "22.2.4"
-    "@angular-devkit/schematics" "22.2.4"
+    "@angular-devkit/architect" "0.2202.5"
+    "@angular-devkit/core" "22.2.5"
+    "@angular-devkit/schematics" "22.2.5"
     "@inquirer/prompts" "8.7.2"
     "@listr2/prompt-adapter-inquirer" "4.2.7"
     "@modelcontextprotocol/server" "2.3.1"
-    "@schematics/angular" "22.2.4"
+    "@schematics/angular" "22.2.5"
     jsonc-parser "3.3.1"
     listr2 "11.1.0"
     npm-package-arg "14.0.0"
@@ -663,12 +663,12 @@
   version "0.150.0"
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.150.0.tgz#e9be0840114655016b16f1c05ddaaa01df5b8853"
 
-"@schematics/angular@22.2.4":
-  version "22.2.4"
-  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.2.4.tgz#6364b30280bf15e1a2fbab5af011bc271dbd92ea"
+"@schematics/angular@22.2.5":
+  version "22.2.5"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.2.5.tgz#f00331dd68091afc38b7ea504a60333f0e5beb49"
   dependencies:
-    "@angular-devkit/core" "22.2.4"
-    "@angular-devkit/schematics" "22.2.4"
+    "@angular-devkit/core" "22.2.5"
+    "@angular-devkit/schematics" "22.2.5"
     jsonc-parser "3.3.1"
     oxc-parser "0.150.0"
     typescript "6.0.3"
