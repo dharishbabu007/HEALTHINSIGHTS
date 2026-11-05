@@ -191,9 +191,9 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/router@^20.3.33":
-  version "20.3.33"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-20.3.33.tgz#714f0e031d370859db29f9f793cca06e297bfea4"
+"@angular/router@^22.2.4":
+  version "22.2.4"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-22.2.4.tgz#1c519591a95e4d59e0cf2bf8919c06b1158485b3"
   dependencies:
     tslib "^2.3.0"
 
