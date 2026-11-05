@@ -16,7 +16,7 @@
     "dependencies": {
         "@angular/animations": "^22.2.4",
         "@angular/common": "^22.2.4",
-        "@angular/compiler": "^20.3.28",
+        "@angular/compiler": "^22.2.4",
         "@angular/core": "^20.3.28",
         "@angular/forms": "^6.0.0",
         "@angular/http": "^6.0.0",

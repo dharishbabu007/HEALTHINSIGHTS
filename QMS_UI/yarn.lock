@@ -159,9 +159,9 @@
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-9.0.0.tgz#87e0bef4c369b6cadae07e3a4295778fc93799d5"
 
-"@angular/compiler@^20.3.28":
-  version "20.3.28"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-20.3.28.tgz#d5f6c12a7686fcd4ddb197771b19749eef1c7d79"
+"@angular/compiler@^22.2.4":
+  version "22.2.4"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-22.2.4.tgz#8d4a6e722d607e1d56ac642216989c7c28a3111b"
   dependencies:
     tslib "^2.3.0"
 
