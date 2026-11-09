@@ -2,11 +2,11 @@
 # yarn lockfile v1
 
 
-"@angular-devkit/architect@0.2202.5":
-  version "0.2202.5"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2202.5.tgz#495b50da910f46c855006fca4e7b10a5c8f3abcf"
+"@angular-devkit/architect@0.2202.6":
+  version "0.2202.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2202.6.tgz#b1f312fc2dcd90ccde0d27398d606fb08a6f6474"
   dependencies:
-    "@angular-devkit/core" "22.2.5"
+    "@angular-devkit/core" "22.2.6"
     rxjs "7.8.2"
 
 "@angular-devkit/architect@0.6.0":
@@ -90,9 +90,9 @@
     rxjs "^6.0.0"
     source-map "^0.5.6"
 
-"@angular-devkit/core@22.2.5":
-  version "22.2.5"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.5.tgz#751fab1995ed105d2f9359d3db5caf6302402cef"
+"@angular-devkit/core@22.2.6":
+  version "22.2.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.6.tgz#ca6342bf505001033f3c2f2bfcd47bf0829a734d"
   dependencies:
     ajv "8.20.0"
     ajv-formats "3.0.1"
@@ -101,11 +101,11 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/schematics@22.2.5":
-  version "22.2.5"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.5.tgz#fa28b3fe64a3c1984509ec24cb3582d529122429"
+"@angular-devkit/schematics@22.2.6":
+  version "22.2.6"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.6.tgz#36830110420883d71410ded884c8ccd028b0bf3e"
   dependencies:
-    "@angular-devkit/core" "22.2.5"
+    "@angular-devkit/core" "22.2.6"
     jsonc-parser "3.3.1"
     magic-string "1.4.1"
     ora "9.4.1"
@@ -117,17 +117,17 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/cli@^22.2.5":
-  version "22.2.5"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.2.5.tgz#b61cf5c3a39e86bd081591cd42ab2bdca6303b2b"
+"@angular/cli@^22.2.6":
+  version "22.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.2.6.tgz#994d8dd19882aecf0d2b0f9b5386266c8049a2a4"
   dependencies:
-    "@angular-devkit/architect" "0.2202.5"
-    "@angular-devkit/core" "22.2.5"
-    "@angular-devkit/schematics" "22.2.5"
+    "@angular-devkit/architect" "0.2202.6"
+    "@angular-devkit/core" "22.2.6"
+    "@angular-devkit/schematics" "22.2.6"
     "@inquirer/prompts" "8.7.2"
     "@listr2/prompt-adapter-inquirer" "4.2.7"
     "@modelcontextprotocol/server" "2.3.1"
-    "@schematics/angular" "22.2.5"
+    "@schematics/angular" "22.2.6"
     jsonc-parser "3.3.1"
     listr2 "11.1.0"
     npm-package-arg "14.0.0"
@@ -583,94 +583,94 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@oxc-parser/binding-android-arm-eabi@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.150.0.tgz#c15f2c5565e56f66def408aaeb8145a029d78809"
+"@oxc-parser/binding-android-arm-eabi@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.156.0.tgz#16c69d14b48d8ad290e5113e609796b373a567e3"
 
-"@oxc-parser/binding-android-arm64@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm64/-/binding-android-arm64-0.150.0.tgz#67f168e0dfbd125d67ab0d3beac8ffec36b93ff6"
+"@oxc-parser/binding-android-arm64@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm64/-/binding-android-arm64-0.156.0.tgz#fdd31b010d635b4bc106fedfba51dce4d02b71d1"
 
-"@oxc-parser/binding-darwin-arm64@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-arm64/-/binding-darwin-arm64-0.150.0.tgz#04f17c7d5f77c715a1cfbd847d490c27906cc177"
+"@oxc-parser/binding-darwin-arm64@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-arm64/-/binding-darwin-arm64-0.156.0.tgz#7d3130fa1d4e795c3b74cf8579b6f77d46bd2a3d"
 
-"@oxc-parser/binding-darwin-x64@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-x64/-/binding-darwin-x64-0.150.0.tgz#b0524643e8c076171ecd8a6be941038b83cb80a8"
+"@oxc-parser/binding-darwin-x64@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-x64/-/binding-darwin-x64-0.156.0.tgz#2e0a7687f94e6d38d5e4754c5a261d1406fad52b"
 
-"@oxc-parser/binding-freebsd-x64@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-freebsd-x64/-/binding-freebsd-x64-0.150.0.tgz#ae6a04d81b28011373949c7397739f88fbb69e1a"
+"@oxc-parser/binding-freebsd-x64@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-freebsd-x64/-/binding-freebsd-x64-0.156.0.tgz#02c085b4483c4022046e0008e3fdbcd2b2d355e6"
 
-"@oxc-parser/binding-linux-arm-gnueabihf@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.150.0.tgz#d06793edd30244cbc753a5108c4d24f917bd155b"
+"@oxc-parser/binding-linux-arm-gnueabihf@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.156.0.tgz#ebe594e197c8825c82176979a4d2fb06a04d85cc"
 
-"@oxc-parser/binding-linux-arm-musleabihf@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.150.0.tgz#503d38d8608e3bb82de216a0e23e0a966c259ce7"
+"@oxc-parser/binding-linux-arm-musleabihf@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.156.0.tgz#754bd631cf24058e60fbfb33e86b6f8010d00d55"
 
-"@oxc-parser/binding-linux-arm64-gnu@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.150.0.tgz#8bddc72b2266ea0e306b65287a407e25769a30ca"
+"@oxc-parser/binding-linux-arm64-gnu@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.156.0.tgz#08dd20982cbd09b786b9a155ca507d0c353e5976"
 
-"@oxc-parser/binding-linux-arm64-musl@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.150.0.tgz#c8d691b24578da438d5ea12f455456c1745af8a4"
+"@oxc-parser/binding-linux-arm64-musl@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.156.0.tgz#67304813ca392d7512f3fe90263882a04e33623a"
 
-"@oxc-parser/binding-linux-ppc64-gnu@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.150.0.tgz#9e413404c82f055c242d440093fa0d4d2fcd51de"
+"@oxc-parser/binding-linux-ppc64-gnu@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.156.0.tgz#a52324e1bed6ba444cfbb6e14aa7c19044b83483"
 
-"@oxc-parser/binding-linux-riscv64-gnu@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.150.0.tgz#346a2f08935d8d3bc0820f039c6fb7f9521fc822"
+"@oxc-parser/binding-linux-riscv64-gnu@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.156.0.tgz#76664d5caa16df482ec4f2521b2a90731ab98055"
 
-"@oxc-parser/binding-linux-riscv64-musl@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.150.0.tgz#b85b8d971b85a581d2267693a0bce9d5ef35a69e"
+"@oxc-parser/binding-linux-riscv64-musl@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.156.0.tgz#3fb127d6742f045c336a7cf6f1044c7f19104b5a"
 
-"@oxc-parser/binding-linux-s390x-gnu@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.150.0.tgz#744b62c9f5f13b5dddf49084385895e7c109fda8"
+"@oxc-parser/binding-linux-s390x-gnu@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.156.0.tgz#5599543de8e232c2c6e39b1eb1ab4459392e7214"
 
-"@oxc-parser/binding-linux-x64-gnu@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.150.0.tgz#4f44e8aa3db1357d46253ce0bc50ba941381657c"
+"@oxc-parser/binding-linux-x64-gnu@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.156.0.tgz#8125af6b776b64e968fd2e3fe5a0d1729cba87d8"
 
-"@oxc-parser/binding-linux-x64-musl@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-musl/-/binding-linux-x64-musl-0.150.0.tgz#390c02547514f84ddd3d9dde01aa954dc1397aa6"
+"@oxc-parser/binding-linux-x64-musl@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-musl/-/binding-linux-x64-musl-0.156.0.tgz#72b1c9c7d9268caab3c49b7a3308264fc4462660"
 
-"@oxc-parser/binding-openharmony-arm64@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-openharmony-arm64/-/binding-openharmony-arm64-0.150.0.tgz#7dab8223b0b08e0a595fc4a08e2c037e8855f9b1"
+"@oxc-parser/binding-openharmony-arm64@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-openharmony-arm64/-/binding-openharmony-arm64-0.156.0.tgz#8e3ebeed0775841cb4f5572a91f52a586e592342"
 
-"@oxc-parser/binding-win32-arm64-msvc@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.150.0.tgz#955dd61cf5a41667bb9c195180c5adbe48a8d6d3"
+"@oxc-parser/binding-win32-arm64-msvc@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.156.0.tgz#0ec97c146c762e3f81bb10d53fea4586c891f144"
 
-"@oxc-parser/binding-win32-ia32-msvc@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.150.0.tgz#73df50d6fc60b06d3b1ac742d669f883c6a327b0"
+"@oxc-parser/binding-win32-ia32-msvc@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.156.0.tgz#3476a56ff18cf46594eb1d7384b47cca152f3dff"
 
-"@oxc-parser/binding-win32-x64-msvc@0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.150.0.tgz#59a175e144bd206d91ded4d7ef31b4d7d89907f7"
+"@oxc-parser/binding-win32-x64-msvc@0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.156.0.tgz#2203888668f128a66f4c7234a3e21b8ed2de2f9f"
 
-"@oxc-project/types@^0.150.0":
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.150.0.tgz#e9be0840114655016b16f1c05ddaaa01df5b8853"
+"@oxc-project/types@^0.156.0":
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.156.0.tgz#00e35b1ead490d81b4c7fe1dbfe35fc55e89c5e6"
 
-"@schematics/angular@22.2.5":
-  version "22.2.5"
-  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.2.5.tgz#f00331dd68091afc38b7ea504a60333f0e5beb49"
+"@schematics/angular@22.2.6":
+  version "22.2.6"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.2.6.tgz#8e65d33a344e27a80bf22f937d75d92cb3d96ed8"
   dependencies:
-    "@angular-devkit/core" "22.2.5"
-    "@angular-devkit/schematics" "22.2.5"
+    "@angular-devkit/core" "22.2.6"
+    "@angular-devkit/schematics" "22.2.6"
     jsonc-parser "3.3.1"
-    oxc-parser "0.150.0"
+    oxc-parser "0.156.0"
     typescript "6.0.3"
 
 "@socket.io/component-emitter@~3.1.0":
@@ -5721,31 +5721,31 @@ own-keys@^1.0.1:
     object-keys "^1.1.1"
     safe-push-apply "^1.0.0"
 
-oxc-parser@0.150.0:
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/oxc-parser/-/oxc-parser-0.150.0.tgz#fb260d3f762b588524b84fd037ee5df348d20424"
+oxc-parser@0.156.0:
+  version "0.156.0"
+  resolved "https://registry.yarnpkg.com/oxc-parser/-/oxc-parser-0.156.0.tgz#8ec9ff7b5bf894eeb8ef8b9a2de9329b2dd1aa95"
   dependencies:
-    "@oxc-project/types" "^0.150.0"
+    "@oxc-project/types" "^0.156.0"
   optionalDependencies:
-    "@oxc-parser/binding-android-arm-eabi" "0.150.0"
-    "@oxc-parser/binding-android-arm64" "0.150.0"
-    "@oxc-parser/binding-darwin-arm64" "0.150.0"
-    "@oxc-parser/binding-darwin-x64" "0.150.0"
-    "@oxc-parser/binding-freebsd-x64" "0.150.0"
-    "@oxc-parser/binding-linux-arm-gnueabihf" "0.150.0"
-    "@oxc-parser/binding-linux-arm-musleabihf" "0.150.0"
-    "@oxc-parser/binding-linux-arm64-gnu" "0.150.0"
-    "@oxc-parser/binding-linux-arm64-musl" "0.150.0"
-    "@oxc-parser/binding-linux-ppc64-gnu" "0.150.0"
-    "@oxc-parser/binding-linux-riscv64-gnu" "0.150.0"
-    "@oxc-parser/binding-linux-riscv64-musl" "0.150.0"
-    "@oxc-parser/binding-linux-s390x-gnu" "0.150.0"
-    "@oxc-parser/binding-linux-x64-gnu" "0.150.0"
-    "@oxc-parser/binding-linux-x64-musl" "0.150.0"
-    "@oxc-parser/binding-openharmony-arm64" "0.150.0"
-    "@oxc-parser/binding-win32-arm64-msvc" "0.150.0"
-    "@oxc-parser/binding-win32-ia32-msvc" "0.150.0"
-    "@oxc-parser/binding-win32-x64-msvc" "0.150.0"
+    "@oxc-parser/binding-android-arm-eabi" "0.156.0"
+    "@oxc-parser/binding-android-arm64" "0.156.0"
+    "@oxc-parser/binding-darwin-arm64" "0.156.0"
+    "@oxc-parser/binding-darwin-x64" "0.156.0"
+    "@oxc-parser/binding-freebsd-x64" "0.156.0"
+    "@oxc-parser/binding-linux-arm-gnueabihf" "0.156.0"
+    "@oxc-parser/binding-linux-arm-musleabihf" "0.156.0"
+    "@oxc-parser/binding-linux-arm64-gnu" "0.156.0"
+    "@oxc-parser/binding-linux-arm64-musl" "0.156.0"
+    "@oxc-parser/binding-linux-ppc64-gnu" "0.156.0"
+    "@oxc-parser/binding-linux-riscv64-gnu" "0.156.0"
+    "@oxc-parser/binding-linux-riscv64-musl" "0.156.0"
+    "@oxc-parser/binding-linux-s390x-gnu" "0.156.0"
+    "@oxc-parser/binding-linux-x64-gnu" "0.156.0"
+    "@oxc-parser/binding-linux-x64-musl" "0.156.0"
+    "@oxc-parser/binding-openharmony-arm64" "0.156.0"
+    "@oxc-parser/binding-win32-arm64-msvc" "0.156.0"
+    "@oxc-parser/binding-win32-ia32-msvc" "0.156.0"
+    "@oxc-parser/binding-win32-x64-msvc" "0.156.0"
 
 p-finally@^1.0.0:
   version "1.0.0"
