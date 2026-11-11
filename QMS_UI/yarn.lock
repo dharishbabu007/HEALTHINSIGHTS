@@ -2731,6 +2731,10 @@ entities@^8.0.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-8.1.0.tgz#9632d69619ebdbe0cf0ef22f53088fe5a2163d86"
 
+entities@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-9.0.0.tgz#c45df3cdbc5ce805474759f4ec4ea7907d9d5477"
+
 env-paths@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.1.tgz#420399d416ce1fbe9bc0a07c62fa68d67fd0f8f2"
@@ -5831,10 +5835,10 @@ parse5-html-rewriting-stream@8.0.1:
     parse5-sax-parser "^8.0.0"
 
 parse5-sax-parser@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/parse5-sax-parser/-/parse5-sax-parser-8.0.0.tgz#49755efbd2b63846c7b908a297a874af00760715"
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/parse5-sax-parser/-/parse5-sax-parser-8.0.1.tgz#9072f7809e2bcae6e21c45986bcf03ccb0da77e5"
   dependencies:
-    parse5 "^8.0.0"
+    parse5 "^8.1.1"
 
 parse5@^4.0.0:
   version "4.0.0"
@@ -5845,6 +5849,12 @@ parse5@^8.0.0:
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-8.0.1.tgz#f43bcd2cd683efe084075333e9ce0da7d06da31e"
   dependencies:
     entities "^8.0.0"
+
+parse5@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-8.1.1.tgz#d73eb52282024c921e9c5a19b870f53492e631b2"
+  dependencies:
+    entities "^9.0.0"
 
 parseurl@~1.3.3:
   version "1.3.3"
