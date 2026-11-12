@@ -567,25 +567,13 @@
     "@babel/template" "^8.1.2"
     "@babel/types" "^8.1.2"
 
-"@babel/parser@^7.23.9", "@babel/parser@^7.29.13", "@babel/parser@^7.29.7":
-  version "7.29.13"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.29.13.tgz#dbba85be72b94635123d594035fd087fe7e42bb3"
-  dependencies:
-    "@babel/types" "^7.29.11"
-
-"@babel/parser@^7.29.14":
+"@babel/parser@^7.23.9", "@babel/parser@^7.29.13", "@babel/parser@^7.29.14", "@babel/parser@^7.29.7":
   version "7.29.14"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.29.14.tgz#9d3f5e3d62d725aa036ab489057e72fb446d1fad"
   dependencies:
     "@babel/types" "^7.29.14"
 
-"@babel/parser@^8.0.0", "@babel/parser@^8.0.5", "@babel/parser@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-8.1.0.tgz#872b51d371a0ffc4053fbdea64213daf3fd7ab97"
-  dependencies:
-    "@babel/types" "^8.1.0"
-
-"@babel/parser@^8.1.2":
+"@babel/parser@^8.0.0", "@babel/parser@^8.0.5", "@babel/parser@^8.1.0", "@babel/parser@^8.1.2":
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-8.1.2.tgz#c620e25c6f137e27e745442a69331747e3658a7e"
   dependencies:
