@@ -5226,13 +5226,7 @@ parse5-sax-parser@^8.0.0:
   dependencies:
     parse5 "^8.1.1"
 
-parse5@^8.0.0:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/parse5/-/parse5-8.0.1.tgz#f43bcd2cd683efe084075333e9ce0da7d06da31e"
-  dependencies:
-    entities "^8.0.0"
-
-parse5@^8.1.1:
+parse5@^8.0.0, parse5@^8.1.1:
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-8.1.1.tgz#d73eb52282024c921e9c5a19b870f53492e631b2"
   dependencies:
