@@ -5340,8 +5340,8 @@ postcss-safe-parser@^7.0.1:
   resolved "https://registry.yarnpkg.com/postcss-safe-parser/-/postcss-safe-parser-7.1.0.tgz#87b1416f874c318f56b34463ef7f5d49c6347c9c"
 
 postcss-selector-parser@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.2.0.tgz#e892f2002e8997690c080c9690b727a16151fb16"
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.2.1.tgz#7d53306479cfe1f40117f80aa6331e31667bc845"
   dependencies:
     util-deprecate "^1.0.2"
 
