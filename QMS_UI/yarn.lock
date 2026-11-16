@@ -1280,7 +1280,7 @@
     "@inquirer/core" "^12.0.6"
     "@inquirer/type" "4.2.1"
 
-"@inquirer/core@^12.0.3":
+"@inquirer/core@^12.0.3", "@inquirer/core@^12.1.0":
   version "12.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-12.1.0.tgz#a0c1327728170e89a45002818c62bd2dee5c70ac"
   dependencies:
@@ -1342,11 +1342,11 @@
     "@inquirer/type" "4.2.1"
 
 "@inquirer/number@^4.2.3":
-  version "4.2.6"
-  resolved "https://registry.yarnpkg.com/@inquirer/number/-/number-4.2.6.tgz#695f2ce5aa3229be392f7211cf292d4312a3704b"
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/number/-/number-4.3.0.tgz#a73ed13724251eb8dbe63981771ef9f87ade54ac"
   dependencies:
-    "@inquirer/core" "^12.0.6"
-    "@inquirer/type" "4.2.1"
+    "@inquirer/core" "^12.1.0"
+    "@inquirer/type" "4.3.0"
 
 "@inquirer/password@^5.2.2":
   version "5.2.5"
