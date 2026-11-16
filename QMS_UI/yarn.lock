@@ -1254,13 +1254,13 @@
   resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.1.0.tgz#5bc0bb4cb986c52f325141e1964de5fa7b21d1ce"
 
 "@inquirer/checkbox@^5.2.5":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@inquirer/checkbox/-/checkbox-5.2.8.tgz#fda6af5e7d747250974be6de417f0da9bac6c125"
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/checkbox/-/checkbox-5.3.0.tgz#fab107c89138d93b220381f9bb49d4850ac20e38"
   dependencies:
-    "@inquirer/ansi" "^2.0.10"
-    "@inquirer/core" "^12.0.6"
-    "@inquirer/figures" "^2.0.10"
-    "@inquirer/type" "4.2.1"
+    "@inquirer/ansi" "^2.1.0"
+    "@inquirer/core" "^12.1.0"
+    "@inquirer/figures" "^2.1.0"
+    "@inquirer/type" "4.3.0"
 
 "@inquirer/confirm@6.3.2":
   version "6.3.2"
