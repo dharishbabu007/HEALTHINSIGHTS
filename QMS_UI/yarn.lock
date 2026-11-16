@@ -1249,11 +1249,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@harperfast/extended-iterable/-/extended-iterable-1.0.5.tgz#be0e33796dcbcb32b40ff7ac44925a1b37e7c006"
 
-"@inquirer/ansi@^2.0.10":
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.0.10.tgz#25f81ba9e13423a6b9419489690321330a545c90"
-
-"@inquirer/ansi@^2.1.0":
+"@inquirer/ansi@^2.0.10", "@inquirer/ansi@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.1.0.tgz#5bc0bb4cb986c52f325141e1964de5fa7b21d1ce"
 
