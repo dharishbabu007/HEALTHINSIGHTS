@@ -1359,12 +1359,12 @@
     "@inquirer/type" "4.3.0"
 
 "@inquirer/password@^5.2.2":
-  version "5.2.5"
-  resolved "https://registry.yarnpkg.com/@inquirer/password/-/password-5.2.5.tgz#535c07d0134e091b3511eb0ce2bf4d5f9c9304f1"
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/password/-/password-5.3.0.tgz#3f43a9719dfe554d97bf9e87650914404e22ac6b"
   dependencies:
-    "@inquirer/ansi" "^2.0.10"
-    "@inquirer/core" "^12.0.6"
-    "@inquirer/type" "4.2.1"
+    "@inquirer/ansi" "^2.1.0"
+    "@inquirer/core" "^12.1.0"
+    "@inquirer/type" "4.3.0"
 
 "@inquirer/prompts@8.7.2":
   version "8.7.2"
