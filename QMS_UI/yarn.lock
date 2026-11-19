@@ -398,7 +398,7 @@
     flru "1.0.2"
     verkit "^0.5.0"
 
-"@babel/helper-create-class-features-plugin@^8.0.1", "@babel/helper-create-class-features-plugin@^8.0.5":
+"@babel/helper-create-class-features-plugin@^8.0.1", "@babel/helper-create-class-features-plugin@^8.0.10", "@babel/helper-create-class-features-plugin@^8.0.5":
   version "8.0.10"
   resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-8.0.10.tgz#c9121e53cecbddbdf7da2c28d01e524ba253a389"
   dependencies:
@@ -657,10 +657,10 @@
     "@babel/helper-plugin-utils" "^8.0.1"
 
 "@babel/plugin-transform-class-static-block@^8.0.5":
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-class-static-block/-/plugin-transform-class-static-block-8.0.5.tgz#ad84681cef23b646b00a756c7cd44a7f2996a2a2"
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-class-static-block/-/plugin-transform-class-static-block-8.1.2.tgz#3e2a92831dd895a44f77675a2f3f856eea57baf3"
   dependencies:
-    "@babel/helper-create-class-features-plugin" "^8.0.5"
+    "@babel/helper-create-class-features-plugin" "^8.0.10"
     "@babel/helper-plugin-utils" "^8.0.1"
 
 "@babel/plugin-transform-classes@^8.0.5":
