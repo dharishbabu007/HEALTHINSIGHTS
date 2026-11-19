@@ -721,10 +721,11 @@
     "@babel/plugin-transform-destructuring" "^8.0.5"
 
 "@babel/plugin-transform-exponentiation-operator@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-exponentiation-operator/-/plugin-transform-exponentiation-operator-8.0.1.tgz#9595d2faa13cf6fd131b06fb80e39fefdf2f45f1"
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-exponentiation-operator/-/plugin-transform-exponentiation-operator-8.1.2.tgz#d5f19f457a58e07613e6df2d13e31f533e62360d"
   dependencies:
     "@babel/helper-plugin-utils" "^8.0.1"
+    "@babel/helper-skip-transparent-expression-wrappers" "^8.1.0"
 
 "@babel/plugin-transform-export-namespace-from@^8.0.1":
   version "8.1.0"
