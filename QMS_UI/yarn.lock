@@ -1269,7 +1269,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@harperfast/extended-iterable/-/extended-iterable-1.0.5.tgz#be0e33796dcbcb32b40ff7ac44925a1b37e7c006"
 
-"@inquirer/ansi@^2.0.10", "@inquirer/ansi@^2.1.0":
+"@inquirer/ansi@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.1.0.tgz#5bc0bb4cb986c52f325141e1964de5fa7b21d1ce"
 
@@ -1296,7 +1296,7 @@
     "@inquirer/core" "^12.0.6"
     "@inquirer/type" "4.2.1"
 
-"@inquirer/core@^12.0.3", "@inquirer/core@^12.1.0":
+"@inquirer/core@^12.0.3", "@inquirer/core@^12.0.6", "@inquirer/core@^12.1.0":
   version "12.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-12.1.0.tgz#a0c1327728170e89a45002818c62bd2dee5c70ac"
   dependencies:
@@ -1306,18 +1306,6 @@
     cli-width "^4.1.0"
     fast-wrap-ansi "^0.2.0"
     mute-stream "^4.0.0"
-    signal-exit "^4.1.0"
-
-"@inquirer/core@^12.0.6":
-  version "12.0.6"
-  resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-12.0.6.tgz#7b426c029925817f3ec333e7dbb146aecbff144c"
-  dependencies:
-    "@inquirer/ansi" "^2.0.10"
-    "@inquirer/figures" "^2.0.10"
-    "@inquirer/type" "4.2.1"
-    cli-width "^4.1.0"
-    fast-wrap-ansi "^0.2.0"
-    mute-stream "^3.0.0"
     signal-exit "^4.1.0"
 
 "@inquirer/editor@^5.3.3":
@@ -1342,7 +1330,7 @@
     chardet "^2.1.1"
     iconv-lite "^0.7.2"
 
-"@inquirer/figures@^2.0.10", "@inquirer/figures@^2.1.0":
+"@inquirer/figures@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/figures/-/figures-2.1.0.tgz#d31ea8b21e5223102239f5e38b6c52e5dffe5106"
 
@@ -4972,10 +4960,6 @@ multicast-dns@^7.2.5:
   dependencies:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
-
-mute-stream@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-3.0.0.tgz#cd8014dd2acb72e1e91bb67c74f0019e620ba2d1"
 
 mute-stream@^4.0.0:
   version "4.0.0"
