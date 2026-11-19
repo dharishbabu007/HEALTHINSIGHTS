@@ -435,11 +435,12 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-globals/-/helper-globals-8.0.6.tgz#198c218ccff8a99093d620abf66328ec80d234cd"
 
 "@babel/helper-member-expression-to-functions@^8.0.0", "@babel/helper-member-expression-to-functions@^8.0.5":
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-8.0.5.tgz#d23e8c1d574ffb894940502361340bf7002f20ea"
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-8.1.2.tgz#7a8251480394b30877d706ce373df8c32e4c6c0c"
   dependencies:
-    "@babel/traverse" "^8.0.5"
-    "@babel/types" "^8.0.5"
+    "@babel/helper-skip-transparent-expression-wrappers" "^8.1.0"
+    "@babel/traverse" "^8.1.2"
+    "@babel/types" "^8.1.2"
 
 "@babel/helper-module-imports@^7.29.7":
   version "7.29.7"
