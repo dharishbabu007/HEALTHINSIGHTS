@@ -1309,12 +1309,12 @@
     signal-exit "^4.1.0"
 
 "@inquirer/editor@^5.3.3":
-  version "5.3.6"
-  resolved "https://registry.yarnpkg.com/@inquirer/editor/-/editor-5.3.6.tgz#55f655b87ec9ee95beb26dee906f279c5b74fea8"
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/editor/-/editor-5.4.0.tgz#f9e91d18a0d604f73e992efa78ef3558576c309f"
   dependencies:
-    "@inquirer/core" "^12.0.6"
-    "@inquirer/external-editor" "^3.0.7"
-    "@inquirer/type" "4.2.1"
+    "@inquirer/core" "^12.1.0"
+    "@inquirer/external-editor" "^3.1.0"
+    "@inquirer/type" "4.3.0"
 
 "@inquirer/expand@^5.1.5":
   version "5.2.0"
@@ -1323,7 +1323,7 @@
     "@inquirer/core" "^12.1.0"
     "@inquirer/type" "4.3.0"
 
-"@inquirer/external-editor@^3.0.7":
+"@inquirer/external-editor@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/external-editor/-/external-editor-3.1.0.tgz#17c2f4634e421ddf99ce2688dfb3fa5c11373654"
   dependencies:
