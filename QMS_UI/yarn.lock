@@ -411,11 +411,11 @@
     verkit "^0.5.0"
 
 "@babel/helper-create-regexp-features-plugin@^8.0.1":
-  version "8.0.7"
-  resolved "https://registry.yarnpkg.com/@babel/helper-create-regexp-features-plugin/-/helper-create-regexp-features-plugin-8.0.7.tgz#1317b8363a0f73803967f1d06e4c0b53df099837"
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/helper-create-regexp-features-plugin/-/helper-create-regexp-features-plugin-8.1.2.tgz#a79dd6f3fc59107a164f2c46567c7b13312528ba"
   dependencies:
     "@babel/helper-annotate-as-pure" "^8.0.0"
-    regexpu-core "^6.5.3"
+    regexpu-core "^6.5.4"
     verkit "^0.5.0"
 
 "@babel/helper-define-polyfill-provider@^1.0.0":
@@ -5562,7 +5562,7 @@ regex-parser@^2.2.11:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/regex-parser/-/regex-parser-2.3.1.tgz#ee3f70e50bdd81a221d505242cb9a9c275a2ad91"
 
-regexpu-core@^6.5.3:
+regexpu-core@^6.5.4:
   version "6.5.4"
   resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-6.5.4.tgz#9d0fd7e27f494b925cf0f5f876194494deda9587"
   dependencies:
