@@ -464,7 +464,7 @@
     "@babel/helper-validator-identifier" "^7.29.7"
     "@babel/traverse" "^7.29.14"
 
-"@babel/helper-module-transforms@^8.0.1", "@babel/helper-module-transforms@^8.1.0", "@babel/helper-module-transforms@^8.1.2":
+"@babel/helper-module-transforms@^8.1.0", "@babel/helper-module-transforms@^8.1.2":
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/@babel/helper-module-transforms/-/helper-module-transforms-8.1.2.tgz#033a12f7777dad0bce30c3444fd7f9c5453b99ee"
   dependencies:
@@ -2857,8 +2857,8 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
 
 baseline-browser-mapping@^2.11.33:
-  version "2.11.37"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.37.tgz#a6170da13a37d1423bec6e99bcd7889a9db77036"
+  version "2.11.39"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.39.tgz#4e99c4845e0c2100b6b1ef189bce3643d11e604e"
 
 batch@0.6.1:
   version "0.6.1"
