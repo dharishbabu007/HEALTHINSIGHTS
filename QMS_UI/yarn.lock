@@ -464,7 +464,7 @@
     "@babel/helper-validator-identifier" "^7.29.7"
     "@babel/traverse" "^7.29.14"
 
-"@babel/helper-module-transforms@^8.0.1", "@babel/helper-module-transforms@^8.1.0", "@babel/helper-module-transforms@^8.1.2":
+"@babel/helper-module-transforms@^8.1.0", "@babel/helper-module-transforms@^8.1.2":
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/@babel/helper-module-transforms/-/helper-module-transforms-8.1.2.tgz#033a12f7777dad0bce30c3444fd7f9c5453b99ee"
   dependencies:
@@ -2255,8 +2255,8 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.4.tgz#0b92dcc0cc1c81f6f306a381f28e31b1a56536e9"
 
 "@tybys/wasm-util@^0.10.3":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@tybys/wasm-util/-/wasm-util-0.10.4.tgz#3e85ecb266f9d1722250e89bc69528615720b154"
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/@tybys/wasm-util/-/wasm-util-0.10.5.tgz#b3404a492dfbd65ba1c41c6f0a21f5e2d19b9053"
   dependencies:
     tslib "^2.4.0"
 
