@@ -515,9 +515,17 @@
   version "7.29.14"
   resolved "https://registry.yarnpkg.com/@babel/helper-string-parser/-/helper-string-parser-7.29.14.tgz#580738bad73cc713688e6bbc0b59ac8760066fe1"
 
+"@babel/helper-string-parser@^7.29.15":
+  version "7.29.15"
+  resolved "https://registry.yarnpkg.com/@babel/helper-string-parser/-/helper-string-parser-7.29.15.tgz#97d33964c3622accda81fc81ed7a34c7bb5f863b"
+
 "@babel/helper-string-parser@^8.1.2":
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/@babel/helper-string-parser/-/helper-string-parser-8.1.2.tgz#4bfcdea225730d80efbfb4bc8cb29694c6281a7b"
+
+"@babel/helper-string-parser@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/helper-string-parser/-/helper-string-parser-8.1.3.tgz#51264912caa3767fbf26c49a4b9dfc5bacea8e82"
 
 "@babel/helper-validator-identifier@^7.29.7":
   version "7.29.7"
@@ -558,16 +566,16 @@
     "@babel/types" "^8.1.2"
 
 "@babel/parser@^7.23.9", "@babel/parser@^7.29.13", "@babel/parser@^7.29.14", "@babel/parser@^7.29.7":
-  version "7.29.14"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.29.14.tgz#9d3f5e3d62d725aa036ab489057e72fb446d1fad"
+  version "7.29.15"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.29.15.tgz#2e2bcf6e51bfc99e1a00417f0a122ba27a441dba"
   dependencies:
-    "@babel/types" "^7.29.14"
+    "@babel/types" "^7.29.15"
 
 "@babel/parser@^8.0.0", "@babel/parser@^8.0.5", "@babel/parser@^8.1.2":
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-8.1.2.tgz#c620e25c6f137e27e745442a69331747e3658a7e"
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-8.1.3.tgz#976889f256041875e61a813bce343893a7aff179"
   dependencies:
-    "@babel/types" "^8.1.2"
+    "@babel/types" "^8.1.3"
 
 "@babel/plugin-bugfix-firefox-class-in-computed-class-key@^8.0.1":
   version "8.0.1"
@@ -1105,11 +1113,25 @@
     "@babel/helper-string-parser" "^7.29.14"
     "@babel/helper-validator-identifier" "^7.29.7"
 
+"@babel/types@^7.29.15":
+  version "7.29.15"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.29.15.tgz#92f0fa3501405b132ac7a5acd064052e8a455f09"
+  dependencies:
+    "@babel/helper-string-parser" "^7.29.15"
+    "@babel/helper-validator-identifier" "^7.29.7"
+
 "@babel/types@^8.0.0", "@babel/types@^8.0.5", "@babel/types@^8.1.0", "@babel/types@^8.1.2":
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-8.1.2.tgz#8317c04eee4db9fcf82f90785227d13fd2679ae0"
   dependencies:
     "@babel/helper-string-parser" "^8.1.2"
+    "@babel/helper-validator-identifier" "^8.0.6"
+
+"@babel/types@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-8.1.3.tgz#8ed4e67554415ce4dd86fa2b1bed769dbe2991d1"
+  dependencies:
+    "@babel/helper-string-parser" "^8.1.3"
     "@babel/helper-validator-identifier" "^8.0.6"
 
 "@bufbuild/protobuf@^2.5.0":
