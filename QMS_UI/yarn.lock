@@ -16,11 +16,11 @@
     "@angular-devkit/core" "22.2.6"
     rxjs "7.8.2"
 
-"@angular-devkit/architect@0.2202.7":
-  version "0.2202.7"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2202.7.tgz#f314bcf12f31f9475053dd34f74b70f0d2c8f5a2"
+"@angular-devkit/architect@0.2203.0":
+  version "0.2203.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.2203.0.tgz#34df6a9827abf431264800687fb4a6c7fe2faa31"
   dependencies:
-    "@angular-devkit/core" "22.2.7"
+    "@angular-devkit/core" "22.3.0"
     rxjs "7.8.2"
 
 "@angular-devkit/build-angular@^22.2.6":
@@ -101,9 +101,9 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/core@22.2.7":
-  version "22.2.7"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.7.tgz#a3a0388b083a660ed0b2f46ced10f803fcc4c4e3"
+"@angular-devkit/core@22.3.0":
+  version "22.3.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.3.0.tgz#15fb6c95cccf37e945829414b31418c4d980b34d"
   dependencies:
     ajv "8.20.0"
     ajv-formats "3.0.1"
@@ -112,14 +112,14 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/schematics@22.2.7":
-  version "22.2.7"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.7.tgz#1cd4f88c24f568bfef5d0d78ed8996098dc823c2"
+"@angular-devkit/schematics@22.3.0":
+  version "22.3.0"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.3.0.tgz#aafda06ec4aa7b5fd82f3723d7f7458589e68bfb"
   dependencies:
-    "@angular-devkit/core" "22.2.7"
+    "@angular-devkit/core" "22.3.0"
     jsonc-parser "3.3.1"
-    magic-string "1.4.1"
-    ora "9.4.1"
+    magic-string "1.4.5"
+    ora "10.0.0"
     rxjs "7.8.2"
 
 "@angular/animations@^22.3.0":
@@ -163,24 +163,24 @@
     "@oxc-parser/binding-wasm32-wasi" "0.156.0"
     lmdb "3.5.6"
 
-"@angular/cli@^22.2.7":
-  version "22.2.7"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.2.7.tgz#327a2b1ba144304243ededdbf3da6bc0e70d96fe"
+"@angular/cli@^22.3.0":
+  version "22.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-22.3.0.tgz#8971fb1bbe2a92dec04f0392db6009eb7d89f9a0"
   dependencies:
-    "@angular-devkit/architect" "0.2202.7"
-    "@angular-devkit/core" "22.2.7"
-    "@angular-devkit/schematics" "22.2.7"
-    "@inquirer/prompts" "8.7.2"
-    "@listr2/prompt-adapter-inquirer" "4.2.7"
-    "@modelcontextprotocol/server" "2.3.1"
-    "@schematics/angular" "22.2.7"
+    "@angular-devkit/architect" "0.2203.0"
+    "@angular-devkit/core" "22.3.0"
+    "@angular-devkit/schematics" "22.3.0"
+    "@inquirer/prompts" "8.8.0"
+    "@listr2/prompt-adapter-inquirer" "4.3.4"
+    "@modelcontextprotocol/server" "2.4.0"
+    "@schematics/angular" "22.3.0"
     jsonc-parser "3.3.1"
-    listr2 "11.1.0"
+    listr2 "11.4.1"
     npm-package-arg "14.0.0"
-    parse5-html-rewriting-stream "8.0.1"
-    semver "7.8.5"
-    yargs "18.1.0"
-    zod "4.6.6"
+    parse5-html-rewriting-stream "8.1.1"
+    semver "7.8.6"
+    yargs "18.2.0"
+    zod "4.6.7"
 
 "@angular/common@^22.2.4":
   version "22.2.4"
@@ -1274,14 +1274,18 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.1.0.tgz#5bc0bb4cb986c52f325141e1964de5fa7b21d1ce"
 
-"@inquirer/checkbox@^5.2.5":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/checkbox/-/checkbox-5.3.0.tgz#fab107c89138d93b220381f9bb49d4850ac20e38"
+"@inquirer/ansi@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/ansi/-/ansi-2.1.1.tgz#18a6009686f2bbeb498d1d6a7d1e4e680f65c64a"
+
+"@inquirer/checkbox@^5.3.0":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/checkbox/-/checkbox-5.3.1.tgz#1ff5a167f4030246a15939416898e33a398ac73d"
   dependencies:
-    "@inquirer/ansi" "^2.1.0"
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/figures" "^2.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/ansi" "^2.1.1"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/figures" "^2.1.1"
+    "@inquirer/type" "4.3.1"
 
 "@inquirer/confirm@6.3.2":
   version "6.3.2"
@@ -1290,14 +1294,14 @@
     "@inquirer/core" "^12.0.3"
     "@inquirer/type" "4.1.1"
 
-"@inquirer/confirm@^6.3.2":
-  version "6.3.5"
-  resolved "https://registry.yarnpkg.com/@inquirer/confirm/-/confirm-6.3.5.tgz#bac73c08aabda6b96689b04f80626f7ecc629dbc"
+"@inquirer/confirm@^6.4.0":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/confirm/-/confirm-6.4.1.tgz#9c7453ae9325f4266be2f5adc2782b4283164263"
   dependencies:
-    "@inquirer/core" "^12.0.6"
-    "@inquirer/type" "4.2.1"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/core@^12.0.3", "@inquirer/core@^12.0.6", "@inquirer/core@^12.1.0":
+"@inquirer/core@^12.0.3":
   version "12.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-12.1.0.tgz#a0c1327728170e89a45002818c62bd2dee5c70ac"
   dependencies:
@@ -1309,24 +1313,37 @@
     mute-stream "^4.0.0"
     signal-exit "^4.1.0"
 
-"@inquirer/editor@^5.3.3":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/editor/-/editor-5.4.0.tgz#f9e91d18a0d604f73e992efa78ef3558576c309f"
+"@inquirer/core@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/core/-/core-12.1.1.tgz#a8d56d6d4d78903093a58e4a8e42ebbb20b1e623"
   dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/external-editor" "^3.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/ansi" "^2.1.1"
+    "@inquirer/figures" "^2.1.1"
+    "@inquirer/type" "4.3.1"
+    cli-width "^4.1.0"
+    fast-string-width "^3.0.2"
+    fast-wrap-ansi "^0.2.0"
+    mute-stream "^3.0.0"
+    signal-exit "^4.1.0"
 
-"@inquirer/expand@^5.1.5":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/expand/-/expand-5.2.0.tgz#e4c67d9b2eae66ba3ddbb5edaee601f60d281a00"
+"@inquirer/editor@^5.4.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/editor/-/editor-5.5.0.tgz#b88692848a236952c30ad7c9aa2a356476fa3d40"
   dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/external-editor" "^3.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/external-editor@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/external-editor/-/external-editor-3.1.0.tgz#17c2f4634e421ddf99ce2688dfb3fa5c11373654"
+"@inquirer/expand@^5.2.0":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/expand/-/expand-5.2.1.tgz#eaba2a0ec44be8adaae2a861d4eb96a8eddff757"
+  dependencies:
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
+
+"@inquirer/external-editor@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/external-editor/-/external-editor-3.1.1.tgz#d7ace8124437e34ca4167c5b4136f5159b1c62f4"
   dependencies:
     chardet "^2.1.1"
     iconv-lite "^0.7.2"
@@ -1335,78 +1352,82 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@inquirer/figures/-/figures-2.1.0.tgz#d31ea8b21e5223102239f5e38b6c52e5dffe5106"
 
-"@inquirer/input@^5.1.6":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/input/-/input-5.2.0.tgz#b4e0e6050fb322f38c1d3da0303c3b49b0c5b5b2"
-  dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/type" "4.3.0"
+"@inquirer/figures@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/figures/-/figures-2.1.1.tgz#b2e56e9d287f58801c3a35ad6a9ab3f2ac02ca33"
 
-"@inquirer/number@^4.2.3":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/number/-/number-4.3.0.tgz#a73ed13724251eb8dbe63981771ef9f87ade54ac"
+"@inquirer/input@^5.2.0":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/input/-/input-5.2.1.tgz#41123d1fd4ccc04fbed606c5f4822a128ec13838"
   dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/password@^5.2.2":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/password/-/password-5.3.0.tgz#3f43a9719dfe554d97bf9e87650914404e22ac6b"
+"@inquirer/number@^4.3.0":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/number/-/number-4.3.1.tgz#f4e1d5df54ffe59fde69da0917b79819a571e766"
   dependencies:
-    "@inquirer/ansi" "^2.1.0"
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/prompts@8.7.2":
-  version "8.7.2"
-  resolved "https://registry.yarnpkg.com/@inquirer/prompts/-/prompts-8.7.2.tgz#fbbfd7e552e53608c740944908c1a0fc0cf3369c"
+"@inquirer/password@^5.3.0":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/password/-/password-5.3.1.tgz#171405c22e62ac68dc5c00edd2dd48b3a1617fb0"
   dependencies:
-    "@inquirer/checkbox" "^5.2.5"
-    "@inquirer/confirm" "^6.3.2"
-    "@inquirer/editor" "^5.3.3"
-    "@inquirer/expand" "^5.1.5"
-    "@inquirer/input" "^5.1.6"
-    "@inquirer/number" "^4.2.3"
-    "@inquirer/password" "^5.2.2"
-    "@inquirer/rawlist" "^5.3.5"
-    "@inquirer/search" "^4.3.3"
-    "@inquirer/select" "^5.2.5"
+    "@inquirer/ansi" "^2.1.1"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/rawlist@^5.3.5":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/rawlist/-/rawlist-5.4.0.tgz#d27b4e3b502898186734893d6f66cffa1755f53c"
+"@inquirer/prompts@8.8.0":
+  version "8.8.0"
+  resolved "https://registry.yarnpkg.com/@inquirer/prompts/-/prompts-8.8.0.tgz#5e5900c3a0817ee4b6b393c748c1f4697d17bc1a"
   dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/checkbox" "^5.3.0"
+    "@inquirer/confirm" "^6.4.0"
+    "@inquirer/editor" "^5.4.0"
+    "@inquirer/expand" "^5.2.0"
+    "@inquirer/input" "^5.2.0"
+    "@inquirer/number" "^4.3.0"
+    "@inquirer/password" "^5.3.0"
+    "@inquirer/rawlist" "^5.4.0"
+    "@inquirer/search" "^4.4.0"
+    "@inquirer/select" "^5.3.0"
 
-"@inquirer/search@^4.3.3":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/search/-/search-4.4.0.tgz#dd7cbf54114a1166e4dec04ece30fae542e23c17"
+"@inquirer/rawlist@^5.4.0":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/rawlist/-/rawlist-5.4.1.tgz#11ee9262a0d788d53d977757c9dbc79f54435d3a"
   dependencies:
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/figures" "^2.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/type" "4.3.1"
 
-"@inquirer/select@^5.2.5":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/select/-/select-5.3.0.tgz#fc893a8db77577aeb0066cabe6c911aaf5d899d8"
+"@inquirer/search@^4.4.0":
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/search/-/search-4.4.1.tgz#491b4b2ac364a5e55a249bc1de997f05b1397acd"
   dependencies:
-    "@inquirer/ansi" "^2.1.0"
-    "@inquirer/core" "^12.1.0"
-    "@inquirer/figures" "^2.1.0"
-    "@inquirer/type" "4.3.0"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/figures" "^2.1.1"
+    "@inquirer/type" "4.3.1"
+
+"@inquirer/select@^5.3.0":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/select/-/select-5.3.1.tgz#685d4bdc86d5552f705af74ec0c67922d2bc12f4"
+  dependencies:
+    "@inquirer/ansi" "^2.1.1"
+    "@inquirer/core" "^12.1.1"
+    "@inquirer/figures" "^2.1.1"
+    "@inquirer/type" "4.3.1"
 
 "@inquirer/type@4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-4.1.1.tgz#f865ee99f39e0951a0279f9c45ad1d260c0ce0dd"
 
-"@inquirer/type@4.2.1", "@inquirer/type@^4.0.7":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-4.2.1.tgz#ef7de2070d26e0e3f1c558b9e3939eab147717a3"
-
 "@inquirer/type@4.3.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-4.3.0.tgz#223be58dd538eed1c03f09fa236d7e85fb184c19"
+
+"@inquirer/type@4.3.1", "@inquirer/type@^4.2.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-4.3.1.tgz#fe4af72fae95241f2deacf2d8ad34591164aad6a"
 
 "@istanbuljs/schema@^0.1.3":
   version "0.1.6"
@@ -1611,11 +1632,11 @@
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
 
-"@listr2/prompt-adapter-inquirer@4.2.7":
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/@listr2/prompt-adapter-inquirer/-/prompt-adapter-inquirer-4.2.7.tgz#d3181be7f06af459e89aeed4b57208e92e9368ff"
+"@listr2/prompt-adapter-inquirer@4.3.4":
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@listr2/prompt-adapter-inquirer/-/prompt-adapter-inquirer-4.3.4.tgz#2bb0033c57f8e499b155b748fe02a7318883a906"
   dependencies:
-    "@inquirer/type" "^4.0.7"
+    "@inquirer/type" "^4.2.1"
 
 "@lmdb/lmdb-darwin-arm64@3.5.6":
   version "3.5.6"
@@ -1645,17 +1666,17 @@
   version "3.5.6"
   resolved "https://registry.yarnpkg.com/@lmdb/lmdb-win32-x64/-/lmdb-win32-x64-3.5.6.tgz#8e26cbb62abb1454130fe73bd475df3b24a97567"
 
-"@modelcontextprotocol/core@2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/core/-/core-2.3.1.tgz#14e177b68558bb47b584dc1457617a2155c83e73"
+"@modelcontextprotocol/core@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/core/-/core-2.4.0.tgz#c7f1a505452c3a0ad666d9a6e78a5804d8d8d0d9"
   dependencies:
     zod "^4.2.0"
 
-"@modelcontextprotocol/server@2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/server/-/server-2.3.1.tgz#a15440d5c06f3bad67360952fe58e6965b4a4ac7"
+"@modelcontextprotocol/server@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/server/-/server-2.4.0.tgz#282a61ccbdc531361f03525a33e33283534d6fc7"
   dependencies:
-    "@modelcontextprotocol/core" "2.3.1"
+    "@modelcontextprotocol/core" "2.4.0"
     zod "^4.2.0"
 
 "@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.7":
@@ -1820,65 +1841,129 @@
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.156.0.tgz#16c69d14b48d8ad290e5113e609796b373a567e3"
 
+"@oxc-parser/binding-android-arm-eabi@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.158.0.tgz#322bafc467fb6676c065d04a6f7e336d755aa6e4"
+
 "@oxc-parser/binding-android-arm64@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm64/-/binding-android-arm64-0.156.0.tgz#fdd31b010d635b4bc106fedfba51dce4d02b71d1"
+
+"@oxc-parser/binding-android-arm64@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm64/-/binding-android-arm64-0.158.0.tgz#75f34e4c5380488df60094249f339de6fcede15c"
 
 "@oxc-parser/binding-darwin-arm64@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-arm64/-/binding-darwin-arm64-0.156.0.tgz#7d3130fa1d4e795c3b74cf8579b6f77d46bd2a3d"
 
+"@oxc-parser/binding-darwin-arm64@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-arm64/-/binding-darwin-arm64-0.158.0.tgz#e09c602d91466d607693726c50edef52e593a5e1"
+
 "@oxc-parser/binding-darwin-x64@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-x64/-/binding-darwin-x64-0.156.0.tgz#2e0a7687f94e6d38d5e4754c5a261d1406fad52b"
+
+"@oxc-parser/binding-darwin-x64@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-darwin-x64/-/binding-darwin-x64-0.158.0.tgz#afa1300cec1748d4d3f3e20b03820d786ffc2b04"
 
 "@oxc-parser/binding-freebsd-x64@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-freebsd-x64/-/binding-freebsd-x64-0.156.0.tgz#02c085b4483c4022046e0008e3fdbcd2b2d355e6"
 
+"@oxc-parser/binding-freebsd-x64@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-freebsd-x64/-/binding-freebsd-x64-0.158.0.tgz#71b6303c7c81765338dc4522a2c767c379adfc26"
+
 "@oxc-parser/binding-linux-arm-gnueabihf@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.156.0.tgz#ebe594e197c8825c82176979a4d2fb06a04d85cc"
+
+"@oxc-parser/binding-linux-arm-gnueabihf@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.158.0.tgz#0ec1206e278a9f7d25590021669807446efc9e3b"
 
 "@oxc-parser/binding-linux-arm-musleabihf@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.156.0.tgz#754bd631cf24058e60fbfb33e86b6f8010d00d55"
 
+"@oxc-parser/binding-linux-arm-musleabihf@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.158.0.tgz#039560e02f11ddf98a7e536af8792a83e08eb74a"
+
 "@oxc-parser/binding-linux-arm64-gnu@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.156.0.tgz#08dd20982cbd09b786b9a155ca507d0c353e5976"
+
+"@oxc-parser/binding-linux-arm64-gnu@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.158.0.tgz#63a9babe0ffbd048d970218dad75d276c600293a"
 
 "@oxc-parser/binding-linux-arm64-musl@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.156.0.tgz#67304813ca392d7512f3fe90263882a04e33623a"
 
+"@oxc-parser/binding-linux-arm64-musl@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.158.0.tgz#06e65f247b71ffe648640a2221ab2ac880d4c980"
+
 "@oxc-parser/binding-linux-ppc64-gnu@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.156.0.tgz#a52324e1bed6ba444cfbb6e14aa7c19044b83483"
+
+"@oxc-parser/binding-linux-ppc64-gnu@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.158.0.tgz#9abd8cfd3bc4b853cfe749e2083fd49246769179"
 
 "@oxc-parser/binding-linux-riscv64-gnu@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.156.0.tgz#76664d5caa16df482ec4f2521b2a90731ab98055"
 
+"@oxc-parser/binding-linux-riscv64-gnu@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.158.0.tgz#1e17187b00b8d3d308107b3e3b35440dd66959b7"
+
 "@oxc-parser/binding-linux-riscv64-musl@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.156.0.tgz#3fb127d6742f045c336a7cf6f1044c7f19104b5a"
+
+"@oxc-parser/binding-linux-riscv64-musl@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.158.0.tgz#f78cfd010b602bf4a691f4a4a9e516e146a6f5ac"
 
 "@oxc-parser/binding-linux-s390x-gnu@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.156.0.tgz#5599543de8e232c2c6e39b1eb1ab4459392e7214"
 
+"@oxc-parser/binding-linux-s390x-gnu@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.158.0.tgz#9f7837a86d307058894c76a2173143cf1c0b64c5"
+
 "@oxc-parser/binding-linux-x64-gnu@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.156.0.tgz#8125af6b776b64e968fd2e3fe5a0d1729cba87d8"
+
+"@oxc-parser/binding-linux-x64-gnu@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.158.0.tgz#dd412f38fdd27a0cb5168f8f50e7e14d4bb559c0"
 
 "@oxc-parser/binding-linux-x64-musl@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-musl/-/binding-linux-x64-musl-0.156.0.tgz#72b1c9c7d9268caab3c49b7a3308264fc4462660"
 
+"@oxc-parser/binding-linux-x64-musl@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-linux-x64-musl/-/binding-linux-x64-musl-0.158.0.tgz#3418d03a59340772c339f1c1a296b2149aae978c"
+
 "@oxc-parser/binding-openharmony-arm64@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-openharmony-arm64/-/binding-openharmony-arm64-0.156.0.tgz#8e3ebeed0775841cb4f5572a91f52a586e592342"
+
+"@oxc-parser/binding-openharmony-arm64@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-openharmony-arm64/-/binding-openharmony-arm64-0.158.0.tgz#06fabf1ac151064cccaf3b738baf2e4835190beb"
 
 "@oxc-parser/binding-wasm32-wasi@0.156.0":
   version "0.156.0"
@@ -1892,17 +1977,33 @@
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.156.0.tgz#0ec97c146c762e3f81bb10d53fea4586c891f144"
 
+"@oxc-parser/binding-win32-arm64-msvc@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.158.0.tgz#0e84114ea33ef60f25f1d289b0e49af8d9f49d67"
+
 "@oxc-parser/binding-win32-ia32-msvc@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.156.0.tgz#3476a56ff18cf46594eb1d7384b47cca152f3dff"
+
+"@oxc-parser/binding-win32-ia32-msvc@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.158.0.tgz#1602a1539ba3b7cc077f4184aaa6371944fe5dc2"
 
 "@oxc-parser/binding-win32-x64-msvc@0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.156.0.tgz#2203888668f128a66f4c7234a3e21b8ed2de2f9f"
 
+"@oxc-parser/binding-win32-x64-msvc@0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-parser/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.158.0.tgz#75bce27deef7c1803c5fe91331b9e896e66ad94c"
+
 "@oxc-project/types@=0.156.0", "@oxc-project/types@^0.156.0":
   version "0.156.0"
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.156.0.tgz#00e35b1ead490d81b4c7fe1dbfe35fc55e89c5e6"
+
+"@oxc-project/types@^0.158.0":
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.158.0.tgz#b679b3726682a92c3a6c95d0d90d46654c0eaeb8"
 
 "@parcel/watcher-android-arm64@2.6.0":
   version "2.6.0"
@@ -2224,14 +2325,14 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.1.1.tgz#bdb13954851dc43ef5b03992618e0ed5e03c0598"
 
-"@schematics/angular@22.2.7":
-  version "22.2.7"
-  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.2.7.tgz#d7071773e59f44d49db16ed07b5858e608e85b96"
+"@schematics/angular@22.3.0":
+  version "22.3.0"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-22.3.0.tgz#9f84529e7df0a1579229b9c65837ae38ec0c339b"
   dependencies:
-    "@angular-devkit/core" "22.2.7"
-    "@angular-devkit/schematics" "22.2.7"
+    "@angular-devkit/core" "22.3.0"
+    "@angular-devkit/schematics" "22.3.0"
     jsonc-parser "3.3.1"
-    oxc-parser "0.156.0"
+    oxc-parser "0.158.0"
     typescript "6.0.3"
 
 "@socket.io/component-emitter@~3.1.0":
@@ -3050,6 +3151,10 @@ chalk@^5.6.2:
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.6.2.tgz#b1238b6e23ea337af71c7f8a295db5af0c158aea"
 
+chalk@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-6.0.1.tgz#077d4667ad6e608c9687782caed3d534d7f9abc3"
+
 chardet@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-2.2.0.tgz#005d664f2cbd4961888d2e2c32c5a69e59d8eec4"
@@ -3090,11 +3195,11 @@ cli-cursor@^5.0.0:
   dependencies:
     restore-cursor "^5.0.0"
 
-cli-spinners@^3.2.0:
+cli-spinners@^3.2.0, cli-spinners@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-3.4.0.tgz#1f11f6d48c4e5bc6849fcb4efa0dc98f9e7299ea"
 
-cli-truncate@^6.1.1:
+cli-truncate@^6.1.1, cli-truncate@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/cli-truncate/-/cli-truncate-6.2.0.tgz#d82f0601a62cd11c4fea53c67fd0b02b541f9d5b"
   dependencies:
@@ -4691,6 +4796,14 @@ listr2@11.1.0:
     log-update "^8.0.0"
     wrap-ansi "^10.0.1"
 
+listr2@11.4.1:
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/listr2/-/listr2-11.4.1.tgz#32a99b9a9d09ea929be5ceb26cb37da915a7fdfb"
+  dependencies:
+    cli-truncate "^6.2.0"
+    log-update "^8.0.0"
+    wrap-ansi "^10.0.2"
+
 lmdb@3.5.6:
   version "3.5.6"
   resolved "https://registry.yarnpkg.com/lmdb/-/lmdb-3.5.6.tgz#c45d2d40f65f91770d45dccbba8dba7f422a5388"
@@ -4787,6 +4900,12 @@ lru-cache@^5.1.1:
 magic-string@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-1.4.1.tgz#d0f91b82cd286a8a8de14f4254ccbf1d7e07f55e"
+  dependencies:
+    "@jridgewell/sourcemap-codec" "^1.6.0"
+
+magic-string@1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-1.4.5.tgz#201c852d51eb0664d6f66cf7ab93b20b416e48d9"
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.6.0"
 
@@ -4962,6 +5081,10 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
+mute-stream@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-3.0.0.tgz#cd8014dd2acb72e1e91bb67c74f0019e620ba2d1"
+
 mute-stream@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-4.0.0.tgz#3b04c237748aa7a2c93d8b5093cb001eaca1fbeb"
@@ -5101,6 +5224,19 @@ open@11.0.4, open@^11.0.0:
     powershell-utils "^0.2.1"
     wsl-utils "^1.0.0"
 
+ora@10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/ora/-/ora-10.0.0.tgz#eb3d13e363b4855972f1dd9e95bb553dbce5260e"
+  dependencies:
+    chalk "^6.0.1"
+    cli-cursor "^5.0.0"
+    cli-spinners "^3.4.0"
+    is-interactive "^2.0.0"
+    is-unicode-supported "^2.1.0"
+    log-symbols "^7.0.1"
+    stdin-discarder "^0.3.2"
+    string-width "^8.3.0"
+
 ora@9.4.1:
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/ora/-/ora-9.4.1.tgz#ba7644f3c7c92a8f830fbc48ca770b9eaf4bc55c"
@@ -5147,6 +5283,32 @@ oxc-parser@0.156.0:
     "@oxc-parser/binding-win32-arm64-msvc" "0.156.0"
     "@oxc-parser/binding-win32-ia32-msvc" "0.156.0"
     "@oxc-parser/binding-win32-x64-msvc" "0.156.0"
+
+oxc-parser@0.158.0:
+  version "0.158.0"
+  resolved "https://registry.yarnpkg.com/oxc-parser/-/oxc-parser-0.158.0.tgz#7ce129b2e32ed0ffa775cfd2d989d2576fa82d72"
+  dependencies:
+    "@oxc-project/types" "^0.158.0"
+  optionalDependencies:
+    "@oxc-parser/binding-android-arm-eabi" "0.158.0"
+    "@oxc-parser/binding-android-arm64" "0.158.0"
+    "@oxc-parser/binding-darwin-arm64" "0.158.0"
+    "@oxc-parser/binding-darwin-x64" "0.158.0"
+    "@oxc-parser/binding-freebsd-x64" "0.158.0"
+    "@oxc-parser/binding-linux-arm-gnueabihf" "0.158.0"
+    "@oxc-parser/binding-linux-arm-musleabihf" "0.158.0"
+    "@oxc-parser/binding-linux-arm64-gnu" "0.158.0"
+    "@oxc-parser/binding-linux-arm64-musl" "0.158.0"
+    "@oxc-parser/binding-linux-ppc64-gnu" "0.158.0"
+    "@oxc-parser/binding-linux-riscv64-gnu" "0.158.0"
+    "@oxc-parser/binding-linux-riscv64-musl" "0.158.0"
+    "@oxc-parser/binding-linux-s390x-gnu" "0.158.0"
+    "@oxc-parser/binding-linux-x64-gnu" "0.158.0"
+    "@oxc-parser/binding-linux-x64-musl" "0.158.0"
+    "@oxc-parser/binding-openharmony-arm64" "0.158.0"
+    "@oxc-parser/binding-win32-arm64-msvc" "0.158.0"
+    "@oxc-parser/binding-win32-ia32-msvc" "0.158.0"
+    "@oxc-parser/binding-win32-x64-msvc" "0.158.0"
 
 p-limit@^2.2.0:
   version "2.3.0"
@@ -5213,7 +5375,15 @@ parse5-html-rewriting-stream@8.0.1:
     parse5 "^8.0.0"
     parse5-sax-parser "^8.0.0"
 
-parse5-sax-parser@^8.0.0:
+parse5-html-rewriting-stream@8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/parse5-html-rewriting-stream/-/parse5-html-rewriting-stream-8.1.1.tgz#96d56ce1a506a517c56ee50e6e6bbee09e8c1b36"
+  dependencies:
+    entities "^9.0.0"
+    parse5 "^8.1.1"
+    parse5-sax-parser "^8.0.1"
+
+parse5-sax-parser@^8.0.0, parse5-sax-parser@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/parse5-sax-parser/-/parse5-sax-parser-8.0.1.tgz#9072f7809e2bcae6e21c45986bcf03ccb0da77e5"
   dependencies:
@@ -5925,6 +6095,10 @@ semver@7.8.5:
   version "7.8.5"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
 
+semver@7.8.6, semver@^7.0.0, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4, semver@^7.6.2, semver@^7.6.3, semver@^7.7.3:
+  version "7.8.6"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
+
 semver@^5.3.0, semver@^5.6.0:
   version "5.7.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.3.tgz#cfc74be3a9b2c95aa6e62aa0b2fbaa325f3ed329"
@@ -5932,10 +6106,6 @@ semver@^5.3.0, semver@^5.6.0:
 semver@^6.3.1:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.2.tgz#f50413fbe5a686c6379385b2e8789b61c124a3c7"
-
-semver@^7.0.0, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4, semver@^7.6.2, semver@^7.6.3, semver@^7.7.3:
-  version "7.8.6"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
 
 send@^1.1.0, send@^1.2.0:
   version "1.2.1"
@@ -6688,7 +6858,7 @@ word@~0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/word/-/word-0.3.0.tgz#8542157e4f8e849f4a363a288992d47612db9961"
 
-wrap-ansi@^10.0.0, wrap-ansi@^10.0.1:
+wrap-ansi@^10.0.0, wrap-ansi@^10.0.1, wrap-ansi@^10.0.2:
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-10.0.2.tgz#92f8f14b014136d034389a8700d6ce3df79c65d5"
   dependencies:
@@ -6792,9 +6962,9 @@ yargs-parser@^22.0.0:
   version "22.0.0"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-22.0.0.tgz#87b82094051b0567717346ecd00fd14804b357c8"
 
-yargs@18.1.0:
-  version "18.1.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-18.1.0.tgz#cd7e98c703ef51695bbbf062ed58f28e94291b56"
+yargs@18.2.0, yargs@^18.0.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-18.2.0.tgz#c258276baa935fe8fb911d986067f6d0733e8608"
   dependencies:
     cliui "^9.0.1"
     escalade "^3.1.1"
@@ -6831,17 +7001,6 @@ yargs@^16.1.1:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yargs@^18.0.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-18.2.0.tgz#c258276baa935fe8fb911d986067f6d0733e8608"
-  dependencies:
-    cliui "^9.0.1"
-    escalade "^3.1.1"
-    get-caller-file "^2.0.5"
-    string-width "^8.2.1"
-    y18n "^5.0.5"
-    yargs-parser "^22.0.0"
-
 yarn@^1.22.22:
   version "1.22.22"
   resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.22.tgz#ac34549e6aa8e7ead463a7407e1c7390f61a6610"
@@ -6858,11 +7017,7 @@ yoctocolors@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/yoctocolors/-/yoctocolors-2.2.0.tgz#c4b68ee477f3982c33e4de24a5aa4a354be506d3"
 
-zod@4.6.6:
-  version "4.6.6"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-4.6.6.tgz#0bb0cf57b87011a71ec28ed2e1b51f6455563f9a"
-
-zod@^4.2.0:
+zod@4.6.7, zod@^4.2.0:
   version "4.6.7"
   resolved "https://registry.yarnpkg.com/zod/-/zod-4.6.7.tgz#e806cf64a7f4e37635ce9f2f52c04c3766f75e5b"
 
