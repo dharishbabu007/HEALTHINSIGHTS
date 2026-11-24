@@ -6659,8 +6659,8 @@ webpack-merge@6.0.1:
     wildcard "^2.0.1"
 
 webpack-sources@^3.0.0, webpack-sources@^3.6.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.7.0.tgz#6c145ac83f8220ef20d4b01b9e7d5c15b1598b09"
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.7.1.tgz#f8d91f5ae9f5d4940c67333283044a7d80100480"
 
 webpack-subresource-integrity@5.1.0:
   version "5.1.0"
