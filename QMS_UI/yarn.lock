@@ -333,7 +333,7 @@
     "@types/jsesc" "^2.5.0"
     jsesc "^3.0.2"
 
-"@babel/generator@^7.29.13", "@babel/generator@^7.29.14":
+"@babel/generator@^7.29.13", "@babel/generator@^7.29.15":
   version "7.29.15"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.29.15.tgz#ffa72ac239f0ccf1b755f00fccdcb20cd2e627c4"
   dependencies:
@@ -343,7 +343,7 @@
     "@jridgewell/trace-mapping" "^0.3.28"
     jsesc "^3.0.2"
 
-"@babel/generator@^8.0.0", "@babel/generator@^8.1.0", "@babel/generator@^8.1.2", "@babel/generator@^8.1.3":
+"@babel/generator@^8.0.0", "@babel/generator@^8.1.0", "@babel/generator@^8.1.3":
   version "8.1.3"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-8.1.3.tgz#232695632576c3a14328998c52d80e9f176b6745"
   dependencies:
@@ -547,7 +547,7 @@
     "@babel/template" "^8.1.2"
     "@babel/types" "^8.1.3"
 
-"@babel/parser@^7.23.9", "@babel/parser@^7.29.13", "@babel/parser@^7.29.14", "@babel/parser@^7.29.15", "@babel/parser@^7.29.7":
+"@babel/parser@^7.23.9", "@babel/parser@^7.29.13", "@babel/parser@^7.29.15", "@babel/parser@^7.29.7":
   version "7.29.15"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.29.15.tgz#2e2bcf6e51bfc99e1a00417f0a122ba27a441dba"
   dependencies:
@@ -1057,30 +1057,18 @@
     "@babel/types" "^8.1.2"
 
 "@babel/traverse@^7.29.13", "@babel/traverse@^7.29.14", "@babel/traverse@^7.29.7":
-  version "7.29.14"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.29.14.tgz#97af2f5e45248b06f94d7e72f4433287cf385339"
+  version "7.29.15"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.29.15.tgz#244572b939ceff7cae12f2a17fd76a2d89f4201c"
   dependencies:
     "@babel/code-frame" "^7.29.7"
-    "@babel/generator" "^7.29.14"
+    "@babel/generator" "^7.29.15"
     "@babel/helper-globals" "^7.29.7"
-    "@babel/parser" "^7.29.14"
+    "@babel/parser" "^7.29.15"
     "@babel/template" "^7.29.7"
-    "@babel/types" "^7.29.14"
+    "@babel/types" "^7.29.15"
     debug "^4.3.1"
 
-"@babel/traverse@^8.0.0", "@babel/traverse@^8.0.10", "@babel/traverse@^8.0.6", "@babel/traverse@^8.1.0", "@babel/traverse@^8.1.2":
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-8.1.2.tgz#30b73946e7d4623bc493dfbfd1b99e43e8a6172b"
-  dependencies:
-    "@babel/code-frame" "^8.0.6"
-    "@babel/generator" "^8.1.2"
-    "@babel/helper-globals" "^8.0.6"
-    "@babel/parser" "^8.1.2"
-    "@babel/template" "^8.1.2"
-    "@babel/types" "^8.1.2"
-    obug "^3.0.0"
-
-"@babel/traverse@^8.1.3":
+"@babel/traverse@^8.0.0", "@babel/traverse@^8.0.10", "@babel/traverse@^8.0.6", "@babel/traverse@^8.1.0", "@babel/traverse@^8.1.2", "@babel/traverse@^8.1.3":
   version "8.1.3"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-8.1.3.tgz#8bb5ee364dbec6e9d99051a97ec1e2a7e19d6e50"
   dependencies:
@@ -1092,7 +1080,7 @@
     "@babel/types" "^8.1.3"
     obug "^3.0.0"
 
-"@babel/types@^7.24.7", "@babel/types@^7.29.11", "@babel/types@^7.29.14", "@babel/types@^7.29.15", "@babel/types@^7.29.7":
+"@babel/types@^7.24.7", "@babel/types@^7.29.11", "@babel/types@^7.29.15", "@babel/types@^7.29.7":
   version "7.29.15"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.29.15.tgz#92f0fa3501405b132ac7a5acd064052e8a455f09"
   dependencies:
