@@ -677,8 +677,8 @@
     "@babel/helper-plugin-utils" "^8.0.1"
 
 "@babel/plugin-transform-duplicate-keys@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-duplicate-keys/-/plugin-transform-duplicate-keys-8.0.1.tgz#7dc186973c25fec1b41c4f95567cf8a11fbc2299"
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-duplicate-keys/-/plugin-transform-duplicate-keys-8.1.3.tgz#05df87099976efbef943735128b2bdf040a3bd0e"
   dependencies:
     "@babel/helper-plugin-utils" "^8.0.1"
 
