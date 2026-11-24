@@ -696,8 +696,8 @@
     "@babel/helper-plugin-utils" "^8.0.1"
 
 "@babel/plugin-transform-explicit-resource-management@^8.0.5":
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-explicit-resource-management/-/plugin-transform-explicit-resource-management-8.0.5.tgz#d736189a36b144176aca2ba23bb229e357c92887"
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-explicit-resource-management/-/plugin-transform-explicit-resource-management-8.1.3.tgz#2a106939da54fd36ef92c2db842687e620b2a472"
   dependencies:
     "@babel/helper-plugin-utils" "^8.0.1"
     "@babel/plugin-transform-destructuring" "^8.0.5"
