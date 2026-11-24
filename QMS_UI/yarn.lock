@@ -889,11 +889,11 @@
     "@babel/helper-plugin-utils" "^8.0.1"
 
 "@babel/plugin-transform-spread@^8.0.5":
-  version "8.0.8"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-spread/-/plugin-transform-spread-8.0.8.tgz#da56ba8a403302399ffd3b8f47ccff39405be0d4"
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-spread/-/plugin-transform-spread-8.1.3.tgz#4127058ec18ee5aff53c7a88be73ab7d368f3576"
   dependencies:
     "@babel/helper-plugin-utils" "^8.0.1"
-    "@babel/helper-skip-transparent-expression-wrappers" "^8.0.0"
+    "@babel/helper-skip-transparent-expression-wrappers" "^8.1.0"
 
 "@babel/plugin-transform-sticky-regex@^8.0.1":
   version "8.0.1"
