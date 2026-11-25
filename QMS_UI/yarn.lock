@@ -5739,8 +5739,8 @@ rolldown@~1.2.18:
     "@rolldown/binding-win32-x64-msvc" "1.2.19"
 
 router@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/router/-/router-2.2.0.tgz#019be620b711c87641167cc79b99090f00b146ef"
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/router/-/router-2.3.0.tgz#b383eb82cc19b9b9ef20ac1a7081345540b31fc4"
   dependencies:
     debug "^4.4.0"
     depd "^2.0.0"
