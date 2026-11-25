@@ -710,8 +710,8 @@
     "@babel/helper-skip-transparent-expression-wrappers" "^8.1.0"
 
 "@babel/plugin-transform-export-namespace-from@^8.0.1":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-export-namespace-from/-/plugin-transform-export-namespace-from-8.1.0.tgz#873c5376f8dd43afbd13a4abeb67fb9773ef681a"
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-export-namespace-from/-/plugin-transform-export-namespace-from-8.1.3.tgz#1aa131e304f6f204ed42982974f025c91abf3642"
   dependencies:
     "@babel/helper-plugin-utils" "^8.0.1"
 
