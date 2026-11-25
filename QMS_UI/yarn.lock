@@ -197,9 +197,9 @@
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-9.0.0.tgz#227dc53e1ac81824f998c6e76000b7efc522641e"
 
-"@angular/core@^22.1.8":
-  version "22.1.8"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-22.1.8.tgz#2aee29def074fb9e7f4e54d174edc4d5bc2217e2"
+"@angular/core@^22.3.0":
+  version "22.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-22.3.0.tgz#bbedf91e4d31e01353ec1e049364d03ec6aa3733"
   dependencies:
     tslib "^2.3.0"
 
