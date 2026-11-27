@@ -6076,11 +6076,11 @@ slice-ansi@^9.0.0:
     is-fullwidth-code-point "^5.1.0"
 
 socket.io-adapter@~2.5.2:
-  version "2.5.8"
-  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.8.tgz#c9fcabf602dbd5b09258ca98e5ec6a7ae4360698"
+  version "2.5.9"
+  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.9.tgz#a5225bfb706a5c96fd9a0bfbe0e4224a8145bfa8"
   dependencies:
     debug "~4.4.1"
-    ws "~8.21.0"
+    ws "^8.23.0"
 
 socket.io-parser@~4.2.4:
   version "4.2.7"
@@ -6742,10 +6742,6 @@ ws@^8.18.3, ws@^8.20.0:
 ws@^8.23.0:
   version "8.23.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.23.0.tgz#e1af4314ad9d4cfde4684d08a9f09b322830e84e"
-
-ws@~8.21.0:
-  version "8.21.3"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.3.tgz#660b4faddb6a3e575c86e078126919961f4de4fc"
 
 wsl-utils@^1.0.0:
   version "1.0.1"
